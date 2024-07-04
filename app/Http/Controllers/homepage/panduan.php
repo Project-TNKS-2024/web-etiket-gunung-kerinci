@@ -8,4 +8,9 @@ use Illuminate\Http\Request;
 class panduan extends Controller
 {
     //
+
+    public function index()
+    {
+        return null;
+    }
 }
