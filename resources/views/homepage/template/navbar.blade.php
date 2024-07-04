@@ -35,10 +35,10 @@
          </ul>
          <ul class="navbar-nav mb-2 mb-sm-0">
             <li class="nav-item">
-               <a class="nav-link text-white pe-2" aria-current="page" href="{{route('etiket.in.register')}}">Register</a>
+               <a class="nav-link text-white pe-2" aria-current="page" href="#">Register</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link text-white" aria-current="page" href="{{route('etiket.in.login')}}">Login</a>
+               <a class="nav-link text-white" aria-current="page" href="#">Login</a>
             </li>
          </ul>
 
