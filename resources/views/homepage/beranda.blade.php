@@ -52,7 +52,7 @@
 
 <div class="gk-bg-neutrals200">
    <div class="container">
-      <p>ejfbwjfbkjwbfwvbkn j njwsfbjwe</p>
+     
    </div>
 </div>
 
