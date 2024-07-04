@@ -12,6 +12,7 @@
 
    <link rel="stylesheet" href="{{asset('bootstrap-5.3.3-dist/css/bootstrap.min.css')}}">
    <link rel="stylesheet" href="{{asset('bootstrap-5.3.3-dist/font/bootstrap-icons.min.css')}}">
+   <link rel="stylesheet" href="{{asset('fontawesome-free-6.5.2-web/css/all.css')}}">
    <link rel="stylesheet" href="{{asset('componen/colorplate.css')}}">
    <style>
       .index-navbar {
