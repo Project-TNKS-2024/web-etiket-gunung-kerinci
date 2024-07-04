@@ -1,21 +1,69 @@
-<div class="d-flex flex-wrap flex-column justify-content-center align-items-center" style="height: 450px;">
-    @foreach ($panduan as $index => $o)
-        @if (($index + 1) % 2 != 0)
-            <div class="col-md-3 card row-md-2 mb-3 p-3 " style="min-height: 150px">
-                <div style="font-size: 16px" class="fw-bold py-1"><span
-                        class="gk-text-primary700">#{{ $index + 1 }}</span>
-                    {{ $o['title'] }}
+<div class="d-none d-md-block" style="margin: 100px 0;">
+    <div class="guide-container guide-card-border-b ">
+        @for ($i = 0; $i < count($panduan); $i++)
+            @if ($i % 2 == 0)
+                <div class="d-flex flex-column align-items-center guide-right">
+                    <div class="guide-card card shadow-sm">
+                        <header class="fw-bold"><span>#{{ $i + 1 }}</span> {{ $panduan[$i]['title'] }}</header>
+                        <main>{{ $panduan[$i]['caption'] }}</main>
+                    </div>
+                    <div class="guide-card-tail"></div>
+                    <div class="guide-card-div"></div>
                 </div>
-                <div style="font-size: 13px" class="">{{ $o['caption'] }}</div>
-            </div>
-        @else
-            <div class="col-md-3 card row-md-2 px-2 mb-3 ml-2 p-2" style="margin-left: 50px;height: 150px">
-                <div style="font-size: 16px" class="fw-bold"><span
-                        class="gk-text-primary700">#{{ $index + 1 }}</span>
-                    {{ $o['title'] }}
+            @endif
+        @endfor
+    </div>
+
+    <div class="guide-container guide-card-border-t" style="margin-left: 0px;">
+        @for ($i = 0; $i < count($panduan); $i++)
+            @if ($i % 2 == 0)
+                <div class="d-flex flex-column align-items-center guide-left">
+                    <div class="guide-card-head"></div>
+                    <div class="guide-card card shadow-sm">
+                        <header class="fw-bold"><span>#{{ $i + 2 }}</span> {{ $panduan[$i + 1]['title'] }}
+                        </header>
+                        <main>{{ $panduan[$i + 1]['caption'] }}</main>
+                    </div>
+                    <div class="guide-card-div"></div>
                 </div>
-                <div style="font-size: 13px"> {{ $o['caption'] }}</div>
-            </div>
-        @endif
-    @endforeach
+            @endif
+        @endfor
+    </div>
 </div>
+
+<div class="d-flex d-md-none flex-column w-100 align-items-center" style="margin: 10px 0">
+    <div class="guide-container guide-card-border-t" style="margin-left: 0px;">
+        @for ($i = 0; $i < count($panduan); $i++)
+            <div class="d-flex flex-column align-items-center ">
+                <div class="guide-card-head"></div>
+                <div class="guide-card card shadow-sm">
+                    <header class="fw-bold"><span>#{{ $i + 1 }}</span> {{ $panduan[$i]['title'] }}
+                    </header>
+                    <main>{{ $panduan[$i]['caption'] }}</main>
+                </div>
+                <div class="guide-card-div"></div>
+            </div>
+        @endfor
+    </div>
+</div>
+
+{{-- <div class="d-flex flex-column w-100 align-items-start mx-0" style="margin: 100px 0">
+    <div class="guide-container m-0 mx-0">
+        @for ($i = 0; $i < count($panduan); $i++)
+            <div class="d-flex flex-column align-items-center guide-right m-0 @if (($i + 1) % 2 != 0) guide-card-border-b guide-right @else guide-left @endif"
+                style="max-width: 300px">
+                @if (($i + 1) % 2 == 0)
+                    <div class="guide-card-head"></div>
+                @endif
+                <div class="guide-card card shadow-sm ">
+                    <header class="fw-bold"><span>#{{ $i + 1 }}</span> {{ $panduan[$i]['title'] }}</header>
+                    <main>{{ $panduan[$i]['caption'] }}</main>
+                </div>
+                @if (($i + 1) % 2 != 0)
+                    <div class="guide-card-tail"></div>
+                @endif
+                {{-- <div class="guide-card-tail"></div> --}}
+{{-- </div>
+@endfor
+</div>
+</div> --}}

@@ -55,9 +55,15 @@
         {{-- <h4 class="text-center">SOP Pendakian Gunung Kerinci</h4> --}}
 
         <div class="">
-            <iframe src="{{ asset('assets/pdf/panduan-sop.pdf') }}"
+            {{-- <iframe src="{{ asset('assets/pdf/panduan-sop.pdf') }}"
                 class="pdf-container m-auto d-block my-3 border border-1 border border-secondary rounded shadow"
-                height="700px"></iframe>
+                height="700px"></iframe> --}}
+            <p class="m-auto d-block text-center">Jika dokumen tidak muncul, <a
+                    href="{{ asset('assets/pdf/panduan-sop.pdf') }}" download>Unduh dokumen</a>.</p>
+            <embed src="{{ asset('assets/pdf/panduan-sop.pdf') }}"
+                class="pdf-container m-auto d-block my-3 border border-1 border border-secondary rounded shadow"
+                height="700px" type="application/pdf">
+
         </div>
     </div>
 @endsection
