@@ -48,18 +48,18 @@
         }
 
         /* .guide-container {
-                        display: flex;
-                        flex-direction: column;
-                        max-height: 450px;
-                        height: 100%;
-                        flex-wrap: wrap;
-                        gap: 0;
-                        padding: 0;
-                        margin: 0;
-                        row-gap: 0;
-                        grid-gap: 0;
-                        column-gap: 0;
-                    } */
+                                            display: flex;
+                                            flex-direction: column;
+                                            max-height: 450px;
+                                            height: 100%;
+                                            flex-wrap: wrap;
+                                            gap: 0;
+                                            padding: 0;
+                                            margin: 0;
+                                            row-gap: 0;
+                                            grid-gap: 0;
+                                            column-gap: 0;
+                                        } */
 
         .guide-card {
             margin: 0;
