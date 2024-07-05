@@ -9,8 +9,13 @@ class panduan extends Controller
 {
     //
 
-    public function index()
+    public function sop()
     {
-        return null;
+        return view('homepage.sop');
+    }
+
+    public function panduan()
+    {
+        return view('homepage.panduan');
     }
 }

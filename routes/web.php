@@ -4,6 +4,8 @@ use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
 use App\Http\Controllers\homepage\beranda;
 use App\Http\Controllers\sampel;
+use App\Http\Controllers\homepage\panduan;
+use App\Http\Controllers\homepage\booking;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,6 +13,9 @@ Route::get('/', function () {
 });
 
 Route::get('beranda', [beranda::class, 'index'])->name('homepage.beranda');
+Route::get('sop', [panduan::class, 'sop'])->name('sop');
+Route::get('panduan', [panduan::class, 'panduan'])->name('panduan');
+Route::get('booking', [booking::class, 'index'])->name('booking');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');

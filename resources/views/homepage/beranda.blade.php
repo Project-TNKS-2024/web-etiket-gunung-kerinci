@@ -19,9 +19,9 @@
       background: linear-gradient(to top, white, rgba(255, 255, 255, 0));
    }
 
-   .index-kartu-1 img {
-      max-height: 150px;
-   }
+        .index-kartu-1 img {
+            max-height: 150px;
+        }
 
    .index-kartu-1 .index-text {
       height: 130px;
@@ -63,11 +63,11 @@
 </div>
 
 
-<div class="container mt-5">
+    <div class="container mt-5">
 
    <h3 class="text-center">Jalur Pendakian Gunung Kerinci</h3>
    <div class="row mt-3 index-kartu-1">
-      @for ($i = 1; $i <= 5; $i++)<div class="col-12 col-md-6 col-lg-4 mb-3">
+      @for ($i = 1; $i <= 5; $i++) <div class="col-12 col-md-6 col-lg-4 mb-3">
          <div class="card h-100">
             <img src="{{ asset('img/sampel/sampel 2.png') }}" class="card-img-top" alt="Jalur Pendakian Kersik Tuo">
             <div class="card-body">
@@ -82,72 +82,10 @@
 </div>
 
 
-<div class="gk-bg-neutrals100 mt-4">
-   <div class="container py-5">
-      <div class="row">
-         <div class="col-12 col-md-6">
-            <h2>Kondisi Pendakian Gunung Kerinci</h2>
-            <p>Informasi realtime data pengunjung Gunung Kerinci</p>
-         </div>
-         <div class="col-12 col-md-6 row index-info">
-            <div class="col-6 d-flex align-items-center">
-               <div class="icon">
-                  <i class="fa-solid fa-users"></i>
-               </div>
-               <div class="ms-2">
-                  <h3>5.245</h3>
-                  <p>Total Pendaki</p>
-               </div>
-            </div>
-            <div class="col-6 d-flex align-items-center">
-               <div class="icon">
-                  <i class="fa-solid fa-person-hiking"></i>
-               </div>
-               <div class="ms-2">
-                  <h3>245</h3>
-                  <p>Sedang Mendaki</p>
-               </div>
-            </div>
-            <div class="col-6 d-flex align-items-center">
-               <div class="icon">
-                  <i class="fa-solid fa-person-dress"></i>
-               </div>
-               <div class="ms-2">
-                  <h3>5.245</h3>
-                  <p>Pendali Perempuan</p>
-               </div>
-            </div>
-            <div class="col-6 d-flex align-items-center">
-               <div class="icon">
-                  <i class="fa-solid fa-person"></i>
-               </div>
-               <div class="ms-2">
-                  <h3>5.245</h3>
-                  <p>Pendaki Laki-laki</p>
-               </div>
-            </div>
-         </div>
-      </div>
+<div class="gk-bg-neutrals200">
+   <div class="container">
+      <p>ejfbwjfbkjwbfwvbkn j njwsfbjwe</p>
    </div>
 </div>
-
-<div class="mt-4">
-   <div class="container pt-5">
-      <div class="w-100">
-         <h3 class="text-center">Seputar jelajah TNKS</h3>
-      </div>
-      <div class="row galeri">
-         @for ($i = 1; $i <= 5; $i++) <div class="col-12 col-sm-6 col-lg-4">
-            <div class="overflow-hidden shadow-sm rounded-4 mt-4 mx-2">
-
-               <img src="{{asset('img/sampel/sampel 2.png')}}" alt="" class="w-100">
-            </div>
-      </div>
-      @endfor
-   </div>
-</div>
-</div>
-
-<div style="height:50px;"></div>
 
 @endsection
