@@ -1,10 +1,10 @@
  <footer class="pt-4 pb-2 index-footer">
      <div class="container">
          <div class="row d-flex">
-             <div class="col-md-5 d-flex align-items-start ">
-                 <img src="{{ asset('img/logo/logo bulat.png') }}" alt="Logo" class="img-fluid me-3">
+             <div class="col-md-5 d-flex align-items-center  py-0 gap-2" style="height: fit-content">
+                 <img src="{{ asset('img/logo/logo bulat.png') }}" alt="Logo" class="img-fluid my-0">
                  <div>
-                     <h4 class="mb-0">Taman Nasional Kerinci Seblat</h4>
+                     <h4 class="mb-0 lead fw-normal fs-3">Taman Nasional Kerinci Seblat</h4>
                  </div>
              </div>
              <div class="d-flex gap-2 justify-content-between" style="width: fit-content">

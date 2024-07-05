@@ -35,7 +35,8 @@
                         Booking</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page" href="#">Booking Online</a>
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('booking') }}">Booking
+                        Online</a>
                 </li>
             </ul>
             <ul class="navbar-nav mb-2 mb-sm-0">
