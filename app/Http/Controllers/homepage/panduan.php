@@ -11,7 +11,7 @@ class panduan extends Controller
 
     public function sop()
     {
-        return view('homepage.sop');
+        return view('homepage.sop-written');
     }
 
     public function panduan()
