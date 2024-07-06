@@ -157,20 +157,26 @@
             }
         </script>
         <div class="navigation-page glass border">
-            <ol type="I" class="text-start d-flex flex-column gap-2 my-0">
+            <ol type="I" class="text-start d-flex flex-column gap-2 my-0 py-0">
                 <li class="py-0">
                     <a href="#bab-pendahuluan">Pendahuluan</a>
-                    <p>
                     <ol type="A" class="py-0">
                         <li><a href="#pendahuluan-a">Latar Belakang</a></li>
                         <li><a href="#pendahuluan-b">Maksud dan Tujuan</a></li>
                         <li><a href="#pendahuluan-c">Ruang Lingkup</a></li>
                         <li><a href="#pendahuluan-d">Pengertian</a></li>
                     </ol>
-                    </p>
                 </li>
                 <li><a href="#bab-arahan-teknis">Arahan Teknis</a></li>
-                <li><a href="#bab-ketentuan-pendakian">Ketentuan Pendakian</a></li>
+                <li>
+                    <a href="#bab-ketentuan-pendakian">Ketentuan Pendakian</a>
+                    <ol type="A" class="py-0">
+                        <li><a href="#ketentuan-a">Ketentuan</a></li>
+                        <li><a href="#ketentuan-b">Kewajiban Pendaki</a></li>
+                        <li><a href="#ketentuan-c">Larangan</a></li>
+                        <li><a href="#ketentuan-d">Sanksi</a></li>
+                    </ol>
+                </li>
                 <li><a href="#bab-penutup">Penutup</a></li>
             </ol>
         </div>
@@ -182,7 +188,7 @@
 
     <div class="container my-5 ">
         <article class="font-serif px-3 px-sm-5 d-block m-auto border py-5 rounded shadow-sm">
-            <dl>
+            <dl type="A">
                 <header class="chapter-header" id="bab-pendahuluan">I. PENDAHULUAN</header>
                 @include('homepage.sop.PENDAHULUAN.a')
                 @include('homepage.sop.PENDAHULUAN.b')
@@ -220,6 +226,15 @@
 
             <dl>
                 <header class="chapter-header" id="bab-ketentuan-pendakian">III. KETENTUAN PENDAKIAN</header>
+                <p class="chapter-content">Setiap pendaki yang melalui pintu masuk di Pos R10 Kersik Tuo Kabupaten Kerinci
+                    Provinsi Jambi wajib memiliki karcis sedangkan pendaki yang melalaui Camping Ground Bangun Rejo
+                    Kabupaten Solok Selatan Provinsi Sumatera Barat wajib memiliki karcis dan Surat Ijin Masuk Kawasan
+                    Konservasi (SIMAKSI) pendakian karena melalui zona rimba.
+                </p>
+                @include('homepage.sop.KETENTUAN.a')
+                @include('homepage.sop.KETENTUAN.b')
+                @include('homepage.sop.KETENTUAN.c')
+                @include('homepage.sop.KETENTUAN.d')
             </dl>
             <dl>
                 <header class="chapter-header" id="bab-penutup">IV. PENUTUP</header>
