@@ -1,4 +1,4 @@
-<dt class="chapter-subheader " id="pendahuluan-d">D. Pengertian</dt>
+<dt class="chapter-subheader" id="pendahuluan-d">D.&Tab;Pengertian</dt>
 <dd class="chapter-content">
     <ol>
         <li>
