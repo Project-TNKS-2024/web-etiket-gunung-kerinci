@@ -19,9 +19,9 @@
       background: linear-gradient(to top, white, rgba(255, 255, 255, 0));
    }
 
-        .index-kartu-1 img {
-            max-height: 150px;
-        }
+   .index-kartu-1 img {
+      max-height: 150px;
+   }
 
    .index-kartu-1 .index-text {
       height: 130px;
@@ -63,7 +63,7 @@
 </div>
 
 
-    <div class="container mt-5">
+<div class="container mt-5">
 
    <h3 class="text-center">Jalur Pendakian Gunung Kerinci</h3>
    <div class="row mt-3 index-kartu-1">

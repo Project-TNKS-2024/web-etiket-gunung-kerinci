@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\etiket\user\dashboard;
 use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
 use App\Http\Controllers\homepage\beranda;
@@ -26,4 +27,10 @@ Route::middleware('guest')->group(function () {
 });
 
 
+// admin
+Route::get('admin/dashboard', [dashboard::class, 'index'])->name('admin.dashboard');
+
+
+
+// sampel
 Route::get('sampel/{blade}', [sampel::class, 'index'])->name('sampel.index');
