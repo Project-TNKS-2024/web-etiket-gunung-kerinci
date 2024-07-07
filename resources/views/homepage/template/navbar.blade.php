@@ -24,15 +24,15 @@
                     <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.beranda') }}">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('sop') }}">SOP
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.sop') }}">SOP
                         Pendakian</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('panduan') }}">Panduan
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.panduan') }}">Panduan
                         Booking</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('booking') }}">Booking
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.booking') }}">Booking
                         Online</a>
                 </li>
             </ul>

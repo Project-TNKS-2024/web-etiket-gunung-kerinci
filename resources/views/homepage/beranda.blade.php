@@ -29,25 +29,19 @@
       text-align: justify;
    }
 
-   .index-info h3 {
-      margin-bottom: 0px;
-   }
-
-   .index-info i {
-      font-size: 40px;
-      height: min-content;
-   }
-
-   .index-info .icon {
-      width: 50px;
-   }
-
-   .index-info p {
-      margin-bottom: 0px;
+   .galeri .col-6 {
+      overflow: hidden;
+      border-radius: 0.5rem;
+      /* Adjust as needed */
    }
 
    .galeri img {
-      height: 200px;
+      border-radius: 0.5rem;
+      max-height: 250px;
+   }
+
+   .text-shadow {
+      text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
    }
 </style>
 @endsection
@@ -63,7 +57,7 @@
 </div>
 
 
-<div class="container mt-5">
+<div class="container my-5">
 
    <h3 class="text-center">Jalur Pendakian Gunung Kerinci</h3>
    <div class="row mt-3 index-kartu-1">
@@ -82,10 +76,26 @@
 </div>
 
 
-<div class="gk-bg-neutrals200">
+<div class="gk-bg-neutrals200 py-5">
    <div class="container">
-      <p>ejfbwjfbkjwbfwvbkn j njwsfbjwe</p>
+      <div class="w-100 mb-4">
+         <h3 class="text-center">Seputar jelajah TNKS</h3>
+      </div>
+
+
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 align-items-stretch g-4 mx-auto">
+         @for ($i = 1; $i <= 5; $i++) <div class="col">
+            <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url(' {{asset('img/sampel/sampel 2.png')}}'); background-size: cover;">
+               <div class="d-flex flex-column h-100 p-5 pb-5 text-white text-shadow-1">
+                  <h5 class="pt-5 mt-5 mb-1 text-shadow">Short title, long jacket</h5>
+               </div>
+            </div>
+      </div>
+      @endfor
    </div>
+
 </div>
+</div>
+
 
 @endsection

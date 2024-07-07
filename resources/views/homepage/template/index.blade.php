@@ -62,6 +62,20 @@
             font-family: 'bootstrap-icons';
 
         }
+
+        .useradmin .btn {
+            border: 2px solid var(--primary100);
+        }
+
+        .useradmin .btn.active {
+            border: 2px solid var(--primary) !important;
+        }
+
+        .useradmin .btn.close {
+            border: none;
+            background-color: var(--error200) !important;
+            color: white;
+        }
     </style>
 
     @yield('css')
