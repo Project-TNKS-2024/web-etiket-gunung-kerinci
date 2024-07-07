@@ -15,37 +15,36 @@
     </div>
     <div class="container">
         <div></div>
-        <button class="navbar-toggler index-nav-toggle" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
+        <button class="navbar-toggler index-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-sm-0 d-flex align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page"
-                        href="{{ route('homepage.beranda') }}">Beranda</a>
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.beranda') }}">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('sop') }}">SOP
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.sop') }}">SOP
                         Pendakian</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('panduan') }}">Panduan
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.panduan') }}">Panduan
                         Booking</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('booking') }}">Booking
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.booking') }}">Booking
                         Online</a>
                 </li>
             </ul>
             <ul class="navbar-nav mb-2 mb-sm-0">
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page"
-                        href="{{ route('etiket.in.register') }}">Register</a>
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('etiket.in.register') }}">Register</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" aria-current="page" href="{{ route('etiket.in.login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard</a>
                 </li>
             </ul>
 

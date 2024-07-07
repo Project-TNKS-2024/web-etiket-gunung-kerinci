@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\etiket\user\dashboard as dasAdmin;
+use App\Http\Controllers\etiket\user\dashboard as dasUser;
 use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
 use App\Http\Controllers\homepage\beranda;
@@ -13,9 +15,9 @@ Route::get('/', function () {
 });
 
 Route::get('beranda', [beranda::class, 'index'])->name('homepage.beranda');
-Route::get('sop', [panduan::class, 'sop'])->name('sop');
-Route::get('panduan', [panduan::class, 'panduan'])->name('panduan');
-Route::get('booking', [booking::class, 'index'])->name('booking');
+Route::get('sop', [panduan::class, 'sop'])->name('homepage.sop');
+Route::get('panduan', [panduan::class, 'panduan'])->name('homepage.panduan');
+Route::get('booking', [booking::class, 'index'])->name('homepage.booking');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
@@ -26,4 +28,16 @@ Route::middleware('guest')->group(function () {
 });
 
 
+// admin
+Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
+
+
+
+// users
+Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
+
+
+
+
+// sampel
 Route::get('sampel/{blade}', [sampel::class, 'index'])->name('sampel.index');
