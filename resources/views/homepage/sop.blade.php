@@ -49,8 +49,6 @@
 'caption' => 'Pendakian Gunung Kerinci Di Taman Nasional Kerinci Seblat',
 ])
 <div class="container mt-5">
-
-
     <div class="">
         {{-- <iframe src="{{ asset('assets/pdf/panduan-sop.pdf') }}"
         class="pdf-container m-auto d-block my-3 border border-1 border border-secondary rounded shadow"

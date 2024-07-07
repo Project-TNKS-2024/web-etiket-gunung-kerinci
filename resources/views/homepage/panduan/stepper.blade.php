@@ -46,24 +46,3 @@
         @endfor
     </div>
 </div>
-
-{{-- <div class="d-flex flex-column w-100 align-items-start mx-0" style="margin: 100px 0">
-    <div class="guide-container m-0 mx-0">
-        @for ($i = 0; $i < count($panduan); $i++)
-            <div class="d-flex flex-column align-items-center guide-right m-0 @if (($i + 1) % 2 != 0) guide-card-border-b guide-right @else guide-left @endif"
-                style="max-width: 300px">
-                @if (($i + 1) % 2 == 0)
-                    <div class="guide-card-head"></div>
-                @endif
-                <div class="guide-card card shadow-sm ">
-                    <header class="fw-bold"><span>#{{ $i + 1 }}</span> {{ $panduan[$i]['title'] }}</header>
-                    <main>{{ $panduan[$i]['caption'] }}</main>
-                </div>
-                @if (($i + 1) % 2 != 0)
-                    <div class="guide-card-tail"></div>
-                @endif
-                {{-- <div class="guide-card-tail"></div> --}}
-{{-- </div>
-@endfor
-</div>
-</div> --}}
