@@ -20,7 +20,7 @@
         <div class="row w-100 justify-content-center my-3" style="flex-wrap: wrap">
             @for ($i = 1; $i <= 4; $i++) <div class="col-12 col-md-6 col-lg-4 mb-3">
                 <div class="card h-100">
-                    <img src="{{ asset('img/sampel/sampel 2.png') }}" class="card-img-top" alt="Jalur Pendakian Kersik Tuo">
+                    <img src="{{ asset('assets/img/sampel/sampel 2.png') }}" class="card-img-top" alt="Jalur Pendakian Kersik Tuo">
                     <div class="card-body">
                         <h5 class="card-title ">Jalur Kersik Tuo <span class="ms-2 badge gk-bg-primary400 fw-normal">Open</span>
                         </h5>

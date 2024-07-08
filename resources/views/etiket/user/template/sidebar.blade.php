@@ -1,6 +1,6 @@
 <div class="card mb-3 useradmin">
    <div class="card-body text-center">
-      <img src="{{asset('img/sampel/user.jpg')}}" alt="Christina Mason" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+      <img src="{{asset('assets/img/sampel/user.jpg')}}" alt="Christina Mason" class="img-fluid rounded-circle mb-2" width="128" height="128" />
       <h5 class="card-title mb-0">Muktashim Billah</h5>
       <div class="text-muted mb-2">muktasim.elfatih@gmail.com</div>
 

@@ -3,7 +3,7 @@
 @section('css')
 <style>
    .bg-body-tertiary {
-      background-image: url("{{asset('img/bg/bg jumbotron 1.png')}}");
+      background-image: url("{{asset('assets/img/bg/bg jumbotron 1.png')}}");
       background-size: cover;
       padding-bottom: 80px;
    }
@@ -63,7 +63,7 @@
    <div class="row mt-3 index-kartu-1">
       @for ($i = 1; $i <= 5; $i++) <div class="col-12 col-md-6 col-lg-4 mb-3">
          <div class="card h-100">
-            <img src="{{ asset('img/sampel/sampel 2.png') }}" class="card-img-top" alt="Jalur Pendakian Kersik Tuo">
+            <img src="{{ asset('assets/img/sampel/sampel 2.png') }}" class="card-img-top" alt="Jalur Pendakian Kersik Tuo">
             <div class="card-body">
                <h5 class="card-title">Jalur Kersik Tuo <span class="ms-2 badge gk-bg-primary400">Primary</span></h5>
                <p class="card-text index-text">Lorem ipsum dolor sit amet consectetur. Lorem posuere amet non in fermentum. Euismod lectus tellus imperdiet amet condimentum semper nulla ipsum. Tortor ut vestibulum diam maecenas elementum viverra. Sed arcu integer sagittis feugiat diam egestas.</p>
@@ -85,7 +85,7 @@
 
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 align-items-stretch g-4 mx-auto">
          @for ($i = 1; $i <= 5; $i++) <div class="col">
-            <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url(' {{asset('img/sampel/sampel 2.png')}}'); background-size: cover;">
+            <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url(' {{asset('assets/img/sampel/sampel 2.png')}}'); background-size: cover;">
                <div class="d-flex flex-column h-100 p-5 pb-5 text-white text-shadow-1">
                   <h5 class="pt-5 mt-5 mb-1 text-shadow">Short title, long jacket</h5>
                </div>
