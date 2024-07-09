@@ -1,6 +1,8 @@
-
-### Page
+# Page
 ## Homepage
-# Beranda
+### Beranda
+### SOP
+### Panduan
+### Booking
 
-## Controller
+## Admin
