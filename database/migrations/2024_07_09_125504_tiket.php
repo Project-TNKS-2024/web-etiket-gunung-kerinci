@@ -20,7 +20,7 @@ return new class extends Migration
 
             // Jika perlu, tambahkan indeks atau constraint lainnya di sini
             // ============================================================================================
-            $table->foreign('id_destinasi')->references('id')->on('destinasi');
+            $table->foreign('id_destinasi')->references('id')->on('destinasis');
         });
     }
 

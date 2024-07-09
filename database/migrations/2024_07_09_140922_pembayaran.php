@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_booking');
+            $table->string('spesial')->default(null);
             $table->decimal('amount', 10, 2); // Jumlah pembayarans
             $table->string('status'); // Status pembayarans (contoh: pending, success, failed)
             $table->string('payment_method'); // Metode pembayarans (contoh: transfer bank, kartu kredit, dll.)
