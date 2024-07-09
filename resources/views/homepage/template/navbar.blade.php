@@ -2,7 +2,7 @@
     <div class="w-100 index-nav-ats gk-bg-neutrals-base-white py-2">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ route('homepage.beranda') }}" class="d-flex align-items-center" style="gap: 10px;">
-                <img src="{{ asset('img/logo/logo bulat.png') }}" alt="">
+                <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="">
                 <div>Taman Nasional Kelinci Seblat</div>
             </a>
             <div class="d-none d-sm-block">
@@ -37,14 +37,14 @@
                 </li>
             </ul>
             <ul class="navbar-nav mb-2 mb-sm-0">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('etiket.in.register') }}">Register</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" aria-current="page" href="{{ route('etiket.in.login') }}">Login</a>
-                </li>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link text-white" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                    <a class="nav-link text-white" aria-current="page" href="{{ route('user.dashboard') }}">Dashboard</a>
                 </li>
             </ul>
 

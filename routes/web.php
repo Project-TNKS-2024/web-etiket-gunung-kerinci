@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\etiket\user\dashboard as dasAdmin;
+use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
 use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
@@ -29,6 +29,9 @@ Route::middleware('guest')->group(function () {
 
 
 // admin
+Route::get('admin', function () {
+    return redirect('admin/dashboard');
+});
 Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
 
 

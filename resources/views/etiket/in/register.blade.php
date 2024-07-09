@@ -27,7 +27,7 @@
       }
 
       .bg-regis {
-         background-image: url("{{asset('img/bg/bg register.png')}}");
+         background-image: url("{{asset('assets/img/bg/bg register.png')}}");
          background-size: cover;
          min-height: 100vh;
       }
@@ -52,7 +52,7 @@
       <div class="col-12 col-sm-8 col-md-6 d-flex align-items-center flex-column">
          <div class="mt-3">
             <a class="mx-auto nav-logo" href="{{route('homepage.beranda')}}">
-               <img src="{{asset('img/logo/logo bulat.png')}}" alt="logo">
+               <img src="{{asset('assets/img/logo/logo bulat.png')}}" alt="logo">
                Taman nasional Kerinci Seblat
             </a>
          </div>

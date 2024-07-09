@@ -2,7 +2,7 @@
      <div class="container">
          <div class="row">
              <div class="col-md-5 d-flex align-items-center gap-2">
-                 <img src="{{ asset('img/logo/logo bulat.png') }}" alt="Logo" class="img-fluid my-0">
+                 <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="Logo" class="img-fluid my-0">
                  <div>
                      <h4 class="mb-0 lead fw-normal fs-3">Taman Nasional Kerinci Seblat</h4>
                  </div>
