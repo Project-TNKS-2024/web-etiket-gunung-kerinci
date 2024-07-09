@@ -30,7 +30,7 @@ Route::middleware('guest')->group(function () {
 
 // admin
 Route::get('admin', function () {
-    return redirect('admin.dashboard');
+    return redirect('admin/dashboard');
 });
 Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
 
