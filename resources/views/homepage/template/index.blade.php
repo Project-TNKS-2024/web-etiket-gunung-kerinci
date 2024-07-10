@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/font/bootstrap-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('fontawesome-free-6.5.2-web/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('componen/colorplate.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('componen/tailwind-classes.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -105,6 +105,52 @@
             border: none;
             background-color: var(--error200) !important;
             color: white;
+        }
+
+        .bg-linear-gradient-primary {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .dashboard-sidebar-btn {
+            background: none;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .dashboard-sidebar-btn.active {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+            color: #fff;
+        }
+
+        .dashboard-sidebar-btn {
+            background: var(--neutrals100);
+            color: var(--base-black);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .dashboard-sidebar-btn:hover {
+            background: var(--neutrals200);
+        }
+
+        .dashboard-sidebar-btn.active:hover {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
         }
     </style>
 
