@@ -2,8 +2,9 @@
 
 ### Page
 - <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/90" alt="90%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Beranda</span>
+    <div>
+    <img src="https://progress-bar.dev/90" alt="90%" style="margin-right: 8px;"/> </div>
+    <div style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Beranda</div>
   </div>
 - <div style="display: flex; align-items: center;">
     <img src="https://progress-bar.dev/100" alt="100%" style="margin-right: 8px;"/> 
