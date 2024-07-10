@@ -1,15 +1,39 @@
 ## Project Progress
 
 ### Page
-- ![90%](https://progress-bar.dev/90) **Beranda**
-- ![100%](https://progress-bar.dev/100) **SOP**
-- ![100%](https://progress-bar.dev/100) **Panduan**
-- ![50%](https://progress-bar.dev/50) **Booking Online**
+- <div style="display: flex; align-items: center;">
+    <img src="https://progress-bar.dev/90" alt="90%" style="margin-right: 8px;"/> 
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Beranda</span>
+  </div>
+- <div style="display: flex; align-items: center;">
+    <img src="https://progress-bar.dev/100" alt="100%" style="margin-right: 8px;"/> 
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">SOP</span>
+  </div>
+- <div style="display: flex; align-items: center;">
+    <img src="https://progress-bar.dev/100" alt="100%" style="margin-right: 8px;"/> 
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Panduan</span>
+  </div>
+- <div style="display: flex; align-items: center;">
+    <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/> 
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Booking Online</span>
+  </div>
 
 #### Dashboard
-- ![50%](https://progress-bar.dev/50) **Profile** - Layout Done - Tinggal Integrasi Dengan Database
-- ![0%](https://progress-bar.dev/0) **Riwayat Booking**
-- ![0%](https://progress-bar.dev/0) **Ganti Password**
+- <div style="display: flex; align-items: center;">
+    <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/> 
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Profile</span> - Layout Done - Tinggal Integrasi Dengan Database
+  </div>
+- <div style="display: flex; align-items: center;">
+    <img src="https://progress-bar.dev/0" alt="0%" style="margin-right: 8px;"/> 
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Riwayat Booking</span>
+  </div>
+- <div style="display: flex; align-items: center;">
+    <img src="https://progress-bar.dev/0" alt="0%" style="margin-right: 8px;"/> 
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Ganti Password</span>
+  </div>
 
 ### Admin
-- ![10%](https://progress-bar.dev/10) **Admin** - Template Done
+- <div style="display: flex; align-items: center;">
+    <img src="https://progress-bar.dev/10" alt="10%" style="margin-right: 8px;"/> 
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Admin</span> - Template Done
+  </div>
