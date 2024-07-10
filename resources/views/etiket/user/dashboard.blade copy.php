@@ -39,9 +39,9 @@
                 </div>
 
                 <div class="col-md-7 col-xl-8 my-5 my-sm-5 my-md-0 my-lg-0" style="min-height: 500px;">
-                    <form class="row rounded-2xl shadow card p-3">
+                    <form class=" row form rounded-xl shadow py-3 px-2">
                         {{-- JENIS KEWARGANEGARAAN --}}
-                        <div class="form-group ">
+                        <div class="form-group">
                             <label class="mandatory text-base font-semibold">Jenis Kewarganageraan</label>
                             <div class="form-group text-sm d-flex align-items-center gap-2 form-check row">
                                 <div class="col-12 col-md-4 ">
@@ -57,8 +57,10 @@
                             </div>
                         </div>
 
-                        <div class="row py-0 my-0">
-                            <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
+                        {{-- SISI 1 --}}
+                        <div class="container col-lg-6 col-md-12 col-sm-12" style="">
+                            {{-- JENIS IDENTITAS --}}
+                            <div class="form-group my-4">
                                 <label class="mandatory text-base font-semibold">Jenis Identitas</label>
                                 <div class="dropdown">
                                     <button
@@ -68,34 +70,22 @@
                                         KTP
                                     </button>
 
-                                    <ul class="dropdown-menu w-100 shadow">
+                                    <ul class="dropdown-menu w-100">
                                         <li><button class="dropdown-item" href="#">KTP</button></li>
                                         <li><button class="dropdown-item" href="#">Passport</button></li>
                                         <li><button class="dropdown-item" href="#">Lainnya</button></li>
                                     </ul>
                                 </div>
                             </div>
-                            <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
-                                <label class="mandatory text-base font-semibold" for="id-pendaftar">NIK/Passport</label>
-                                <input type="text" class="form-control border-secondary" id="id-pendaftar"
-                                    name="id_pendaftar" placeholder="NIK/Pasport">
-                            </div>
-                        </div>
-
-                        <div class="row my-0 py-0">
-                            <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
+                            {{-- NAMA LENGKAP --}}
+                            <div class="form-group my-4">
                                 <label class="mandatory text-base font-semibold">Nama Lengkap</label>
                                 <input type="text" class="form-control border-secondary" id="nama-lengkap"
                                     name="nama_lengkap" placeholder="Nama Lengkap">
                             </div>
-                            <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
-                                <label class="mandatory text-base font-semibold" for="id-pendaftar">NIK/Passport</label>
-                                <input class="form-control" type="file" id="formFile">
-                            </div>
-                        </div>
 
-                        <div class="row my-0 py-0">
-                            <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
+                            {{-- nomor telepon --}}
+                            <div class="form-group my-4">
                                 <label class="mandatory text-base font-semibold">Nomor Telepon</label>
                                 <div class="d-flex gap-2">
                                     <div class="dropdown custom-dropdown-item">
@@ -123,7 +113,79 @@
                                         name="nomor_telepon" placeholder="Nama Telepon">
                                 </div>
                             </div>
-                            <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
+
+                            {{-- Tanggal Lahir --}}
+                            <div class="form-group my-4">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="mandatory text-base font-semibold">Tanggal Lahir</label>
+                                        <input type="datetime-local" class="form-control border-secondary" id="tgl-lahir"
+                                            name="tgl_lahir">
+                                    </div>
+                                    <div class="col">
+
+                                        <label class="mandatory text-base font-semibold">Usia</label>
+                                        <input type="text" class="form-control border-secondary " id="usia"
+                                            name="usia" placeholder="Usia">
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Alamat Domisili --}}
+                            <div class="form-group my-4">
+                                <label class="mandatory text-base font-semibold">Alamat Domisili</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="text-sm font-normal">Pilih Provinsi</label>
+                                        <div class="dropdown">
+                                            <button
+                                                class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
+                                                id="dropdown-identitas" href="#" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                Pilih Provinsi
+                                            </button>
+
+                                            <div class="dropdown-menu">
+                                                <button class="dropdown-item">x</button>
+                                                <button class="dropdown-item">y</button>
+                                                <button class="dropdown-item">z</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <label class="text-sm font-normal">Kabupaten/Kota</label>
+                                        <div class="dropdown">
+                                            <button
+                                                class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
+                                                id="dropdown-identitas" href="#" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                Pilih Kab/Kota
+                                            </button>
+
+                                            <div class="dropdown-menu">
+                                                <button class="dropdown-item">x</button>
+                                                <button class="dropdown-item">y</button>
+                                                <button class="dropdown-item">z</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- SISI 2 --}}
+                        <div class="col-lg-6 col-md-12 col-sm-12" style="">
+                            <div class="form-group my-4">
+                                <label class="mandatory text-base font-semibold" for="id-pendaftar">NIK/Passport</label>
+                                <input type="text" class="form-control border-secondary" id="id-pendaftar"
+                                    name="id_pendaftar" placeholder="NIK/Pasport">
+                            </div>
+                            <div class="form-group my-4">
+                                <label class="mandatory text-base font-semibold" for="id-pendaftar">NIK/Passport</label>
+                                <input class="form-control" type="file" id="formFile">
+                            </div>
+
+                            <div class="form-group my-4">
                                 <label class="mandatory text-base font-semibold">Nomor Telepon Darurat</label>
                                 <div class="d-flex gap-2">
                                     <div class="dropdown custom-dropdown-item">
@@ -151,111 +213,18 @@
                                         name="nomor_telepon" placeholder="Nama Telepon">
                                 </div>
                             </div>
-                        </div>
-                        <div class="row my-0 py-0">
-                            <div class="form-group col-12 col-sm-12 col-md-12 col-lg-6">
+
+                            <div class="form-group my-4">
                                 <div class="row">
-                                    <div class="col-8 my-3">
-                                        <label class="mandatory text-base font-semibold">Tanggal Lahir</label>
-                                        <input type="datetime-local" class="form-control border-secondary" id="tgl-lahir"
-                                            name="tgl_lahir">
-                                    </div>
-                                    <div class="col-4 my-3">
-
-                                        <label class="mandatory text-base font-semibold">Usia</label>
-                                        <input type="text" class="form-control border-secondary " id="usia"
-                                            name="usia" placeholder="Usia">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-12 col-sm-12 col-md-12 col-lg-6">
-                                <div class="row">
-                                    <div class="col-6 my-3">
-                                        <label class="mandatory text-base font-semibold">Berat Badan</label>
-                                        <input type="text" class="form-control border-secondary" id="berat"
-                                            name="berat" placeholder="Nama Lengkap">
-                                    </div>
-                                    <div class="col-6 my-3">
-                                        <label class="mandatory text-base font-semibold">Tinggi Badan</label>
-                                        <input type="text" class="form-control border-secondary" id="tinggi"
-                                            name="tinggi" placeholder="Nama Lengkap">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row my-0 py-0">
-                            <div class="form-group my-3 col">
-                                <label class="mandatory text-base font-semibold">Alamat Domisili</label>
-                                <div class="row">
-                                    <div class="col ">
-                                        <label class="text-sm font-normal">Pilih Provinsi</label>
-                                        <div class="dropdown">
-                                            <button
-                                                class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                                id="dropdown-identitas" href="#" role="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Pilih Provinsi
-                                            </button>
-
-                                            <div class="dropdown-menu">
-                                                <button class="dropdown-item">x</button>
-                                                <button class="dropdown-item">y</button>
-                                                <button class="dropdown-item">z</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col ">
-                                        <label class="text-sm font-normal">Kabupaten/Kota</label>
-                                        <div class="dropdown">
-                                            <button
-                                                class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                                id="dropdown-identitas" href="#" role="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Pilih Kab/Kota
-                                            </button>
-
-                                            <div class="dropdown-menu">
-                                                <button class="dropdown-item">x</button>
-                                                <button class="dropdown-item">y</button>
-                                                <button class="dropdown-item">z</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col ">
+                                    <div class="col">
                                         <label class="text-sm font-normal">Kecamatan</label>
-                                        <div class="dropdown">
-                                            <button
-                                                class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                                id="dropdown-identitas" href="#" role="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Pilih Kab/Kota
-                                            </button>
-
-                                            <div class="dropdown-menu">
-                                                <button class="dropdown-item">x</button>
-                                                <button class="dropdown-item">y</button>
-                                                <button class="dropdown-item">z</button>
-                                            </div>
-                                        </div>
+                                        <input type="text" class="form-control border-secondary " id="nomor-telepon"
+                                            name="nomor_telepon" placeholder="Nama Telepon">
                                     </div>
-                                    <div class="col ">
-                                        <label class="text-sm font-normal">Des/Kelurahan</label>
-                                        <div class="dropdown">
-                                            <button
-                                                class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                                id="dropdown-identitas" href="#" role="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Pilih Kab/Kota
-                                            </button>
-
-                                            <div class="dropdown-menu">
-                                                <button class="dropdown-item">x</button>
-                                                <button class="dropdown-item">y</button>
-                                                <button class="dropdown-item">z</button>
-                                            </div>
-                                        </div>
+                                    <div class="col">
+                                        <label class="text-sm font-normal">Desa/Kelurahan </label>
+                                        <input type="text" class="form-control border-secondary " id="nomor-telepon"
+                                            name="nomor_telepon" placeholder="Nama Telepon">
                                     </div>
                                 </div>
                             </div>
