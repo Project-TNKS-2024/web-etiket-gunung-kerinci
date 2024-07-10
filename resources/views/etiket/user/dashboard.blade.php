@@ -31,7 +31,7 @@
 @endsection
 
 @section('main')
-    <main class="container content my-4">
+    <main class="container content my-4" style="">
         <div class="container-fluid p-0">
 
             <div class="row " style="min-height: 500px;height:100%;">
@@ -39,7 +39,8 @@
                     @include('etiket.user.template.sidebar')
                 </div>
 
-                <div class="col-md-7 col-xl-8 my-5 my-sm-5 my-md-0 my-lg-0" style="min-height: 500px;">
+                <div class="col-md-7 col-xl-8 my-5 my-sm-5 my-md-0 my-lg-0"
+                    style="min-height: 500px; max-height: 100%; overflow-y: auto;">
                     @yield('sub-main')
                 </div>
             </div>

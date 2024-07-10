@@ -147,71 +147,80 @@
                 <div class="form-group my-3 col">
                     <label class="mandatory text-base font-semibold">Alamat Domisili</label>
                     <div class="row">
-                        <div class="col ">
-                            <label class="text-sm font-normal">Pilih Provinsi</label>
-                            <div class="dropdown">
-                                <button
-                                    class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                    id="dropdown-identitas" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Pilih Provinsi
-                                </button>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col ">
+                                    <label class="text-sm font-normal">Pilih Provinsi</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
+                                            id="dropdown-prov" href="#" role="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            Provinsi
+                                        </button>
 
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item">x</button>
-                                    <button class="dropdown-item">y</button>
-                                    <button class="dropdown-item">z</button>
+                                        <div class="dropdown-menu">
+                                            <button class="dropdown-item">x</button>
+                                            <button class="dropdown-item">y</button>
+                                            <button class="dropdown-item">z</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col ">
+                                    <label class="text-sm font-normal">Kabupaten/Kota</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
+                                            id="dropdown-kab" href="#" role="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            Kab/Kota
+                                        </button>
+
+                                        <div class="dropdown-menu">
+                                            <button class="dropdown-item">x</button>
+                                            <button class="dropdown-item">y</button>
+                                            <button class="dropdown-item">z</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col ">
-                            <label class="text-sm font-normal">Kabupaten/Kota</label>
-                            <div class="dropdown">
-                                <button
-                                    class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                    id="dropdown-identitas" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Pilih Kab/Kota
-                                </button>
 
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item">x</button>
-                                    <button class="dropdown-item">y</button>
-                                    <button class="dropdown-item">z</button>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col ">
+                                    <label class="text-sm font-normal">Pilih Provinsi</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
+                                            id="dropdown-kec" href="#" role="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            Kecamatan
+                                        </button>
+
+                                        <div class="dropdown-menu">
+                                            <button class="dropdown-item">x</button>
+                                            <button class="dropdown-item">y</button>
+                                            <button class="dropdown-item">z</button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col ">
-                            <label class="text-sm font-normal">Kecamatan</label>
-                            <div class="dropdown">
-                                <button
-                                    class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                    id="dropdown-identitas" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Pilih Kab/Kota
-                                </button>
+                                <div class="col ">
+                                    <label class="text-sm font-normal">Kabupaten/Kota</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
+                                            id="dropdown-Kel" href="#" role="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            Desa/Kel
+                                        </button>
 
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item">x</button>
-                                    <button class="dropdown-item">y</button>
-                                    <button class="dropdown-item">z</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col ">
-                            <label class="text-sm font-normal">Des/Kelurahan</label>
-                            <div class="dropdown">
-                                <button
-                                    class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                    id="dropdown-identitas" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Pilih Kab/Kota
-                                </button>
-
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item">x</button>
-                                    <button class="dropdown-item">y</button>
-                                    <button class="dropdown-item">z</button>
+                                        <div class="dropdown-menu">
+                                            <button class="dropdown-item">x</button>
+                                            <button class="dropdown-item">y</button>
+                                            <button class="dropdown-item">z</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

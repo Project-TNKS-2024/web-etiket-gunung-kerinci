@@ -2,8 +2,10 @@
     <div class="position-absolute w-100 bg-linear-gradient-primary rounded-xl" style="max-height: 141px; height:100%;">
     </div>
     <div class="position-absolute w-100 h-100 d-flex flex-column align-items-center gap-2" style="top:0;left:0;">
-        <img src="{{ asset('assets/img/dashboard/Ellipse 143.png') }}" width="100"
-            style="margin-top: 90px;filter: drop-shadow(0px 0px 3px var(--neutrals600))" />
+        <div class="gk-bg-neutrals200"
+            style="border-radius: 100%;width: 100px; height:100px;margin-top: 90px;filter: drop-shadow(0px 0px 3px var(--neutrals600))">
+            <img src="{{ asset('assets/img/dashboard/Ellipse 143.png') }}" width="100" />
+        </div>
         <h4 class="fw-semibold py-0 my-0">Pendaki Handal</h4>
         <h6 class="fw-light py-0 my-0">pendakikerinci@gmail.com</h6>
         <div class="d-flex flex-column gap-2 px-4 w-100">
