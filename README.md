@@ -39,38 +39,5 @@
   </div>
 
 
-  ## Tools and Technologies
 
-### Tools
-<div style="font-family: 'Arial', sans-serif; font-size: 16px;">
-    <ul>
-        <li><i class="fab fa-css3-alt"></i> CSS</li>
-        <li><i class="fab fa-html5"></i> HTML</li>
-        <li><i class="fab fa-js"></i> JavaScript</li>
-        <li><i class="fab fa-php"></i> PHP</li>
-    </ul>
-</div>
-
-### Frameworks
-<div style="font-family: 'Arial', sans-serif; font-size: 16px;">
-    <ul>
-        <li><i class="fab fa-laravel"></i> Laravel 11</li>
-        <li><i class="fab fa-bootstrap"></i> Bootstrap 5</li>
-        <li><i class="fab fa-font-awesome"></i> Font Awesome 5</li>
-    </ul>
-</div>
-
-### DevTools
-<div style="font-family: 'Arial', sans-serif; font-size: 16px;">
-    <ul>
-        <li><i class="fas fa-server"></i> Xampp</li>
-        <li><i class="fas fa-fire"></i> Firebase</li>
-        <li><i class="fas fa-code"></i> Visual Studio Code</li>
-        <li><i class="fas fa-envelope"></i> Postman</li>
-        <li><i class="fas fa-database"></i> MySQL</li>
-    </ul>
-</div>
-
-<!-- Load Font Awesome -->
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
