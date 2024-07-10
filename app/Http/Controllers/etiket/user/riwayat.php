@@ -5,10 +5,10 @@ namespace App\Http\Controllers\etiket\user;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class dashboard extends Controller
+class riwayat extends Controller
 {
     public function index()
     {
-        return view('etiket.user.sections.profile');
+        return view('etiket.user.sections.riwayat');
     }
 }

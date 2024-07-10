@@ -112,7 +112,6 @@
             color: #fff;
             border: none;
             padding: 10px 20px;
-            border-radius: 5px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
