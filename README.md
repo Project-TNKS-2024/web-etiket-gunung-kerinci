@@ -2,7 +2,7 @@
 
 ### Page
 - <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/90" alt="90%" style="margin-right: 8px;"/>
+    <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/>
     <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Beranda</span> <b>[Tinggal Integrasi dengan DB]</b>
   </div>
 - <div style="display: flex; align-items: center;">
