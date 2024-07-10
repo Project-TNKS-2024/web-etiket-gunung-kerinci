@@ -18,7 +18,7 @@
     <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Booking Online</span> <b>[Tinggal Integrasi dengan DB]</b>
   </div>
 
-#### Dashboard
+#### Dashboard <img src="https://progress-bar.dev/17" alt="17%" style="margin-right: 8px;"/>
 - <div style="display: flex; align-items: center;">
     <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/> 
     <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Profile</span> - Layout Done - <b>[Tinggal Integrasi dengan DB]</b>
