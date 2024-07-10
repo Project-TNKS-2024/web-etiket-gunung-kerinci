@@ -2,9 +2,8 @@
 
 ### Page
 - <div style="display: flex; align-items: center;">
-    <div>
-    <img src="https://progress-bar.dev/90" alt="90%" style="margin-right: 8px;"/> </div>
-    <div style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Beranda</div>
+    <img src="https://progress-bar.dev/90" alt="90%" style="margin-right: 8px;"/>
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Beranda</span> <b>[Tinggal Integrasi dengan DB]</b>
   </div>
 - <div style="display: flex; align-items: center;">
     <img src="https://progress-bar.dev/100" alt="100%" style="margin-right: 8px;"/> 
@@ -16,13 +15,13 @@
   </div>
 - <div style="display: flex; align-items: center;">
     <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Booking Online</span>
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Booking Online</span> <b>[Tinggal Integrasi dengan DB]</b>
   </div>
 
 #### Dashboard
 - <div style="display: flex; align-items: center;">
     <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Profile</span> - Layout Done - Tinggal Integrasi Dengan Database
+    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Profile</span> - Layout Done - <b>[Tinggal Integrasi dengan DB]</b>
   </div>
 - <div style="display: flex; align-items: center;">
     <img src="https://progress-bar.dev/0" alt="0%" style="margin-right: 8px;"/> 
