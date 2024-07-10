@@ -1,15 +1,15 @@
 ## Project Progress
 
 ### Page
-- **Beranda** - ![Progress](https://progress-bar.dev/90)
-- **SOP** - ![Progress](https://progress-bar.dev/100)
-- **Panduan** - ![Progress](https://progress-bar.dev/100)
-- **Booking Online** - ![Progress](https://progress-bar.dev/50)
+- ![90%](https://progress-bar.dev/90) **Beranda**
+- ![100%](https://progress-bar.dev/100) **SOP**
+- ![100%](https://progress-bar.dev/100) **Panduan**
+- ![50%](https://progress-bar.dev/50) **Booking Online**
 
 #### Dashboard
-- **Profile** - ![Progress](https://progress-bar.dev/50) - Layout Done - Tinggal Integrasi Dengan Database
-- **Riwayat Booking** - ![Progress](https://progress-bar.dev/0)
-- **Ganti Password** - ![Progress](https://progress-bar.dev/0)
+- ![50%](https://progress-bar.dev/50) **Profile** - Layout Done - Tinggal Integrasi Dengan Database
+- ![0%](https://progress-bar.dev/0) **Riwayat Booking**
+- ![0%](https://progress-bar.dev/0) **Ganti Password**
 
 ### Admin
-- **Admin** - Template Done - ![Progress](https://progress-bar.dev/10)
+- ![10%](https://progress-bar.dev/10) **Admin** - Template Done
