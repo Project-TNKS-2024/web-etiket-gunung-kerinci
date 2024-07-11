@@ -1,4 +1,5 @@
-<div class="card mb-3 useradmin overflow-hidden py-0 position-relative shadow h-100 rounded-2xl" style="">
+<div class="card mb-3 useradmin overflow-hidden py-0 position-relative shadow rounded-2xl h-full"
+    style="min-height: 500px;">
     <div class="position-absolute w-100 bg-linear-gradient-primary rounded-xl" style="max-height: 141px; height:100%;">
     </div>
     <div class="position-absolute w-100 h-100 d-flex flex-column align-items-center gap-2" style="top:0;left:0;">

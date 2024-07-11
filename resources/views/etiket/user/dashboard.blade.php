@@ -6,6 +6,11 @@
             height: 141px;
         }
 
+        .dashboard-sidebar {
+            min-width: 338px;
+            min-height: 500px;
+        }
+
 
         @media (max-width: 768px) {
             .dashboard-sidebar {
@@ -31,7 +36,7 @@
 @endsection
 
 @section('main')
-    <main class="container content my-4" style="">
+    {{-- <main class="container content my-4" style="">
         <div class="container-fluid p-0">
 
             <div class="row " style="min-height: 500px;height:100%;">
@@ -45,8 +50,16 @@
                 </div>
             </div>
         </div>
-    </main>
+    </main> --}}
+    <main class="container-fluid gk-bg-neutrals100 px-5" style="overflow: hidden">
 
+        <div class="row mx-auto justify-content-center" style="min-height: 500px;">
+            <div class="col-12 col-sm-12 col-md-3 dashboard-sidebar py-5" style="">
+                @include('etiket.user.template.sidebar')
+            </div>
+
+            @yield('sub-main')
+        </div>
     </main>
 @endsection
 
