@@ -5,6 +5,7 @@
         .reset-form {
             max-width: 540px;
             padding: 40px 0;
+            width: 100%;
         }
     </style>
 @endsection
@@ -56,10 +57,10 @@
             </div>
         </form>
 
-        <div class="form h-full d-none flex-column align-items-center justify-content-center reset-form gk-bg-base-white px-4 rounded-2xl text-center"
-            onclick="changepage(event)" id="resetSuccess" style="min-width: 540px;">
+        <div class="form h-full d-flex flex-column justify-content-center reset-form gk-bg-base-white px-4 rounded-2xl text-center d-none align-items-center"
+            onclick="changepage(event)" id="resetSuccess" style="">
             <img src="{{ asset('assets/img/dashboard/Successmark.png') }}" width="120" />
-            <h3 class="text-2xl font-bold mt-4">Atur Ulang Password Berhasil</h3>
+            <h3 class="text-xl font-bold mt-4">Atur Ulang Password Berhasil</h3>
             <p class="text-sm gk-text-neutrals400">Password anda telah sukses di ubah</p>
         </div>
 
