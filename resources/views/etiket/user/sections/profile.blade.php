@@ -250,7 +250,7 @@
                                                 <div class="position-fixed w-100 *: "
                                                     style="top: -40px;width:fit-content;">
                                                     <input type="text" class="shadow border form-control rounded-sm"
-                                                        id="cariKel" placeholder="Cari Kab/Kot"
+                                                        id="cariKel" placeholder="Cari Des/Kel"
                                                         oninput="cariItem('cariKel', 'daftar-kel')">
                                                 </div>
                                             </div>
