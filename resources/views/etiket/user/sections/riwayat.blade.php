@@ -87,9 +87,9 @@
                             </div>
                         </div>
 
-                        <div class="row my-2">
+                        <div class="row my-2 ">
                             <div class="col-6">
-                                <div class="font-semibold">Jumlah Anggota</div>
+                                <div class="font-semibold text-nowrap">Jumlah Anggota</div>
                                 <div class="">5 Orang</div>
                             </div>
                             <div class="col-6" style="width: fit-content">

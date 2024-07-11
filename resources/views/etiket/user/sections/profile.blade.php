@@ -5,9 +5,12 @@
 
 
 @section('sub-main')
+    <script></script>
+
     <div class="col py-5 px-4 my-5 my-md-0" style="min-height: 500px; overflow-y: auto;">
         <form class="row rounded-2xl card p-3">
             {{-- JENIS KEWARGANEGARAAN --}}
+            @csrf
             <div class="form-group ">
                 <label class="mandatory text-base font-semibold">Jenis Kewarganageraan</label>
                 <div class="form-group text-sm d-flex align-items-center gap-2 form-check row">
@@ -116,7 +119,7 @@
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-6">
                         <div class="row">
                             <div class="col-8 my-3">
-                                <label class="mandatory text-base font-semibold">Tanggal Lahir</label>
+                                <label class="mandatory text-base font-semibold text-nowrap">Tanggal Lahir</label>
                                 <input type="datetime-local" class="form-control border-secondary" id="tgl-lahir"
                                     name="tgl_lahir">
                             </div>
@@ -132,12 +135,12 @@
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-6">
                         <div class="row">
                             <div class="col-6 my-3">
-                                <label class="mandatory text-base font-semibold">Berat Badan</label>
+                                <label class="mandatory text-base font-semibold text-nowrap">Berat Badan</label>
                                 <input type="number" class="form-control border-secondary" id="berat"
                                     name="berat" placeholder="Berat Badan">
                             </div>
                             <div class="col-6 my-3">
-                                <label class="mandatory text-base font-semibold">Tinggi Badan</label>
+                                <label class="mandatory text-base font-semibold text-nowrap">Tinggi Badan</label>
                                 <input type="number" class="form-control border-secondary" id="tinggi"
                                     name="tinggi" placeholder="Tinggi (cm)">
                             </div>
@@ -152,19 +155,24 @@
                             <div class="col">
                                 <div class="row">
                                     <div class="col ">
-                                        <label class="text-sm font-normal">Pilih Provinsi</label>
+                                        <label class="text-sm font-normal text-nowrap">Pilih Provinsi</label>
                                         <div class="dropdown">
                                             <button
-                                                class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
+                                                class="text-nowrap w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
                                                 id="dropdown-prov" href="#" role="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 Provinsi
                                             </button>
 
-                                            <div class="dropdown-menu">
-                                                <button class="dropdown-item">x</button>
-                                                <button class="dropdown-item">y</button>
-                                                <button class="dropdown-item">z</button>
+                                            <div class="dropdown-menu ">
+                                                <div class="overflow-y-scroll" id="daftar-provinsi"
+                                                    style="max-height: 200px;"></div>
+                                                <div class="position-fixed w-100 *: "
+                                                    style="top: -40px;width:fit-content;">
+                                                    <input type="text" class="shadow border form-control rounded-sm"
+                                                        id="cariProvinsi" placeholder="Cari Provinsi"
+                                                        oninput="cariItem('cariProvinsi', 'daftar-provinsi')">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -179,9 +187,16 @@
                                             </button>
 
                                             <div class="dropdown-menu">
-                                                <button class="dropdown-item">x</button>
-                                                <button class="dropdown-item">y</button>
-                                                <button class="dropdown-item">z</button>
+                                                <div class="overflow-y-auto w-100 " id="daftar-kab"
+                                                    style="max-height: 200px;">
+                                                    <div class="w-100 dropdown-item">Pilih Provinsi</div>
+                                                </div>
+                                                <div class="position-fixed w-100 *: "
+                                                    style="top: -40px;width:fit-content;">
+                                                    <input type="text" class="shadow border form-control rounded-sm"
+                                                        id="cariKab" placeholder="Cari Kab/Kot"
+                                                        oninput="cariItem('cariKab', 'daftar-kab')">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -191,7 +206,7 @@
                             <div class="col">
                                 <div class="row">
                                     <div class="col ">
-                                        <label class="text-sm font-normal">Pilih Provinsi</label>
+                                        <label class="text-sm font-normal">Pilih Kecamatan</label>
                                         <div class="dropdown">
                                             <button
                                                 class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
@@ -201,26 +216,43 @@
                                             </button>
 
                                             <div class="dropdown-menu">
-                                                <button class="dropdown-item">x</button>
-                                                <button class="dropdown-item">y</button>
-                                                <button class="dropdown-item">z</button>
+                                                <div class="overflow-y-auto w-100 " id="daftar-kec"
+                                                    style="max-height: 200px;">
+                                                    <div class="w-100 dropdown-item">Pilih Kabupaten</div>
+                                                </div>
+                                                <div class="position-fixed w-100 *: "
+                                                    style="top: -40px;width:fit-content;">
+                                                    <input type="text" class="shadow border form-control rounded-sm"
+                                                        id="cariKec" placeholder="Cari Kecamatan"
+                                                        oninput="cariItem('cariKec', 'daftar-kec')">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col ">
-                                        <label class="text-sm font-normal">Kabupaten/Kota</label>
+                                    <div class="col "
+                                        style="overflow-wrap: unset; flex-wrap: nowrap; overflow:visible;">
+                                        <label class="text-sm font-normal"
+                                            style="white-space: nowrap;overflow-wrap: unset; flex-wrap: nowrap; overflow:visible;">Pilih
+                                            Desa/Kelurahan</label>
                                         <div class="dropdown">
                                             <button
                                                 class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                                id="dropdown-Kel" href="#" role="button"
+                                                id="dropdown-kel" href="#" role="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 Desa/Kel
                                             </button>
 
                                             <div class="dropdown-menu">
-                                                <button class="dropdown-item">x</button>
-                                                <button class="dropdown-item">y</button>
-                                                <button class="dropdown-item">z</button>
+                                                <div class="overflow-y-auto w-100 " id="daftar-kel"
+                                                    style="max-height: 200px;">
+                                                    <div class="w-100 dropdown-item">Pilih Kecamatan</div>
+                                                </div>
+                                                <div class="position-fixed w-100 *: "
+                                                    style="top: -40px;width:fit-content;">
+                                                    <input type="text" class="shadow border form-control rounded-sm"
+                                                        id="cariKel" placeholder="Cari Kab/Kot"
+                                                        oninput="cariItem('cariKel', 'daftar-kel')">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -241,68 +273,6 @@
         profile.classList.add("active");
     </script>
 
-    <script>
-        function cariTelepon(e) {
-            const teleponItem = document.querySelector("#telepon-item").querySelectorAll("button");
-            teleponItem.forEach((o, i) => {
-                if (!(teleponItem[i].textContent.toLowerCase()).includes(e.target.value.toLowerCase()) && e.target
-                    .value !== "") {
-                    teleponItem[i].style.display = "none";
-                } else {
-                    teleponItem[i].style.display = "block";
-                }
-            })
-        }
-
-        function cariTeleponDarurat(e) {
-            const teleponDaruratItem = document.querySelector("#telepon-item-darurat").querySelectorAll("button");
-            teleponDaruratItem.forEach((o, i) => {
-                if (!(o.textContent.toLowerCase()).includes(e.target.value.toLowerCase()) && e.target
-                    .value !== "") {
-                    o.style.display = "none";
-                } else {
-                    o.style.display = "block";
-                }
-            })
-        }
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('cariTelepon').addEventListener('input', cariTelepon);
-            document.getElementById('cariTeleponDarurat').addEventListener('input', cariTeleponDarurat);
-            fetch('https://restcountries.com/v3.1/all')
-                .then(response => response.json())
-                .then(data => {
-                    countriesData = data;
-                    const teleponItem = document.querySelector('#telepon-item');
-                    const teleponDaruratItem = document.querySelector('#telepon-item-darurat');
-
-                    data.forEach((country, index) => {
-                        if (country.idd.root) {
-                            teleponDaruratItem.appendChild(createCountryButton(country))
-                            teleponItem.appendChild(createCountryButton(country));
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching countries:', error));
-
-            function createCountryButton(country) {
-                const button = document.createElement('button');
-                button.classList.add('dropdown-item');
-                button.classList.add('w-100');
-
-                const img = document.createElement('img');
-                img.src = country.flags.png;
-                img.width = 20;
-                button.appendChild(img);
-
-                const code = country.idd.suffixes ? country.idd.suffixes[0] : ""
-                const text = document.createTextNode(
-                    ` ${country.cca2} (${country.idd.root}${code})`
-                );
-                button.appendChild(text);
-
-                return button;
-            }
-
-        });
-    </script>
+    @include('etiket.user.sections.profile.flags-script')
+    @include('etiket.user.sections.profile.wilayah')
 @endsection

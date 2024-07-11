@@ -41,7 +41,9 @@ Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard
 // users
 Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
 Route::get('dashboard/riwayat-booking', [riwayatUser::class, 'index'])->name('user.dashboard.riwayat');
+//reset password
 Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
+Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
 
 
 

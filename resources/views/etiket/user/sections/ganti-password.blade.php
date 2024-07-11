@@ -25,23 +25,28 @@
 
         <form
             class="form h-full d-flex flex-column justify-content-center reset-form gk-bg-base-white px-4 rounded-2xl text-center"
-            method="POST" id="resetForm">
+            method="POST" id="resetForm" action="{{ route('user.dashboard.reset-password-action') }}">
             @csrf
             <header class="text-xl font-bold">Buat Kata Sandi Baru</header>
             <p class="gk-text-neutrals400 text-sm">Kata sandi baru Anda harus unik dari yang digunakan sebelumnya.</p>
 
             <div class="px-5">
                 <div class="text-start form-group my-3">
-                    <label class="font-semibold" for="new_password">Password Baru</label>
-                    <input class="form-control" name="password_baru" id="password_baru" type="password"
-                        placeholder="Password Baru" />
+                    <label class="font-semibold form-label" for="new_password">Password Baru</label>
+                    <input class="form-control @error('password')  is-invalid @enderror " name="password_baru"
+                        id="password_baru" type="password" placeholder="Password Baru" required autofocus />
+                    @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            {{ $message }}
+                        </span>
+                    @enderror
                     <label class="text-start text-sm gk-text-neutrals400">Password <span
                             id="passwordStrength"></span></label>
                 </div>
                 <div class="text-start form-group my-3">
                     <label class="font-semibold" for="password_baru">Konfirmasi Password Baru</label>
                     <input class="form-control" name="konfirmasi_password_baru" id="konfirmasi_password_baru"
-                        type="password" oninput="confirmPassword" placeholder="Password Baru" />
+                        type="password" oninput="confirmPassword" placeholder="Password Baru" required />
                     <label class="text-start text-sm gk-text-neutrals400" id="passwordConfirmed"></label>
                 </div>
                 <div class="text-start form-group my-4">
