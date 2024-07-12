@@ -8,7 +8,7 @@
 <script></script>
 
 <div class="col py-5 px-4 my-5 my-md-0" style="min-height: 500px; overflow-y: auto;">
-    <form class="row rounded-2xl card p-3">
+    <form class="row rounded-2xl card p-3" method="post" action="#">
         {{-- JENIS KEWARGANEGARAAN --}}
         @csrf
         <div class="form-group ">
@@ -207,6 +207,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-8">
+                <button type="submit" class="btn btn-primary"> simpan</button>
             </div>
     </form>
 </div>

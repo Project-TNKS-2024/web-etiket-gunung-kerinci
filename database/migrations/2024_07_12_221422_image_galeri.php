@@ -8,22 +8,17 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('galeris', function (Blueprint $table) {
+        Schema::create('galeri_images', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('gambar');
-            $table->text('content');
+            $table->string('name')->unique();
+            $table->boolean('private')->default(false);
+            $table->binary('image');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('galeris');
+        Schema::dropIfExists('galeri_images');
     }
 };
