@@ -1,43 +1,17 @@
 ## Project Progress
 
 ### Page
-- <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/>
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Beranda</span> <b>[Tinggal Integrasi dengan DB]</b>
-  </div>
-- <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/100" alt="100%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">SOP</span>
-  </div>
-- <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/100" alt="100%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Panduan</span>
-  </div>
-- <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Booking Online</span> <b>[Tinggal Integrasi dengan DB]</b>
-  </div>
+- **Beranda** ![50%](https://progress-bar.dev/50) **[Tinggal Integrasi dengan DB]**
+- **SOP** ![100%](https://progress-bar.dev/100)
+- **Panduan** ![100%](https://progress-bar.dev/100)
+- **Booking Online** ![50%](https://progress-bar.dev/50) **[Tinggal Integrasi dengan DB]**
 
-#### ![17%](https://progress-bar.dev/17) Dashboard 
-- <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/50" alt="50%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Profile</span> - Layout Done - <b>[Tinggal Integrasi dengan DB]</b>
-  </div>
-- <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/0" alt="0%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Riwayat Booking</span>
-  </div>
-- <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/0" alt="0%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Ganti Password</span>
-  </div>
+#### ![70%](https://progress-bar.dev/70) Dashboard 
+- **Profile** ![70%](https://progress-bar.dev/70) **[Tinggal Integrasi dengan DB]**
+  - [x] Wilayah Indonesia
+  - [x] Bendera untuk nomor telepon
+- **Riwayat Booking** ![70%](https://progress-bar.dev/70) **[Tinggal Integrasi dengan DB]**
+- **Ganti Password** ![70%](https://progress-bar.dev/70) **[Tinggal Integrasi dengan DB]**
 
 ### Admin
-- <div style="display: flex; align-items: center;">
-    <img src="https://progress-bar.dev/10" alt="10%" style="margin-right: 8px;"/> 
-    <span style="font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold;">Admin</span> - Template Done
-  </div>
-
-
-
-
+- **Admin** ![10%](https://progress-bar.dev/10) - Template Done
