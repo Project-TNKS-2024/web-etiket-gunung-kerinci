@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
+use App\Http\Controllers\etiket\user\gantipassword as resetPasswordUser;
+use App\Http\Controllers\etiket\user\riwayat as riwayatUser;
 use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
 use App\Http\Controllers\homepage\beranda;
@@ -38,11 +40,13 @@ Route::middleware(['check.role:admin'])->group(function () {
 
 // User routes
 Route::middleware(['check.role:user'])->group(function () {
-    Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
+  Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
+  Route::get('dashboard/riwayat-booking', [riwayatUser::class, 'index'])->name('user.dashboard.riwayat');
+  
+  //reset password
+Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
+Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
 });
-
-
-
 
 
 // sampel

@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/font/bootstrap-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('fontawesome-free-6.5.2-web/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('componen/colorplate.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('componen/tailwind-classes.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .border-between {
             border-top: 2px solid white;
@@ -105,6 +105,51 @@
             border: none;
             background-color: var(--error200) !important;
             color: white;
+        }
+
+        .bg-linear-gradient-primary {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .dashboard-sidebar-btn {
+            background: none;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .dashboard-sidebar-btn.active {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+            color: #fff;
+        }
+
+        .dashboard-sidebar-btn {
+            background: var(--neutrals100);
+            color: var(--base-black);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .dashboard-sidebar-btn:hover {
+            background: var(--neutrals200);
+        }
+
+        .dashboard-sidebar-btn.active:hover {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
         }
     </style>
 
