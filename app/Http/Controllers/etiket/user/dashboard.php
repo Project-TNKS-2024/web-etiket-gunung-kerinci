@@ -11,4 +11,5 @@ class dashboard extends Controller
     {
         return view('etiket.user.dashboard');
     }
+    
 }

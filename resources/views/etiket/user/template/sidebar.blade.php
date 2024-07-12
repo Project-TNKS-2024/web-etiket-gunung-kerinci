@@ -19,7 +19,10 @@
    <hr class="my-0" />
    <div class="card-body">
       <ul class="list-unstyled mb-0">
-         <li class="mb-1"><a class="btn close w-100 text-start" href="#">Logout</a></li>
+         <form action="{{route('etiket.in.logout')}}" method="post">
+            @csrf
+            <li class="mb-1"><button type="submit" class="btn close w-100 text-start">Logout</button></li>
+         </form>
       </ul>
    </div>
    <hr class="my-0" />

@@ -22,22 +22,25 @@ Route::get('booking', [booking::class, 'index'])->name('homepage.booking');
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
     Route::post('login', [login::class, 'actionlogin'])->name('etiket.in.actionlogin');
-    Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
 });
+Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
 
+// Admin routes
+Route::middleware(['check.role:admin'])->group(function () {
+    Route::get('admin', function () {
+        return redirect('admin/dashboard');
+    });
 
-// admin
-Route::get('admin', function () {
-    return redirect('admin/dashboard');
+    Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
 });
-Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
 
+// User routes
+Route::middleware(['check.role:user'])->group(function () {
+    Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
+});
 
-
-// users
-Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
 
 
 

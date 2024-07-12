@@ -16,14 +16,21 @@ class destinasi_gate_tiket extends Seeder
     public function run(): void
     {
         destinasi::create([
-            'nama' => 'Destinasi 1',
+            'nama' => 'Gunung Kerinci',
             'status' => true,
             'lokasi' => 'Lokasi Destinasi 1',
             'detail' => 'Deskripsi Destinasi 1',
         ]);
 
         Destinasi::create([
-            'nama' => 'Destinasi 2',
+            'nama' => 'Danau Kaco',
+            'status' => true,
+            'lokasi' => 'Lokasi Destinasi 2',
+            'detail' => 'Deskripsi Destinasi 2',
+        ]);
+
+        Destinasi::create([
+            'nama' => 'Danau Gunung Tujuh',
             'status' => true,
             'lokasi' => 'Lokasi Destinasi 2',
             'detail' => 'Deskripsi Destinasi 2',
@@ -31,17 +38,17 @@ class destinasi_gate_tiket extends Seeder
 
 
         gk_gates::create([
-            'nama' => 'Gate 1',
+            'nama' => 'Desa Kersik Tuo',
             'lokasi' => 'Lokasi Gate 1',
             'status' => true,
-            'detail' => 'Deskripsi Gate 1',
+            'detail' => 'Desa Kersik Tuo, Kecamatan Kayu Aro, Kabupaten Kerinci, Jambi.',
         ]);
 
         gk_gates::create([
-            'nama' => 'Gate 2',
+            'nama' => 'Solok Selatan',
             'lokasi' => 'Lokasi Gate 2',
             'status' => true,
-            'detail' => 'Deskripsi Gate 2',
+            'detail' => 'Camping Ground Bangun Rejo di Kabupaten Solok Selatan, Sumatera Barat.',
         ]);
 
         tiket::create([
