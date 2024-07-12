@@ -13,6 +13,7 @@ class gk_gates extends Model
         'status',
         'lokasi',
         'detail',
+        'foto',
     ];
 
     /**

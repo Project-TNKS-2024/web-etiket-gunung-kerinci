@@ -14,6 +14,7 @@ class destinasi extends Model
         'status',
         'lokasi',
         'detail',
+        'foto',
     ];
 
     /**
@@ -21,7 +22,9 @@ class destinasi extends Model
      *
      * @var array
      */
+
     protected $casts = [
+        'status' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

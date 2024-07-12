@@ -20,13 +20,15 @@ class destinasi_gate_tiket extends Seeder
             'status' => true,
             'lokasi' => 'Lokasi Destinasi 1',
             'detail' => 'Deskripsi Destinasi 1',
+            'foto' => 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Uprising-mount_kerinci.jpg',
         ]);
 
         Destinasi::create([
             'nama' => 'Danau Kaco',
-            'status' => true,
+            'status' => false,
             'lokasi' => 'Lokasi Destinasi 2',
             'detail' => 'Deskripsi Destinasi 2',
+            'foto' => '-',
         ]);
 
         Destinasi::create([
@@ -34,6 +36,7 @@ class destinasi_gate_tiket extends Seeder
             'status' => true,
             'lokasi' => 'Lokasi Destinasi 2',
             'detail' => 'Deskripsi Destinasi 2',
+            'foto' => '-',
         ]);
 
 
@@ -41,6 +44,7 @@ class destinasi_gate_tiket extends Seeder
             'nama' => 'Desa Kersik Tuo',
             'lokasi' => 'Lokasi Gate 1',
             'status' => true,
+            'foto' => 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Uprising-mount_kerinci.jpg',
             'detail' => 'Desa Kersik Tuo, Kecamatan Kayu Aro, Kabupaten Kerinci, Jambi.',
         ]);
 
@@ -48,6 +52,7 @@ class destinasi_gate_tiket extends Seeder
             'nama' => 'Solok Selatan',
             'lokasi' => 'Lokasi Gate 2',
             'status' => true,
+            'foto' => '-',
             'detail' => 'Camping Ground Bangun Rejo di Kabupaten Solok Selatan, Sumatera Barat.',
         ]);
 
@@ -55,7 +60,7 @@ class destinasi_gate_tiket extends Seeder
             'id_destinasi' => 1,
             'wni' => true,
             'nama' => 'tiket 1',
-            'spesial' => 'gunung_kerinci',
+            'spesial' => 'gunung',
             'keterangan' => '-',
             'harga' => 40000,
         ]);
@@ -63,7 +68,7 @@ class destinasi_gate_tiket extends Seeder
             'id_destinasi' => 1,
             'wni' => false,
             'nama' => 'tiket 1',
-            'spesial' => 'gunung_kerinci',
+            'spesial' => 'gunung',
             'keterangan' => '-',
             'harga' => 40000,
         ]);

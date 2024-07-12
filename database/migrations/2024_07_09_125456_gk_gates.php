@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->boolean('status')->default(true);
             $table->string('lokasi'); // lokasi maps
+            $table->string('foto'); // lokasi maps
             $table->text('detail')->nullable();
             $table->timestamps();
         });
