@@ -2,9 +2,9 @@
 
 ### Page
 - **Beranda** ![50%](https://progress-bar.dev/50) **[Tinggal Integrasi dengan DB]** 
- > **Integration with weather data**: not yet (red box)  
-> **Integration with destination data**: completed (green box)  
-> **Integration with TNKS exploration data**: not yet
+> Integration with weather data: belum
+> Integration with destination data: sudah
+> Integration with TNKS exploration data: belum
     
 - **SOP** ![100%](https://progress-bar.dev/100)
 - **Panduan** ![100%](https://progress-bar.dev/100)
