@@ -3,6 +3,7 @@
 ### Page
 - **Beranda** ![50%](https://progress-bar.dev/50) **[Tinggal Integrasi dengan DB]**
   - Integration with weather data: belum
+  - <font color="red">Tulisan ini akan berwarna merah</font>
   - Integration with destination data: sudah
   - Integration with TNKS exploration data: belum
     
