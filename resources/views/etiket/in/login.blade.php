@@ -43,7 +43,8 @@
             Taman nasional Kerinci Seblat
         </a>
     </div>
-    <div class="container" style="
+    <div class="container"
+        style="
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -58,32 +59,36 @@
                             @csrf
                             <div class="form-group mb-3">
                                 <label for="email" class="form-label ">Email</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                    id="email" name="email" value="{{ old('email') }}" required
+                                    autocomplete="email" autofocus>
                                 @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    {{ $message }}
-                                </span>
+                                    <span class="invalid-feedback" role="alert">
+                                        {{ $message }}
+                                    </span>
                                 @enderror
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="password" class="form-label ">Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required autocomplete="current-password">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    id="password" name="password" required autocomplete="current-password">
                                 @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    {{ $message }}
-                                </span>
+                                    <span class="invalid-feedback" role="alert">
+                                        {{ $message }}
+                                    </span>
                                 @enderror
                             </div>
 
                             <div class="form-group mb-3">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                        <input type="checkbox" name="remember" id="remember"
+                                            {{ old('remember') ? 'checked' : '' }}>
                                         <label for="remember">Ingat saya</label>
                                     </div>
                                     <div>
-                                        <a href="#">Lupa Password?</a>
+                                        <a href="{{ route('etiket.in.lupapassword') }}">Lupa Password?</a>
                                     </div>
                                 </div>
                             </div>

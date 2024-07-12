@@ -20,8 +20,6 @@ class CheckRole
             // Redirect...
             return $next($request);
         }
-
-
         abort(403, 'Unauthorized action.');
     }
 }
