@@ -2,7 +2,7 @@
    <!-- Sidebar scroll-->
    <div class="">
       <div class="brand-logo d-flex align-items-center justify-content-between">
-         <a href="./index.html" class="text-nowrap logo-img">
+         <a href="{{route('homepage.beranda')}}" class="text-nowrap logo-img">
             <img src="{{asset('assets/img/logo/logo bulat.png')}}" width="180" alt="" /><span>TNKS Admin</span>
          </a>
          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">

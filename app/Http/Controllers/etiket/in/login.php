@@ -27,7 +27,7 @@ class login extends Controller
         // Attempt authentication
         if (Auth::attempt($credentials)) {
             if (Auth::user()->role == 'admin') {
-                return redirect()->intended(route('user.dashboard'));
+                return redirect()->intended(route('admin.dashboard'));
             } else if (Auth::user()->role == 'user') {
                 return redirect()->intended(route('user.dashboard'));
             }
