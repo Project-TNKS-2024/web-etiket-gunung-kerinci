@@ -14,8 +14,7 @@
                         <div>Normal</div>
                     </div>
                 </div>
-                <select class="form-select border-0 form-select-sm w-100" style="background-color: transparent"
-                    aria-label="Small select example">
+                <select class="form-select border-0 form-select-sm w-100" style="background-color: transparent" aria-label="Small select example">
                     <option value="id" selected>Pilih Bahasa : Indonesia</option>
                     <option value="en">Select Language: English</option>
                 </select>
@@ -24,29 +23,24 @@
     </div>
     <div class="container">
         <div></div>
-        <button class="navbar-toggler index-nav-toggle" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
+        <button class="navbar-toggler index-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-sm-0 d-flex align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page"
-                        href="{{ route('homepage.beranda') }}">Beranda</a>
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.beranda') }}">Beranda</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.sop') }}">SOP
                         Pendakian</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page"
-                        href="{{ route('homepage.panduan') }}">Panduan
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.panduan') }}">Panduan
                         Booking</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white pe-2" aria-current="page"
-                        href="{{ route('homepage.booking') }}">Booking
+                    <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('homepage.booking') }}">Booking
                         Online</a>
                 </li>
                 <li class="nav-item">
@@ -54,17 +48,31 @@
                 </li>
             </ul>
             <ul class="navbar-nav mb-2 mb-sm-0">
-                <!-- <li class="nav-item">
+                @guest
+                <!-- If the user is not logged in -->
+                <li class="nav-item">
                     <a class="nav-link text-white pe-2" aria-current="page" href="{{ route('etiket.in.register') }}">Register</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" aria-current="page" href="{{ route('etiket.in.login') }}">Login</a>
-                </li> -->
-                <li class="nav-item">
-                    <a class="nav-link text-white" aria-current="page"
-                        href="{{ route('user.dashboard') }}">Dashboard</a>
                 </li>
+                @endguest
+
+                @auth
+                <!-- If the user is logged in with the role 'user' -->
+                @if(Auth::user()->role == 'user')
+                <li class="nav-item">
+                    <a class="nav-link text-white" aria-current="page" href="{{ route('user.dashboard') }}">Dashboard</a>
+                </li>
+                @endif
+                @if(Auth::user()->role == 'admin')
+                <li class="nav-item">
+                    <a class="nav-link text-white" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                </li>
+                @endif
+                @endauth
             </ul>
+
 
             <div class="d-block d-sm-none my-2">
                 <select class="form-select form-select-sm" aria-label="Small select example">

@@ -12,11 +12,23 @@ return new class extends Migration
         Schema::create('gk_pendakis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('booking_id');
-            $table->string('nama');
+            $table->boolean('wni')->default(false);
             $table->string('nik');
+            $table->string('nama');
+            $table->string('lampiran_identitas');
             $table->string('no_hp');
+            $table->string('no_hp_darurat');
+            $table->date('tanggal_lahir');
+            $table->integer('usia');
+            $table->integer('tinggi');
+            $table->integer('berat');
             $table->string('alamat');
-            $table->string('tanggal_lahir');
+            $table->string('provinsi');
+            $table->string('kabupaten');
+            $table->string('kec');
+            $table->string('desa');
+            $table->string('lampiran_surat_kesehatan');
+            $table->string('lampiran_simaksi');
             $table->boolean('ketua');
             $table->timestamps();
 

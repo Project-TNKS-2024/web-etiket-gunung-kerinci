@@ -15,21 +15,25 @@ class login extends Controller
 
     public function actionlogin(Request $request)
     {
-        // untuk sementara
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+        // Validate input
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',  // Ensure password is required
         ]);
 
-        // asli
-
+        // Get credentials
         $credentials = $request->only('email', 'password');
 
+        // Attempt authentication
         if (Auth::attempt($credentials)) {
-            // Jika autentikasi berhasil
-            return redirect()->intended('/'); // Ganti '/' dengan route yang ingin dituju setelah login
+            if (Auth::user()->role == 'admin') {
+                return redirect()->intended(route('user.dashboard'));
+            } else if (Auth::user()->role == 'user') {
+                return redirect()->intended(route('user.dashboard'));
+            }
         }
 
-        // Jika autentikasi gagal
+        // If authentication fails, return with error message
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
@@ -39,6 +43,6 @@ class login extends Controller
     {
         Auth::logout();
 
-        return redirect('dashboard'); // Ganti '/login' dengan route yang ingin dituju setelah logout
+        return redirect(route('homepage.beranda'));
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('gk_gates', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('status');
+            $table->boolean('status')->default(true);
             $table->string('lokasi'); // lokasi maps
             $table->text('detail')->nullable();
             $table->timestamps();

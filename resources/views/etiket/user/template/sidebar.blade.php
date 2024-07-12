@@ -1,3 +1,4 @@
+
 <div class="card mb-3 useradmin overflow-hidden py-0 position-relative shadow rounded-2xl h-full"
     style="min-height: 500px;">
     <div class="position-absolute w-100 bg-linear-gradient-primary rounded-xl" style="max-height: 141px; height:100%;">
@@ -19,3 +20,4 @@
         </div>
     </div>
 </div>
+
