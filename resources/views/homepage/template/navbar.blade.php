@@ -56,6 +56,8 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" aria-current="page" href="{{ route('etiket.in.login') }}">Login</a>
                 </li>
+
+                
                 @endguest
 
                 @auth
