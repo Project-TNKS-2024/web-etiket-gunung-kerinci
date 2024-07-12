@@ -8,8 +8,8 @@
 
 #### ![70%](https://progress-bar.dev/70) Dashboard 
 - **Profile** ![70%](https://progress-bar.dev/70) **[Tinggal Integrasi dengan DB]**
-- [x] Wilayah Indonesia
-- [x] Bendera untuk nomor telepon
+  - [x] Wilayah Indonesia
+  - [x] Bendera untuk nomor telepon
 - **Riwayat Booking** ![70%](https://progress-bar.dev/70) **[Tinggal Integrasi dengan DB]**
 - **Ganti Password** ![70%](https://progress-bar.dev/70) **[Tinggal Integrasi dengan DB]**
 
