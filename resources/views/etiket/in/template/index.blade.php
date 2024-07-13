@@ -31,11 +31,6 @@
             color: black;
         }
 
-        body {
-            /* height: 100vh; */
-            background-image: url("{{ asset('assets/img/bg/bg login.png') }}");
-            background-size: cover;
-        }
 
         a {
             text-decoration: none;
@@ -45,6 +40,8 @@
 </head>
 
 <body>
+    <img src="{{ asset('assets/img/bg/bg login.png') }}" class="w-100 h-100 position-fixed"
+        style="object-fit: cover;min-width: 100vh; left:0; top:0" />
     <div style="width: 100%; margin-top: 30px;">
         <a class="mx-auto nav-logo d-block" href="{{ route('homepage.beranda') }}">
             <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="logo">
