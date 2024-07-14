@@ -1,3 +1,4 @@
+
 @extends('etiket.in.template.index')
 @section('css')
 @endsection
