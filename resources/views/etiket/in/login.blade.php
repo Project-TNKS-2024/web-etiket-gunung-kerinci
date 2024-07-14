@@ -51,7 +51,7 @@
     justify-content: center;">
         <div class="row justify-content-center w-100">
             <div class=" col-md-6">
-                <div class="card border border-0 shadow-lg">
+                <div class="card border border-0 shadow-lg px-4 py-2">
                     <div class="card-body">
                         <h5 class="mt-2 text-center fw-bold">Masuk ke akun</h5>
                         <form method="POST" action="{{ route('etiket.in.actionlogin') }}">
@@ -83,7 +83,7 @@
                                         <label for="remember">Ingat saya</label>
                                     </div>
                                     <div>
-                                        <a href="#">Lupa Password?</a>
+                                        <a href="{{route('etiket.in.lp.sentEmail')}}">Lupa Password?</a>
                                     </div>
                                 </div>
                             </div>

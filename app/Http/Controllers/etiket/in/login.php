@@ -45,4 +45,12 @@ class login extends Controller
 
         return redirect(route('homepage.beranda'));
     }
+    public function lp_sentEmail()
+    {
+        return view('etiket.in.lupapw-sent email');
+    }
+    public function lp_confirmEmail(Request $request)
+    {
+        return view('etiket.in.lupapw-confm email');
+    }
 }
