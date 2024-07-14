@@ -1,9 +1,4 @@
 <script>
-    let prov = [];
-    let kab = [];
-    let kec = [];
-    let kel = [];
-
     $(document).ready(function() {
         $.getJSON('/assets/json/provinsi.json', function(data) {
             const daftarProvinsi = document.getElementById("daftar-provinsi");
@@ -13,6 +8,7 @@
                 const text = document.createTextNode(`${prov.name}`);
                 button.appendChild(text);
                 button.addEventListener("click", function(event) {
+
                     const parent = document.querySelector("#dropdown-prov");
                     parent.textContent = prov.name;
                     pilihKabupaten(event, prov.id);
@@ -24,6 +20,18 @@
         function pilihKabupaten(event, id) {
             event.preventDefault();
             $.getJSON('/assets/json/kabupaten.json', function(data) { // Adjusted path to kabupaten.json
+
+                document.getElementById("daftar-kab").innerHTML =
+                    '<div class="w-100 dropdown-item">Pilih Provinsi</div>';
+                document.getElementById("daftar-kec").innerHTML =
+                    '<div class="w-100 dropdown-item">Pilih Kab/Kota</div>';
+                document.getElementById("daftar-kel").innerHTML =
+                    '<div class="w-100 dropdown-item">Pilih Kecamatan</div>';
+
+                document.getElementById('dropdown-kab').textContent = "Kab/Kota";
+                document.getElementById('dropdown-kec').textContent = "Kecamatan";
+                document.getElementById('dropdown-kel').textContent = "Desa/Kel";
+
                 const daftarKab = document.getElementById("daftar-kab");
                 daftarKab.innerHTML = ''; // Clear existing options
                 const kabupaten = data.filter(o => o.provinsi_id === id);
@@ -46,6 +54,15 @@
         function pilihKecamatan(event, id) {
             event.preventDefault();
             $.getJSON('/assets/json/kecamatan.json', function(data) { // Adjusted path to kabupaten.json
+
+                document.getElementById("daftar-kec").innerHTML =
+                    '<div class="w-100 dropdown-item">Pilih Kab/Kota</div>';
+                document.getElementById("daftar-kel").innerHTML =
+                    '<div class="w-100 dropdown-item">Pilih Kelurahan</div>';
+
+                document.getElementById('dropdown-kel').textContent = "Desa/Kel";
+                document.getElementById('dropdown-kec').textContent = "Kecamatan";
+
                 const daftarKec = document.getElementById("daftar-kec");
                 daftarKec.innerHTML = ''; // Clear existing options
                 const kecamatan = data.filter(o => o.kabupaten_id === id);
@@ -68,6 +85,12 @@
         function pilihKelurahan(event, id) {
             event.preventDefault();
             $.getJSON('/assets/json/kelurahan.json', function(data) { // Adjusted path to kabupaten.json
+
+                document.getElementById("daftar-kel").innerHTML =
+                    '<div class="w-100 dropdown-item">Pilih Kecamatan</div>';
+
+                document.getElementById('dropdown-kel').textContent = "Desa/Kel";
+
                 const daftarKel = document.getElementById("daftar-kel");
                 daftarKel.innerHTML = ''; // Clear existing options
                 const kelurahan = data.filter(o => o.kecamatan_id === id);

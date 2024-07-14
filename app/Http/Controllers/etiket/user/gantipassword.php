@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\etiket\user;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class GantiPassword extends Controller
 {
@@ -15,23 +17,31 @@ class GantiPassword extends Controller
 
     public function resetAction(Request $request)
     {
-        // For demonstration purposes
-        return back()->withErrors([
-            'password' => 'Password tidak sesuai',
+        // Actual logic
+        $email = Auth::user()->email;
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'password.required' => 'Password harus diisi.',
+            'password.min' => 'Password minimal :min karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
-        // Actual logic
-        $credentials = $request->only('password', 'konfirmasiPassword');
+        // Find the user by email
+        $user = User::where(
+            'email',
+            $email
+        )->first();
 
-        if (Auth::attempt($credentials)) {
-            // If authentication is successful
-            return redirect()->intended('/'); // Replace '/' with the route you want to redirect to after login
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
         }
 
+        // Update the user's password
+        $user->password = Hash::make($request->password);
+        $user->save();
         // If authentication fails
-        return back()->withErrors([
-            'password' => 'The provided credentials do not match our records.',
-        ]);
+        // Redirect to login page with success message
+        return redirect()->route('login')->with('status', 'Password Anda telah berhasil direset.');
     }
 }
-
