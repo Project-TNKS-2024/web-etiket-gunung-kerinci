@@ -26,6 +26,9 @@ Route::get('booking', [booking::class, 'index'])->name('homepage.booking');
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
     Route::post('login', [login::class, 'actionlogin'])->name('etiket.in.actionlogin');
+    Route::get('lupaPassword/sentEmail', [login::class, 'lp_sentEmail'])->name('etiket.in.lp.sentEmail');
+    // Route::get('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
+    Route::post('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
     route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');

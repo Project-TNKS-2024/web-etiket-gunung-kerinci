@@ -4,6 +4,7 @@ namespace App\Http\Controllers\homepage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\gk_gates;
 
 class booking extends Controller
 {
@@ -11,7 +12,8 @@ class booking extends Controller
 
     public function index(Request $request)
     {
-
-        return view("homepage.booking");
+        $gates = gk_gates::all();
+        // return $gates;
+        return view("homepage.booking.booking", ["gates" => $gates]);
     }
 }

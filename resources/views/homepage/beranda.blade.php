@@ -139,31 +139,7 @@
         <div class="border-between d-block mx-auto mt-0" style="width: 70px;border-color: var(--base-black)"></div>
     </header>
     <div class="row mt-3 index-kartu-1">
-        @include('homepage.beranda.daftar-destinasi', [
-        'destinasi' => [
-        [
-        'name' => 'Gunung Kerinci',
-        'description' =>
-        'Lorem ipsum dolor sit amet consectetur. Lorem posuere amet non in fermentum. Euismod lectus tellus imperdiet amet condimentum semper nulla ipsum. Tortor ut vestibulum diam maecenas elementum viverra. Sed arcu integer sagittis feugiat diam egestas',
-        'cover' => asset('assets/img/cover/kerinci.png'),
-        'target' => '#',
-        ],
-        [
-        'name' => 'Danau Kaco',
-        'description' =>
-        'Lorem ipsum dolor sit amet consectetur. Lorem posuere amet non in fermentum. Euismod lectus tellus imperdiet amet condimentum semper nulla ipsum. Tortor ut vestibulum diam maecenas elementum viverra. Sed arcu integer sagittis feugiat diam egestas',
-        'cover' => asset('assets/img/cover/danau-kaco.png'),
-        'target' => '#',
-        ],
-        [
-        'name' => 'Gunung Tujuh',
-        'description' =>
-        'Lorem ipsum dolor sit amet consectetur. Lorem posuere amet non in fermentum. Euismod lectus tellus imperdiet amet condimentum semper nulla ipsum. Tortor ut vestibulum diam maecenas elementum viverra. Sed arcu integer sagittis feugiat diam egestas',
-        'cover' => asset('assets/img/cover/gunung-tujuh.png'),
-        'target' => '#',
-        ],
-        ],
-        ])
+        @include('homepage.beranda.daftar-destinasi', ['destinasi' => $destinasi])
     </div>
 </div>
 
