@@ -13,10 +13,14 @@ class resetpassword extends Controller
         return view('etiket.in.reset-password'); // Ganti 'register' dengan nama view yang sesuai
     }
 
-    public function actionlupapassword(Request $request)
+    public function actionresetpassword(Request $request)
     {
-        return back()->withErrors([
-            'password' => 'Password tidak sesuai',
-        ]);
+        return redirect()->route('etiket.in.login')->with(
+            'success',
+            'berhasil berhasil reset password'
+        );
+        // return back()->withErrors([
+        //     'password' => 'Password tidak sesuai',
+        // ]);
     }
 }
