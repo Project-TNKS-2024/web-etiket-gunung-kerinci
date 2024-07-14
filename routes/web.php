@@ -6,6 +6,8 @@ use App\Http\Controllers\etiket\user\gantipassword as resetPasswordUser;
 use App\Http\Controllers\etiket\user\riwayat as riwayatUser;
 use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
+use App\Http\Controllers\etiket\in\lupapassword;
+use App\Http\Controllers\etiket\in\resetpassword;
 use App\Http\Controllers\homepage\beranda;
 use App\Http\Controllers\sampel;
 use App\Http\Controllers\homepage\panduan;
@@ -24,11 +26,12 @@ Route::get('booking', [booking::class, 'index'])->name('homepage.booking');
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
     Route::post('login', [login::class, 'actionlogin'])->name('etiket.in.actionlogin');
-    Route::get('lupaPassword/sentEmail', [login::class, 'lp_sentEmail'])->name('etiket.in.lp.sentEmail');
-    // Route::get('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
-    Route::post('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
+    route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
+    route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
+    route::get('reset-password', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
+    route::post('reset-password', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
 });
 Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
 
@@ -54,3 +57,9 @@ Route::middleware(['check.role:user'])->group(function () {
 
 // sampel
 Route::get('sampel/{blade}', [sampel::class, 'index'])->name('sampel.index');
+
+
+//test
+Route::get('/unauthorized', function () {
+    return view('errors.abort');
+});

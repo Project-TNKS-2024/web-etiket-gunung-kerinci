@@ -16,12 +16,13 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string $roles): Response
     {
+        if (!Auth::check()) {
+            abort(403, 'Unauthorized action.');
+
+        }
         if ($roles == Auth::user()->role) {
-            // Redirect...
             return $next($request);
         }
-
-
         abort(403, 'Unauthorized action.');
     }
 }

@@ -50,10 +50,4 @@ class register extends Controller
             'Registrasi berhasil. Silakan login untuk melanjutkan.'
         );
     }
-
-    // bagian lupa password
-    // page masukkan email
-    // page menunggu cek Email
-    // page buat kata sandi baru
-
 }

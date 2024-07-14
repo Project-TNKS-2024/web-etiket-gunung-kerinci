@@ -50,7 +50,6 @@ class userSeeder extends Seeder
             'password' => Hash::make('password'),
             'fullname' => 'User 1',
             'path_foto' => 'user 1.jpg',
-            // 'email_verified_at' => now(),
         ]);
     }
 }
