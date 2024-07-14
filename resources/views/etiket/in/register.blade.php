@@ -65,70 +65,63 @@
                         <div class="row mb-3">
                             <div class="form-group col-6">
                                 <label for="fullname" class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-control @error('fullname') is-invalid @enderror"
-                                    id="fullname" name="fullname" value="{{ old('fullname') }}" required>
+                                <input type="text" class="form-control @error('fullname') is-invalid @enderror" id="fullname" name="fullname" value="{{ old('fullname') }}" required>
                                 @error('fullname')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                             <div class="form-group col-6">
                                 <label for="phone" class="form-label">Nomor Handphone</label>
-                                <input type="text" class="form-control @error('phone') is-invalid @enderror"
-                                    id="phone" name="phone" value="{{ old('phone') }}" required>
+                                <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
                                 @error('phone')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                         </div>
                         <div class="form-group mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                id="email" name="email" value="{{ old('email') }}" required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
                             @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
 
                         </div>
                         <div class="row mb-3">
                             <div class="form-group col-6">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                    id="password" name="password" required>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
                                 @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                             <div class="form-group col-6">
                                 <label for="password_confirmation" class="form-label">Ulangi Password</label>
-                                <input type="password" class="form-control" id="password_confirmation"
-                                    name="password_confirmation" required>
+                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                             </div>
                         </div>
-                        <div class="form-group mb-3">
+                        <!-- <div class="form-group mb-3">
                             <label class="form-label d-block">Jenis Kelamin</label>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="male"
-                                    value="Laki-Laki" required>
+                                <input class="form-check-input" type="radio" name="gender" id="male" value="Laki-Laki" required>
                                 <label class="form-check-label" for="male">
                                     Laki-Laki
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="female"
-                                    value="Perempuan" required>
+                                <input class="form-check-input" type="radio" name="gender" id="female" value="Perempuan" required>
                                 <label class="form-check-label" for="female">
                                     Perempuan
                                 </label>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group mb-3">
                             <button type="submit" class="btn btn-primary w-100">Buat Akun</button>
                         </div>

@@ -24,6 +24,9 @@ Route::get('booking', [booking::class, 'index'])->name('homepage.booking');
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
     Route::post('login', [login::class, 'actionlogin'])->name('etiket.in.actionlogin');
+    Route::get('lupaPassword/sentEmail', [login::class, 'lp_sentEmail'])->name('etiket.in.lp.sentEmail');
+    // Route::get('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
+    Route::post('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
 });
@@ -40,12 +43,12 @@ Route::middleware(['check.role:admin'])->group(function () {
 
 // User routes
 Route::middleware(['check.role:user'])->group(function () {
-  Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
-  Route::get('dashboard/riwayat-booking', [riwayatUser::class, 'index'])->name('user.dashboard.riwayat');
-  
-  //reset password
-Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
-Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
+    Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
+    Route::get('dashboard/riwayat-booking', [riwayatUser::class, 'index'])->name('user.dashboard.riwayat');
+
+    //reset password
+    Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
+    Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
 });
 
 
