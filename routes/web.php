@@ -57,3 +57,9 @@ Route::middleware(['check.role:user'])->group(function () {
 
 // sampel
 Route::get('sampel/{blade}', [sampel::class, 'index'])->name('sampel.index');
+
+
+//test
+Route::get('/unauthorized', function () {
+    return view('errors.abort');
+});
