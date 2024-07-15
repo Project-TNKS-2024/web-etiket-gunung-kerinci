@@ -12,6 +12,8 @@ use App\Http\Controllers\homepage\beranda;
 use App\Http\Controllers\sampel;
 use App\Http\Controllers\homepage\panduan;
 use App\Http\Controllers\homepage\booking;
+
+//builtin
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,7 +35,7 @@ Route::middleware('guest')->group(function () {
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
     route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
     route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
-    route::get('reset-password', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
+    route::get('reset-password/{token}', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
     route::post('reset-password', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
 });
 Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
