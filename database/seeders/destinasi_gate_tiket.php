@@ -60,7 +60,7 @@ class destinasi_gate_tiket extends Seeder
             'id_destinasi' => 1,
             'wni' => true,
             'nama' => 'tiket 1',
-            'spesial' => 'gunung',
+            'spesial' => 'gunungKerinci',
             'keterangan' => '-',
             'harga' => 40000,
         ]);
@@ -68,9 +68,9 @@ class destinasi_gate_tiket extends Seeder
             'id_destinasi' => 1,
             'wni' => false,
             'nama' => 'tiket 1',
-            'spesial' => 'gunung',
+            'spesial' => 'gunungKerinci',
             'keterangan' => '-',
-            'harga' => 40000,
+            'harga' => 50000,
         ]);
     }
 }

@@ -22,6 +22,7 @@ Route::get('beranda', [beranda::class, 'index'])->name('homepage.beranda');
 Route::get('sop', [panduan::class, 'sop'])->name('homepage.sop');
 Route::get('panduan', [panduan::class, 'panduan'])->name('homepage.panduan');
 Route::get('booking', [booking::class, 'index'])->name('homepage.booking');
+Route::post('booking', [booking::class, 'getbooking'])->name('homepage.getbooking');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
@@ -55,6 +56,8 @@ Route::middleware(['check.role:user'])->group(function () {
     //reset password
     Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
     Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
+
+    // booking
 });
 
 
