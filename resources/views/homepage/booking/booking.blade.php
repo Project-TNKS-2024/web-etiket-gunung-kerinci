@@ -73,10 +73,11 @@
             </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-5">
-            <form method="post" action="{{route('homepage.getbooking')}}">
+            <form method="post" action="{{route('homepage.postBooking')}}">
                 @csrf
                 <h4 class="mb-4">Booking tiket pendakian gung kerici</h4>
 
+                <input type="hidden" name="id" value="1">
                 <div class="form-group">
                     <label for="date-start">Pilih tanggal check-in dan check-out</label>
                     <div class="row" id="iptdatevol">
@@ -93,25 +94,14 @@
                     <label>Total Pendaki</label>
                     <div class="row">
                         <div class="col-md-6 mb-1">
-                            <?php
-                            $wna = 0;
-                            $wni = 1;
-                            foreach ($tikets as $tiket) {
-                                if ($tiket['wni']) {
-                                    $wni = $tiket['harga'];
-                                } else {
-                                    $wna = $tiket['harga'];
-                                }
-                            }
-                            ?>
-                            <label for="wni">WNI: {{$wni}}</label>
-                            <div class="input-group mb-1 inputVolume1" data-price-vol="{{$wni}}">
+                            <label for="wni">WNI: {{$tiket['harga wni']}}</label>
+                            <div class="input-group mb-1 inputVolume1" data-price-vol="{{$tiket['harga wni']}}">
                                 <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
                                 <input type="number" class="form-control" name="wni" id="wni" placeholder="Jumlah WNI" required>
                                 <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>
                             </div>
-                            <label for="wna">WNA: {{$wna}}</label>
-                            <div class="input-group mb-1 inputVolume1" data-price-vol="{{$wna}}">
+                            <label for="wna">WNA: {{$tiket['harga wna']}}</label>
+                            <div class="input-group mb-1 inputVolume1" data-price-vol="{{$tiket['harga wna']}}">
                                 <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
                                 <input type="number" class="form-control" name="wna" id="wna" placeholder="Jumlah WNA" required>
                                 <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>

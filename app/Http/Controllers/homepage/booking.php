@@ -11,60 +11,72 @@ use Illuminate\Support\Facades\Auth;
 
 class booking extends Controller
 {
-    public function index(Request $request)
+    public function booking($id)
     {
-        $gates = gk_gates::all();
-        $tiket = tiket::where('spesial', 'gunungKerinci')->get();
-        return view("homepage.booking.booking", ["gates" => $gates, "tikets" => $tiket]);
+
+        $tiket = tiket::find($id);
+        if ($tiket->spesial == 'gunungKerinci') {
+            $gates = gk_gates::all();
+            return view("homepage.booking.booking", ["gates" => $gates, "tiket" => $tiket]);
+        }
+        return view("homepage.booking.booking", ["tiket" => $tiket]);
     }
 
-    public function getbooking(Request $request)
+    public function postBooking(Request $request)
     {
         if (!Auth::check()) {
             return redirect()->route('etiket.in.login');
         }
 
         if (Auth::user()->role == 'user') {
-            $latestBooking = gk_booking::where('id_user', Auth::id())
-                ->where('status', 0)
-                ->latest()
-                ->first();
-            if ($latestBooking) {
-                $latestBooking->tanggal_masuk = $request->input('date-start');
-                $latestBooking->tanggal_keluar = $request->input('date-end');
-                $latestBooking->wni = $request->input('wni');
-                $latestBooking->wna = $request->input('wna');
-                $latestBooking->gate_masuk = $request->input('gerbang-masuk');
-                $latestBooking->gate_keluar = $request->input('gerbang-keluar');
+            return redirect()->route('homepage.booking-snk', ['id' => $request->id]);
 
-                $latestBooking->save();
-            } else {
-                gk_booking::create([
-                    'id_user' =>$request,
-                    'id_tiket',
-                    'status',
-                    'id_booking_master',
-                    'total_pendaki',
-                    'wni',
-                    'wna',
-                    'keterangan',
-                    'QR',
-                    'pembayaran',
-                    'gate_masuk',
-                    'gate_keluar',
-                    'tanggal_masuk',
-                    'tanggal_keluar',
-                ]);
-            }
+
+            // jika user
+            // cek booking sebelumnya
+
+            // $latestBooking = gk_booking::where('id_user', Auth::id())
+            //     ->where('status', 0)
+            //     ->latest()
+            //     ->first();
+            // if ($latestBooking) {
+            //     // update booking sebelumnya
+            //     $latestBooking->tanggal_masuk = $request->input('date-start');
+            //     $latestBooking->tanggal_keluar = $request->input('date-end');
+            //     $latestBooking->wni = $request->input('wni');
+            //     $latestBooking->wna = $request->input('wna');
+            //     $latestBooking->gate_masuk = $request->input('gerbang-masuk');
+            //     $latestBooking->gate_keluar = $request->input('gerbang-keluar');
+
+            //     $latestBooking->save();
+            // } else {
+            //     // buat booking baru
+            //     gk_booking::create([
+            //         'id_user' => $request,
+            //         'id_tiket',
+            //         'status',
+            //         'id_booking_master',
+            //         'total_pendaki',
+            //         'wni',
+            //         'wna',
+            //         'keterangan',
+            //         'QR',
+            //         'pembayaran',
+            //         'gate_masuk',
+            //         'gate_keluar',
+            //         'tanggal_masuk',
+            //         'tanggal_keluar',
+            //     ]);
+            // }
+
         } else {
             // jika yang login adalah admin 
             // arahkan ke fitur kelola booking gunung kerinci
+            return 0;
         }
-
-        return response()->json($request);
     }
-    public function bookingStep1($id)
+    public function bookingSnk($id)
     {
-        return $id;
+        return view('homepage.booking.booking-snk');
     }
 }
