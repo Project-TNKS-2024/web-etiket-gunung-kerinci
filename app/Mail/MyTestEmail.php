@@ -31,7 +31,7 @@ class MyTestEmail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'My Test Email',
+            subject: 'Reset Password',
         );
     }
 
