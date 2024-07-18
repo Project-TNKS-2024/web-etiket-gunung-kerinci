@@ -6,7 +6,7 @@
     <div class="card-body">
         <h5 class="mt-2 text-center fw-bold">Buat Kata Sandi Baru</h5>
         <p class="text-center text-secondary">Kata sandi baru Anda harus unik dari yang digunakan sebelumnya.</p>
-        <form method="POST" action="{{ route('etiket.in.actionresetpassword') }}">
+        <form method="POST" action="{{ route('etiket.in.actionresetpassword', ['token' => $token]) }}">
             @csrf
             <div class="form-group mb-3">
                 <label for="password" class="form-label ">Password</label>

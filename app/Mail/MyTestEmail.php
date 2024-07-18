@@ -18,7 +18,7 @@ class MyTestEmail extends Mailable
      *
      * @return void
      */
-    public function __construct(private $name)
+    public function __construct(private $token)
     {
         //
     }
@@ -45,19 +45,9 @@ class MyTestEmail extends Mailable
     {
         return new Content(
             view: 'email.template',
-            with: ['token' => $this->generateRandomString(20)],
+            with: ['token' => $this->token],
         );
     }
 
-    function generateRandomString($length = 10)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
-    }
 
 }

@@ -36,7 +36,7 @@
                         <label for="remember">Ingat saya</label>
                     </div>
                     <div>
-                        <a href="{{ route('etiket.in.lupapassword') }}">Lupa Password?</a>
+                        <a href="{{ route('etiket.in.lp.sentEmail') }}">Lupa Password?</a>
                     </div>
                 </div>
             </div>

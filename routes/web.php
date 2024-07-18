@@ -33,10 +33,10 @@ Route::middleware('guest')->group(function () {
     Route::post('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
-    route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
-    route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
+    // route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
+    // route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
     route::get('reset-password/{token}', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
-    route::post('reset-password', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
+    route::post('reset-password/action/{token}/', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
 });
 Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
 
