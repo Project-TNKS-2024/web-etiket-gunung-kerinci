@@ -28,7 +28,7 @@
     <h5 class="mt-2 text-center fw-bold">403</h5>
     <div>
         <p class="fw-bold text-center my-5">Periksa kembali alamat URL</p>
-        <div class="px-3">
+        <div class="px-3 text-center">
             @if (isset($message))
             {{ $message }}
             @else

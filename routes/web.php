@@ -59,6 +59,10 @@ Route::middleware(['check.role:user'])->group(function () {
 
     // booking
     Route::get('booking-snk/{id}', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
+    Route::post('booking-snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
+    Route::get('booking-fp/{id}', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
+    Route::post('booking-fp', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
+    Route::get('booking-detail/{id}', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
 });
 
 
