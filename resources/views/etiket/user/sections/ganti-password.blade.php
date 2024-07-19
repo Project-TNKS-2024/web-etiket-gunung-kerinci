@@ -1,4 +1,4 @@
-@extends('etiket.user.template.index')
+@extends('etiket.user.dashboard')
 
 @section('sub-css')
 <style>
@@ -56,7 +56,7 @@
         </div>
     </form>
 
-    <div class="form h-full d-flex flex-column justify-content-center reset-form gk-bg-base-white px-4 rounded-2xl text-center d-none align-items-center" onclick="changepage(event)" id="resetSuccess" style="">
+    <div class="form h-full d-flex flex-column justify-content-center reset-form gk-bg-base-white px-4 rounded-2xl text-center d-none align-items-center" onclick="changepage(event)" id="resetSuccess">
         <img src="{{ asset('assets/img/dashboard/Successmark.png') }}" width="120" />
         <h3 class="text-xl font-bold mt-4">Atur Ulang Password Berhasil</h3>
         <p class="text-sm gk-text-neutrals400">Password anda telah sukses di ubah</p>

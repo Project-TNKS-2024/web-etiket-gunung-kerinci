@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('tikets', function (Blueprint $table) {
             $table->id(); // Ini akan membuat kolom id auto-increment
             $table->unsignedBigInteger('id_destinasi');
-            $table->boolean('wni');
             $table->string('nama');
             $table->string('spesial')->nullable();
             $table->string('keterangan')->nullable();
-            $table->decimal('harga', 10, 2); // Ubah panjang dan presisi sesuai kebutuhan
+            $table->decimal('harga wna', 10, 2);
+            $table->decimal('harga wni', 10, 2);
             $table->timestamps(); // Tambahkan created_at dan updated_at
 
             // Jika perlu, tambahkan indeks atau constraint lainnya di sini

@@ -18,9 +18,7 @@
     <link rel="stylesheet" href="{{ asset('componen/tailwind-classes.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .border-between {
@@ -33,6 +31,7 @@
             font-family: "Poppins", sans-serif;
             font-weight: 100;
             font-style: normal;
+            a
         }
 
         .poppins-extralight {
@@ -167,6 +166,13 @@
         .dashboard-sidebar-btn.active:hover {
             background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
         }
+
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1050;
+        }
     </style>
 
     @yield('css')
@@ -186,7 +192,10 @@
 
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+
+    @include('homepage.template.modal-notif')
 
     @yield('js')
 

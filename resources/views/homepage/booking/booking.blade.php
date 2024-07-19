@@ -3,40 +3,245 @@
 
 @section('css')
 <style>
+    .pdf-container {
+        max-width: 700px;
+        width: 100%;
+    }
+
+    .header-bg {
+        position: relative;
+        background: url("{{ asset('assets/img/bg/title-header-bg.png') }}") no-repeat;
+        background-size: cover;
+        background-position: 50% 50%;
+        color: white;
+    }
+
+
+    .header-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        /* Adjust the alpha value for the desired opacity */
+        z-index: 1;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+
     .border-between {
-        border-top: 2px solid var(--base-black);
+        border-top: 2px solid white;
         width: 50px;
+        margin: 20px 0;
     }
 </style>
 @endsection
 
 @section('main')
-<div class="container py-5">
-    <main class="d-flex flex-column align-items-center">
-        <header class="fs-5 fw-semibold">
-            Pilih Jalur Pendakian
-        </header>
-        <div class="border-between"></div>
-        <div class="row w-100 justify-content-center my-3" style="flex-wrap: wrap">
-            @for ($i = 1; $i <= 4; $i++) <div class="col-12 col-md-6 col-lg-4 mb-3">
-                <div class="card h-100">
-                    <img src="{{ asset('assets/img/sampel/sampel 2.png') }}" class="card-img-top" alt="Jalur Pendakian Kersik Tuo">
-                    <div class="card-body">
-                        <h5 class="card-title ">Jalur Kersik Tuo <span class="ms-2 badge gk-bg-primary400 fw-normal">Open</span>
-                        </h5>
-                        <p class="card-text index-text">Lorem ipsum dolor sit amet consectetur. Lorem posuere amet
-                            non
-                            in fermentum. Euismod lectus tellus imperdiet amet condimentum semper nulla ipsum.
-                            Tortor ut
-                            vestibulum diam maecenas elementum viverra. Sed arcu integer sagittis feugiat diam
-                            egestas.
-                        </p>
-                        <a href="#" class="btn gk-bg-primary700 w-100 text-white">Pilih Jalur Pendakian</a>
+@include('homepage.template.header', [
+'title' => 'Pendakian Gunung Kerinci',
+'caption' => '.',
+])
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 col-sm-6 col-lg-7">
+            <div id="carouselExample" class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{asset('assets/img/cover/danau-kaco.png')}}" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{asset('assets/img/cover/gunung-tujuh.png')}}" class="d-block w-100" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{asset('assets/img/cover/kerinci.png')}}" class="d-block w-100" alt="...">
                     </div>
                 </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
         </div>
-        @endfor
+        <div class="col-12 col-sm-6 col-lg-5">
+            <form method="post" action="{{route('homepage.postBooking')}}">
+                @csrf
+                <h4 class="mb-4">Booking tiket pendakian gung kerici</h4>
+
+                <input type="hidden" name="id" value="1">
+                <div class="form-group">
+                    <label for="date-start">Pilih tanggal check-in dan check-out</label>
+                    <div class="row" id="iptdatevol">
+                        <div class="col-md-6 mb-3">
+                            <input type="date" class="form-control" name="date-start" id="date-start" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="date" class="form-control" name="date-end" id="date-end" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Total Pendaki</label>
+                    <div class="row">
+                        <div class="col-md-6 mb-1">
+                            <label for="wni">WNI: {{$tiket['harga wni']}}</label>
+                            <div class="input-group mb-1 inputVolume1" data-price-vol="{{$tiket['harga wni']}}">
+                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
+                                <input type="number" class="form-control" name="wni" id="wni" placeholder="Jumlah WNI" required>
+                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>
+                            </div>
+                            <label for="wna">WNA: {{$tiket['harga wna']}}</label>
+                            <div class="input-group mb-1 inputVolume1" data-price-vol="{{$tiket['harga wna']}}">
+                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
+                                <input type="number" class="form-control" name="wna" id="wna" placeholder="Jumlah WNA" required>
+                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>
+                            </div>
+                            <div>
+                                <label for="totalharga">Total Harga</label>
+                                <p style="font-size: 11px;" id="labeliptvol">*2 hari 1 malam (2D1N)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3 ">
+                            <br>
+                            <div class="card ">
+                                <div class="card-body p-2">
+                                    <p>
+                                        Rp. <span class="iptvol">000</span>
+                                    </p>
+                                    <br>
+                                    <p class="mb-0">
+                                        Rp. <span class="iptvol">000</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="m-2">
+                                <p>
+                                    Rp. <span id="iptvol-total">000</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=" form-group row">
+                    <div class="col-6">
+                        <label for="gerbang-masuk">Gerbang Masuk</label>
+                        <select class="form-control" name="gerbang-masuk" id="gerbang-masuk" required>
+                            <option value="" selected disabled>Pilih Gerbang Masuk</option>
+                            @foreach ($gates as $gate)
+                            <option value="{{$gate['id']}}">{{$gate['nama']}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="gerbang-keluar">Gerbang Keluar</label>
+                        <select class="form-control" name="gerbang-keluar" id="gerbang-keluar" required>
+                            <option value="" selected disabled>Pilih Gerbang Keluar</option>
+                            @foreach ($gates as $gate)
+                            <option value="{{$gate['id']}}">{{$gate['nama']}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-primary w-100">Lanjut Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-</main>
-</div>
+@endsection
+
+@section('js')
+<script>
+    // Get all elements with the class 'inputVolume1'
+    const inputGroups = document.querySelectorAll('.inputVolume1');
+    const inputPrice = document.querySelectorAll('.iptvol');
+    const inputTotalPrice = document.getElementById('iptvol-total');
+    const inputDate = document.getElementById('iptdatevol');
+    const dateStartInput = inputDate.querySelector('input[name="date-start"]');
+    const dateEndInput = inputDate.querySelector('input[name="date-end"]');
+    const labelTotalPrice = document.getElementById('labeliptvol');
+
+    function calculateAdjustedDays() {
+        const startDate = new Date(dateStartInput.value);
+        const endDate = new Date(dateEndInput.value);
+        let dayDifference = 0;
+        if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
+            const timeDifference = endDate - startDate;
+            dayDifference = timeDifference / (1000 * 3600 * 24);
+        }
+        const adjustedDays = Math.floor((dayDifference) / 2) + 1;
+        labelTotalPrice.textContent = `${dayDifference+1} Hari ${adjustedDays} malam (${dayDifference+1}D${adjustedDays}M)`;
+        return adjustedDays;
+    }
+
+    dateStartInput.addEventListener('change', calculateAdjustedDays);
+    dateEndInput.addEventListener('change', calculateAdjustedDays);
+
+    function updateTotalPrice() {
+        let totalPrice = 0;
+        let adjustedDays = calculateAdjustedDays();
+
+        inputPrice.forEach(span => {
+            let price = parseInt(span.textContent);
+            if (!isNaN(price)) {
+                totalPrice += price;
+            }
+        });
+
+        totalPrice *= adjustedDays;
+        inputTotalPrice.textContent = totalPrice;
+    }
+
+    inputGroups.forEach((group, index) => {
+        const inputField = group.querySelector('input[type="number"]');
+        const incrementButton = group.querySelector('button[data-input-vol="ipt+"]');
+        const decrementButton = group.querySelector('button[data-input-vol="ipt-"]');
+
+        const price = parseInt(group.getAttribute('data-price-vol'));
+
+        incrementButton.addEventListener('click', () => {
+            // tambah nilai inputfield
+            let currentValue = parseInt(inputField.value);
+            if (isNaN(currentValue)) {
+                currentValue = 0;
+            }
+            inputField.value = currentValue + 1;
+
+            // masukkan nilai harga ke inputprice urutan each goup
+            inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
+            // update total price
+            updateTotalPrice()
+        });
+
+        decrementButton.addEventListener('click', () => {
+            let currentValue = parseInt(inputField.value);
+            if (isNaN(currentValue)) {
+                currentValue = 0;
+            }
+            if (currentValue == 0) {
+                currentValue = 0;
+            } else {
+                inputField.value = parseInt(inputField.value) - 1;
+            }
+
+            // masukkan nilai harga ke inputprice urutan each goup
+            inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
+            // update total price
+            updateTotalPrice()
+        });
+    });
+</script>
 @endsection

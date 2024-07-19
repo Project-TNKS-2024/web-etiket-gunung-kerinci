@@ -168,16 +168,8 @@
                     </div>
                 </div>
         </div>
-        {{-- <div class="col">
-                        <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg"
-                            style="background-image: url(' {{ asset('assets/img/sampel/sampel 2.png') }}'); background-size: cover;">
-        <div class="d-flex flex-column h-100 p-5 pb-5 text-white text-shadow-1">
-            <h5 class="pt-5 mt-5 mb-1 text-shadow">Short title, long jacket</h5>
-        </div>
+        @endfor
     </div>
-</div> --}}
-@endfor
-</div>
 
 </div>
 </div>

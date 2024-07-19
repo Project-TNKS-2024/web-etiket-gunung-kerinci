@@ -21,7 +21,8 @@ Route::get('/', function () {
 Route::get('beranda', [beranda::class, 'index'])->name('homepage.beranda');
 Route::get('sop', [panduan::class, 'sop'])->name('homepage.sop');
 Route::get('panduan', [panduan::class, 'panduan'])->name('homepage.panduan');
-Route::get('booking', [booking::class, 'index'])->name('homepage.booking');
+Route::get('booking/{id}', [booking::class, 'booking'])->name('homepage.booking');
+Route::post('booking', [booking::class, 'postBooking'])->name('homepage.postBooking');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
@@ -55,6 +56,13 @@ Route::middleware(['check.role:user'])->group(function () {
     //reset password
     Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
     Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
+
+    // booking
+    Route::get('booking-snk/{id}', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
+    Route::post('booking-snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
+    Route::get('booking-fp/{id}', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
+    Route::post('booking-fp', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
+    Route::get('booking-detail/{id}', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
 });
 
 
