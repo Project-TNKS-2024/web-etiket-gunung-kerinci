@@ -51,9 +51,4 @@ class register extends Controller
         );
     }
 
-    // bagian lupa password
-    // page masukkan email
-    // page menunggu cek Email
-    // page buat kata sandi baru
-
 }

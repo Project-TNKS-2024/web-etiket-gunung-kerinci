@@ -10,11 +10,11 @@ class tiket extends Model
     use HasFactory;
     protected $fillable = [
         'id_destinasi',
-        'wni',
         'nama',
         'spesial',
+        'harga wna',
+        'harga wni',
         'keterangan',
-        'harga',
     ];
 
     /**
@@ -23,8 +23,8 @@ class tiket extends Model
      * @var array
      */
     protected $casts = [
-        'wni' => 'boolean',
-        'harga' => 'decimal:2',
+        'harga wni' => 'decimal:2',
+        'harga wna' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

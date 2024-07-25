@@ -33,6 +33,7 @@
             font-family: "Poppins", sans-serif;
             font-weight: 100;
             font-style: normal;
+            a
         }
 
         .poppins-extralight {
@@ -167,6 +168,13 @@
         .dashboard-sidebar-btn.active:hover {
             background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
         }
+
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1050;
+        }
     </style>
 
     @yield('css')
@@ -186,7 +194,10 @@
 
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+
+    @include('homepage.template.modal-notif')
 
     @yield('js')
 

@@ -1,4 +1,4 @@
-@extends('etiket.user.template.index')
+@extends('etiket.user.dashboard')
 
 @section('sub-css')
     <style>
