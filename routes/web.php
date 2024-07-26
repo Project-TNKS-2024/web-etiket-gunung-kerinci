@@ -1,17 +1,26 @@
 <?php
-
+//admin
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
+use App\Http\Controllers\etiket\admin\tiket;
+
+//user
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
 use App\Http\Controllers\etiket\user\gantipassword as resetPasswordUser;
 use App\Http\Controllers\etiket\user\riwayat as riwayatUser;
+
+//auth
 use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
 use App\Http\Controllers\etiket\in\lupapassword;
 use App\Http\Controllers\etiket\in\resetpassword;
+
+//homepage
 use App\Http\Controllers\homepage\beranda;
-use App\Http\Controllers\sampel;
 use App\Http\Controllers\homepage\panduan;
 use App\Http\Controllers\homepage\booking;
+
+//~
+use App\Http\Controllers\sampel;
 
 //builtin
 use Illuminate\Support\Facades\Route;
@@ -48,6 +57,13 @@ Route::middleware(['check.role:admin'])->group(function () {
     });
 
     Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
+
+    //tiket
+    Route::get('admin/kelola/tiket', [tiket::class, 'daftar'])->name('admin.tiket.daftar');
+    Route::get('admin/kelola/tambah-tiket', [tiket::class, 'tambah'])->name('admin.tiket.tambah');
+    Route::get('admin/kelola/edit-tiket', [tiket::class, 'edit'])->name('admin.tiket.edit');
+    Route::post('admin/kelola/tambah-tiket', [tiket::class, 'tambahAction'])->name('admin.tiket.tambahAction');
+    Route::post('admin/kelola/edit-tiket', [tiket::class, 'editAction'])->name('admin.tiket.editAction');
 });
 
 // User routes
