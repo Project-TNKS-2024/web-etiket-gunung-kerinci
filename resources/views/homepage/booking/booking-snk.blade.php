@@ -65,7 +65,7 @@
 'caption' => 'Syarat dan Ketentuan',
 ])
 <div class="container my-5">
-   @include('homepage.booking.booking-nav', ['step' => 0])
+   @include('homepage.booking.booking-nav', ['step' => $status])
    <div class="border border-2 rounded-3 p-3 snk">
       <form method="post" action="{{ route('homepage.booking-snk.store') }}" id="form-snk">
          <input type="hidden" name="id" value="{{$id}}">

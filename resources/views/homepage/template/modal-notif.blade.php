@@ -11,6 +11,8 @@
     </div>
     @endforeach
     @endif
+
+
     @if(session('error'))
     @foreach((array) session('error') as $message)
     <div class="toast align-items-center text-bg-danger border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
@@ -30,7 +32,10 @@
     document.addEventListener('DOMContentLoaded', function() {
        const toastElements = document.querySelectorAll('.toast');
        toastElements.forEach(toastElement => {
-          const toast = new bootstrap.Toast(toastElement);
+          const toast = new bootstrap.Toast(toastElement, {
+             autohide: true,
+             delay: 5000 // 2000 milliseconds = 2 seconds
+          });
           toast.show();
        });
     });

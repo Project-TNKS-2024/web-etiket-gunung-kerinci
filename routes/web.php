@@ -70,6 +70,8 @@ Route::middleware(['check.role:user'])->group(function () {
 
 // sampel
 Route::get('sampel/{blade}', [sampel::class, 'index'])->name('sampel.index');
+Route::get('sampel/tesnotif', [sampel::class, 'tesnotif'])->name('sampel.tesnotif');
+Route::post('sampel/tesnotif', [sampel::class, 'actiontesnotif'])->name('sampel.actiontesnotif');
 
 
 //test

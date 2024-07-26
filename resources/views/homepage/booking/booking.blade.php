@@ -80,18 +80,18 @@
                     @csrf
                     <h4 class="mb-4">Booking tiket pendakian gung kerici</h4>
 
-                    <input type="hidden" name="id" value="1">
-                    <div class="form-group">
-                        <label for="date-start">Pilih tanggal check-in dan check-out</label>
-                        <div class="row" id="iptdatevol">
-                            <div class="col-md-6 mb-3">
-                                <input type="date" class="form-control" name="date-start" id="date-start" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <input type="date" class="form-control" name="date-end" id="date-end" required>
-                            </div>
+                <input type="hidden" name="id" value="1">
+                <div class="form-group">
+                    <label for="date-start">Pilih tanggal check-in dan check-out</label>
+                    <div class="row" id="iptdatevol">
+                        <div class="col-md-6 mb-3">
+                            <input type="date" class="form-control" name="date-start" id="date-start" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="date" class="form-control" name="date-end" id="date-end" required>
                         </div>
                     </div>
+                </div>
 
                     <div class="form-group">
                         <label>Total Pendaki</label>
