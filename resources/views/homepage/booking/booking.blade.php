@@ -77,7 +77,7 @@
                 @csrf
                 <h4 class="mb-4">Booking tiket pendakian gung kerici</h4>
 
-                <input type="hidden" name="id" value="1">
+                <input type="hidden" name="id_tiket" value="1">
                 <div class="form-group">
                     <label for="date-start">Pilih tanggal check-in dan check-out</label>
                     <div class="row" id="iptdatevol">
