@@ -69,8 +69,6 @@
       /* background-color: #007bff; */
 
    }
-
-  
 </style>
 
 @endsection
@@ -81,13 +79,16 @@
 ])
 
 <div class="container my-5">
-   @include('homepage.booking.booking-nav', ['step' => 1])
+   @include('homepage.booking.booking-nav', ['step' => $booking->status])
    <form id="formulir" action="{{route('homepage.booking-fp.store')}}" method="post" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="id_booking" value="{{$id}}">
       <div class="shadow px-5 pt-1 pb-4 rounded">
          <!-- anggota -->
-         @for ($i = 0; $i <= 2; $i++) @include('homepage.booking.fp.formulir',['index'=>$i])
+         @for ($i = 0; $i <= $booking->total_pendaki; $i++) @include('homepage.booking.fp.formulir',[
+            'index'=>$i,
+            'pendaki'=>$booking[$i]
+            ])
             @endfor
             <!-- barang -->
             @include('homepage.booking.fp.barang')
