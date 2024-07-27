@@ -71,6 +71,8 @@
    <script src="{{asset('modernize/js/dashboard.js')}}"></script>
 
    @yield('js')
+
+   @include('etiket.admin.components.modal')
 </body>
 
 </html>

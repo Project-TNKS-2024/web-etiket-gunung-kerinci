@@ -15,6 +15,9 @@ class tiket extends Model
         'harga wna',
         'harga wni',
         'keterangan',
+        'gate',
+        'harga',
+        'jenis',
     ];
 
     /**
@@ -35,5 +38,10 @@ class tiket extends Model
     public function destinasi()
     {
         return $this->belongsTo(Destinasi::class, 'id_destinasi');
+    }
+
+    public function gk_gates()
+    {
+        return $this->belongsTo(gk_gates::class, 'gate');
     }
 }

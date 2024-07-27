@@ -58,11 +58,14 @@ class destinasi_gate_tiket extends Seeder
 
         tiket::create([
             'id_destinasi' => 1,
-            'nama' => 'tiket 1',
+            'nama' => 'Domestik',
             'spesial' => 'gunungKerinci',
             'keterangan' => '-',
             'harga wna' => 40000,
             'harga wni' => 50000,
+            'gate' => 1,
+            'jenisTiket' => 1,
+            'harga' => 20000,
         ]);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 //admin
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
-use App\Http\Controllers\etiket\admin\tiket;
+use App\Http\Controllers\etiket\admin\tikets;
 
 //user
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
@@ -59,11 +59,16 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
 
     //tiket
-    Route::get('admin/kelola/tiket', [tiket::class, 'daftar'])->name('admin.tiket.daftar');
-    Route::get('admin/kelola/tambah-tiket', [tiket::class, 'tambah'])->name('admin.tiket.tambah');
-    Route::get('admin/kelola/edit-tiket', [tiket::class, 'edit'])->name('admin.tiket.edit');
-    Route::post('admin/kelola/tambah-tiket', [tiket::class, 'tambahAction'])->name('admin.tiket.tambahAction');
-    Route::post('admin/kelola/edit-tiket', [tiket::class, 'editAction'])->name('admin.tiket.editAction');
+    Route::get('admin/kelola/tiket', [tikets::class, 'daftar'])->name('admin.tiket.daftar');
+    Route::get('admin/kelola/tambah-tiket', [tikets::class, 'tambah'])->name('admin.tiket.tambah');
+    Route::get('admin/kelola/edit-tiket/{id}', [tikets::class, 'edit'])->name('admin.tiket.edit');
+    Route::post('admin/kelola/tambah-tiket', [tikets::class, 'tambahAction'])->name('admin.tiket.tambahAction');
+    Route::post('admin/kelola/edit-tiket/{id}', [tikets::class, 'editAction'])->name('admin.tiket.editAction');
+    Route::post('admin/kelola/hapus-tiket/{id}', [tikets::class, 'hapus'])->name('admin.tiket.hapus');
+
+    //destinasi
+
+    //gate
 });
 
 // User routes

@@ -55,13 +55,16 @@
            </div>
         </div>
 
-        <div class="row">
-            @include('etiket.admin.components.table', [
-                "headers" => ["Destinasi", "Nama Tiket", "Gate Masuk", "Jenis Tiket", "Harga Tiket", "Aksi"],
-                "data" => $tiket,
-            ])
+        <div class="row"  style="overflow: visible;">
+            <div class="col-12 p-0 shadow" style="overflow:auto;">
+                @include('etiket.admin.master-data.tiket.daftar', [
+                    "headers" => ["Destinasi", "Nama Tiket", "Gate Masuk", "Jenis Tiket", "Harga Tiket", "Aksi"],
+                    "data" => $tiket,
+                ])
+            </div>
         </div>
     </main>
+
 </div>
 @endsection
 
