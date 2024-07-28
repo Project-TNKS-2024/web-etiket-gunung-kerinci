@@ -93,54 +93,48 @@
                     </div>
                 </div>
 
-                    <div class="form-group">
-                        <label>Total Pendaki</label>
-                        <div class="row">
-                            <div class="col-md-6 mb-1">
-                                <label for="wni">WNI: {{ $tiket['harga wni'] }}</label>
-                                <div class="input-group mb-1 inputVolume1" data-price-vol="{{ $tiket['harga wni'] }}">
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        data-input-vol="ipt+">+</button>
-                                    <input type="number" class="form-control" name="wni" id="wni"
-                                        placeholder="Jumlah WNI" required>
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        data-input-vol="ipt-">-</button>
-                                </div>
-                                <label for="wna">WNA: {{ $tiket['harga wna'] }}</label>
-                                <div class="input-group mb-1 inputVolume1" data-price-vol="{{ $tiket['harga wna'] }}">
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        data-input-vol="ipt+">+</button>
-                                    <input type="number" class="form-control" name="wna" id="wna"
-                                        placeholder="Jumlah WNA" required>
-                                    <button class="btn btn-outline-secondary" type="button"
-                                        data-input-vol="ipt-">-</button>
-                                </div>
-                                <div>
-                                    <label for="totalharga">Total Harga</label>
-                                    <p style="font-size: 11px;" id="labeliptvol">*2 hari 1 malam (2D1N)</p>
-                                </div>
+                <div class="form-group">
+                    <label>Total Pendaki</label>
+                    <div class="row">
+                        <div class="col-md-6 mb-1">
+                            <label for="wni">WNI: {{$tiket['wni_weekday']}}</label>
+                            <div class="input-group mb-1 inputVolume1" data-price-weekday="{{$tiket['wni_weekday']}}" data-price-weekend="{{$tiket['wni_weekend']}}">
+                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
+                                <input type="number" class="form-control" name="wni" id="wni" placeholder="Jumlah WNI" required value="0" readonly>
+                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>
                             </div>
-                            <div class="col-md-6 mb-3 ">
-                                <br>
-                                <div class="card ">
-                                    <div class="card-body p-2">
-                                        <p>
-                                            Rp. <span class="iptvol">000</span>
-                                        </p>
-                                        <br>
-                                        <p class="mb-0">
-                                            Rp. <span class="iptvol">000</span>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="m-2">
+                            <label for="wna">WNA: {{$tiket['wna_weekday']}} </label>
+                            <div class="input-group mb-1 inputVolume1" data-price-weekday="{{$tiket['wna_weekday']}}" data-price-weekend="{{$tiket['wna_weekend']}}">
+                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
+                                <input type="number" class="form-control" name="wna" id="wna" placeholder="Jumlah WNA" required value="0" readonly>
+                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>
+                            </div>
+                            <div>
+                                <label for="totalharga">Total Harga</label>
+                                <p style="font-size: 11px;" id="labeliptvol">*0 hari 0 malam (2D1N)</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3 ">
+                            <br>
+                            <div class="card ">
+                                <div class="card-body p-2">
                                     <p>
-                                        Rp. <span id="iptvol-total">000</span>
+                                        Rp. <span class="iptvol">000</span>
+                                    </p>
+                                    <br>
+                                    <p class="mb-0">
+                                        Rp. <span class="iptvol">000</span>
                                     </p>
                                 </div>
                             </div>
+                            <div class="m-2">
+                                <p>
+                                    Rp. <span id="iptvol-total">000</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
+                </div>
 
                     <div class=" form-group row">
                         <div class="col-6">
@@ -183,22 +177,21 @@
         const dateEndInput = inputDate.querySelector('input[name="date-end"]');
         const labelTotalPrice = document.getElementById('labeliptvol');
 
-        function calculateAdjustedDays() {
-            const startDate = new Date(dateStartInput.value);
-            const endDate = new Date(dateEndInput.value);
-            let dayDifference = 0;
-            if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
-                const timeDifference = endDate - startDate;
-                dayDifference = timeDifference / (1000 * 3600 * 24);
-            }
-            const adjustedDays = Math.floor((dayDifference) / 2) + 1;
-            labelTotalPrice.textContent =
-                `${dayDifference+1} Hari ${adjustedDays} malam (${dayDifference+1}D${adjustedDays}M)`;
-            return adjustedDays;
+    function calculateAdjustedDays() {
+        const startDate = new Date(dateStartInput.value);
+        const endDate = new Date(dateEndInput.value);
+        let dayDifference = 0;
+        if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
+            const timeDifference = endDate - startDate;
+            dayDifference = timeDifference / (1000 * 3600 * 24);
         }
+        const adjustedDays = Math.floor((dayDifference) / 2) + 1;
+        labelTotalPrice.textContent = `${dayDifference+1} Hari ${adjustedDays} malam (${dayDifference+1}D${adjustedDays}M)`;
+        return adjustedDays;
+    }
 
-        dateStartInput.addEventListener('change', calculateAdjustedDays);
-        dateEndInput.addEventListener('change', calculateAdjustedDays);
+    dateStartInput.addEventListener('change', calculateAdjustedDays);
+    dateEndInput.addEventListener('change', calculateAdjustedDays);
 
         function updateTotalPrice() {
             let totalPrice = 0;
@@ -211,16 +204,16 @@
                 }
             });
 
-            totalPrice *= adjustedDays;
-            inputTotalPrice.textContent = totalPrice;
-        }
+        totalPrice *= adjustedDays;
+        inputTotalPrice.textContent = totalPrice;
+    }
 
         inputGroups.forEach((group, index) => {
             const inputField = group.querySelector('input[type="number"]');
             const incrementButton = group.querySelector('button[data-input-vol="ipt+"]');
             const decrementButton = group.querySelector('button[data-input-vol="ipt-"]');
 
-            const price = parseInt(group.getAttribute('data-price-vol'));
+        const price = parseInt(group.getAttribute('data-price-vol'));
 
             incrementButton.addEventListener('click', () => {
                 // tambah nilai inputfield
@@ -230,11 +223,11 @@
                 }
                 inputField.value = currentValue + 1;
 
-                // masukkan nilai harga ke inputprice urutan each goup
-                inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
-                // update total price
-                updateTotalPrice()
-            });
+            // masukkan nilai harga ke inputprice urutan each goup
+            inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
+            // update total price
+            updateTotalPrice()
+        });
 
             decrementButton.addEventListener('click', () => {
                 let currentValue = parseInt(inputField.value);

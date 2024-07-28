@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\homepage;
 
 use App\Http\Controllers\Controller;
-use App\Models\gk_barang;
 use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
 use App\Models\gk_gates;
 use App\Models\gk_pendaki;
-use App\Models\tiket;
+use App\Models\gk_tikets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,15 +17,10 @@ class booking extends Controller
 {
     public function booking($id)
     {
-
-        $tiket = tiket::find($id);
-        if ($tiket->spesial == 'gunungKerinci') {
-            $gates = gk_gates::all();
-            return view("homepage.booking.booking", ["gates" => $gates, "tiket" => $tiket]);
-        }
-        return view("homepage.booking.booking", [
-            "tiket" => $tiket,
-        ]);
+        $tiket = gk_tikets::find($id);
+        $gates = gk_gates::all();
+        // return $tiket;
+        return view("homepage.booking.booking", ["gates" => $gates, "tiket" => $tiket]);
     }
 
     public function postBooking(Request $request)

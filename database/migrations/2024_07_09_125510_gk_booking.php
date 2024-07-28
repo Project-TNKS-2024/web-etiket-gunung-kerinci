@@ -28,7 +28,7 @@ return new class extends Migration
 
             // Foreign key constraints
             $table->foreign('id_user')->references('id')->on('users');
-            $table->foreign('id_tiket')->references('id')->on('tikets');
+            $table->foreign('id_tiket')->references('id')->on('gk_tikets');
             $table->foreign('gate_masuk')->references('id')->on('gk_gates');
             $table->foreign('gate_keluar')->references('id')->on('gk_gates');
         });
