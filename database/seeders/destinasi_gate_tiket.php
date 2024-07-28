@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\destinasi;
 use App\Models\gk_gates;
-use App\Models\tiket;
+use App\Models\gk_tikets;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -56,13 +56,33 @@ class destinasi_gate_tiket extends Seeder
             'detail' => 'Camping Ground Bangun Rejo di Kabupaten Solok Selatan, Sumatera Barat.',
         ]);
 
-        tiket::create([
+        gk_tikets::create([
             'id_destinasi' => 1,
-            'nama' => 'tiket 1',
-            'spesial' => 'gunungKerinci',
-            'keterangan' => '-',
-            'harga wna' => 40000,
-            'harga wni' => 50000,
+            'nama' => 'Tiket Umum',
+            'price_traking' => 5000,
+            'price_kemah' => 5000,
+            'price_ansuransi' => 2500,
+            'min_visitor' => 0,
+            'penugasan' => false,
+            'wni_weekday' => 5000,
+            'wni_weekend' => 7500,
+            'wna_weekend' => 225000,
+            'wna_weekday' => 150000,
+            'keterangan' => 'Tiket Umum',
+        ]);
+        gk_tikets::create([
+            'id_destinasi' => 1,
+            'nama' => 'Tiket Pelajar',
+            'price_traking' => 5000,
+            'price_kemah' => 5000,
+            'price_ansuransi' => 2500,
+            'min_visitor' => 0,
+            'penugasan' => false,
+            'wni_weekday' => 3000,
+            'wni_weekend' => 7500,
+            'wna_weekend' => 150000,
+            'wna_weekday' => 100000,
+            'keterangan' => 'Tiket Pelajar',
         ]);
     }
 }
