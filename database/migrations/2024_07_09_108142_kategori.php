@@ -14,7 +14,8 @@ return new class extends Migration
         //
         Schema::create('kategoris', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('nama');
+            $table->string('nama');
+            $table->timestamps(); // Tambahkan created_at dan updated_at
         });
     }
 

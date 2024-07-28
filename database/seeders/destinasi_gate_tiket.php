@@ -6,6 +6,7 @@ use App\Models\destinasi;
 use App\Models\gk_gates;
 use App\Models\gk_tikets;
 use App\Models\kategoris;
+use App\Models\golongans;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
