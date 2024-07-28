@@ -9,14 +9,11 @@
     <tbody>
         @foreach ($data as $d)
             <tr class="">
-                <td class="p-3 font-bold">{{$d->destinasi->nama}}</td>
-                <td class="p-3 font-bold">{{ucwords($d->nama)}}</td>
-                <td class="p-3 font-bold">{{$d->gk_gates->nama}}</td>
-                <td class="p-3 font-bold">{{$jenisTiket[$d->jenisTiket]}}</td>
-                <td class="p-3 font-bold">Rp {{number_format($d->harga)}}</td>
+                <td class="p-3 font-bold">{{$d->nama}}</td>
+                <td class="p-3 font-bold">{{$d->lokasi}}</td>
                 <td class="p-3 d-flex gap-1">
                         <a  href="{{route('admin.tiket.edit', ['id' => $d->id])}}" class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/edit.png')}}"/></a>
-                        <a onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.tiket.hapus', ['id' => $d->id])}}`)" href="#" class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/delete.png')}}"/></a>
+                        <a onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.destinasi.hapus', ['id' => $d->id])}}`)" href="#" class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/delete.png')}}"/></a>
                 </td>
             </tr>
         @endforeach
