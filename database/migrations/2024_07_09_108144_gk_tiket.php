@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('gk_tikets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_golongan');
+            $table->unsignedBigInteger('id_kategori');
+            $table->unsignedBigInteger('id_gate');
             $table->unsignedBigInteger('id_destinasi');
             $table->string('nama');
             $table->decimal('price_traking', 10, 2);
@@ -20,16 +23,16 @@ return new class extends Migration
             $table->decimal('price_ansuransi', 10, 2);
             $table->integer('min_visitor');
             $table->boolean('penugasan')->default(false);
-            // $table->string('penugasan')->default("false");
-            $table->decimal('wni_weekday', 10, 2);
-            $table->decimal('wni_weekend', 10, 2);
-            $table->decimal('wna_weekend', 10, 2);
-            $table->decimal('wna_weekday', 10, 2);
             $table->text('keterangan')->nullable();
+            $table->decimal('harga');
+            $table->string('tipe', 3);
             $table->timestamps();
 
             // Foreign key constraint for id_destinasi if needed
+            $table->foreign('id_golongan')->references('id')->on('golongans');
             $table->foreign('id_destinasi')->references('id')->on('destinasis');
+            $table->foreign('id_kategori')->references('id')->on('kategoris');
+            $table->foreign('id_gate')->references('id')->on('gk_gates');
         });
     }
 
