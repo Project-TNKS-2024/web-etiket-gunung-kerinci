@@ -31,7 +31,6 @@
             font-family: "Poppins", sans-serif;
             font-weight: 100;
             font-style: normal;
-            a
         }
 
         .poppins-extralight {

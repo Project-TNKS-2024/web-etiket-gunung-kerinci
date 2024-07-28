@@ -185,13 +185,14 @@
         }
         const adjustedDays = (dayDifference - 1); //malam
         labelTotalPrice.textContent = `${dayDifference} Hari ${adjustedDays} malam (${dayDifference}D${adjustedDays}M)`;
-        return adjustedDays;
+        return dayDifference;
     }
 
 
     function updateTotalPrice() {
         let totalPrice = 0;
-        let adjustedDays = calculateAdjustedDays();
+        let dayDifference = calculateAdjustedDays();
+        let adjustedDays = dayDifference - 1;
 
         inputPrice.forEach(span => {
             let price = parseInt(span.textContent);
@@ -201,7 +202,7 @@
         });
 
         totalPrice *= adjustedDays;
-        inputTotalPrice.textContent = totalPrice;
+        inputTotalPrice.textContent = adjustedDays;
     }
 
     dateStartInput.addEventListener('change', updateTotalPrice);
@@ -241,7 +242,7 @@
             }
 
             // masukkan nilai harga ke inputprice urutan each goup
-            inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
+            inputPrice[index].textContent = parseInt(price_weekday) * parseInt(inputField.value);
             // update total price
             updateTotalPrice()
         });
