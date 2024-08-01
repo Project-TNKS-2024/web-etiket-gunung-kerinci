@@ -3,6 +3,7 @@
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
 use App\Http\Controllers\etiket\admin\tikets;
 use App\Http\Controllers\etiket\admin\destinasis;
+use App\Http\Controllers\etiket\admin\gates;
 
 //user
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
@@ -75,7 +76,14 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/kelola/edit-destinasi/{id}', [destinasis::class, 'editAction'])->name('admin.destinasi.editAction');
     Route::post('admin/kelola/hapus-destinasi/{id}', [destinasis::class, 'hapus'])->name('admin.destinasi.hapus');
 
+
     //gate
+    Route::get('admin/kelola/gate', [gates::class, 'daftar'])->name('admin.gate.daftar');
+    Route::get('admin/kelola/tambah-gate', [gates::class, 'tambah'])->name('admin.gate.tambah');
+    Route::get('admin/kelola/edit-gate/{id}', [gates::class, 'edit'])->name('admin.gate.edit');
+    Route::post('admin/kelola/tambah-gate', [gates::class, 'tambahAction'])->name('admin.gate.tambahAction');
+    Route::post('admin/kelola/edit-gate/{id}', [gates::class, 'editAction'])->name('admin.gate.editAction');
+    Route::post('admin/kelola/hapus-gate/{id}', [gates::class, 'hapus'])->name('admin.gate.hapus');
 });
 
 // User routes

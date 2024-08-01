@@ -3,7 +3,11 @@
    <li class="sidebar-item">
       <a class="sidebar-link " href="{{$item['link']}}" aria-expanded="false">
          <span>
-            <i class="{{$item['icon']}}"></i>
+            @if($item['icon']['type'] == "bootstrap")
+                <i class="{{$item['icon']['name']}}"></i>
+            @elseif ($item['icon']['type'] == "image")
+                <img src="{{$item['icon']['name']}}"></img>
+            @endif
          </span>
          <span class="hide-menu">{{$item['name']}}</span>
       </a>
@@ -19,8 +23,12 @@
       <li class="sidebar-item">
          <a class="sidebar-link" href="{{$list['link']}}" aria-expanded="false">
             <span>
-               <i class="{{$list['icon']}}"></i>
-            </span>
+                @if($list['icon']['type'] == "bootstrap")
+                    <i class="{{$list['icon']['name']}}"></i>
+                @elseif ($list['icon']['type'] == "image")
+                    <img src="{{$list['icon']['name']}}"></img>
+                @endif
+             </span>
             <span class="hide-menu">{{$list['name']}}</span>
          </a>
       </li>

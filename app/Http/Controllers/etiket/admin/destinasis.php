@@ -66,17 +66,10 @@ class destinasis extends Controller
     }
 
     public function edit($id) {
-
-        $destinasi = Destinasi::all();
-        $gates = Gates::all();
-        $jenisTiket = ['Weekday','Weekend'];
-        $data = Destinasi::where('id',$id)->get();
+        $data = Destinasi::where('id',$id)->first();
 
         return view('etiket.admin.master-data.destinasi.edit', [
             'data' => $data,
-            "destinasi" => $destinasi,
-            "gate" => $gates,
-            "jenisTiket" => $jenisTiket,
         ]);
     }
 

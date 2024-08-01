@@ -15,7 +15,7 @@ class tikets extends Controller
 
     public function daftar() {
 
-        $data = gk_tikets::with(['destinasi', 'gk_gates'])->get();
+        $data = gk_tikets::with(['destinasi', 'gk_gate','kategori', 'golongan'])->get();
 
         $jenisTiket = ['Weekday','Weekend'];
         $totalTerjual = 122;

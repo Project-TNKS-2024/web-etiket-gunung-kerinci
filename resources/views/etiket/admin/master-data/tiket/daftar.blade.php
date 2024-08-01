@@ -1,4 +1,4 @@
-<table class="w-full">
+<table class="w-full rounded">
     <thead>
         <tr>
             @foreach ($headers as $h)
@@ -8,11 +8,14 @@
     </thead>
     <tbody>
         @foreach ($data as $d)
-            <tr class="">
+            <tr class="tiket-row">
+                <td class="p-3 font-bold">{{$d->nama}}</td>
+                <td class="p-3 font-bold">{{$d->kategori->nama}}</td>
+                <td class="p-3 font-bold">{{$d->golongan->nama}}</td>
+                <td class="p-3 font-bold">{{$d->tipe}}</td>
                 <td class="p-3 font-bold">{{$d->destinasi->nama}}</td>
-                <td class="p-3 font-bold">{{ucwords($d->nama)}}</td>
-                <td class="p-3 font-bold">{{$d->gk_gates->nama}}</td>
-                <td class="p-3 font-bold">{{$jenisTiket[$d->jenisTiket]}}</td>
+                <td class="p-3 font-bold">{{$d->gk_gate->nama}}</td>
+                <td class="p-3 font-bold">{{$d->keterangan}}</td>
                 <td class="p-3 font-bold">Rp {{number_format($d->harga)}}</td>
                 <td class="p-3 d-flex gap-1">
                         <a  href="{{route('admin.tiket.edit', ['id' => $d->id])}}" class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/edit.png')}}"/></a>
