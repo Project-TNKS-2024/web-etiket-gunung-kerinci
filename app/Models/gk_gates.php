@@ -32,7 +32,4 @@ class gk_gates extends Model
         return $this->belongsTo(destinasi::class, 'id_destinasi');
     }
 
-    public function gambar_gates() {
-        return $this->hasMany(gambar_gates::class, 'id_gate');
-    }
 }

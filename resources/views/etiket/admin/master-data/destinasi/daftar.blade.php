@@ -13,10 +13,10 @@
                 <td class="p-3 font-bold">{{$d->nama}}</td>
                 <td class="p-3 font-bold">{{$d->lokasi}}</td>
                 <td class="p-3 font-bold">{{$d->detail}}</td>
-                <td class="p-3 d-flex gap-1 bg-transparent align-items-center justify-content-center" >
+                <td class="p-3 d-flex gap-1 bg-transparent align-items-center justify-content-start" >
                         <a  href="{{route('admin.destinasi.edit', ['id' => $d->id])}}" class="bg-transparent rounded gk-bg-primary100 cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent"/></a>
                         <a onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.destinasi.hapus', ['id' => $d->id])}}`)" href="#" class="rounded cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/icon/tnks-bin.svg')}}"/></a>
-                        <a><img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/tnks-detail.svg')}}"/></a>
+                        <div onclick="openModal({{ json_encode($gambar) }}.filter(o => o.id_destinasi === {{$d->id}}))"><img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/tnks-detail.svg')}}"/></div>
                 </td>
             </tr>
         @endforeach

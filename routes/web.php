@@ -75,6 +75,7 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/kelola/tambah-destinasi', [destinasis::class, 'tambahAction'])->name('admin.destinasi.tambahAction');
     Route::post('admin/kelola/edit-destinasi/{id}', [destinasis::class, 'editAction'])->name('admin.destinasi.editAction');
     Route::post('admin/kelola/hapus-destinasi/{id}', [destinasis::class, 'hapus'])->name('admin.destinasi.hapus');
+    Route::post('admin/kelola/upload-destinasi/{id}', [destinasis::class, 'upload'])->name('admin.destinasi.upload');
 
 
     //gate
@@ -84,7 +85,6 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/kelola/tambah-gate', [gates::class, 'tambahAction'])->name('admin.gate.tambahAction');
     Route::post('admin/kelola/edit-gate/{id}', [gates::class, 'editAction'])->name('admin.gate.editAction');
     Route::post('admin/kelola/hapus-gate/{id}', [gates::class, 'hapus'])->name('admin.gate.hapus');
-    Route::post('admin/kelola/upload-gate/{id}', [gates::class, 'upload'])->name('admin.gate.upload');
 });
 
 // User routes

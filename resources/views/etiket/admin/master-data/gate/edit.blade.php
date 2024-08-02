@@ -76,66 +76,8 @@
                 </div>
             </div>
         </form>
-
-
-       <div class="row gap-1  mt-3">
-           <form class="form row" action="{{route('admin.gate.upload', ['id' => $data->id])}}" method="post" enctype="multipart/form-data">
-            @csrf
-                <div class="">
-                    <label class="form-label" for="gate-foto">Upload Foto</label>
-                    <div class="d-flex gap-2">
-                        <label class="borderx form-control d-flex align-items-center w-fit p-0 py-2 px-2 bg-white cursor-pointer" for="gate-foto" style="user-select: none;max-width: 300px;border: 1px solid var(--neutrals500)">
-                            <div class="m-0 p-0 pe-3 py-0 borderx gk-text-primary700 font-medium d-flex gap-1">
-                                <img class="p-0 m-0" width="20" src="{{asset('assets/icon/tnks/upload.svg')}}"/> <div>Pilih Foto</div>
-                            </div>
-                            <div id="input-file-label" class="m-0 p-0" style="flex-wrap: nowrap;"> No File Chosen</div>
-                        </label>
-                        <div class="btn btn-warning text-black">Lihat Gambar</div>
-                        <button type="submit" class="btn btn-primary gk-bg-primary700">Upload Gambar</button>
-                    </div>
-                    <label class="text-sm text-black px-1">2-3 Foto</label>
-                    <input class="form-control borderx bg-white d-none" type="file" name="foto" id="gate-foto" accept="image/*" onchange="collectPics(event)"/>
-                </div>
-                <div class="col-md-3 col-sm-6">
-
-                </div>
-           </form>
-            <div class="row">
-                <div class="col text-base font-medium text-black">Daftar Gambar</div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <table class="rounded table table-striped table-bordered">
-                        <thead>
-                            <tr class="bg-white">
-                                <th class="col-2">No</th>
-                                <th class="col-8">Nama</th>
-                                <th class="col-2">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="data-body">
-                            <tr>
-                                <td  colspan="3">Belum Ada Gambar</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
        </div>
     </main>
 </div>
 
-<script>
-    const selectedFiles = [];
-    function collectPics(event) {
-        const fileInput = event.target;
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const inputFileLabel = document.getElementById("input-file-label");
-            inputFileLabel.textContent = event.target.value.split("\\").slice(-1);
-        }
-
-
-    }
-</script>
 @endsection

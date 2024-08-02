@@ -102,28 +102,4 @@ class gates extends Controller
         Tiket::where('id', $id)->delete();
         return back()->with('success', 'Berhasil Menghapus Tiket');
     }
-
-    public function upload(Request $request, $id) {
-        $request->validate([
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg', // Adjust the validation rules as needed
-        ]);
-
-        // If validation passes, handle the upload logic
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $fileName = time() . '.' . $file->getClientOriginalExtension(); // Use $fileName consistently
-            $file->move(public_path('assets/img/gates/'), $fileName);
-            $fileUrl = asset('assets/img/gates/' . $fileName);
-
-            if (!gambar_gates::create([
-                "src" => $fileUrl,
-                "id_gate" => $id,
-            ])) {
-                return back()->withErrors(['database' => "Terjadi kesalahan saat mengupload gambar"]); // withErrors instead of withError
-            }
-
-            return back()->with('success', 'Berhasil mengupload gambar.');
-        }
-
-    }
 }

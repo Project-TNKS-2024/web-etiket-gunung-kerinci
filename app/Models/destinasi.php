@@ -26,4 +26,9 @@ class destinasi extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+
+    public function gambar_destinasi() {
+        return $this->hasMany(gambar_destinasi::class, 'id_destinasi');
+    }
 }

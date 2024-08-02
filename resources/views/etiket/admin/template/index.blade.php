@@ -42,11 +42,31 @@
         .tiket-row:nth-child(even) {
             background-color: rgb(250, 250, 250);
         }
+
+        .gradient-top {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25%; /* Covering the top 25% */
+            background: linear-gradient(to top, rgba(0,0,0,.5), transparent);
+            pointer-events: none; /* Ensure it doesn't block interactions with the img */
+        }
+
+
    </style>
    @yield('css')
 </head>
 
 <body>
+
+
+
+    <div id="modal" class="gap-5 d-none align-items-center justify-content-start position-fixed top-0 left-0 w-full h-full" style="overflow-x: auto; padding: 0 25%;z-index: 999; background-color: rgba(0,0,0,.2)">
+        <img class="position-fixed cursor-pointer" onclick="closeModal()" src="{{asset('assets/icon/tnks/x-light.svg')}}" width="50" style="top: 20px; right: 20px;filter: drop-shadow(0px 0px 10px black)"/>
+    </div>
+
+
    <!--  Body Wrapper -->
    <div class="page-wrapper w-100" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
       <!-- ========================================= -->
@@ -90,8 +110,46 @@
 
             caller.textContent = event.target.textContent;
             input.value = value;
+        }
+    </script>
 
 
+    <script>
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.add("d-none");
+            modal.classList.remove("d-flex");
+
+            const imageContainer = document.querySelectorAll(".image-container-in-modal");
+            imageContainer.forEach(element => {
+                element.remove();
+            });
+        }
+
+        function openModal(src) {
+            const modal = document.getElementById('modal');
+            modal.classList.add("d-flex");
+            modal.classList.remove("d-none");
+            console.log(src);
+            src.forEach((image,index) => {
+                // <img id="modal-img" width="1000" class="rounded shadow"/>
+                const div = document.createElement('div');
+                div.style.position = "relative";
+                div.classList.add("image-container-in-modal");
+                div.classList.add("d-flex", "flex-column", "justify-content-end");
+                div.innerHTML = `
+                    <div class="gradient-top w-100 h-100"></div>
+                    <div class="p-3 text-white position-absolute w-100 h-100 d-flex flex-column justify-content-end" style="left: 0; bottom: 0;" >
+                        <header class="text-xl font-semibold">${image.nama}</header>
+                        <div class="text-lg">${image.detail}</div>
+                    </div>
+                    <img id="modal-img" width="750" class="rounded shadow" src='${image.src}' />
+                `;
+                modal.appendChild(div);
+
+            });
+
+            // modalImg.src = src[0];
         }
     </script>
 </body>

@@ -4,10 +4,13 @@ namespace App\Http\Controllers\etiket\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\tiket as Tiket;
 use App\Models\destinasi;
 use App\Models\gk_gates;
+use App\Models\gambar_destinasi;
 use Illuminate\Support\Facades\DB;
+use Exception;
+use Illuminate\Support\Facades\Log;
+
 
 class destinasis extends Controller
 {
@@ -16,14 +19,11 @@ class destinasis extends Controller
     public function daftar() {
 
         $data = Destinasi::get();
-
-        $jenisTiket = ['Weekday','Weekend'];
-        $totalTerjual = 122;
+        $gambar = gambar_destinasi::with(['destinasi'])->get();
 
         return view('etiket.admin.master-data.destinasi', [
             "destinasi" => $data,
-            "totalTerjual" => $totalTerjual,
-            "jenisTiket" => $jenisTiket,
+            "gambar" => $gambar,
         ]);
     }
 
@@ -63,42 +63,66 @@ class destinasis extends Controller
     public function edit($id) {
         $data = Destinasi::where('id',$id)->first();
         $gates = gk_gates::with(['destinasi'])->where('gk_gates.id_destinasi', $id)->get();
+        $gambar = gambar_destinasi::with(['destinasi'])->where('id_destinasi', $id)->get();
 
         return view('etiket.admin.master-data.destinasi.edit', [
             'data' => $data,
             'gates' => $gates,
+            'gambar' => $gambar,
         ]);
     }
 
     public function editAction(Request $request, $id) {
         $request->validate([
-            'destinasi' => 'required',
-            'tipe' => 'required', // Sesuaikan dengan kebutuhan Anda
-            'jenis' => 'required',
-            'gate' => 'required',
-            'hargaTiket' => 'required',
+            'nama' => 'required',
+            'detail' => 'required',
         ]);
 
-        DB::table('tikets')->where('id', $id)->update([
-            'id_destinasi' => $request->destinasi,
-            'nama' => $request->tipe,
-            'spesial' => 'gunungKerinci',
-            'keterangan' => '-',
-            'harga wna' => 0, // Fixed key
-            'harga wni' => 0, // Fixed key
-            'gate' => 1, // Ensure this field is correctly passed
-            'jenisTiket' => $request->jenis,
-            'harga' => $request->hargaTiket,
-        ]);
-
+        if (!destinasi::where('id',$id)->update([
+            "nama" => $request->nama,
+            "detail" => $request->detail
+        ])) {
+            return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);
+        }
 
         return back()->with('success', 'Berhasil memperbarui tiket');
 
     }
 
     public function hapus(Request $reqeust, $id) {
-
-        Tiket::where('id', $id)->delete();
         return back()->with('success', 'Berhasil Menghapus Tiket');
+    }
+
+    public function upload(Request $request, $id)
+    {
+        // Validate the request
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Added max size constraint
+            'foto_nama' => 'required|string|max:255', // Added max length constraint
+            'foto_detail' => 'required|string|max:500', // Added max length constraint
+        ]);
+
+        try {
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('assets/img/destinasi/'), $fileName);
+                $fileUrl = asset('assets/img/destinasi/' . $fileName);
+
+                gambar_destinasi::create([
+                    "src" => $fileUrl,
+                    "nama" => $request->input('foto_nama'),
+                    "detail" => $request->input('foto_detail'),
+                    "id_destinasi" => $id,
+                ]);
+
+                return back()->with('success', 'Berhasil mengupload gambar.');
+            } else {
+                return back()->withErrors(['foto' => 'File tidak ditemukan.']);
+            }
+        } catch (Exception $e) {
+            Log::error('Error uploading file: ' . $e->getMessage());
+            return back()->withErrors(['database' => 'Terjadi kesalahan saat mengupload gambar: ' . $e->getMessage()]);
+        }
     }
 }
