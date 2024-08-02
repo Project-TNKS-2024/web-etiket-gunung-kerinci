@@ -12,9 +12,7 @@ class destinasi extends Model
     protected $fillable = [
         'nama',
         'status',
-        'lokasi',
         'detail',
-        'foto',
     ];
 
     /**

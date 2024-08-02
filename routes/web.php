@@ -84,6 +84,7 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/kelola/tambah-gate', [gates::class, 'tambahAction'])->name('admin.gate.tambahAction');
     Route::post('admin/kelola/edit-gate/{id}', [gates::class, 'editAction'])->name('admin.gate.editAction');
     Route::post('admin/kelola/hapus-gate/{id}', [gates::class, 'hapus'])->name('admin.gate.hapus');
+    Route::post('admin/kelola/upload-gate/{id}', [gates::class, 'upload'])->name('admin.gate.upload');
 });
 
 // User routes

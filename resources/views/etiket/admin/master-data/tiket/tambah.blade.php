@@ -93,17 +93,6 @@
             </div>
         </form>
     </main>
-    <script>
-        function select(event, callerId, inputId, value) {
-            const caller = document.getElementById(callerId);
-            const input = document.getElementById(inputId);
-
-            caller.textContent = event.target.textContent;
-            input.value = value;
-
-
-        }
-    </script>
 </div>
 @endsection
 

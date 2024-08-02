@@ -5,8 +5,8 @@ namespace App\Http\Controllers\etiket\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\tiket as Tiket;
-use App\Models\destinasi as Destinasi;
-use App\Models\gk_gates as Gates;
+use App\Models\destinasi;
+use App\Models\gk_gates;
 use Illuminate\Support\Facades\DB;
 
 class destinasis extends Controller
@@ -29,7 +29,7 @@ class destinasis extends Controller
 
     public function tambah() {
         $destinasi = Destinasi::all();
-        $gates = Gates::all();
+        $gates = gk_gates::all();
         $jenisTiket = ['Weekday','Weekend'];
 
         return view('etiket.admin.master-data.destinasi.tambah', [
@@ -42,34 +42,31 @@ class destinasis extends Controller
 
     public function tambahAction(Request $request) {
         $request->validate([
-            'destinasi' => 'required',
-            'tipe' => 'required', // Sesuaikan dengan kebutuhan Anda
-            'jenis' => 'required',
-            'gate' => 'required',
-            'hargaTiket' => 'required',
+            'nama' => 'required',
+            'detail' => 'required',
         ]);
 
-        DB::table('tikets')->insert([
-            'id_destinasi' => $request->destinasi,
-            'nama' => $request->tipe,
-            'spesial' => 'gunungKerinci',
-            'keterangan' => '-',
-            'harga wna' => 0, // Fixed key
-            'harga wni' => 0, // Fixed key
-            'gate' => 1, // Ensure this field is correctly passed
-            'jenisTiket' => $request->jenis,
-            'harga' => $request->hargaTiket,
+        $proceed = destinasi::create([
+            "nama" => $request->nama,
+            "detail" => $request->detail,
+            "status" => 1,
         ]);
 
+        if (!$proceed) {
+            return back()->with('error', 'Terjadi kesalahan ketika menambahkan destinasi');
+        }
 
-        return back()->with('success', 'Berhasil menambah tiket');
+
+        return back()->with('success', 'Berhasil menambah destinasi');
     }
 
     public function edit($id) {
         $data = Destinasi::where('id',$id)->first();
+        $gates = gk_gates::with(['destinasi'])->where('gk_gates.id_destinasi', $id)->get();
 
         return view('etiket.admin.master-data.destinasi.edit', [
             'data' => $data,
+            'gates' => $gates,
         ]);
     }
 

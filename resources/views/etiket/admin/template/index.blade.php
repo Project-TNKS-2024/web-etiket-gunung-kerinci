@@ -34,6 +34,14 @@
       * {
             font-family: "Poppins", sans-serif;
         }
+
+
+        .tiket-row:nth-child(odd) {
+            background-color: rgb(233, 233, 233);
+        }
+        .tiket-row:nth-child(even) {
+            background-color: rgb(250, 250, 250);
+        }
    </style>
    @yield('css')
 </head>
@@ -73,6 +81,19 @@
    @yield('js')
 
    @include('etiket.admin.components.modal')
+
+
+   <script>
+        function select(event, callerId, inputId, value) {
+            const caller = document.getElementById(callerId);
+            const input = document.getElementById(inputId);
+
+            caller.textContent = event.target.textContent;
+            input.value = value;
+
+
+        }
+    </script>
 </body>
 
 </html>

@@ -3,9 +3,6 @@
 @section('css')
 
 <style>
-    .tiket-row:nth-child(odd) {
-        background-color: rgb(233, 233, 233);
-    }
 </style>
 
 @endsection

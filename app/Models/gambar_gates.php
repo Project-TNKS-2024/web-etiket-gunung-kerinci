@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class gk_gates extends Model
+class gambar_gates extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'nama',
-        'status',
-        'lokasi',
-        'detail',
-        'foto',
-        'id_destinasi',
+        'src',
+        'id_gate',
     ];
 
     /**
@@ -23,16 +20,11 @@ class gk_gates extends Model
      * @var array
      */
     protected $casts = [
-        'status' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
     public function destinasi() {
-        return $this->belongsTo(destinasi::class, 'id_destinasi');
-    }
-
-    public function gambar_gates() {
-        return $this->hasMany(gambar_gates::class, 'id_gate');
+        return $this->belongsTo(gk_gates::class, 'id_gate');
     }
 }

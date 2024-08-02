@@ -27,7 +27,7 @@
         <div class="row"  style="overflow: visible;">
             <div class="col-12 p-0 shadow rounded" style="overflow:auto;">
                 @include('etiket.admin.master-data.gate.daftar', [
-                    "headers" => ["Status", "Nama", "Lokasi", "Detail", "Aksi"],
+                    "headers" => ["Status", "Nama", "Lokasi", "Destinasi", "Detail", "Aksi"],
                     "data" => $gates,
                 ])
             </div>

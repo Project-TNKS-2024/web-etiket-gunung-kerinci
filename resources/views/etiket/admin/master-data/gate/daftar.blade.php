@@ -12,6 +12,7 @@
                 <td class="p-3 font-bold">{{$d->status}}</td>
                 <td class="p-3 font-bold">{{$d->nama}}</td>
                 <td class="p-3 font-bold">{{$d->lokasi}}</td>
+                <td class="p-3 font-bold">{{$d->destinasi->nama}}</td>
                 <td class="p-3 font-bold">{{$d->detail}}</td>
                 <td class="p-3 d-flex gap-1 bg-transparent align-items-center justify-content-center" >
                         <a  href="{{route('admin.gate.edit', ['id' => $d->id])}}" class="bg-transparent rounded gk-bg-primary100 cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent"/></a>

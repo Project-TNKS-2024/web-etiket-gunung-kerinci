@@ -17,28 +17,46 @@ class destinasi_gate_tiket extends Seeder
      */
     public function run(): void
     {
+        // destinasi::create([
+        //     'nama' => 'Gunung Kerinci',
+        //     'status' => true,
+        //     'lokasi' => 'Lokasi Destinasi 1',
+        //     'detail' => 'Deskripsi Destinasi 1',
+        //     'foto' => 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Uprising-mount_kerinci.jpg',
+        // ]);
+
+        // Destinasi::create([
+        //     'nama' => 'Danau Kaco',
+        //     'status' => false,
+        //     'lokasi' => 'Lokasi Destinasi 2',
+        //     'detail' => 'Deskripsi Destinasi 2',
+        //     'foto' => '-',
+        // ]);
+
+        // Destinasi::create([
+        //     'nama' => 'Danau Gunung Tujuh',
+        //     'status' => true,
+        //     'lokasi' => 'Lokasi Destinasi 2',
+        //     'detail' => 'Deskripsi Destinasi 2',
+        //     'foto' => '-',
+        // ]);
+
         destinasi::create([
             'nama' => 'Gunung Kerinci',
             'status' => true,
-            'lokasi' => 'Lokasi Destinasi 1',
             'detail' => 'Deskripsi Destinasi 1',
-            'foto' => 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Uprising-mount_kerinci.jpg',
         ]);
 
         Destinasi::create([
             'nama' => 'Danau Kaco',
             'status' => false,
-            'lokasi' => 'Lokasi Destinasi 2',
             'detail' => 'Deskripsi Destinasi 2',
-            'foto' => '-',
         ]);
 
         Destinasi::create([
             'nama' => 'Danau Gunung Tujuh',
             'status' => true,
-            'lokasi' => 'Lokasi Destinasi 2',
             'detail' => 'Deskripsi Destinasi 2',
-            'foto' => '-',
         ]);
 
         kategoris::create([
@@ -63,6 +81,7 @@ class destinasi_gate_tiket extends Seeder
             'status' => true,
             'foto' => 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Uprising-mount_kerinci.jpg',
             'detail' => 'Desa Kersik Tuo, Kecamatan Kayu Aro, Kabupaten Kerinci, Jambi.',
+            'id_destinasi' => '1',
         ]);
 
         gk_gates::create([
@@ -71,6 +90,7 @@ class destinasi_gate_tiket extends Seeder
             'status' => true,
             'foto' => '-',
             'detail' => 'Camping Ground Bangun Rejo di Kabupaten Solok Selatan, Sumatera Barat.',
+            'id_destinasi' => '1',
         ]);
 
         // GUNUNG KERINCI KERSIK TUO, NUSANTARA

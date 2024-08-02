@@ -37,29 +37,13 @@
             </div>
             @endif
            <div class="row gap-2">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-6 col-sm-12">
                     <label class="form-label">Nama Destinasi</label>
                     <input class="form-control borderx bg-white" name="nama" id="destinasi-nama" value="{{$data->nama}}" required/>
                 </div>
-                <div class="col-md-3 col-sm-6">
-                    <label class="form-label">Lokasi Destinasi</label>
-                    <input class="form-control borderx bg-white" name="lokasi" id="destinasi-lokasi" value="{{$data->lokasi}}" required/>
-                </div>
-
-                <div class="col w-fit">
-                    <label class="form-label" for="destinasi-foto">Upload Foto</label>
-                    <label class="borderx form-control d-flex align-items-center w-fit p-0 py-2 px-2 bg-white cursor-pointer" for="destinasi-foto" style="user-select: none;max-width: 240px;border: 1px solid var(--neutrals500)">
-                        <div  class="m-0 p-0 pe-3 py-0 borderx gk-text-primary700 font-medium">
-                            <img class="p-0 m-0" width="20" src="{{asset('assets/icon/tnks/upload.svg')}}"/> Pilih Foto
-                        </div>
-                        <div class="m-0 p-0"> No File Choosen</div>
-                    </label>
-                    <label class="text-sm text-black px-1">2-3 Foto</label>
-                    <input class="form-control borderx bg-white d-none" styl type="file" name="foto" id="destinasi-foto" value="{{$data->lokasi}}"  required/>
-                </div>
            </div>
             <div class="row gap-2">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-6 col-sm-12">
                     <label class="form-label">Detail</label>
                     <textarea name="detail" id="destinasi-detail" class="form-control bg-white borderx" style="min-height: 75px;" placeholder="Detail">{{ $data->detail }}</textarea>
                 </div>
@@ -72,6 +56,41 @@
                     </button>
                 </div>
             </div>
+            <div class="row">
+                <div class="col mt-3 text-base font-medium text-black">Daftar Gambar</div>
+            </div>
+            <div class="row">
+                <div class="col mt-3 text-base font-medium text-black">Daftar Gates</div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="rounded table table-striped table-bordered">
+                        <thead>
+                            <tr class="bg-white">
+                                <th class="col-1" style="">No</th>
+                                <th class="col-4">Nama</th>
+                                <th class="col-4">Detail</th>
+                                <th class="col-2">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($gates as $g)
+                                <tr class="tiket-row">
+                                    <td class="col-1" style="">{{$loop->index+1}}</td>
+                                    <td class="col-4">{{$g->nama}}</td>
+                                    <td class="col-4">{{$g->detail}}</td>
+                                    <td class="p-3 d-flex gap-1 bg-transparent align-items-center justify-content-center" >
+                                        <a  href="{{route('admin.gate.edit', ['id' => $g->id])}}" class="bg-transparent rounded gk-bg-primary100 cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent"/></a>
+                                        <a onclick="confirmDelete(event, '{{json_encode($g)}}',  `{{ route('admin.gate.hapus', ['id' => $g->id])}}`)" href="#" class="rounded cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/icon/tnks-bin.svg')}}"/></a>
+                                        <a><img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/tnks-detail.svg')}}"/></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col mt-3 text-base font-medium text-black">Daftar Gambar</div>
             </div>
