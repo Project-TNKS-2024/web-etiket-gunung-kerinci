@@ -12,18 +12,24 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_user');
             $table->unsignedBigInteger('id_tiket');
-            $table->unsignedTinyInteger('status'); // (1, 2, 3)
-            $table->unsignedBigInteger('id_booking_master')->nullable();
-            $table->unsignedInteger('total_pendaki')->nullable();
-            $table->integer('wni');
-            $table->integer('wna');
-            $table->text('keterangan')->nullable();
-            $table->string('QR')->nullable();
-            $table->boolean('pembayaran')->default(false);
-            $table->unsignedBigInteger('gate_masuk');
-            $table->unsignedBigInteger('gate_keluar');
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar');
+            $table->enum('kategori_hari', ['wk', 'wd']); //==================
+            $table->integer('total_hari');
+            $table->integer('total_pendaki_wni');
+            $table->integer('total_pendaki_wna');
+            $table->unsignedBigInteger('gate_masuk');
+            $table->unsignedBigInteger('gate_keluar');
+            $table->unsignedTinyInteger('status_booking'); // (1, 2, 3)
+            $table->integer('total_pembayaran');
+            $table->boolean('status_pembayaran')->default(false);
+
+            $table->text('lampiran_simaksi');
+            $table->text('lampiran_stugas');
+            $table->string('unique_code')->nullable();
+            $table->text('keterangan')->nullable();
+
+            $table->unsignedBigInteger('id_booking_master')->nullable();
             $table->timestamps();
 
             // Foreign key constraints
