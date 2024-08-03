@@ -24,17 +24,22 @@ class GantiPassword extends Controller
         ], [
             'password_baru.required' => 'Password harus diisi.',
             'password_baru.min' => 'Password minimal :min karakter.',
+            'password_baru.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password_baru.required' => 'Password harus diisi.',
+            'password_baru.min' => 'Password minimal :min karakter.',
             'password_baru.confirmed' => 'Periksa kembali password.',
         ]);
 
+        return Auth::user()->email;
         // Find the user by email
+
         $user = User::where(
             'email',
             $email
         )->first();
 
         if (!$user) {
-            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
+            return back()->with(['error' => 'Email tidak ditemukan.']);
         }
 
         // Update the user's password

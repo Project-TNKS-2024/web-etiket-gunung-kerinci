@@ -11,37 +11,23 @@ class gk_booking extends Model
     protected $fillable = [
         'id_user',
         'id_tiket',
-        'status',
-        'id_booking_master',
-        'total_pendaki',
-        'wni',
-        'wna',
-        'keterangan',
-        'QR',
-        'pembayaran',
-        'gate_masuk',
-        'gate_keluar',
         'tanggal_masuk',
         'tanggal_keluar',
+        'kategori_hari',
+        'total_hari',
+        'total_pendaki_wni',
+        'total_pendaki_wna',
+        'gate_masuk',
+        'gate_keluar',
+        'status_booking',
+        'total_pembayaran',
+        'status_pembayaran',
+        'lampiran_simaksi',
+        'lampiran_stugas',
+        'unique_code',
+        'keterangan',
+        'id_booking_master',
     ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'status' => 'integer',
-        'total_pendaki' => 'integer',
-        'wni' => 'integer',
-        'wna' => 'integer',
-        'pembayaran' => 'boolean',
-        'tanggal_masuk' => 'date',
-        'tanggal_keluar' => 'date',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
     /**
      * Get the user that owns the booking.
      */
@@ -53,9 +39,9 @@ class gk_booking extends Model
     /**
      * Get the ticket associated with the booking.
      */
-    public function tiket()
+    public function gktiket()
     {
-        return $this->belongsTo(Tiket::class, 'id_tiket');
+        return $this->belongsTo(gk_paket_tiket::class, 'id_tiket');
     }
 
     /**

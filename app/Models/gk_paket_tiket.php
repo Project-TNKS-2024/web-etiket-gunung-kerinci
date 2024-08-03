@@ -5,23 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class gk_tikets extends Model
+class gk_paket_tiket extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'id_destinasi',
-        'id_kategori',
-        'id_golongan',
-        'id_gate',
         'nama',
-        'price_traking',
-        'price_kemah',
-        'price_ansuransi',
-        'min_visitor',
+        'min_pendaki',
         'penugasan',
         'keterangan',
-        'tipe',
-        'harga',
     ];
 
     // Specify the attributes that should be cast to native types
