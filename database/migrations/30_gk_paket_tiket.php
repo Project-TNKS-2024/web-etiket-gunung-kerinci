@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_destinasi');
             $table->string('nama');
-            $table->integer('min_pendaki');
-            $table->boolean('penugasan')->default(false);
+            $table->integer('min_pendaki')->nullable();
+            $table->string('penugasan')->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });

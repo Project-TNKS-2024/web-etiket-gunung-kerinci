@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('nama');
             $table->boolean('status')->default(true);
             $table->unsignedBigInteger('id_destinasi');
-            $table->integer('max_pendaki_hari');
-            $table->integer('min_pendaki_booking');
-            $table->string('lokasi'); // lokasi maps
-            $table->string('lokasi_maps'); // lokasi maps
+            $table->integer('max_pendaki_hari')->nullable();
+            $table->integer('min_pendaki_booking')->nullable();
+            $table->string('lokasi')->nullable();
+            $table->string('lokasi_maps')->nullable();
             $table->text('detail')->nullable();
             $table->timestamps();
         });
