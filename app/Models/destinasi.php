@@ -12,9 +12,9 @@ class destinasi extends Model
     protected $fillable = [
         'nama',
         'status',
+        'kategori',
         'lokasi',
         'detail',
-        'foto',
     ];
 
     /**
@@ -24,7 +24,6 @@ class destinasi extends Model
      */
 
     protected $casts = [
-        'status' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

@@ -28,13 +28,6 @@ class gk_booking extends Model
         'keterangan',
         'id_booking_master',
     ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-
     /**
      * Get the user that owns the booking.
      */
@@ -48,7 +41,7 @@ class gk_booking extends Model
      */
     public function gktiket()
     {
-        return $this->belongsTo(gk_tikets::class, 'id_tiket');
+        return $this->belongsTo(gk_paket_tiket::class, 'id_tiket');
     }
 
     /**

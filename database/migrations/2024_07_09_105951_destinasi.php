@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->boolean('status');
+            $table->enum('kategori', ['taman', 'gunung']);
             $table->string('lokasi');
             $table->text('detail');
-            $table->string('foto');
             $table->timestamps();
         });
     }
