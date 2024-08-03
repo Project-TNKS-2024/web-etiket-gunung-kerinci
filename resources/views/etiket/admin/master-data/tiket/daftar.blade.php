@@ -19,7 +19,7 @@
                 <td class="p-3 font-bold">Rp {{number_format($d->harga)}}</td>
                 <td class="p-3 d-flex gap-1">
                         <a  href="{{route('admin.tiket.edit', ['id' => $d->id])}}" class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/edit.png')}}"/></a>
-                        <a onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.tiket.hapus', ['id' => $d->id])}}`)" href="#" class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/delete.png')}}"/></a>
+                        <div onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.tiket.hapus', ['id' => $d->id])}}`)"  class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/delete.png')}}"/></div>
                 </td>
             </tr>
         @endforeach
@@ -27,31 +27,21 @@
 </table>
 
 <script>
-    const jenisTiket = ['Weekday', 'Weekend'];
     function confirmDelete(event, data, rute) {
-        const el = document.getElementById('modal-container');
-        document.getElementById('modal-title').textContent = "Konfirmasi Hapus Tiket"
-        const modalBody = document.getElementById('modal-body');
+        const el = document.getElementById('modal-confirmation-container');
+        document.getElementById('modal-confirmation-title').textContent = "Konfirmasi Hapus Tiket"
+        const modalBody = document.getElementById('modal-confirmation-body');
         el.classList.remove("d-none");
         el.classList.add("d-flex")
         data = JSON.parse(data);
         console.log(rute)
-        modalBody.innerHTML = "Konfirmasi hapus tiket pada id "+ data['id'] +"?"+`
-            <br>
-            <div class="row">
-                <div class="row"><div class="col-2">Destinasi</div> : ${data.destinasi.nama}</div>
-                <div class="row"><div class="col-2">Nama</div> : ${data.nama} </div>
-                <div class="row"><div class="col-2">Gate</div> : ${data.gk_gates.nama} </div>
-                <div class="row"><div class="col-2">Jenis</div> : ${jenisTiket[data.jenisTiket]} </div>
-                <div class="row"><div class="col-2">Harga</div> : ${data.harga} </div>
-            </div>
-        `;
+        modalBody.innerHTML = "Konfirmasi hapus destinasi pada id "+ data['id'];
 
-        const modalTarget = document.getElementById('modal-target');
+        const modalTarget = document.getElementById('modal-confirmation-target');
         modalTarget.classList.remove("bg-primary");
         modalTarget.classList.add("bg-danger");
 
-        const modalForm = document.getElementById('modal-form');
+        const modalForm = document.getElementById('modal-confirmation-form');
         modalForm.action = rute;
     }
 </script>

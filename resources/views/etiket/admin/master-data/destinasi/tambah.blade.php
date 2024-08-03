@@ -44,6 +44,12 @@
                     <label class="form-label">Nama Destinasi</label>
                     <input class="form-control borderx bg-white" name="nama" id="nama" value="" placeholder="Nama Destinasi" required/>
                 </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <label class="form-label" for="lokasi-foto">Upload Foto</label>
+                    <label class="form-label">Upload foto bisa dilakukan pada bagian Edit</label>
+
+                </div>
            </div>
             <div class="row gap-2">
                 <div class="col-md-6 col-sm-12">

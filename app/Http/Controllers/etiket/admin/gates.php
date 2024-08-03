@@ -99,7 +99,7 @@ class gates extends Controller
 
     public function hapus(Request $request, $id) {
 
-        Tiket::where('id', $id)->delete();
+        gk_gates::where('id', $id)->delete();
         return back()->with('success', 'Berhasil Menghapus Tiket');
     }
 }

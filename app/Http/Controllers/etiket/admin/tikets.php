@@ -108,7 +108,7 @@ class tikets extends Controller
 
     public function hapus(Request $reqeust, $id) {
 
-        Tiket::where('id', $id)->delete();
+        gk_tikets::where('id', $id)->delete();
         return back()->with('success', 'Berhasil Menghapus Tiket');
     }
 }

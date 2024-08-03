@@ -57,12 +57,6 @@
                       </ul>
                 </div>
                 <input type="hidden" name="destinasi" id="destinasi-value"/>
-
-                <div class="col-md-4 col-sm-6">
-                    <label class="form-label" for="lokasi-foto">Upload Foto</label>
-                    <label class="form-label">Upload foto bisa dilakukan pada bagian Edit</label>
-
-                </div>
            </div>
             <div class="row gap-2">
                 <div class="col-md-3 col-sm-6">
