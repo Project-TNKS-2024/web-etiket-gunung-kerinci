@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gk_gates', function (Blueprint $table) {
+        //
+        Schema::create('golongans', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->boolean('status')->default(true);
-            $table->string('lokasi'); // lokasi maps
-            $table->string('foto'); // lokasi maps
-            $table->text('detail')->nullable();
-            $table->timestamps();
+            $table->timestamps(); // Tambahkan created_at dan updated_at
         });
     }
 
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gk_gates');
+        Schema::dropIfExists('golongans');
     }
 };

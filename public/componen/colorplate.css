@@ -452,3 +452,35 @@
 .gk-text-error300 {
     color: var(--error300);
 }
+
+
+
+.border-neutrals100 {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--neutrals100);
+}
+
+.border-neutrals200 {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--neutrals200);
+}
+
+.border-neutrals300 {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--neutrals300);
+}
+
+.border-neutrals400 {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--neutrals400);
+}
+
+.border-neutrals500 {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--neutrals500);
+}

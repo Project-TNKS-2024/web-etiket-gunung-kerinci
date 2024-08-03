@@ -14,6 +14,7 @@ class gk_gates extends Model
         'lokasi',
         'detail',
         'foto',
+        'id_destinasi',
     ];
 
     /**
@@ -26,4 +27,9 @@ class gk_gates extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function destinasi() {
+        return $this->belongsTo(destinasi::class, 'id_destinasi');
+    }
+
 }

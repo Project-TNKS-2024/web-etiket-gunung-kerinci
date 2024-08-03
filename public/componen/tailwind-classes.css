@@ -245,3 +245,95 @@
 .overscroll-x-none {
     overscroll-behavior-x: none;
 }
+
+
+/* Equivalent to Tailwind 'border' */
+.border {
+    border-width: 1px;
+}
+
+/* Equivalent to Tailwind 'border-0' */
+.border-0 {
+    border-width: 0px;
+}
+
+/* Equivalent to Tailwind 'border-2' */
+.border-2 {
+    border-width: 2px;
+}
+
+/* Equivalent to Tailwind 'border-4' */
+.border-4 {
+    border-width: 4px;
+}
+
+/* Equivalent to Tailwind 'border-8' */
+.border-8 {
+    border-width: 8px;
+}
+
+/* Equivalent to Tailwind 'border-t' */
+.border-t {
+    border-top-width: 1px;
+}
+
+/* Equivalent to Tailwind 'border-r' */
+.border-r {
+    border-right-width: 1px;
+}
+
+/* Equivalent to Tailwind 'border-b' */
+.border-b {
+    border-bottom-width: 1px;
+}
+
+/* Equivalent to Tailwind 'border-l' */
+.border-l {
+    border-left-width: 1px;
+}
+
+/* Equivalent to Tailwind 'border-transparent' */
+.border-transparent {
+    border-color: transparent;
+}
+
+/* Equivalent to Tailwind 'border-black' */
+.border-black {
+    border-color: #000;
+}
+
+/* Equivalent to Tailwind 'border-white' */
+.border-white {
+    border-color: #fff;
+}
+
+/* Example for custom color */
+.border-blue-500 {
+    border-color: #3b82f6;
+    /* This is the default color for blue-500 in Tailwind */
+}
+
+/* Equivalent to Tailwind 'border-solid' */
+.border-solid {
+    border-style: solid;
+}
+
+/* Equivalent to Tailwind 'border-dashed' */
+.border-dashed {
+    border-style: dashed;
+}
+
+/* Equivalent to Tailwind 'border-dotted' */
+.border-dotted {
+    border-style: dotted;
+}
+
+/* Equivalent to Tailwind 'border-double' */
+.border-double {
+    border-style: double;
+}
+
+/* Equivalent to Tailwind 'border-none' */
+.border-none {
+    border-style: none;
+}

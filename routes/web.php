@@ -1,17 +1,30 @@
 <?php
-
+//admin
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
+use App\Http\Controllers\etiket\admin\tikets;
+use App\Http\Controllers\etiket\admin\destinasis;
+use App\Http\Controllers\etiket\admin\gates;
+
+//user
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
 use App\Http\Controllers\etiket\user\gantipassword as resetPasswordUser;
 use App\Http\Controllers\etiket\user\riwayat as riwayatUser;
+
+//auth
 use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
 use App\Http\Controllers\etiket\in\lupapassword;
 use App\Http\Controllers\etiket\in\resetpassword;
+
+//homepage
 use App\Http\Controllers\homepage\beranda;
-use App\Http\Controllers\sampel;
 use App\Http\Controllers\homepage\panduan;
 use App\Http\Controllers\homepage\booking;
+
+//~
+use App\Http\Controllers\sampel;
+
+//builtin
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,10 +45,10 @@ Route::middleware('guest')->group(function () {
     Route::post('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
-    route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
-    route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
-    route::get('reset-password', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
-    route::post('reset-password', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
+    // route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
+    // route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
+    route::get('reset-password/{token}', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
+    route::post('reset-password/action/{token}/', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
 });
 Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
 
@@ -46,6 +59,33 @@ Route::middleware(['check.role:admin'])->group(function () {
     });
 
     Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
+
+    //tiket
+    Route::get('admin/kelola/tiket', [tikets::class, 'daftar'])->name('admin.tiket.daftar');
+    Route::get('admin/kelola/tambah-tiket', [tikets::class, 'tambah'])->name('admin.tiket.tambah');
+    Route::get('admin/kelola/edit-tiket/{id}', [tikets::class, 'edit'])->name('admin.tiket.edit');
+    Route::post('admin/kelola/tambah-tiket', [tikets::class, 'tambahAction'])->name('admin.tiket.tambahAction');
+    Route::post('admin/kelola/edit-tiket/{id}', [tikets::class, 'editAction'])->name('admin.tiket.editAction');
+    Route::post('admin/kelola/hapus-tiket/{id}', [tikets::class, 'hapus'])->name('admin.tiket.hapus');
+
+
+    //destinasi
+    Route::get('admin/kelola/destinasi', [destinasis::class, 'daftar'])->name('admin.destinasi.daftar');
+    Route::get('admin/kelola/tambah-destinasi', [destinasis::class, 'tambah'])->name('admin.destinasi.tambah');
+    Route::get('admin/kelola/edit-destinasi/{id}', [destinasis::class, 'edit'])->name('admin.destinasi.edit');
+    Route::post('admin/kelola/tambah-destinasi', [destinasis::class, 'tambahAction'])->name('admin.destinasi.tambahAction');
+    Route::post('admin/kelola/edit-destinasi/{id}', [destinasis::class, 'editAction'])->name('admin.destinasi.editAction');
+    Route::post('admin/kelola/hapus-destinasi/{id}', [destinasis::class, 'hapus'])->name('admin.destinasi.hapus');
+    Route::post('admin/kelola/upload-destinasi/{id}', [destinasis::class, 'upload'])->name('admin.destinasi.upload');
+
+
+    //gate
+    Route::get('admin/kelola/gate', [gates::class, 'daftar'])->name('admin.gate.daftar');
+    Route::get('admin/kelola/tambah-gate', [gates::class, 'tambah'])->name('admin.gate.tambah');
+    Route::get('admin/kelola/edit-gate/{id}', [gates::class, 'edit'])->name('admin.gate.edit');
+    Route::post('admin/kelola/tambah-gate', [gates::class, 'tambahAction'])->name('admin.gate.tambahAction');
+    Route::post('admin/kelola/edit-gate/{id}', [gates::class, 'editAction'])->name('admin.gate.editAction');
+    Route::post('admin/kelola/hapus-gate/{id}', [gates::class, 'hapus'])->name('admin.gate.hapus');
 });
 
 // User routes

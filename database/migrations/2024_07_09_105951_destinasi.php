@@ -11,10 +11,8 @@ return new class extends Migration
         Schema::create('destinasis', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->boolean('status');
-            $table->string('lokasi');
+            $table->unsignedBigInteger('status');
             $table->text('detail');
-            $table->string('foto');
             $table->timestamps();
         });
     }
