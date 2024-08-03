@@ -9,7 +9,6 @@ class gk_paket_tiket extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'id_destinasi',
         'nama',
         'min_pendaki',
         'penugasan',
@@ -24,5 +23,20 @@ class gk_paket_tiket extends Model
     public function destinasi()
     {
         return $this->belongsTo(Destinasi::class, 'id_destinasi');
+    }
+
+    public function gk_gate()
+    {
+        return $this->belongsTo(gk_gates::class, 'id_gate');
+    }
+
+    public function kategori()
+    {
+        return $this->belongsTo(kategoris::class, 'id_kategori');
+    }
+
+    public function golongan()
+    {
+        return $this->belongsTo(golongans::class, 'id_golongan');
     }
 }

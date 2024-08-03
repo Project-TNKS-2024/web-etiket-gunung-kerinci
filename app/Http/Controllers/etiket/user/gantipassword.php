@@ -25,6 +25,9 @@ class GantiPassword extends Controller
             'password_baru.required' => 'Password harus diisi.',
             'password_baru.min' => 'Password minimal :min karakter.',
             'password_baru.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password_baru.required' => 'Password harus diisi.',
+            'password_baru.min' => 'Password minimal :min karakter.',
+            'password_baru.confirmed' => 'Periksa kembali password.',
         ]);
 
         return Auth::user()->email;
@@ -41,9 +44,11 @@ class GantiPassword extends Controller
 
         // Update the user's password
         $user->password = Hash::make($request->password);
-        $user->save();
         // If authentication fails
         // Redirect to login page with success message
-        return redirect()->route('login')->with('success', 'Password Anda telah berhasil direset.');
+        if ($user->save())
+            return back()->with('status', 'Password Anda telah berhasil direset.');
+
+
     }
 }
