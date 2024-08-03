@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        Schema::create('kategoris', function (Blueprint $table) {
+        Schema::create('gk_paket_tikets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_destinasi');
             $table->string('nama');
-            $table->timestamps(); // Tambahkan created_at dan updated_at
+            $table->integer('min_pendaki');
+            $table->boolean('penugasan')->default(false);
+            $table->text('keterangan')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kategoris');
+        Schema::dropIfExists('gk_paket_tikets');
     }
 };

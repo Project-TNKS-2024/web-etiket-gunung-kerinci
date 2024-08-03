@@ -90,7 +90,7 @@ Route::middleware(['check.role:admin'])->group(function () {
 
 // User routes
 Route::middleware(['check.role:user'])->group(function () {
-    Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
+    Route::get('dashboard/profile', [dasUser::class, 'index'])->name('user.dashboard');
     Route::get('dashboard/riwayat-booking', [riwayatUser::class, 'index'])->name('user.dashboard.riwayat');
 
     //reset password

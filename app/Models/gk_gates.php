@@ -11,10 +11,12 @@ class gk_gates extends Model
     protected $fillable = [
         'nama',
         'status',
-        'lokasi',
-        'detail',
-        'foto',
         'id_destinasi',
+        'max_pendaki_hari',
+        'min_pendaki_booking',
+        'lokasi',
+        'lokasi_maps',
+        'detail',
     ];
 
     /**
@@ -22,14 +24,9 @@ class gk_gates extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'status' => 'boolean',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
 
-    public function destinasi() {
+    public function destinasi()
+    {
         return $this->belongsTo(destinasi::class, 'id_destinasi');
     }
-
 }

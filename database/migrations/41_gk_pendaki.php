@@ -12,23 +12,29 @@ return new class extends Migration
         Schema::create('gk_pendakis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('booking_id');
-            $table->string('type_visitor');
-            $table->string('nik');
+            $table->unsignedBigInteger('tiket_id');
+            // enum wna/wni
+            $table->enum('kategori_pendaki', ['wna', 'wni']);
             $table->string('nama');
+            $table->string('nik');
             $table->string('lampiran_identitas');
             $table->string('no_hp');
             $table->string('no_hp_darurat');
             $table->date('tanggal_lahir');
+            $table->integer('usia');
             $table->string('provinsi');
             $table->string('kabupaten');
             $table->string('kec');
             $table->string('desa');
+
             $table->string('lampiran_surat_kesehatan');
             $table->string('lampiran_surat_izin_ortu');
+            $table->integer('tagihan');
             // $table->string('lampiran_simaksi');
             $table->timestamps();
 
             $table->foreign('booking_id')->references('id')->on('gk_bookings')->onDelete('cascade');
+            $table->foreign('tiket_id')->references('id')->on('gk_tiket_pendakis')->onDelete('restrict');
         });
     }
 

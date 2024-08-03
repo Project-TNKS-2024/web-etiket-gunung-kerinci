@@ -12,23 +12,25 @@ class gk_pendaki extends Model
 
     protected $fillable = [
         'booking_id',
-        'wni',
-        'nik',
+        'tiket_id',
+        'kategori_pendaki',
         'nama',
+        'nik',
         'lampiran_identitas',
         'no_hp',
         'no_hp_darurat',
         'tanggal_lahir',
+        'usia',
         'provinsi',
         'kabupaten',
         'kec',
         'desa',
         'lampiran_surat_kesehatan',
-        'lampiran_simaksi',
+        'lampiran_surat_izin_ortu',
+        'tagihan',
     ];
 
     protected $casts = [
-        'wni' => 'boolean',
         'tanggal_lahir' => 'date',
     ];
 
