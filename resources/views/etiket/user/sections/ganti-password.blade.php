@@ -30,8 +30,8 @@
         <div class="px-5">
             <div class="text-start form-group my-3">
                 <label class="font-semibold form-label" for="new_password">Password Baru</label>
-                <input class="form-control @error('password')  is-invalid @enderror " name="password_baru" id="password_baru" type="password" placeholder="Password Baru" required autofocus />
-                @error('password')
+                <input class="form-control @error('password_baru')  is-invalid @enderror " name="password_baru" id="password_baru" type="password" placeholder="Password Baru" required autofocus />
+                @error('password_baru')
                 <span class="invalid-feedback" role="alert">
                     {{ $message }}
                 </span>
@@ -39,8 +39,8 @@
                 <label class="text-start text-sm gk-text-neutrals400">Password <span id="passwordStrength"></span></label>
             </div>
             <div class="text-start form-group my-3">
-                <label class="font-semibold" for="password_baru">Konfirmasi Password Baru</label>
-                <input class="form-control" name="konfirmasi_password_baru" id="konfirmasi_password_baru" type="password" oninput="confirmPassword" placeholder="Password Baru" required />
+                <label class="font-semibold" for="konfirmasi_password_baru">Konfirmasi Password Baru</label>
+                <input class="form-control" name="konfirmasi_password_baru" id="konfirmasi_password_baru" type="password" placeholder="Konfirmasi Password Baru" required />
                 <label class="text-start text-sm gk-text-neutrals400" id="passwordConfirmed"></label>
             </div>
             <div class="text-start form-group my-4">

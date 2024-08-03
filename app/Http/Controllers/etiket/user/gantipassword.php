@@ -20,21 +20,23 @@ class GantiPassword extends Controller
         // Actual logic
         $email = Auth::user()->email;
         $request->validate([
-            'password' => 'required|string|min:8|confirmed',
+            'password_baru' => 'required|string|min:8|confirmed',
         ], [
-            'password.required' => 'Password harus diisi.',
-            'password.min' => 'Password minimal :min karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password_baru.required' => 'Password harus diisi.',
+            'password_baru.min' => 'Password minimal :min karakter.',
+            'password_baru.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
 
+        return Auth::user()->email;
         // Find the user by email
+
         $user = User::where(
             'email',
             $email
         )->first();
 
         if (!$user) {
-            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
+            return back()->with(['error' => 'Email tidak ditemukan.']);
         }
 
         // Update the user's password
@@ -42,6 +44,6 @@ class GantiPassword extends Controller
         $user->save();
         // If authentication fails
         // Redirect to login page with success message
-        return redirect()->route('login')->with('status', 'Password Anda telah berhasil direset.');
+        return redirect()->route('login')->with('success', 'Password Anda telah berhasil direset.');
     }
 }

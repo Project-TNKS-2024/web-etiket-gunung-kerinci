@@ -47,10 +47,6 @@
                 'name' => 'Booking Online',
                 'link' => route('homepage.booking',['id' => 1]),
                 ],
-                [
-                'name' => 'Virtual Tour',
-                'link' => '/virtual-tour',
-                ],
                 ],
                 ])
             </ul>
