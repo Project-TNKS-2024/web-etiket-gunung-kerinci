@@ -136,14 +136,14 @@
                 const div = document.createElement('div');
                 div.style.position = "relative";
                 div.classList.add("image-container-in-modal");
-                div.classList.add("d-flex", "flex-column", "justify-content-end");
+                div.classList.add("d-flex", "flex-column", "justify-content-end", "rounded", "shadow", );
                 div.innerHTML = `
-                    <div class="gradient-top w-100 h-100"></div>
-                    <div class="p-3 text-white position-absolute w-100 h-100 d-flex flex-column justify-content-end" style="left: 0; bottom: 0;" >
+                    <div class="gradient-top rounded w-100 h-100"></div>
+                    <div class="p-3 rounded text-white position-absolute w-100 h-100 d-flex flex-column justify-content-end" style="left: 0; bottom: 0;" >
                         <header class="text-xl font-semibold">${image.nama}</header>
                         <div class="text-lg">${image.detail}</div>
                     </div>
-                    <img id="modal-img" width="750" class="rounded shadow" src='{{url('')}}/${image.src}' />
+                    <img id="modal-img" style="height: 500px;" class="rounded  " src='{{url('')}}/${image.src}' />
                 `;
                 modal.appendChild(div);
 
