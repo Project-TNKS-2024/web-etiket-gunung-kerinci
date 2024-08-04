@@ -55,7 +55,7 @@
 
                         @foreach ($gambar as $g)
                             <div class="carousel-item {{ $loop->index == 0 ? 'active' : ''}}">
-                                <img src="{{ $g->src }}" class="d-block w-100" style=";object-fit: cover;height: 480px;" alt="...">
+                                <img src="{{ url('/').'/'.$g->src }}" class="d-block w-100" style=";object-fit: cover;height: 480px;" alt="...">
                             </div>
                         @endforeach
                     </div>
@@ -101,14 +101,14 @@
                     <label>Total Pendaki</label>
                     <div class="row">
                         <div class="col-md-6 mb-1">
-                            <label for="wni">WNI: {{$tiket['wni_weekday']}}</label>
-                            <div class="input-group mb-1 inputVolume1" data-price-weekday="{{$tiket['wni_weekday']}}" data-price-weekend="{{$tiket['wni_weekend']}}">
+                            <label for="wni">WNI: </label>
+                            <div class="input-group mb-1 inputVolume1" data-price-weekday="" data-price-weekend="">
                                 <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
                                 <input type="number" class="form-control" name="wni" id="wni" placeholder="Jumlah WNI" required value="0" readonly>
                                 <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>
                             </div>
-                            <label for="wna">WNA: {{$tiket['wna_weekday']}} </label>
-                            <div class="input-group mb-1 inputVolume1" data-price-weekday="{{$tiket['wna_weekday']}}" data-price-weekend="{{$tiket['wna_weekend']}}">
+                            <label for="wna">WNA:  </label>
+                            <div class="input-group mb-1 inputVolume1" data-price-weekday="" data-price-weekend="">
                                 <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
                                 <input type="number" class="form-control" name="wna" id="wna" placeholder="Jumlah WNA" required value="0" readonly>
                                 <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>

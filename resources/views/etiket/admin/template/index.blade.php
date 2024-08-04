@@ -143,7 +143,7 @@
                         <header class="text-xl font-semibold">${image.nama}</header>
                         <div class="text-lg">${image.detail}</div>
                     </div>
-                    <img id="modal-img" width="750" class="rounded shadow" src='${image.src}' />
+                    <img id="modal-img" width="750" class="rounded shadow" src='{{url('')}}/${image.src}' />
                 `;
                 modal.appendChild(div);
 
