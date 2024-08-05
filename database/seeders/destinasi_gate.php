@@ -24,6 +24,7 @@ class destinasi_gate extends Seeder
         destinasi::create([
             'nama' => 'Gunung Kerinci',
             'status' => true,
+            'kategori' => 'gunung',
             'lokasi' => 'Lokasi Destinasi 1',
             'detail' => 'Deskripsi Destinasi 1',
         ]);
@@ -31,6 +32,7 @@ class destinasi_gate extends Seeder
         Destinasi::create([
             'nama' => 'Danau Kaco',
             'status' => false,
+            'kategori' => 'gunung',
             'detail' => 'Deskripsi Destinasi 2',
             'lokasi' => 'Lokasi Destinasi 2',
         ]);
@@ -38,6 +40,7 @@ class destinasi_gate extends Seeder
         Destinasi::create([
             'nama' => 'Danau Gunung Tujuh',
             'status' => true,
+            'kategori' => 'gunung',
             'lokasi' => 'Lokasi Destinasi 3',
             'detail' => 'Deskripsi Destinasi 3',
         ]);
