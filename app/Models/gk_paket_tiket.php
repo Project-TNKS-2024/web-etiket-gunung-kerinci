@@ -23,12 +23,13 @@ class gk_paket_tiket extends Model
         'penugasan' => 'boolean',
     ];
 
+    public function tiket_pendaki()
+    {
+        return $this->hasMany(gk_tiket_pendaki::class, 'id_paket_tiket');
+    }
+
     public function destinasi()
     {
         return $this->belongsTo(Destinasi::class, 'id_destinasi');
-    }
-
-    public function tiket_pendaki() {
-        return $this->belongsTo(gk_tiket_pendaki::class, "id", "id_paket_tiket");
     }
 }

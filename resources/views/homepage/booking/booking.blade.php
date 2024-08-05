@@ -341,11 +341,12 @@
                 tr.appendChild(td);
             }
 
+
             for (i = 0; i < daysInMonth; i++) {
                 const td = document.createElement("td");
                 const div = document.createElement("div");
                 div.textContent = `${i+1}`;
-                if (currentMonth === currentDate.getMonth() && i === currentDate.getDate() && currentYear === currentDate.getFullYear()) {
+                if (currentMonth === currentDate.getMonth() && i+1 === currentDate.getDate() && currentYear === currentDate.getFullYear()) {
                     div.classList.add("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
                 }
                 td.appendChild(div)

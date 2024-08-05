@@ -21,9 +21,10 @@
                     <img src="{{asset('assets/icon/tnks-plus.svg')}}" />
                     Tambah Tiket
                 </a>
+
                 <a class="text-start text-black font-bold d-flex align-items-center gap-2 w-fit border-neutrals500 border-4 btn shadow gk-bg-base-white " href="{{route('admin.tiket.tambah')}}" style="border: 1px solid var)">
-                    <img src="{{asset('assets/icon/tnks/package_favourite_alt-light.svg')}}" />
-                    Tambah Tiket
+                    <img src="{{asset('assets/icon/tnks/package_favourite_alt-light.svg')}}" class="gk-bg-primary700 rounded" />
+                    Tambah Paket Tiket
                 </a>
            </div>
 

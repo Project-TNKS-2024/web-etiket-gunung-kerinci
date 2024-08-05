@@ -32,4 +32,10 @@ class destinasi extends Model
     public function gambar_destinasi() {
         return $this->hasMany(gambar_destinasi::class, 'id_destinasi');
     }
+
+    public function destinasi()
+    {
+        return $this->hasMany(gk_paket_tiket::class, 'id_destinasi');
+    }
+
 }
