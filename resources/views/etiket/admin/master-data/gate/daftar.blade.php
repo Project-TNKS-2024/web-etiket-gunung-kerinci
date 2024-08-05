@@ -13,7 +13,9 @@
                 @if ($d->status)
                 <span class="badge rounded-pill text-bg-success">Open</span>
                 @else
+
                 <span class="badge rounded-pill gk-bg-error200">Close</span>
+
                 @endif
             </td>
             <td class="p-3 ">{{$d->nama}}</td>

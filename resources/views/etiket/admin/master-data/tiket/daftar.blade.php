@@ -1,13 +1,16 @@
 <table class="w-full rounded">
     <thead>
         <tr>
+
             @foreach (["Destinasi", "Nama", "Tipe", "Kategori", "Keterangan", "HTM", "Kuota", "Aksi"] as $h)
                 <th class="p-3 gk-bg-base-white font-bold col">{{ $h }}</th>
+
             @endforeach
         </tr>
     </thead>
     <tbody>
         @foreach ($data as $d)
+
             <tr class="tiket-row">
                 <td class="p-3 font-medium col">{{$d->paket_tiket->destinasi->nama}}</td>
                 <td class="p-3 font-medium col-1">{{$d->paket_tiket->nama}}</td>
@@ -23,6 +26,7 @@
                         <div onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.tiket.hapus', ['id' => $d->id])}}`)"  class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/delete.png')}}"/></div>
                 </td>
             </tr>
+
         @endforeach
     </tbody>
 </table>
