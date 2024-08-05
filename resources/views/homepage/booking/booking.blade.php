@@ -47,6 +47,11 @@
         'title' => 'Pendakian Gunung Kerinci',
         'caption' => '.',
     ])
+
+    <script>
+        console.log(@json($tiket));
+    </script>
+
     <div class="container my-5">
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-7 ">
@@ -74,103 +79,158 @@
             <div class="col-12 col-sm-12 col-lg-5 mt-3 mt-lg-0">
                 <form method="post" action="{{ route('homepage.postBooking') }}">
                     @csrf
-                    <h4 class="mb-4">Booking tiket pendakian gunungg kerici</h4>
+                    <h4 class="mb-4">Booking Tiket Pendakian {{$destinasi->nama}}</h4>
 
-                <input type="hidden" name="id" value="1">
-                <div class="form-group">
-                    <label for="date-start">Pilih tanggal check-in dan check-out</label>
-                    <div class="row" id="iptdatevol">
-                        <div class="col-md-6 mb-3">
-                            <div id="date-start" onclick="generateDate('date-start-value','tanggal-start-label');" class="w-full cursor-pointer btn btn-outline-secondary p-2 rounded d-flex justify-content-between" style="border: 1px solid var(--neutrals300)">
-                                <div id="tanggal-start-label">dd/mm/yy</div>
-                                <img src="{{ asset('assets/icon/tnks/date-dark.svg')}}"></img>
-                                <input type="hidden" class="" name="date_start" id="date-start-value" required>
+                    <input type="hidden" name="id" value="1">
+                    <div class="form-group">
+                        <label for="date-start">Pilih tanggal check-in dan check-out</label>
+                        <div class="row" id="iptdatevol">
+                            <div class="col-md-6 mb-3">
+                                <div id="date-start" onclick="generateDate('date-start-value','tanggal-start-label');" class="w-full cursor-pointer btn btn-outline-secondary p-2 rounded d-flex justify-content-between" style="border: 1px solid var(--neutrals300)">
+                                    <div id="tanggal-start-label">dd/mm/yy</div>
+                                    <img src="{{ asset('assets/icon/tnks/date-dark.svg')}}"></img>
+                                    <input type="hidden" class="" name="date_start" id="date-start-value" required>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div id="date-end" onclick="generateDate('date-end-value','tanggal-end-label');" class="w-full cursor-pointer btn btn-outline-secondary p-2 rounded d-flex justify-content-between" style="border: 1px solid var(--neutrals300)">
-                                <div id="tanggal-end-label">dd/mm/yy</div>
-                                <img src="{{ asset('assets/icon/tnks/date-dark.svg')}}"></img>
-                                <input type="hidden" class="" name="date_end" id="date-end-value" required>
+                            <div class="col-md-6 mb-3">
+                                <div id="date-end" onclick="generateDate('date-end-value','tanggal-end-label');" class="w-full cursor-pointer btn btn-outline-secondary p-2 rounded d-flex justify-content-between" style="border: 1px solid var(--neutrals300)">
+                                    <div id="tanggal-end-label">dd/mm/yy</div>
+                                    <img src="{{ asset('assets/icon/tnks/date-dark.svg')}}"></img>
+                                    <input type="hidden" class="" name="date_end" id="date-end-value" required>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label>Total Pendaki</label>
-                    <div class="row">
-                        <div class="col-md-6 mb-1">
-                            <label for="wni">WNI: </label>
-                            <div class="input-group mb-1 inputVolume1" data-price-weekday="" data-price-weekend="">
-                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
-                                <input type="number" class="form-control" name="wni" id="wni" placeholder="Jumlah WNI" required value="0" readonly>
-                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>
-                            </div>
-                            <label for="wna">WNA:  </label>
-                            <div class="input-group mb-1 inputVolume1" data-price-weekday="" data-price-weekend="">
-                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+">+</button>
-                                <input type="number" class="form-control" name="wna" id="wna" placeholder="Jumlah WNA" required value="0" readonly>
-                                <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-">-</button>
-                            </div>
-                            <div>
-                                <label for="totalharga">Total Harga</label>
-                                <p style="font-size: 11px;" id="labeliptvol">*0 hari 0 malam (2D1N)</p>
+                    <div class="form-group py-2">
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="form-label p-0 m-0">Jenis Tiket</label>
+                                <div class="dropdown w-100">
+                                    <button class="btn btn-outline gk-text-neutrals700 w-100 text-start d-flex justify-content-between  align-items-center dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-color: var(--neutrals700);overflow-x:hidden;">
+                                        <div  id="jenis-tiket" style="overflow-x:hidden;">Pilih Jenis Tiket</div>
+                                    </button>
+                                    <ul class="dropdown-menu"  aria-labelledby="destinasi">
+                                        <li>
+                                            <a class="dropdown-item" onclick="changeLabelThroughJenisTiket(event, 'jenis-tiket','jenis-tiket-value', '1')" href="#">
+                                                <span>Umum</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" onclick="changeLabelThroughJenisTiket(event, 'jenis-tiket','jenis-tiket-value', '2')" href="#">
+                                                <span>Rombongan Pelajar (Min 10)</span>
+                                            </a>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3 ">
-                            <br>
-                            <div class="card ">
-                                <div class="card-body p-2">
+                        <input id="jenis-tiket-value" name="jenis_tiket" type="hidden" value="1"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Total Pendaki</label>
+                        <label class="text-sm gk-text-neutrals500" style="font-style: italic;" >Estimasi Harga</label>
+                        <div class="row">
+                            <div class="col-md-6 mb-1">
+                                <label for="wni">WNI: <span id="price-for-wni"  ></span></label>
+                                <div class="input-group mb-1 inputVolume1" data-price-weekday="" data-price-weekend="">
+                                    <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+" onclick="wniInc(event)">+</button>
+                                    <input type="number" class="form-control" name="wni" id="wni" placeholder="Jumlah WNI" required value="0" readonly>
+                                    <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-" onclick="wniDec(event)">-</button>
+                                </div>
+                                <label for="wna">WNA:  <span id="price-for-wna"></span></label>
+                                <div class="input-group mb-1 inputVolume1" data-price-weekday="" data-price-weekend="">
+                                    <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt+" onclick="wnaInc(event)">+</button>
+                                    <input type="number" class="form-control" name="wna" id="wna" placeholder="Jumlah WNA" required value="0" readonly>
+                                    <button class="btn btn-outline-secondary" type="button" data-input-vol="ipt-" onclick="wnaDec(event)">-</button>
+                                </div>
+                                <div>
+                                    <label for="totalharga">Total Harga</label>
+                                    <p style="font-size: 11px;" id="labeliptvol">*0 hari 0 malam (2D1N)</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3 ">
+                                <br>
+                                <div class="card ">
+                                    <div class="card-body p-2">
+                                        <p>
+                                            Rp. <span class="iptvol" id="wniTotal">000</span>
+                                        </p>
+                                        <br>
+                                        <p class="mb-0">
+                                            Rp. <span class="iptvol" id="wnaTotal">000</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="m-2">
                                     <p>
-                                        Rp. <span class="iptvol">000</span>
-                                    </p>
-                                    <br>
-                                    <p class="mb-0">
-                                        Rp. <span class="iptvol">000</span>
+                                        Rp. <span id="hargaTotal">000</span>
                                     </p>
                                 </div>
                             </div>
-                            <div class="m-2">
-                                <p>
-                                    Rp. <span id="iptvol-total">000</span>
-                                </p>
-                            </div>
                         </div>
                     </div>
-                </div>
 
                     <div class=" form-group row">
                         <div class="col-6">
-                            <label for="gerbang-masuk">Gerbang Masuk</label>
-                            <select class="form-control" name="gerbang-masuk" id="gerbang-masuk" required>
-                                <option value="" selected disabled>Pilih Gerbang Masuk</option>
-                                @foreach ($gates as $gate)
-                                    <option value="{{ $gate['id'] }}">{{ $gate['nama'] }}</option>
-                                @endforeach
-                            </select>
+                            <label class="form-label p-0 m-0">Gerbang Masuk</label>
+                            <div class="dropdown w-100">
+                                <button class="btn btn-outline gk-text-neutrals700 w-100 text-start d-flex justify-content-between  align-items-center dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-color: var(--neutrals700);overflow-x:hidden;">
+                                    <div  id="gerbang_masuk" style="overflow-x:hidden;">Pilih Gerbang Masuk</div>
+                                </button>
+                                <ul class="dropdown-menu"  aria-labelledby="destinasi">
+                                    @foreach ($destinasi->gates as $d)
+                                        <li>
+                                            <a class="dropdown-item" onclick="select(event, 'gerbang_masuk','gerbang-masuk-value', 'wna')" href="#">
+                                                <span>{{$d->nama}}</span>
+                                                <span class="d-none" id="gerbang-masuk-id"></span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <input type="hidden" name="gerbang_masuk" id="gerbang-masuk-value">
                         </div>
                         <div class="col-6">
-                            <label for="gerbang-keluar">Gerbang Keluar</label>
-                            <select class="form-control" name="gerbang-keluar" id="gerbang-keluar" required>
-                                <option value="" selected disabled>Pilih Gerbang Keluar</option>
-                                @foreach ($gates as $gate)
-                                    <option value="{{ $gate['id'] }}">{{ $gate['nama'] }}</option>
-                                @endforeach
-                            </select>
+                            <label class="form-label p-0 m-0">Gerbang Keluar</label>
+                            <div class="dropdown w-100">
+                                <button class="btn btn-outline gk-text-neutrals700 w-100 text-start d-flex justify-content-between  align-items-center dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-color: var(--neutrals700);overflow-x:hidden;">
+                                    <div  id="gerbang_keluar" style="overflow-x:hidden;">Pilih Gerbang Masuk</div>
+                                </button>
+                                <ul class="dropdown-menu"  aria-labelledby="destinasi">
+                                    @foreach ($destinasi->gates as $d)
+                                        <li>
+                                            <a class="dropdown-item" onclick="select(event, 'gerbang_keluar','gerbang-keluar-value', 'wna')" href="#">
+                                                <span>{{$d->nama}}</span>
+                                                <span class="d-none" id="gerbang-keluar-id"></span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <input type="hidden" name="gerbang_keluar" id="gerbang-keluar-value">
                         </div>
                     </div>
 
                     <div class="form-group mt-3">
                         <button type="submit" class="btn btn-primary w-100">Lanjut Booking</button>
                     </div>
+                    @if ($errors->any())
+                        <div class="row gap-1">
+                            @foreach ($errors->all() as $error)
+                                <div class="row btn btn-danger">
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </form>
             </div>
         </div>
     </div>
 
-    <div id="modal-date-container" class="px-2 d-none justify-content-center align-items-center w-screen h-screen position-fixed top-0 left-0" style="z-index: 999; background-color: rgba(0,0,0,.2);">
-        <div style="max-width: 500px; " class="w-full h-fit bg-white rounded d-flex flex-column justify-content-between">
+    <div id="modal-date-container" class="px-2 m-0 d-none justify-content-center align-items-center w-screen h-screen position-fixed top-0 left-0" style="z-index: 999; background-color: rgba(0,0,0,.2);">
+        <div style="max-width: 500px; " class="m-0 w-full h-fit bg-white rounded d-flex flex-column justify-content-between">
             <div class="w-full h-full">
                 <header class="d-flex align-items-center justify-content-between p-2" style="border-bottom: 1px solid var(--neutrals100)">
                     <div class=""><span id="date-month">August</span> <span id="date-year">2019</span></div>
@@ -209,6 +269,65 @@
 @section('js')
     <script>
 
+        function refresh() {
+            if (!document.getElementById("date-start-value").value || !document.getElementById("date-end-value").value) {
+                return;
+            }
+            const harga = @json($tiket);
+
+            const kategori_hari = isWeekend(document.getElementById("date-start-value").value) ? "wk" : "wd";
+            const jenis_tiket = document.getElementById("jenis-tiket-value").value;
+
+            const wniLabel = document.getElementById("wniTotal");
+            const wniPendaki = document.getElementById("wni");
+            const wniPrice = document.getElementById("price-for-wni").textContent = harga.filter(o => {
+                if (o.kategori_hari === kategori_hari && o.kategori_pendaki === "wni" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
+                    return o;
+                }
+            })[0].harga_masuk;;
+
+            const wnaLabel = document.getElementById("wnaTotal");
+            const wnaPendaki = document.getElementById("wna");
+            const wnaPrice = document.getElementById("price-for-wna").textContent = harga.filter(o => {
+                if (o.kategori_hari === kategori_hari && o.kategori_pendaki === "wna" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
+                    return o;
+                }
+            })[0].harga_masuk;;
+
+
+            const hargaTotal = document.getElementById("hargaTotal");
+
+            wniLabel.textContent = wniPendaki.value * harga.filter(o => {
+                if (o.kategori_hari === kategori_hari && o.kategori_pendaki === "wni" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
+                    return o;
+                }
+            })[0].harga_masuk;
+
+            wnaLabel.textContent = wna.value * harga.filter(o => {
+                if (o.kategori_hari === kategori_hari && o.kategori_pendaki === "wna" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
+                    return o;
+                }
+            })[0].harga_masuk;
+
+            hargaTotal.textContent = parseInt(wniLabel.textContent)+parseInt(wnaLabel.textContent);
+            console.log("Refreshed");
+        }
+
+        function changeLabelThroughJenisTiket(event, callerId, inputId, value) {
+            select(event, callerId, inputId, value);
+            refresh();
+        }
+
+        function select(event, callerId, inputId, value) {
+            const caller = document.getElementById(callerId);
+            const input = document.getElementById(inputId);
+
+            caller.textContent = event.target.textContent;
+            input.value = value;
+
+
+        }
+
         const currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
@@ -228,87 +347,60 @@
             "Desember"
         ];
 
-        // Get all elements with the class 'inputVolume1'
-        const inputGroups = document.querySelectorAll('.inputVolume1');
-        const inputPrice = document.querySelectorAll('.iptvol');
-        const inputTotalPrice = document.getElementById('iptvol-total');
-        const inputDate = document.getElementById('iptdatevol');
-        const dateStartInput = inputDate.querySelector('input[name="date-start"]');
-        const dateEndInput = inputDate.querySelector('input[name="date-end"]');
-        const labelTotalPrice = document.getElementById('labeliptvol');
+        function totalChange() {
+            const wniLabel = document.getElementById("wniTotal");
+            const wnaLabel = document.getElementById("wnaTotal");
+            const hargaTotal = document.getElementById("hargaTotal");
 
-        function calculateAdjustedDays() {
-            const startDate = new Date(dateStartInput.value);
-            const endDate = new Date(dateEndInput.value);
-            let dayDifference = 0;
-            if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
-                const timeDifference = endDate - startDate;
-                dayDifference = timeDifference / (1000 * 3600 * 24);
+            // Convert text content to numbers, handling potential NaN
+            const wniValue = parseInt(wniLabel.textContent) || 0;
+            const wnaValue = parseInt(wnaLabel.textContent) || 0;
+
+            // Calculate and set the total
+            const total = wniValue + wnaValue;
+            hargaTotal.textContent = total;
+        }
+
+        function wniInc(event) {
+            if (document.getElementById("date-start-value").value && document.getElementById("date-end-value").value) {
+                document.getElementById("wni").value++;
+                refresh();
             }
-            const adjustedDays = Math.floor((dayDifference) / 2) + 1;
-            labelTotalPrice.textContent = `${dayDifference+1} Hari ${adjustedDays} malam (${dayDifference+1}D${adjustedDays}M)`;
-            return adjustedDays;
+
         }
 
-        // dateStartInput.addEventListener('change', calculateAdjustedDays);
-        // dateEndInput.addEventListener('change', calculateAdjustedDays);
+        function wniDec(event) {
+            if (document.getElementById("wni").value <= 0) {
+                return;
+            }
+            if (document.getElementById("date-start-value").value && document.getElementById("date-end-value").value) {
+                document.getElementById("wni").value--;
+                refresh();
+            }
 
-        function updateTotalPrice() {
-                let totalPrice = 0;
-                let adjustedDays = calculateAdjustedDays();
-
-                inputPrice.forEach(span => {
-                    let price = parseInt(span.textContent);
-                    if (!isNaN(price)) {
-                        totalPrice += price;
-                    }
-                });
-
-            totalPrice *= adjustedDays;
-            inputTotalPrice.textContent = totalPrice;
         }
 
-        inputGroups.forEach((group, index) => {
-            const inputField = group.querySelector('input[type="number"]');
-            const incrementButton = group.querySelector('button[data-input-vol="ipt+"]');
-            const decrementButton = group.querySelector('button[data-input-vol="ipt-"]');
-            const price = parseInt(group.getAttribute('data-price-vol'));
+        function wnaInc(event) {
+            if (document.getElementById("date-start-value").value && document.getElementById("date-end-value").value) {
+                document.getElementById("wna").value++;
+                refresh();
+            }
 
-                incrementButton.addEventListener('click', () => {
-                    // tambah nilai inputfield
-                    let currentValue = parseInt(inputField.value);
-                    if (isNaN(currentValue)) {
-                        currentValue = 0;
-                    }
-                    inputField.value = currentValue + 1;
+        }
 
-                // masukkan nilai harga ke inputprice urutan each goup
-                inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
-                // update total price
-                updateTotalPrice()
-            });
+        function wnaDec(event) {
+            if (document.getElementById("wna").value <= 0) {
+                return;
+            }
+            if (document.getElementById("date-start-value").value && document.getElementById("date-end-value").value) {
+                document.getElementById("wna").value--;
+                refresh();
+            }
 
-            decrementButton.addEventListener('click', () => {
-                let currentValue = parseInt(inputField.value);
-                if (isNaN(currentValue)) {
-                    currentValue = 0;
-                }
-                if (currentValue == 0) {
-                    currentValue = 0;
-                } else {
-                    inputField.value = parseInt(inputField.value) - 1;
-                }
+        }
 
-                // masukkan nilai harga ke inputprice urutan each goup
-                inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
-                // update total price
-                updateTotalPrice()
-            });
-        });
-
-        function generateDate(input, label) {
+        function generateDate(inputId, labelId) {
             const datePrev = document.getElementById("date-prev");
-            const selectButton = document.getElementById("select-date");
             if (currentMonth === currentDate.getMonth()) {
                 datePrev.classList.add("d-none");
                 datePrev.classList.remove("d-block");
@@ -341,12 +433,11 @@
                 tr.appendChild(td);
             }
 
-
             for (i = 0; i < daysInMonth; i++) {
                 const td = document.createElement("td");
                 const div = document.createElement("div");
                 div.textContent = `${i+1}`;
-                if (currentMonth === currentDate.getMonth() && i+1 === currentDate.getDate() && currentYear === currentDate.getFullYear()) {
+                if (currentMonth === currentDate.getMonth() && i+1 === currentDate.getDate() && currentYear === currentDate.getFullYear() || i+1 === currentDay) {
                     div.classList.add("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
                 }
                 td.appendChild(div)
@@ -354,16 +445,14 @@
                 td.style.cursor="pointer";
 
                 td.addEventListener("click", function(event) {
-                    if (parseInt(td.textContent) >= currentDate.getDate()) {
-                        document.querySelectorAll(".week-row").forEach(o => {
-                            const tableData = o.querySelectorAll(".border .border-primary, .gk-bg-primary700, .text-white, .rounded-pill");
-                            if (tableData.length > 0) {
-                                tableData[0].classList.remove("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
-                            }
-                        });
-                        td.querySelector("div").classList.add("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
-                        currentDay = td.textContent;
-                    }
+                    document.querySelectorAll(".week-row").forEach(o => {
+                        const tableData = o.querySelectorAll(".border .border-primary, .gk-bg-primary700, .text-white, .rounded-pill");
+                        if (tableData.length > 0) {
+                            tableData[0].classList.remove("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
+                        }
+                    });
+                    td.querySelector("div").classList.add("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
+                    currentDay = td.textContent;
                 });
 
 
@@ -386,15 +475,19 @@
                 }
             }
 
-            selectButton.addEventListener("click", function(event) {
-                if (currentDay < currentDate.getDate()) {
+            const selectButton = document.getElementById("select-date");
+            selectButton.onclick = function (event) {
+                event.stopPropagation();
+
+                if (inputId === "date-end-value" && parseInt(document.getElementById("date-start-value").value.split("-")[0]) > parseInt(currentDay)) {
                     return;
                 }
-                const dateLabel = document.getElementById(label);//.textContent(`${currentDay}-${currentMonth}-${currentYear}`);
-                document.getElementById(input).value = `${currentDay}-${currentMonth}-${currentYear}`;
-                dateLabel.textContent = `${currentDay}/${currentMonth}/${currentYear}`;
+                const dateLabel = document.getElementById(labelId);
+                document.getElementById(inputId).value = `${currentDay}-${currentMonth + 1}-${currentYear}`; // Adjust month to be 1-based
+                dateLabel.textContent = `${currentDay}/${currentMonth + 1}/${currentYear}`; // Adjust month to be 1-based
                 closeDate();
-            })
+                refresh();
+            };
         }
 
         function closeDate() {
@@ -403,7 +496,8 @@
             dateContainer.classList.remove("d-flex");
             clearDate();
             currentMonth = currentDate.getMonth();
-            currentYear = currentDate.getFullYear()
+            currentYear = currentDate.getFullYear();
+            currentDay = currentDate.getDate();
 
         }
 
@@ -442,5 +536,13 @@
             }
             generateDate();
         }
+
+        function isWeekend(dateString) {
+            let parts = dateString.split('-');
+            let date = new Date(parts[2], parts[1] - 1, parts[0]);
+            let dayOfWeek = date.getDay();
+            return (dayOfWeek === 6) || (dayOfWeek === 0);
+        }
+
     </script>
 @endsection

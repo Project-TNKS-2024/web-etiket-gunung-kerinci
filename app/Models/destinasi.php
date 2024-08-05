@@ -38,4 +38,8 @@ class destinasi extends Model
         return $this->hasMany(gk_paket_tiket::class, 'id_destinasi');
     }
 
+    public function gates() {
+        return $this->hasMany(gk_gates::class, 'id_destinasi');
+    }
+
 }

@@ -75,7 +75,7 @@ class tikets extends Controller
         $gates = Gates::all();
         $jenisTiket = ['Weekday', 'Weekend'];
 
-        $data = gk_paket_tiket::with(['destinasi', 'tiket_pendaki'])->where('gk_paket_tikets.id', $id)->first();
+        $data = gk_tiket_pendaki::with(['paket_tiket'])->where("gk_tiket_pendakis.id", $id)->first();
         $paket_tiket = gk_paket_tiket::all();
 
         return view('etiket.admin.master-data.tiket.edit', [
