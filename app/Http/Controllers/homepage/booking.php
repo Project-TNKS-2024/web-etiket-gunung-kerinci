@@ -7,7 +7,6 @@ use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
 use App\Models\gk_gates;
 use App\Models\gk_pendaki;
-use App\Models\gk_tikets;
 use App\Models\gambar_destinasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,13 +17,11 @@ class booking extends Controller
 {
     public function booking($id)
     {
-        $tiket = gk_tikets::find($id);
         $gates = gk_gates::all();
         $gambar_destinasi = gambar_destinasi::where('id_destinasi',$id)->get();
         // return $tiket;
         return view("homepage.booking.booking", [
             "gates" => $gates,
-            "tiket" => $tiket,
             "gambar" => $gambar_destinasi,
         ]);
     }
