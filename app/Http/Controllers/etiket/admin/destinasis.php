@@ -83,16 +83,23 @@ class destinasis extends Controller
             'kategori' => 'required',
             'lokasi' => 'required',
             'detail' => 'required',
+            'status' => 'required',
         ]);
 
         // return $request;
 
         if (!destinasi::where('id', $id)->update([
+<<<<<<< HEAD
             'nama' => $request->nama,
             'status' => $request->status,
             'kategori' => $request->kategori,
             'lokasi' => $request->lokasi,
             'detail' => $request->detail,
+=======
+            "nama" => $request->nama,
+            "detail" => $request->detail,
+            "status" => $request->status
+>>>>>>> ad4414b27858d2c6d0dfd51170a42d9948cda922
         ])) {
             return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);
         }
@@ -119,8 +126,13 @@ class destinasis extends Controller
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
                 $fileName = time() . '.' . $file->getClientOriginalExtension();
+<<<<<<< HEAD
                 $file->move(public_path('upload/img/destinasi/'), $fileName);
                 $fileUrl = 'upload/img/destinasi/' . $fileName;
+=======
+                $file->move(public_path('upload/'), $fileName);
+                $fileUrl = 'upload/' . $fileName;
+>>>>>>> ad4414b27858d2c6d0dfd51170a42d9948cda922
 
                 gambar_destinasi::create([
                     "src" => $fileUrl,

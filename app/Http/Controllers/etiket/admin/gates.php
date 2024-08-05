@@ -79,14 +79,14 @@ class gates extends Controller
             'nama' => 'required',
             'detail' => 'required',
             'destinasi' => 'required',
+            'status' => 'required',
         ]);
 
         $proceed = gk_gates::where('id',$id)->update([
             "nama" => $request->nama,
             "detail" => $request->detail,
-            "lokasi" => "Lokasi Gate",
-            "foto" => "-",
             "id_destinasi" => intval($request->destinasi),
+            "status" => $request->status,
         ]);
 
         if (!$proceed) {

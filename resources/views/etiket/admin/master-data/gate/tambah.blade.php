@@ -67,9 +67,12 @@
                             </select>
                         </div>
                         <div class="col-md-4 col-sm-6">
-                            <label class="form-label" for="status">Status</label>
-                            <input class="form-control borderx bg-white" name="nama" id="lokasi" value="" placeholder="Max Pendaki per Hari" required />
-
+                            <label class="form-label" for="max_pendaki_hari">Max Pendaki / Hari</label>
+                            <input class="form-control borderx bg-white" name="max_pendaki_hari" id="max_pendaki_hari" type="number" value="" placeholder="Max Pendaki per Hari" required />
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <label class="form-label" for="max_pendaki_hari">Max Pendaki / Hari</label>
+                            <input class="form-control borderx bg-white" name="max_pendaki_hari" id="max_pendaki_hari" type="number" value="" placeholder="Max Pendaki per Hari" required />
                         </div>
                     </div>
 
