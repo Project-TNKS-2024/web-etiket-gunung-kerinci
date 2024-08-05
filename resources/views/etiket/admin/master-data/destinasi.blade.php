@@ -15,7 +15,7 @@
 
     <!-- tombol tambah -->
     <div class="overflow-visible mb-3">
-        <a class="text-start text-black font-bold d-flex align-items-center gap-2 w-fit border-neutrals500 border-4 btn shadow gk-bg-base-white " href="{{route('admin.destinasi.tambah')}}" style="border: 1px solid var)">
+        <a class="text-start text-black font-bold d-flex align-items-center gap-2 w-fit border-neutrals500 border-4 btn shadow gk-bg-base-white " href="{{route('admin.destinasi.tambah')}}" style="border: 1px solid var">
             <img src="{{asset('assets/icon/tnks-plus.svg')}}" />
             Tambah Destinasi
         </a>

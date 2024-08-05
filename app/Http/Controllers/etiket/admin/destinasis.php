@@ -104,7 +104,7 @@ class destinasis extends Controller
     public function hapus(Request $reqeust, $id)
     {
         destinasi::where('id', $id)->delete();
-        return back()->with('success', 'Berhasil Menghapus Tiket');
+        return back()->with('success', 'Berhasil Menghapus Destinasi');
     }
 
     public function upload(Request $request, $id)
