@@ -16,9 +16,11 @@ class destinasis extends Controller
 {
     //
 
-    public function daftar() {
+    public function daftar()
+    {
 
         $data = Destinasi::get();
+        // return $data;
         $gambar = gambar_destinasi::with(['destinasi'])->get();
 
         return view('etiket.admin.master-data.destinasi', [
@@ -27,20 +29,21 @@ class destinasis extends Controller
         ]);
     }
 
-    public function tambah() {
+    public function tambah()
+    {
         $destinasi = Destinasi::all();
         $gates = gk_gates::all();
-        $jenisTiket = ['Weekday','Weekend'];
+        $jenisTiket = ['Weekday', 'Weekend'];
 
         return view('etiket.admin.master-data.destinasi.tambah', [
             "destinasi" => $destinasi,
             "gate" => $gates,
             "jenisTiket" => $jenisTiket,
         ]);
-
     }
 
-    public function tambahAction(Request $request) {
+    public function tambahAction(Request $request)
+    {
         $request->validate([
             'nama' => 'required',
             'detail' => 'required',
@@ -60,8 +63,9 @@ class destinasis extends Controller
         return back()->with('success', 'Berhasil menambah destinasi');
     }
 
-    public function edit($id) {
-        $data = Destinasi::where('id',$id)->first();
+    public function edit($id)
+    {
+        $data = Destinasi::where('id', $id)->first();
         $gates = gk_gates::with(['destinasi'])->where('gk_gates.id_destinasi', $id)->get();
         $gambar = gambar_destinasi::with(['destinasi'])->where('id_destinasi', $id)->get();
 
@@ -72,13 +76,14 @@ class destinasis extends Controller
         ]);
     }
 
-    public function editAction(Request $request, $id) {
+    public function editAction(Request $request, $id)
+    {
         $request->validate([
             'nama' => 'required',
             'detail' => 'required',
         ]);
 
-        if (!destinasi::where('id',$id)->update([
+        if (!destinasi::where('id', $id)->update([
             "nama" => $request->nama,
             "detail" => $request->detail
         ])) {
@@ -86,11 +91,11 @@ class destinasis extends Controller
         }
 
         return back()->with('success', 'Berhasil memperbarui tiket');
-
     }
 
-    public function hapus(Request $reqeust, $id) {
-        destinasi::where('id',$id)->delete();
+    public function hapus(Request $reqeust, $id)
+    {
+        destinasi::where('id', $id)->delete();
         return back()->with('success', 'Berhasil Menghapus Tiket');
     }
 
