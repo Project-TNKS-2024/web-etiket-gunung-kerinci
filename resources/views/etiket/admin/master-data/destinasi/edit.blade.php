@@ -136,7 +136,7 @@
                         <tbody id="data-body">
                             @if(count($gambar) == 0)
                             <tr>
-                                <td  colspan="3">Belum Ada Gambar</td>
+                                <td  colspan="4">Belum Ada Gambar</td>
                             </tr>
                             @else
                                 <tr>

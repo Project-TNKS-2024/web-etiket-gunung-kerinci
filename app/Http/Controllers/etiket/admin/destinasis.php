@@ -108,7 +108,7 @@ class destinasis extends Controller
                 $file = $request->file('foto');
                 $fileName = time() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('assets/img/destinasi/'), $fileName);
-                $fileUrl = asset('assets/img/destinasi/' . $fileName);
+                $fileUrl = 'assets/img/destinasi/' . $fileName;
 
                 gambar_destinasi::create([
                     "src" => $fileUrl,

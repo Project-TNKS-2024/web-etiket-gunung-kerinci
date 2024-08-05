@@ -81,17 +81,17 @@
                     <label for="date-start">Pilih tanggal check-in dan check-out</label>
                     <div class="row" id="iptdatevol">
                         <div class="col-md-6 mb-3">
-                            <div id="date-start" onclick="generateDate();" class="w-full cursor-pointer btn btn-outline-secondary p-2 rounded d-flex justify-content-between" style="border: 1px solid var(--neutrals300)">
-                                <div>dd/mm/yy</div>
+                            <div id="date-start" onclick="generateDate('date-start-value','tanggal-start-label');" class="w-full cursor-pointer btn btn-outline-secondary p-2 rounded d-flex justify-content-between" style="border: 1px solid var(--neutrals300)">
+                                <div id="tanggal-start-label">dd/mm/yy</div>
                                 <img src="{{ asset('assets/icon/tnks/date-dark.svg')}}"></img>
-                                <input type="date" class="form-control d-none" name="date_start" id="date-start-value" required>
+                                <input type="hidden" class="" name="date_start" id="date-start-value" required>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <div id="date-end" onclick="generateDate();" class="w-full cursor-pointer btn btn-outline-secondary p-2 rounded d-flex justify-content-between" style="border: 1px solid var(--neutrals300)">
-                                <div>dd/mm/yy</div>
+                            <div id="date-end" onclick="generateDate('date-end-value','tanggal-end-label');" class="w-full cursor-pointer btn btn-outline-secondary p-2 rounded d-flex justify-content-between" style="border: 1px solid var(--neutrals300)">
+                                <div id="tanggal-end-label">dd/mm/yy</div>
                                 <img src="{{ asset('assets/icon/tnks/date-dark.svg')}}"></img>
-                                <input type="date" class="form-control d-none" name="date_end" id="date-end-value" required>
+                                <input type="hidden" class="" name="date_end" id="date-end-value" required>
                             </div>
                         </div>
                     </div>
@@ -198,7 +198,7 @@
             <footer class="d-flex align-items-center justify-content-between p-2" style="border-top: 1px solid var(--neutrals100)">
                 <div>* Merah berarti penuh</div>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-primary gk-bg-primary700 font-medium ">Pilih tanggal</button>
+                    <button class="btn btn-primary gk-bg-primary700 font-medium" id="select-date">Pilih tanggal</button>
                     <button class="btn btn-secondary gk-bg-neutrals200 font-medium text-black" onclick="closeDate()">Batal</button>
                 </div>
             </footer>
@@ -212,6 +212,7 @@
         const currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
+        let currentDay = currentDate.getDate();
         const months = [
             "Januari",
             "Februari",
@@ -305,9 +306,9 @@
             });
         });
 
-        function generateDate() {
+        function generateDate(input, label) {
             const datePrev = document.getElementById("date-prev");
-            console.log(datePrev);
+            const selectButton = document.getElementById("select-date");
             if (currentMonth === currentDate.getMonth()) {
                 datePrev.classList.add("d-none");
                 datePrev.classList.remove("d-block");
@@ -320,6 +321,7 @@
             dateContainer.classList.remove("d-none");
             const year = currentYear;
             const month = currentMonth;
+            const day = currentDay;
             const dateMonth = document.getElementById("date-month").textContent = months[month];
             const dateYear = document.getElementById("date-year").textContent = year;
             const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -344,10 +346,26 @@
                 const div = document.createElement("div");
                 div.textContent = `${i+1}`;
                 if (currentMonth === currentDate.getMonth() && i === currentDate.getDate() && currentYear === currentDate.getFullYear()) {
-                    div.classList.add("border","border-2", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
+                    div.classList.add("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
                 }
                 td.appendChild(div)
                 td.classList.add(...("col font-medium gk-text-neutrals500".split(" ")));
+                td.style.cursor="pointer";
+
+                td.addEventListener("click", function(event) {
+                    if (parseInt(td.textContent) >= currentDate.getDate()) {
+                        document.querySelectorAll(".week-row").forEach(o => {
+                            const tableData = o.querySelectorAll(".border .border-primary, .gk-bg-primary700, .text-white, .rounded-pill");
+                            if (tableData.length > 0) {
+                                tableData[0].classList.remove("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
+                            }
+                        });
+                        td.querySelector("div").classList.add("border", "border-primary", "gk-bg-primary700", "text-white", "rounded-pill");
+                        currentDay = td.textContent;
+                    }
+                });
+
+
                 tr.appendChild(td);
                 if ((i+1+dayStart) % 7 === 0 || i === daysInMonth-1) {
                     dataBody.appendChild(tr);
@@ -367,51 +385,15 @@
                 }
             }
 
-            //     const td = document.createElement("td");
-            //     td.classList.add(...("col font-medium gk-text-neutrals500".split(" ")));
-            //     td.textContent = ``;
-            //     lastWeek.appendChild(td);
-            // }
-                // for (let i = 0; i < row; i++) {
-                //     const tr = document.createElement("tr");
-                //     tr.classList.add(...("row justify-content-center text-center mt-2 week-row".split(" ")));
-                //     for (let j = 0; j < 7; j++) {
-                //         count++;
-                //         // console.log(count-dayStart)
-                //         const td = document.createElement("td");
-                //         td.classList.add(...("col font-medium gk-text-neutrals500".split(" ")));
-                //         if (count > dayStart) {
-                //             td.textContent = `${(count-dayStart)}`;
-                //         } else {
-                //             td.textContent = ``;
-                //         }
-                //         tr.appendChild(td);
-                //     }
-                //     dataBody.appendChild(tr);  // Correcting this line
-                // }
-
-                // const tr = document.createElement("tr");
-                // tr.classList.add(...("row justify-content-center text-center mt-2 week-row".split(" ")));
-                // for (let j = 0; j < 7; j++) {
-                //     if (count > daysInMonth) {
-                //         break;
-                //     }
-                //     count++;
-                //     const td = document.createElement("td");
-                //     td.classList.add(...("col font-medium gk-text-neutrals500".split(" ")));
-                //     td.textContent = `${(count-dayStart)}`;
-                //     tr.appendChild(td);
-                // }
-                // dataBody.appendChild(tr);
-
-                // const lastWeek = Array.from(document.querySelectorAll(".week-row")).slice(-1)[0];
-                // console.log(lastWeek)
-                // for (let i = 0; i < daysInMonth % 7;i++) {
-                //     const td = document.createElement("td");
-                //     td.classList.add(...("col font-medium gk-text-neutrals500".split(" ")));
-                //     td.textContent = ``;
-                //     lastWeek.appendChild(td);
-                // }
+            selectButton.addEventListener("click", function(event) {
+                if (currentDay < currentDate.getDate()) {
+                    return;
+                }
+                const dateLabel = document.getElementById(label);//.textContent(`${currentDay}-${currentMonth}-${currentYear}`);
+                document.getElementById(input).value = `${currentDay}-${currentMonth}-${currentYear}`;
+                dateLabel.textContent = `${currentDay}/${currentMonth}/${currentYear}`;
+                closeDate();
+            })
         }
 
         function closeDate() {

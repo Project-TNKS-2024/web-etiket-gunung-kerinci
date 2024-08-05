@@ -4,7 +4,7 @@ namespace App\Http\Controllers\etiket\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\gk_tikets;
+use App\Models\gk_paket_tiket;
 use App\Models\destinasi as Destinasi;
 use App\Models\gk_gates as Gates;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +15,7 @@ class tikets extends Controller
 
     public function daftar() {
 
-        $data = gk_tikets::with(['destinasi', 'gk_gate','kategori', 'golongan'])->get();
+        $data = gk_paket_tiket::with(['destinasi', 'tiket_pendaki'])->get();
 
         $jenisTiket = ['Weekday','Weekend'];
         $totalTerjual = 122;

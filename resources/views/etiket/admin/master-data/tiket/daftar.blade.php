@@ -1,23 +1,23 @@
 <table class="w-full rounded">
     <thead>
         <tr>
-            @foreach ($headers as $h)
-                <th class="p-3 gk-bg-base-white font-bold">{{ $h }}</th>
+            @foreach (["Destinasi", "Nama", "Kategori", "Golongan", "Destinasi", "Keterangan", "Harga Karcis", "Kuota", "Aksi"] as $h)
+                <th class="p-3 gk-bg-base-white font-bold col">{{ $h }}</th>
             @endforeach
         </tr>
     </thead>
     <tbody>
         @foreach ($data as $d)
             <tr class="tiket-row">
-                <td class="p-3 font-bold">{{$d->nama}}</td>
-                <td class="p-3 font-bold">{{$d->kategori->nama}}</td>
-                <td class="p-3 font-bold">{{$d->golongan->nama}}</td>
-                <td class="p-3 font-bold">{{$d->tipe}}</td>
-                <td class="p-3 font-bold">{{$d->destinasi->nama}}</td>
-                <td class="p-3 font-bold">{{$d->gk_gate->nama}}</td>
-                <td class="p-3 font-bold">{{$d->keterangan}}</td>
-                <td class="p-3 font-bold">Rp {{number_format($d->harga)}}</td>
-                <td class="p-3 d-flex gap-1">
+                <td class="p-3 font-medium col">{{$d->destinasi->nama}}</td>
+                <td class="p-3 font-medium col-1">{{$d->nama}}</td>
+                <td class="p-3 font-medium col">{{$d->tiket_pendaki->kategori_hari == "wk" ? "Weekend" : "Weekday"}}</td>
+                <td class="p-3 font-medium col">{{$d->tiket_pendaki->kategori_pendaki == "wni" ? "Nusantara" : "Mancanegara"}}</td>
+                <td class="p-3 font-medium col">{{$d->destinasi->nama}}</td>
+                <td class="p-3 font-medium col">{{$d->keterangan}}</td>
+                <td class="p-3 font-medium col">Rp {{number_format($d->tiket_pendaki->harga_masuk)}}</td>
+                <td class="p-3 font-medium col">{{$d->min_pendaki}}</td>
+                <td class="p-3 d-flex gap-1 col">
                         <a  href="{{route('admin.tiket.edit', ['id' => $d->id])}}" class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/edit.png')}}"/></a>
                         <div onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.tiket.hapus', ['id' => $d->id])}}`)"  class="cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/img/logo/delete.png')}}"/></div>
                 </td>
