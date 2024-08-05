@@ -11,13 +11,7 @@
 
 <div style="min-height: 80vh;">
     <!-- title -->
-<<<<<<< HEAD
     <h3 class="font-bold mb-3 gk-text-base-black">Kelola Destinasi</h3>
-=======
-
-    <h3 class="font-bold mb-3 gk-text-base-black">Kelola Destinasi</h3>
-
->>>>>>> ad4414b27858d2c6d0dfd51170a42d9948cda922
 
     <!-- tombol tambah -->
     <div class="overflow-visible mb-3">
@@ -38,4 +32,3 @@
 </div>
 
 @endsection
-

@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     @endif
-                    <div class="row gap-2">
+                    <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <label class="form-label" for="nama">Nama Destinasi</label>
                             <input class="form-control borderx bg-white" name="nama" id="nama" value="" placeholder="Nama Destinasi" required />
