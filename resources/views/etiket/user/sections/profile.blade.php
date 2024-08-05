@@ -8,9 +8,19 @@
 <script></script>
 
 <div class="col py-5 px-4 my-5 my-md-0" style="min-height: 500px; overflow-y: auto;">
-    <form class="row rounded-2xl card p-3" method="post" action="#">
+
+    <form class="row rounded-2xl card p-3" action="{{route('user.dashboard.action', ['id' => $user->id])}}" method="post" action="#">
         @csrf
         <div class="form-group ">
+            @if ($errors->any())
+                <div class="row gap-1">
+                    @foreach ($errors->all() as $error)
+                        <div class="row btn btn-danger">
+                            {{ $error }}
+                        </div>
+                    @endforeach
+                </div>
+            @endif
             <label class="mandatory text-base font-semibold">Jenis Kewarganageraan</label>
             <div class="form-group text-sm d-flex align-items-center gap-2 form-check row">
                 <div class="col-12 col-md-4 ">

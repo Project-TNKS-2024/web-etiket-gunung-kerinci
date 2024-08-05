@@ -11,7 +11,9 @@
 
 <div class="container-fluid" style="min-height: 80vh;">
     <!-- title -->
-    <h3 class="font-bold mb-3 gk-text-base-black">Forms</h3>
+
+    <h3 class="font-bold mb-3 gk-text-base-black">Kelola Destinasi</h3>
+
 
     <!-- tombol tambah -->
     <div class="overflow-visible mb-3">
@@ -30,4 +32,6 @@
         </div>
     </div>
 </div>
+
 @endsection
+

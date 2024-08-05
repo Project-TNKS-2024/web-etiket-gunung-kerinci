@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('penugasan')->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_destinasi')->references('id')->on('destinasis')->onDelete('restrict');
         });
     }
 
