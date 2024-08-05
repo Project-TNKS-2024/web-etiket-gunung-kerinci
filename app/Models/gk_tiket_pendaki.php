@@ -18,7 +18,7 @@ class gk_tiket_pendaki extends Model
         'harga_ansuransi',
     ];
 
-    public function paketTiket()
+    public function paket_tiket()
     {
         return $this->belongsTo(gk_paket_tiket::class, 'id_paket_tiket');
     }

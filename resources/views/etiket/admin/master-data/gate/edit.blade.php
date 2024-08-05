@@ -16,7 +16,7 @@
         </a>
 
         <header class="text-2xl font-bold gk-text-base-black">Edit Gate</header>
-        <form id="gate-form" class="row gap-2" action="{{ route('admin.gate.tambahAction') }}" method="post" >
+        <form id="gate-form" class="row gap-2" action="{{ route('admin.gate.editAction', ['id' => $data->id]) }}" method="post" >
             @csrf
             @if (session('success'))
                 <div class="row">
@@ -57,12 +57,34 @@
                           @endforeach
                       </ul>
                 </div>
+
+                <div class="col-md-2 col-sm-12">
+                    <label class="form-label">Status</label>
+                    <div class="dropdown w-100">
+                        <button class="w-100 btn btn-outline dropdown-toggle d-flex justify-content-between align-items-center" style="border: 1px solid var(--neutrals500)" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="status-label">
+                          {{$data->status == "0" ? "Close" : "Open"}}
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" onclick="selectStatus(event, 1)" href="#">Open</a></li>
+                          <li><a class="dropdown-item" onclick="selectStatus(event, 0)" href="#">Close</a></li>
+                        </ul>
+                        <input type="hidden" id="destinasi-status" name="status" value="{{$data->status}}" />
+
+                        <script>
+                            function selectStatus(event, id) {
+                                document.querySelector("#destinasi-status").value = id;
+                                document.querySelector("#status-label").textContent = event.target.textContent;
+                            }
+                        </script>
+                      </div>
+                </div>
+
                 <input type="hidden" name="destinasi" id="destinasi-value" value="{{$data->id_destinasi}}"/>
 
 
            </div>
             <div class="row gap-2">
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-4 col-sm-6">
                     <label class="form-label">Detail</label>
                     <textarea name="detail" id="gate-detail" class="form-control bg-white borderx" style="min-height: 75px;" placeholder="Detail">{{$data->detail}}</textarea>
                 </div>

@@ -81,11 +81,13 @@ class destinasis extends Controller
         $request->validate([
             'nama' => 'required',
             'detail' => 'required',
+            'status' => 'required',
         ]);
 
         if (!destinasi::where('id', $id)->update([
             "nama" => $request->nama,
-            "detail" => $request->detail
+            "detail" => $request->detail,
+            "status" => $request->status
         ])) {
             return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);
         }
@@ -112,8 +114,8 @@ class destinasis extends Controller
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
                 $fileName = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('assets/img/destinasi/'), $fileName);
-                $fileUrl = asset('assets/img/destinasi/' . $fileName);
+                $file->move(public_path('upload/'), $fileName);
+                $fileUrl = 'upload/' . $fileName;
 
                 gambar_destinasi::create([
                     "src" => $fileUrl,
