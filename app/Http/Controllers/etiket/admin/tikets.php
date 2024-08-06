@@ -16,7 +16,6 @@ class tikets extends Controller
 
     public function daftar()
     {
-
         $data = gk_tiket_pendaki::with(['paket_tiket'])->get();
 
         $jenisTiket = ['Weekday', 'Weekend'];
@@ -75,8 +74,11 @@ class tikets extends Controller
         $gates = Gates::all();
         $jenisTiket = ['Weekday', 'Weekend'];
 
-        $data = gk_tiket_pendaki::with(['paket_tiket'])->where("gk_tiket_pendakis.id", $id)->first();
-        $paket_tiket = gk_paket_tiket::all();
+
+
+        $data = gk_paket_tiket::with(['destinasi', 'tiket_pendaki'])->where('gk_paket_tikets.id', $id)->first();
+
+
 
         return view('etiket.admin.master-data.tiket.edit', [
             'data' => $data,
@@ -116,7 +118,7 @@ class tikets extends Controller
     public function hapus(Request $reqeust, $id)
     {
 
-        gk_tikets::where('id', $id)->delete();
+        gk_tiket_pendaki::where('id', $id)->delete();
         return back()->with('success', 'Berhasil Menghapus Tiket');
     }
 }

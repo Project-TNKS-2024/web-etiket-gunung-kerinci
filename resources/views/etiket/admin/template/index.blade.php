@@ -71,7 +71,7 @@
         <!-- ========================================= -->
         @include('etiket.admin.template.sidebar')
         <!--  Main wrapper -->
-        <div class="body-wrapper " style="background-color: #f3f3f3;">
+        <div class="body-wrapper " style="background-color: rgba(245, 246, 250, 1);">
             <!--  Header Start -->
             <!-- ================================================ -->
             @include('etiket.admin.template.navbar')

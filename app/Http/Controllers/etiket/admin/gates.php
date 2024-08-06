@@ -14,12 +14,15 @@ class gates extends Controller
 {
     //
 
-    public function daftar() {
+    public function daftar()
+    {
 
         $data = gk_gates::with(['destinasi'])->get();
 
-        $jenisTiket = ['Weekday','Weekend'];
+        $jenisTiket = ['Weekday', 'Weekend'];
         $totalTerjual = 122;
+
+        // return $data;
 
         return view('etiket.admin.master-data.gate', [
             "gates" => $data,
@@ -28,31 +31,41 @@ class gates extends Controller
         ]);
     }
 
-    public function tambah() {
+    public function tambah()
+    {
         $destinasi = Destinasi::all();
-        $gates = gk_gates::all();
 
         return view('etiket.admin.master-data.gate.tambah', [
             "destinasi" => $destinasi,
-            "gate" => $gates,
         ]);
-
     }
 
-    public function tambahAction(Request $request) {
+    public function tambahAction(Request $request)
+    {
+
         $request->validate([
-            'nama' => 'required',
-            'detail' => 'required',
-            'destinasi' => 'required',
+            'nama' => 'required|string|max:255',
+            'status' => 'required',
+            'id_destinasi' => 'required|integer',
+            'max_pendaki_hari' => 'required|integer|min:0',
+            'min_pendaki_booking' => 'required|integer|min:0',
+            'lokasi' => 'string|max:255',
+            // 'lokasi_maps' => 'string|max:255',
+            'detail' => 'string',
         ]);
 
-        $id = time();
+        // return $request;
+
+
         $proceed = gk_gates::create([
-            "nama" => $request->nama,
-            "detail" => $request->detail,
-            "lokasi" => "Lokasi Gate",
-            "foto" => "-",
-            "id_destinasi" => intval($request->destinasi),
+            'nama' => $request->nama,
+            'status' => $request->status,
+            'id_destinasi' => intval($request->id_destinasi),
+            'max_pendaki_hari' => $request->max_pendaki_hari,
+            'min_pendaki_booking' => $request->min_pendaki_booking,
+            'lokasi' => $request->lokasi,
+            'lokasi_maps' => "",
+            'detail' => $request->detail,
         ]);
 
         if (!$proceed) {
@@ -63,7 +76,8 @@ class gates extends Controller
         return back()->with('success', 'Berhasil menambah gate');
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
 
         $destinasi = Destinasi::all();
         $data = gk_gates::where('id', $id)->first();
@@ -74,30 +88,41 @@ class gates extends Controller
         ]);
     }
 
-    public function editAction(Request $request, $id) {
+    public function editAction(Request $request, $id)
+    {
         $request->validate([
-            'nama' => 'required',
-            'detail' => 'required',
-            'destinasi' => 'required',
+            'nama' => 'required|string|max:255',
             'status' => 'required',
+            'id_destinasi' => 'required|integer',
+            'max_pendaki_hari' => 'required|integer|min:0',
+            'min_pendaki_booking' => 'required|integer|min:0',
+            'lokasi' => 'string|max:255',
+            // 'lokasi_maps' => 'string|max:255',
+            'detail' => 'string',
         ]);
 
-        $proceed = gk_gates::where('id',$id)->update([
-            "nama" => $request->nama,
-            "detail" => $request->detail,
-            "id_destinasi" => intval($request->destinasi),
-            "status" => $request->status,
+        // return $request;
+
+        $proceed = gk_gates::where('id', $id)->update([
+            'nama' => $request->nama,
+            'status' => $request->status,
+            'id_destinasi' => intval($request->id_destinasi),
+            'max_pendaki_hari' => $request->max_pendaki_hari,
+            'min_pendaki_booking' => $request->min_pendaki_booking,
+            'lokasi' => $request->lokasi,
+            'lokasi_maps' => "",
+            'detail' => $request->detail,
         ]);
 
         if (!$proceed) {
             return back()->with('error', 'Terjadi kesalahan ketika menambahkan gate');
         }
 
-        return back()->with('success', 'Berhasil memperbarui tiket');
-
+        return back()->with('success', 'Berhasil memperbarui Gates');
     }
 
-    public function hapus(Request $request, $id) {
+    public function hapus(Request $request, $id)
+    {
 
         gk_gates::where('id', $id)->delete();
         return back()->with('success', 'Berhasil Menghapus Tiket');

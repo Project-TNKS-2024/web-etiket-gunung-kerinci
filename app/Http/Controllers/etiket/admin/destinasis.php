@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\etiket\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\uploadFileControlller;
 use Illuminate\Http\Request;
 use App\Models\destinasi;
 use App\Models\gk_gates;
@@ -31,28 +32,27 @@ class destinasis extends Controller
 
     public function tambah()
     {
-        $destinasi = Destinasi::all();
-        $gates = gk_gates::all();
-        $jenisTiket = ['Weekday', 'Weekend'];
-
-        return view('etiket.admin.master-data.destinasi.tambah', [
-            "destinasi" => $destinasi,
-            "gate" => $gates,
-            "jenisTiket" => $jenisTiket,
-        ]);
+        return view('etiket.admin.master-data.destinasi.tambah');
     }
 
     public function tambahAction(Request $request)
     {
         $request->validate([
             'nama' => 'required',
+            'status' => 'required',
+            'kategori' => 'required',
+            'lokasi' => 'required',
             'detail' => 'required',
         ]);
+        // return $request;
 
         $proceed = destinasi::create([
-            "nama" => $request->nama,
-            "detail" => $request->detail,
-            "status" => 1,
+            'nama' => $request->nama,
+            'status' => $request->status,
+            'kategori' => $request->kategori,
+            'lokasi' => $request->lokasi,
+            'detail' => $request->detail,
+
         ]);
 
         if (!$proceed) {
@@ -80,14 +80,21 @@ class destinasis extends Controller
     {
         $request->validate([
             'nama' => 'required',
+            'status' => 'required',
+            'kategori' => 'required',
+            'lokasi' => 'required',
             'detail' => 'required',
             'status' => 'required',
         ]);
 
+        // return $request;
+
         if (!destinasi::where('id', $id)->update([
-            "nama" => $request->nama,
-            "detail" => $request->detail,
-            "status" => $request->status
+            'nama' => $request->nama,
+            'status' => $request->status,
+            'kategori' => $request->kategori,
+            'lokasi' => $request->lokasi,
+            'detail' => $request->detail,
         ])) {
             return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);
         }
@@ -98,7 +105,7 @@ class destinasis extends Controller
     public function hapus(Request $reqeust, $id)
     {
         destinasi::where('id', $id)->delete();
-        return back()->with('success', 'Berhasil Menghapus Tiket');
+        return back()->with('success', 'Berhasil Menghapus Destinasi');
     }
 
     public function upload(Request $request, $id)
@@ -113,9 +120,10 @@ class destinasis extends Controller
         try {
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
-                $fileName = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('upload/'), $fileName);
-                $fileUrl = 'upload/' . $fileName;
+
+
+                $uploadController = new uploadFileControlller();
+                $fileUrl = $uploadController->create('img', 'destinasi', $file);
 
                 gambar_destinasi::create([
                     "src" => $fileUrl,

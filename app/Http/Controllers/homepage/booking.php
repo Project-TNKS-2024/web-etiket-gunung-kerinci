@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\homepage;
 
 use App\Http\Controllers\Controller;
+use App\Models\destinasi;
 use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
 use App\Models\gk_gates;
@@ -10,6 +11,7 @@ use App\Models\gk_pendaki;
 use App\Models\destinasi;
 use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
+use App\Models\gk_paket_tiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,18 +21,33 @@ class booking extends Controller
 {
     public function booking($id)
     {
-        $destinasi = destinasi::with('gates')->where('id',$id)->first();
-        $gambar_destinasi = gambar_destinasi::where('id_destinasi',$id)->get();
-        $tiket = gk_tiket_pendaki::with(['paket_tiket'])
-            ->whereHas('paket_tiket', function ($query) use ($id) {
-                $query->where('id_destinasi', $id);
-            })
-            ->get();
 
+        $paket = gk_paket_tiket::where('id_destinasi', $id)->get();
+        $gunung = destinasi::find($id);
+        $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id)->get();
+
+        // return $gunung;
+        return view('homepage.booking.booking', [
+            "gunung" => $gunung,
+            "paket" => $paket,
+            "gambar" => $gambar_destinasi,
+        ]);
+        // return $data;
+    }
+
+    public function bookingPaket($id)
+    {
+        $gunung = destinasi::find($id);
+        $paket = gk_paket_tiket::find($id);
+        $tiket = gk_paket_tiket::where('id_destinasi', $id)->get();
+        $gates = gk_gates::where('id_destinasi', $id)->get();
+        $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id)->get();
         // return $tiket;
-        return view("homepage.booking.booking", [
-            "destinasi" => $destinasi,
+        return view("homepage.booking.booking-paket", [
+            "gunung" => $gunung,
+            "paket" => $paket,
             "tiket" => $tiket,
+            "gates" => $gates,
             "gambar" => $gambar_destinasi,
         ]);
     }

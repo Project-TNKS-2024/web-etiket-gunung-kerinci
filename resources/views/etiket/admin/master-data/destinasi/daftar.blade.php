@@ -13,7 +13,9 @@
                 @if ($d->status)
                 <span class="badge rounded-pill text-bg-success">Open</span>
                 @else
+
                 <span class="badge rounded-pill gk-bg-error200">Close</span>
+
                 @endif
             </td>
             <td class="p-3 ">{{$d->nama}}</td>
@@ -21,9 +23,17 @@
             <td class="p-3 ">{{$d->lokasi}}</td>
             <td class="p-3 ">{{$d->detail}}</td>
             <td class="p-3 d-flex gap-1 bg-transparent align-items-center justify-content-start">
-                <a href="{{route('admin.destinasi.edit', ['id' => $d->id])}}" class="bg-transparent rounded cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks/edit_fill-dark.svg')}}" class="bg-warning rounded" /></a>
-                <div onclick="openModal({{ json_encode($gambar) }}.filter(o => o.id_destinasi === {{$d->id}}))"><img class="gk-bg-primary300 rounded shadow-sm" width="25" src="{{asset('assets/icon/tnks/img_rol-dark.svg')}}" /></div>
-                <a onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.destinasi.hapus', ['id' => $d->id])}}`)" href="#" class="rounded cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/icon/tnks/trash-dark.svg')}}" class="bg-danger rounded" /></a>
+
+                <a href="{{route('admin.destinasi.edit', ['id' => $d->id])}}" class="cursor-pointer">
+                    <img width="25" class="gk-bg-primary100 rounded shadow-sm" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent" />
+                </a>
+                <a onclick="confirmDelete(event, '{{json_encode($d)}}',  `{{ route('admin.destinasi.hapus', ['id' => $d->id])}}`)" href="#" class="rounded cursor-pointer shadow-sm">
+                    <img width="25" class="rounded shadow-sm" src="{{asset('assets/icon/tnks-bin.svg')}}" />
+                </a>
+                <div onclick="openModal({{ json_encode($gambar) }}.filter(o => o.id_destinasi === {{$d->id}}))">
+                    <!-- <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/tnks-detail.svg')}}" /> -->
+                    <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/img_rol.svg')}}" />
+                </div>
             </td>
         </tr>
         @endforeach
