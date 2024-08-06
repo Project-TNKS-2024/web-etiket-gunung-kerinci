@@ -34,19 +34,24 @@ Route::get('/', function () {
 Route::get('beranda', [beranda::class, 'index'])->name('homepage.beranda');
 Route::get('sop', [panduan::class, 'sop'])->name('homepage.sop');
 Route::get('panduan', [panduan::class, 'panduan'])->name('homepage.panduan');
+
 Route::get('booking/{id}', [booking::class, 'booking'])->name('homepage.booking');
-Route::post('booking', [booking::class, 'postBooking'])->name('homepage.postBooking');
+Route::get('booking/paket/{id}', [booking::class, 'bookingPaket'])->name('homepage.bookingpaket');
+Route::post('booking/paket', [booking::class, 'postBooking'])->name('homepage.postBooking');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
     Route::post('login', [login::class, 'actionlogin'])->name('etiket.in.actionlogin');
+
+    Route::get('register', [register::class, 'register'])->name('etiket.in.register');
+    Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
+
     Route::get('lupaPassword/sentEmail', [login::class, 'lp_sentEmail'])->name('etiket.in.lp.sentEmail');
     // Route::get('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
     Route::post('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
-    Route::get('register', [register::class, 'register'])->name('etiket.in.register');
-    Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
     // route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
     // route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
+
     route::get('reset-password/{token}', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
     route::post('reset-password/action/{token}/', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
 });
@@ -115,5 +120,6 @@ Route::post('sampel/tesnotif', [sampel::class, 'actiontesnotif'])->name('sampel.
 
 //test
 Route::get('/unauthorized', function () {
-    return view('errors.abort');
+    // return view('errors.abort');
+    return redirect('beranda');
 });

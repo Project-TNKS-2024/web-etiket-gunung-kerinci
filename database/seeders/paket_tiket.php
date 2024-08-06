@@ -34,8 +34,8 @@ class paket_tiket extends Seeder
         gk_tiket_pendaki::create([
             'id_paket_tiket' => 1,
             'kategori_pendaki' => 'wni',
-            'kategori_hari' => 'wd',
-            'harga_masuk' => 5000,
+            'harga_masuk_wk' => 7500,
+            'harga_masuk_wd' => 5000,
             'harga_kemah' => 5000,
             'harga_traking' => 5000,
             'harga_ansuransi' => 5000,
@@ -44,39 +44,18 @@ class paket_tiket extends Seeder
         gk_tiket_pendaki::create([
             'id_paket_tiket' => 2,
             'kategori_pendaki' => 'wni',
-            'kategori_hari' => 'wd',
-            'harga_masuk' => 3000,
+            'harga_masuk_wk' => 4500,
+            'harga_masuk_wd' => 3000,
             'harga_kemah' => 2500,
             'harga_traking' => 2500,
-            'harga_ansuransi' => 5000,
+            'harga_ansuransi' => 2500,
         ]);
-
-        gk_tiket_pendaki::create([
-            'id_paket_tiket' => 1,
-            'kategori_pendaki' => 'wni',
-            'kategori_hari' => 'wk',
-            'harga_masuk' => 7500,
-            'harga_kemah' => 5000,
-            'harga_traking' => 5000,
-            'harga_ansuransi' => 5000,
-        ]);
-
-        gk_tiket_pendaki::create([
-            'id_paket_tiket' => 2,
-            'kategori_pendaki' => 'wni',
-            'kategori_hari' => 'wk',
-            'harga_masuk' => 4500,
-            'harga_kemah' => 2500,
-            'harga_traking' => 2500,
-            'harga_ansuransi' => 5000,
-        ]);
-
 
         gk_tiket_pendaki::create([
             'id_paket_tiket' => 1,
             'kategori_pendaki' => 'wna',
-            'kategori_hari' => 'wd',
-            'harga_masuk' => 150000,
+            'harga_masuk_wk' => 225000,
+            'harga_masuk_wd' => 150000,
             'harga_kemah' => 5000,
             'harga_traking' => 5000,
             'harga_ansuransi' => 5000,
@@ -84,32 +63,12 @@ class paket_tiket extends Seeder
 
         gk_tiket_pendaki::create([
             'id_paket_tiket' => 2,
-            'kategori_pendaki' => 'wni',
-            'kategori_hari' => 'wd',
-            'harga_masuk' => 100000,
+            'kategori_pendaki' => 'wna',
+            'harga_masuk_wk' => 150000,
+            'harga_masuk_wd' => 100000,
             'harga_kemah' => 2500,
             'harga_traking' => 2500,
-            'harga_ansuransi' => 5000,
-        ]);
-
-        gk_tiket_pendaki::create([
-            'id_paket_tiket' => 1,
-            'kategori_pendaki' => 'wni',
-            'kategori_hari' => 'wk',
-            'harga_masuk' => 225000,
-            'harga_kemah' => 5000,
-            'harga_traking' => 5000,
-            'harga_ansuransi' => 5000,
-        ]);
-
-        gk_tiket_pendaki::create([
-            'id_paket_tiket' => 2,
-            'kategori_pendaki' => 'wni',
-            'kategori_hari' => 'wk',
-            'harga_masuk' => 150000,
-            'harga_kemah' => 2500,
-            'harga_traking' => 2500,
-            'harga_ansuransi' => 5000,
+            'harga_ansuransi' => 2500,
         ]);
     }
 }

@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_paket_tiket');
             $table->enum('kategori_pendaki', ['wna', 'wni']);
-            $table->enum('kategori_hari', ['wk', 'wd']);
+            // $table->enum('kategori_hari', ['wk', 'wd']);
 
-            $table->integer('harga_masuk');
+            $table->integer('harga_masuk_wk');
+            $table->integer('harga_masuk_wd');
             $table->integer('harga_kemah');
             $table->integer('harga_traking');
             $table->integer('harga_ansuransi');

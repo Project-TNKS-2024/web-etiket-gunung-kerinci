@@ -44,7 +44,7 @@
                     <div class="col-12 row">
                         <div class="col-6">
                             <label class="form-label" for="kategori">Kategori</label>
-                            <select class="form-control borderx bg-white" id=" kategori" name="kategori" required>
+                            <select class="form-control borderx bg-white" id="kategori" name="kategori" required>
                                 @if ($data->kategori == "taman")
                                 <option value="taman" selected>Taman</option>
                                 <option value="gunung">Gunung</option>
@@ -86,7 +86,7 @@
             </div>
             <div class="col-md-4 col-sm-12">
                 <label class="text-2xl font-bold gk-text-base-black mb-2">Tambah Foto</label>
-                <form class=" form row gap-2" action="{{route('admin.destinasi.upload', ['id' => $data->id])}}" method="post" enctype="multipart/form-data">
+                <form class="form row gap-2" action="{{route('admin.destinasi.upload', ['id' => $data->id])}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="col-12">
                         <label class="form-label">Judul Foto</label>
@@ -100,7 +100,7 @@
                                     <img class="p-0 m-0" width="20" src="{{asset('assets/icon/tnks/upload.svg')}}" />
                                     <div>Pilih Foto</div>
                                 </div>
-                                <div id="input-file-label" class="m-0 p-0 d-flex" style=""> No File Chosen</div>
+                                <div id="input-file-label" class="m-0 p-0 d-flex"> No File Chosen</div>
                             </label>
                             <div class="btn btn-warning text-black h-fit d-flex align-items-center gap-1"> <img src="{{asset('assets/icon/tnks/search_alt-dark.svg')}}" width="20" /></div>
                         </div>
@@ -109,7 +109,7 @@
                     </div>
                     <div class="col-12">
                         <label class="form-label">Detail Foto</label>
-                        <textarea cols="1" name="foto_detail" id="foto-detail" class="form-control bg-white borderx" style="" placeholder="Detail Foto" required></textarea>
+                        <textarea cols="1" name="foto_detail" id="foto-detail" class="form-control bg-white borderx" placeholder="Detail Foto" required></textarea>
                     </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary gk-bg-primary700 d-flex align-items-center gap-1 ms-auto"><img width="20" src="{{asset('assets/icon/tnks/save-light.svg')}}" />Upload</button>
@@ -138,6 +138,7 @@
                             <td class="text-center">
                                 <a href="{{route('admin.gate.edit', ['id' => $g->id])}}" class="bg-transparent rounded gk-bg-primary100 cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent" /></a>
                                 <a onclick="confirmDelete(event, '{{json_encode($g)}}',  `{{ route('admin.gate.hapus', ['id' => $g->id])}}`)" href="#" class="rounded cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/icon/tnks-bin.svg')}}" /></a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -161,30 +162,27 @@
                     <tbody id="data-body" class="table-group-divider">
                         @if(count($gambar) == 0)
                         <tr>
-                            <td colspan="3">Belum Ada Gambar</td>
+                            <td colspan="4">Belum Ada Gambar</td>
                         </tr>
                         @else
-                        <tr>
-                            @foreach ($gambar as $g)
+                        @foreach ($gambar as $g)
                         <tr class="tiket-row">
                             <td class="col-1">{{$loop->index+1}}</td>
                             <td class="col-4">{{$g->nama}}</td>
                             <td class="col-4">{{$g->detail}}</td>
                             <td class="d-flex gap-1 bg-transparent align-items-center justify-content-center">
-                                <div onclick="openModal([{{$g}}])" class=" text-black h-fit d-flex align-items-center gap-1">
+                                <div onclick="openModal([ {{$g}} ])" class="text-black h-fit d-flex align-items-center gap-1">
                                     <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/img_rol.svg')}}" />
                                 </div>
-                                <div class=" text-black h-fit d-flex align-items-center gap-1">
+                                <div class="text-black h-fit d-flex align-items-center gap-1">
                                     <img width="25" class="rounded shadow-sm" src="{{asset('assets/icon/tnks-bin.svg')}}" />
                                 </div>
                             </td>
                         </tr>
                         @endforeach
-                        </tr>
                         @endif
                     </tbody>
                 </table>
-
             </div>
         </div>
     </main>
