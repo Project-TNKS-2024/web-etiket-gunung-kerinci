@@ -38,7 +38,7 @@ class booking extends Controller
     {
         $gunung = destinasi::find($id);
         $paket = gk_paket_tiket::find($id);
-        $tiket = gk_paket_tiket::where('id_destinasi', $id)->get();
+        $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)->get();
         $gates = gk_gates::where('id_destinasi', $id)->get();
         $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id)->get();
         // return $tiket;
@@ -58,13 +58,15 @@ class booking extends Controller
             return redirect()->route('etiket.in.login');
         }
 
+        return $request;
+
         if (Auth::user()->role == 'user') {
             $request->validate([
+                'id_paket_tiket' => 'required|integer',
                 'date_start' => 'required|date',
                 'date_end' => 'required|date',
                 'wni' => 'required|numeric',
                 'wna' => 'required|numeric',
-                'jenis_tiket' => 'required|string',
                 'gerbang_masuk' => 'required',
                 'gerbang_keluar' => 'required',
             ]);

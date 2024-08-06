@@ -55,7 +55,7 @@
 
                     @foreach ($gambar as $g)
                     <div class="carousel-item {{ $loop->index == 0 ? 'active' : ''}}">
-                        <img src="{{ url('/').'/'.$g->src }}" class="d-block w-100" style=";object-fit: cover;height: 480px;" alt="...">
+                        <img src="{{ url('/').'/'.$g->src }}" class="d-block w-100" style="object-fit: cover;height: 480px;" alt="...">
                     </div>
                     @endforeach
                 </div>

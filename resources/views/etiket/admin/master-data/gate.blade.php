@@ -16,7 +16,7 @@
     <h3 class="font-bold mb-3 gk-text-base-black">Kelola Gate</h3>
 
     <div class="overflow-visible mb-3">
-        <a class="text-start text-black font-bold d-flex align-items-center gap-2 w-fit border-neutrals500 border-4 btn shadow gk-bg-base-white " href="{{route('admin.gate.tambah')}}" style="border: 1px solid var)">
+        <a class="text-start text-black font-bold d-flex align-items-center gap-2 w-fit border-neutrals500 border-4 btn shadow gk-bg-base-white " href="{{route('admin.gate.tambah')}}" style="border: 1px solid var">
             <img src="{{asset('assets/icon/tnks-plus.svg')}}" />
             Tambah Gate
         </a>
