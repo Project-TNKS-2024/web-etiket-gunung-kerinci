@@ -13,11 +13,16 @@ use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+
 
 use function PHPUnit\Framework\isNull;
 
 class booking extends Controller
 {
+
+
     public function booking($id)
     {
 
@@ -81,59 +86,90 @@ class booking extends Controller
             ]);
 
 
-            $booking = gk_booking::where('id_user', Auth::user()->id)->where('id_booking', $request->id_booking)->where('status', '<', 3)->first();
-            // if ($booking) {
+            $tiket = gk_paket_tiket::with('tiket_pendaki')->where('id', $request->jenis_tiket)->first();
+            $days = $this->countWeekdaysAndWeekends($request->date_start,$request->date_end);
 
-            //     // update data booking dengan yang baru
-            //     $booking->update([
-            //         'total_pendaki' => $request->wni + $request->wna,
-            //         'wni' => $request->wni,
-            //         'wna' => $request->wna,
-            //         'gate_masuk' => $request['gerbang-masuk'],
-            //         'gate_keluar' => $request['gerbang-keluar'],
-            //         'tanggal_masuk' => $request['date-start'],
-            //         'tanggal_keluar' => $request['date-end'],
-            //     ]);
+            // retu
+            $hargaWni = $tiket->tiket_pendaki->where('kategori_pendaki','wni')->where('id_paket_tiket', intval($request->jenis_tiket))->first();
+            $totalHargaWni = ($days['weekends'] * $hargaWni->harga_masuk_wk + $days['weekdays'] * $hargaWni->harga_masuk_wd + $hargaWni->harga_kemah * ($days['weekdays'] +$days['weekends']-1)) * intval($request->wni) + ($hargaWni->harga_traking*intval($request->wni)) + ($hargaWni->harga_ansuransi*intval($request->wni));
 
-            //     return redirect()->route('homepage.booking-snk', ['id' => $booking->id])->with('success', 'Update Booking');
-            // } else {
-            //     // buat booking baru
-            //     $newBooking = gk_booking::create([
-            //         'id_user' => Auth::user()->id,
-            //         'id_tiket' => $request->id_tiket,
-            //         'status' => 0,
-            //         'id_booking_master' => 0,
-            //         'total_pendaki' => $request->wni + $request->wna,
-            //         'wni' => $request->wni,
-            //         'wna' => $request->wna,
-            //         'keterangan' => $request->keterangan,
-            //         'QR' => null,
-            //         'pembayaran' => false,
-            //         'gate_masuk' => $request['gerbang-masuk'],
-            //         'gate_keluar' => $request['gerbang-keluar'],
-            //         'tanggal_masuk' => $request['date-start'],
-            //         'tanggal_keluar' => $request['date-end'],
-            //     ]);
-            //     // return $newBooking;
-            //     return redirect()->route('homepage.booking-snk', ['id' => $newBooking->id])->with('success', 'Create Booking');
-            // }
+            $hargaWna = $tiket->tiket_pendaki->where('kategori_pendaki','wna')->where('id_paket_tiket', intval($request->jenis_tiket))->first();
+            $totalHargaWna = ($days['weekends'] * $hargaWni->harga_masuk_wk + $days['weekdays'] * $hargaWna->harga_masuk_wd + $hargaWna->harga_kemah * ($days['weekdays'] +$days['weekends']-1)) * intval($request->wna) + ($hargaWna->harga_traking*intval($request->wna)) + ($hargaWna->harga_ansuransi*intval($request->wna));
+            ;
 
-            // return redirect()->route('homepage.booking-snk', ['id' => $request->id]);
+            $totalHarga = $totalHargaWna+$totalHargaWni;
+
+            $dateStart = Carbon::createFromFormat('d-m-Y', $request->date_start);
+            $dateEnd = Carbon::createFromFormat('d-m-Y', $request->date_end);
+            $totalDays = $dateStart->diffInDays($dateEnd);
+
+
+            if ($dateStart > $dateEnd) {
+                return back()->with('error', 'Error: tanggal tidak sesuai');
+            }
+            $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $request->id_booking)->where('status_booking', '<', 3)->first();
+            if ($booking) {
+
+                $booking->update([
+                    'total_pendaki' => $request->wni + $request->wna,
+                    'wni' => $request->wni,
+                    'wna' => $request->wna,
+                    'gate_masuk' => $request['gerbang_masuk'],
+                    'gate_keluar' => $request['gerbang_keluar'],
+                    'tanggal_masuk' => $request['date_start'],
+                    'tanggal_keluar' => $request['date_end'],
+                ]);
+
+                return redirect()->route('homepage.booking-snk', ['id' => $booking->id])->with('success', 'Update Booking');
+            } else {
+                $newBooking = gk_booking::create([
+                    'id_user' => Auth::user()->id,
+                    'id_tiket' => $request->jenis_tiket,
+                    'status_booking' => 0,
+                    'id_booking_master' => 0,
+                    'total_pendaki' => $request->wni + $request->wna,
+                    'total_pendaki_wni' => $request->wni,
+                    'total_pendaki_wna' => $request->wna,
+                    'QR' => null,
+                    'pembayaran' => false,
+                    'gate_masuk' => $request->gerbang_masuk,
+                    'gate_keluar' => $request->gerbang_keluar,
+                    'tanggal_masuk' => Carbon::createFromFormat('d-m-Y', $request->date_start),
+                    'tanggal_keluar' =>Carbon::createFromFormat('d-m-Y', $request->date_end),
+                    'total_hari' => $totalDays,
+                    'total_pembayaran' => $totalHarga,
+                    'lampiran_simaksi' => "-",
+                    'lampiran_stugas' => "-",
+                ]);
+                // return $newBooking;
+                return redirect()->route('homepage.booking-snk', ['id' => $newBooking->id])->with('success', 'Create Booking');
+            }
+
+            return redirect()->route('homepage.booking-snk', ['id' => $request->id]);
     }
-    // =========================================================================================
     public function bookingSnk($id)
     {
         // id booking
-        $booking = gk_booking::find($id);
+        if (!Auth::check()) {
+            return redirect()->route('homepage.beranda');
+        }
+        $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $id)->first();
+        if (!$booking){
+            abort(403);
+        }
+
+        if ($booking->status_booking ==1) {
+            return redirect()->route('homepage.booking-fp', ['id' => $id]);
+        }
+
         return view('homepage.booking.booking-snk', ['id' => $id, 'status' => false]);
     }
+
     public function bookingSnkStore(Request $request)
     {
-        // return $request;
         if ($request->snk) {
-            // update booking status = 1
             $booking = gk_booking::find($request->id);
-            $booking->update(['status' => 1]);
+            $booking->update(['status_booking' => 1]);
             return redirect()->route('homepage.booking-fp', ['id' => $request->id]);
         } else {
             return back()->withErrors(['snk' => 'Silahkan ceklis data diri anda']);
@@ -144,6 +180,12 @@ class booking extends Controller
     public function bookingFP($id)
     {
         $booking = gk_booking::find($id);
+        if (!$booking) {
+            abort(403);
+        }
+        if ($booking->status_booking == 0) {
+            return redirect()->route("homepage.booking-snk", ["id"=> $id] );
+        }
         $pendaki = gk_pendaki::where('booking_id', $booking->id)->get();
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
 
@@ -282,7 +324,14 @@ class booking extends Controller
     {
         // id booking
 
-        $booking = gk_booking::find($id);
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar'])->where('id',$id)->first();
+        if (!$booking) {
+            abort(403);
+        }
+
+        if ($booking->status_booking == 0) {
+            return redirect()->route("homepage.booking-snk", ["id"=> $id] );
+        }
         $gates = gk_gates::all();
 
         // return [
@@ -291,9 +340,57 @@ class booking extends Controller
         //     'gates' => $gates
         // ];
 
+        $tiket = gk_paket_tiket::with('tiket_pendaki')->where('id', $booking->id_tiket)->first();
+        $days = $this->countWeekdaysAndWeekends(Carbon::parse($booking->tanggal_masuk)->format('d-m-Y'),Carbon::parse($booking->tanggal_keluar)->format('d-m-Y'));
+
+        // retu
+        $hargaWni = $tiket->tiket_pendaki->where('kategori_pendaki','wni')->where('id_paket_tiket', intval($booking->id_tiket))->first();
+        $totalHargaWni = ($days['weekends'] * $hargaWni->harga_masuk_wk + $days['weekdays'] * $hargaWni->harga_masuk_wd + $hargaWni->harga_kemah * ($days['weekdays'] +$days['weekends']-1)) * intval($booking->total_pendaki_wni) + ($hargaWni->harga_traking*intval($booking->total_pendaki_wni)) + ($hargaWni->harga_ansuransi*intval($booking->total_pendaki_wni));
+
+        $hargaWna = $tiket->tiket_pendaki->where('kategori_pendaki','wna')->where('id_paket_tiket', intval($booking->id_tiket))->first();
+        $totalHargaWna = ($days['weekends'] * $hargaWni->harga_masuk_wk + $days['weekdays'] * $hargaWna->harga_masuk_wd + $hargaWna->harga_kemah * ($days['weekdays'] +$days['weekends']-1)) * intval($booking->total_pendaki_wna) + ($hargaWna->harga_traking*intval($booking->total_pendaki_wna)) + ($hargaWna->harga_ansuransi*intval($booking->total_pendaki_wna));
+        ;
+
+        $totalHarga = $totalHargaWna+$totalHargaWni;
+
         return view('homepage.booking.booking-detail', [
             'booking' => $booking,
-            'gates' => $gates
+            'gates' => $gates,
+            'hargaWni' => $hargaWni,
+            'totalHargaWni' => $totalHargaWni,
+            'hargaWna' => $hargaWna,
+            'totalHargaWna' => $totalHargaWna,
+            'days' => $days,
+            'days' => $days
+
         ]);
     }
+
+    function countWeekdaysAndWeekends($dateStart, $dateEnd) {
+        // Convert string dates to Carbon instances
+        $start = Carbon::createFromFormat('d-m-Y', $dateStart);
+        $end = Carbon::createFromFormat('d-m-Y', $dateEnd);
+
+        // Create a CarbonPeriod instance
+        $period = CarbonPeriod::create($start, $end);
+
+        // Initialize counters
+        $weekdays = 0;
+        $weekends = 0;
+
+        // Iterate through each date in the period
+        foreach ($period as $date) {
+            if ($date->isWeekend()) {
+                $weekends++;
+            } else {
+                $weekdays++;
+            }
+        }
+
+        return [
+            'weekdays' => $weekdays,
+            'weekends' => $weekends
+        ];
+    }
+
 }

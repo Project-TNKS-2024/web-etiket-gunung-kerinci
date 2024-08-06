@@ -114,26 +114,26 @@
                   <h4>Nama Ketua</h4>
                   <p>Pendaki Handal</p>
                   <h4>Gerbang Masuk</h4>
-                  <p>Kersik Tua</p>
+                  <p>{{$booking->gateMasuk->nama}}</p>
                   <h4>Check In</h4>
-                  <p>14 Agustus 2024</p>
+                  <p>{{$booking->tanggal_masuk}}</p>
                   <h4>Jumlah Anggota</h4>
                   <p>5 orang</p>
                </div>
                <div class="col">
                   <h4>SIMAKSI</h4>
                   <p><span class="c-red">Tidak</span>/<span class="c-green">Ya</span></p>
-                  <h4>Gerbang Masuk</h4>
-                  <p>Kersik Tua</p>
+                  <h4>Gerbang Keluar</h4>
+                  <p>{{$booking->gateKeluar->nama}}</p>
                   <h4>Check out</h4>
-                  <p>19 Agustus 2024</p>
+                  <p>{{$booking->tanggal_keluar}}</p>
                   <h4>Kewarganegaraan</h4>
                   <div class="row">
                      <div class="col">
-                        <p>3 WNI</p>
+                        <p>{{$booking->total_pendaki_wni}} WNI</p>
                      </div>
                      <div class="col">
-                        <p>3 WNA</p>
+                        <p>{{$booking->total_pendaki_wna}} WNA</p>
                      </div>
                   </div>
                </div>
@@ -151,12 +151,12 @@
             <div class="card" id="pembayaran">
                <div class="card-body">
                   <h4>Total Pembayaran</h4>
-                  <p>WNI <span class="float-right">Rp. 40.000</span></p>
-                  <p class="fw-bold">3 x WNI <span class="float-right">Rp. 120.000</span></p>
-                  <p>WNA <span class="float-right">Rp. 30.000</span></p>
-                  <p class="fw-bold">3 x WNA <span class="float-right">Rp. 90.000</span></p>
-                  <p class="fw-bold c-blue">Total <span class="float-right">Rp. 210.000</span></p>
-                  <p class="span">*2 hari 1 malam (2D1M)</p>
+                  <p>WNI <span class="float-right">Rp. {{number_format($totalHargaWni/$booking->total_pendaki_wni)}}</span></p>
+                  <p class="fw-bold">{{ $booking->total_pendaki_wni}} x WNI <span class="float-right">Rp. {{number_format($totalHargaWni)}}</span></p>
+                  <p>WNA <span class="float-right">Rp. {{number_format($totalHargaWna/$booking->total_pendaki_wna)}}</span></p>
+                  <p class="fw-bold">{{$booking->total_pendaki_wna}} x WNA <span class="float-right">Rp. {{number_format($totalHargaWna)}}</span></p>
+                  <p class="fw-bold c-blue">Total <span class="float-right">Rp.  {{number_format($booking->total_pembayaran)}}</span></p>
+                  <p class="span">*{{$days['weekdays']+$days['weekends']}} hari {{$days['weekdays']+$days['weekends']-1}} malam (2D1M)</p>
                </div>
             </div>
          </div>

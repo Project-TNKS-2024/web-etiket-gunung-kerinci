@@ -119,7 +119,7 @@
                                 <ul class="dropdown-menu"  aria-labelledby="destinasi">
                                     @foreach ($destinasi->gates as $d)
                                         <li>
-                                            <a class="dropdown-item" onclick="select(event, 'gerbang_masuk','gerbang-masuk-value', 'wna')" href="#">
+                                            <a class="dropdown-item" onclick="select(event, 'gerbang_masuk','gerbang-masuk-value', {{$d->id}})" href="#">
                                                 <span>{{$d->nama}}</span>
                                                 <span class="d-none" id="gerbang-masuk-id"></span>
                                             </a>
@@ -138,7 +138,7 @@
                                 <ul class="dropdown-menu"  aria-labelledby="destinasi">
                                     @foreach ($destinasi->gates as $d)
                                         <li>
-                                            <a class="dropdown-item" onclick="select(event, 'gerbang_keluar','gerbang-keluar-value', 'wna')" href="#">
+                                            <a class="dropdown-item" onclick="select(event, 'gerbang_keluar','gerbang-keluar-value', {{$d->id}})" href="#">
                                                 <span>{{$d->nama}}</span>
                                                 <span class="d-none" id="gerbang-keluar-id"></span>
                                             </a>
@@ -153,25 +153,17 @@
                     <div class="form-group mt-3">
                         <button type="submit" class="btn btn-primary w-100">Lanjut Booking</button>
                     </div>
-                    @if ($errors->any())
-                        <div class="row gap-1">
-                            @foreach ($errors->all() as $error)
-                                <div class="row btn btn-danger">
-                                    {{ $error }}
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
+
                 </form>
             </div>
         </div>
-        <div class="row mt-4">
+        <div class="row mt-4" style="overflow-x: auto">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mt-2">Perbandingan Harga</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-x: auto">
                         <form action="#" method="get" id="booking_price">
 
                             <table class="table">
@@ -307,7 +299,7 @@
                     return o;
                 }
             })[0];
-            const hargaTotalWNI = (days.weekends * filteredPriceWNI.harga_masuk_wk + days.weekdays * filteredPriceWNI.harga_masuk_wd + filteredPriceWNI.harga_kemah*(days.weekdays+days.weekends-1) ) * wniPendaki.value;
+            const hargaTotalWNI = (days.weekends * filteredPriceWNI.harga_masuk_wk + days.weekdays * filteredPriceWNI.harga_masuk_wd + filteredPriceWNI.harga_kemah*(days.weekdays+days.weekends-1)) * wniPendaki.value + (filteredPriceWNI.harga_traking*wniPendaki.value);
 
             const filteredPriceWeekendWNA = harga.filter(o => {
                 if (o.kategori_hari === "wk" && o.kategori_pendaki === "wna" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
@@ -319,7 +311,7 @@
                     return o;
                 }
             })[0];
-            const hargaTotalWNA = (days.weekends * filteredPriceWNA.harga_masuk_wk + days.weekdays * filteredPriceWNA.harga_masuk_wd + filteredPriceWNA.harga_kemah*(days.weekdays+days.weekends-1) ) * wnaPendaki.value;
+            const hargaTotalWNA = (days.weekends * filteredPriceWNA.harga_masuk_wk + days.weekdays * filteredPriceWNA.harga_masuk_wd + filteredPriceWNA.harga_kemah*(days.weekdays+days.weekends-1) ) * wnaPendaki.value + (filteredPriceWNA.harga_traking*wnaPendaki.value);
 
             wniLabel.textContent = hargaTotalWNI;
             wnaLabel.textContent = hargaTotalWNA;
