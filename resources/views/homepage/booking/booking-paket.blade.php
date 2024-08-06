@@ -7,7 +7,7 @@
 @section('main')
     @include('homepage.template.header', [
         'title' => 'Pendakian Gunung Kerinci',
-        'caption' => 'Paket Rombongan Pelajar/Mahasiswa',
+        'caption' => "Paket ".$paket->nama,
     ])
 
     <script>
@@ -22,7 +22,7 @@
 
                         @foreach ($gambar as $g)
                             <div class="carousel-item {{ $loop->index == 0 ? 'active' : ''}}">
-                                <img src="{{ url('/').'/'.$g->src }}" class="d-block w-100" style=";object-fit: cover;height: 480px;" alt="...">
+                                <img src="{{ url('/').'/'.$g->src }}" class="d-block w-100" style="object-fit: cover;height: 480px;" alt="...">
                             </div>
                         @endforeach
                     </div>
@@ -39,13 +39,12 @@
                 </div>
             </div>
             <div class="col-12 col-sm-12 col-lg-5 mt-3 mt-lg-0">
-                <form method="post" action="{{ route('homepage.postBooking') }}">
+                <form method="post" action="{{ route('homepage.postBooking') }}" id="form-booking">
                     @csrf
                     <h4 class="mb-4">Booking Tiket Pendakian {{$destinasi->nama}}</h4>
-                    <input type="hidden" value="{{$jenis_tiket}}" id="jenis-tiket-value" />
+                    <input type="hidden" value="{{$jenis_tiket}}" id="jenis-tiket-value" name="jenis_tiket" />
 
-                    <input type="hidden" name="id" value="1">
-                    <div class="form-group">
+                <div class="form-group">
                         <label for="date-start">Pilih tanggal check-in dan check-out</label>
                         <div class="row" id="iptdatevol">
                             <div class="col-md-6 mb-3">
@@ -63,7 +62,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <input type="hidden" name="days_traking" value="0" id="days_traking">
+                </div>
 
                     <div class="form-group">
                         <label>Total Pendaki</label>
@@ -165,6 +165,58 @@
                 </form>
             </div>
         </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mt-2">Perbandingan Harga</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="#" method="get" id="booking_price">
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Kewarganegaraan</th>
+                                        <th scope="col">Masuk Hari Kerja</th>
+                                        <th scope="col">Masuk Hari Libur</th>
+                                        <th scope="col">Kemah</th>
+                                        <th scope="col">Traking</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach ($tiket_pendaki as $key => $t)
+                                            <tr>
+                                                <th scope="row">{{ $key + 1 }}</th>
+                                                <td>
+                                                    {{$t->kategori_pendaki}}
+                                                </td>
+                                                <td>
+                                                    Rp. {{ number_format($t->harga_masuk_wd, 0, ',', '.') }}
+                                                    <input type="hidden" name="{{$t->kategori_pendaki}}-wd" value="{{$t->harga_masuk_wd}}">
+                                                </td>
+                                                <td>
+                                                    Rp. {{ number_format($t->harga_masuk_wk, 0, ',', '.') }}
+                                                    <input type="hidden" name="{{$t->kategori_pendaki}}-wk" value="{{$t->harga_masuk_wk}}">
+                                                </td>
+                                                <td>
+                                                    Rp. {{ number_format($t->harga_kemah, 0, ',', '.') }}
+                                                    <input type="hidden" name="{{$t->kategori_pendaki}}-night" value="{{$t->harga_kemah}}">
+                                                </td>
+                                                <td>
+                                                    Rp. {{ number_format($t->harga_traking, 0, ',', '.') }}
+                                                    <input type="hidden" name="{{$t->kategori_pendaki}}-traking" value="{{$t->harga_traking}}">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="modal-date-container" class="px-2 m-0 d-none justify-content-center align-items-center w-screen h-screen position-fixed top-0 left-0" style="z-index: 999; background-color: rgba(0,0,0,.2);">
@@ -173,8 +225,8 @@
                 <header class="d-flex align-items-center justify-content-between p-2" style="border-bottom: 1px solid var(--neutrals100)">
                     <div class=""><span id="date-month">August</span> <span id="date-year">2019</span></div>
                     <div class="d-flex gap-2">
-                        <div id="date-prev" class="d-block gk-bg-neutrals100 rounded px-1 p-0 m-0 d-flex justify-content-center" onclick="prevMonth()"><i class="p-0 m-0 bi bi-arrow-left-short text-2xl" style=""></i></div>
-                        <div id="date-next" class="d-block gk-bg-neutrals100 rounded px-1 p-0 m-0 d-flex justify-content-center" onclick="nextMonth()"><i class="p-0 m-0 bi bi-arrow-right-short text-2xl" style=""></i></div>
+                        <div id="date-prev" class="d-block gk-bg-neutrals100 rounded px-1 p-0 m-0 d-flex justify-content-center" onclick="prevMonth()"><i class="p-0 m-0 bi bi-arrow-left-short text-2xl"></i></div>
+                        <div id="date-next" class="d-block gk-bg-neutrals100 rounded px-1 p-0 m-0 d-flex justify-content-center" onclick="nextMonth()"><i class="p-0 m-0 bi bi-arrow-right-short text-2xl"></i></div>
                     </div>
                 </header>
                 <table class="row p-2 row justify-content-center py-3">
@@ -250,26 +302,24 @@
 
             const days = countWeekdaysAndWeekends(startDay.value, endDay.value);
             const hargaTotal = document.getElementById("hargaTotal");
-            const filteredPriceWeekendWNI = harga.filter(o => {
-                if (o.kategori_hari === "wk" && o.kategori_pendaki === "wni" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
+            const filteredPriceWNI = harga.filter(o => {
+                if (o.kategori_pendaki === "wni" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
                     return o;
                 }
             })[0];
-            const filteredPriceWeekdayWNI = harga.filter(o => {
-                if (o.kategori_hari === "wd" && o.kategori_pendaki === "wni" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
-                    return o;
-                }
-            })[0];
-            const hargaTotalWNI = (days.weekends * filteredPriceWeekendWNI.harga_masuk + days.weekdays * filteredPriceWeekdayWNI.harga_masuk + filteredPriceWeekendWNI.harga_kemah * (days.weekdays+days.weekends-1)) * wniPendaki.value;
-            const hargaTotalWNA = (days.weekends * harga.filter(o => {
+            const hargaTotalWNI = (days.weekends * filteredPriceWNI.harga_masuk_wk + days.weekdays * filteredPriceWNI.harga_masuk_wd + filteredPriceWNI.harga_kemah*(days.weekdays+days.weekends-1) ) * wniPendaki.value;
+
+            const filteredPriceWeekendWNA = harga.filter(o => {
                 if (o.kategori_hari === "wk" && o.kategori_pendaki === "wna" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
                     return o;
                 }
-            })[0].harga_masuk + days.weekdays * harga.filter(o => {
-                if (o.kategori_hari === "wd" && o.kategori_pendaki === "wna" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
+            })[0];
+            const filteredPriceWNA = harga.filter(o => {
+                if (o.kategori_pendaki === "wna" && o.paket_tiket.id === parseInt(jenis_tiket)  ) {
                     return o;
                 }
-            })[0].harga_masuk) * wnaPendaki.value;
+            })[0];
+            const hargaTotalWNA = (days.weekends * filteredPriceWNA.harga_masuk_wk + days.weekdays * filteredPriceWNA.harga_masuk_wd + filteredPriceWNA.harga_kemah*(days.weekdays+days.weekends-1) ) * wnaPendaki.value;
 
             wniLabel.textContent = hargaTotalWNI;
             wnaLabel.textContent = hargaTotalWNA;
@@ -504,22 +554,101 @@
             generateDate();
         }
 
-        function nextMonth() {
-            clearDate();
-            currentMonth = (currentMonth+1);
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            generateDate();
+    function nextMonth() {
+        clearDate();
+        currentMonth = (currentMonth + 1);
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
         }
+        generateDate();
+    }
+</script>
 
-        function isWeekend(dateString) {
-            let parts = dateString.split('-');
-            let date = new Date(parts[2], parts[1] - 1, parts[0]);
-            let dayOfWeek = date.getDay();
-            return (dayOfWeek === 6) || (dayOfWeek === 0);
-        }
 
-    </script>
+<script>
+    // Get all elements with the class 'inputVolume1'
+    // const inputGroups = document.querySelectorAll('.inputVolume1');
+
+    // const inputDate = document.getElementById('iptdatevol');
+    // const dateStartInput = inputDate.querySelector('input[name="date-start"]');
+    // const dateEndInput = inputDate.querySelector('input[name="date-end"]');
+
+
+    // const inputPrice = document.querySelectorAll('.iptvol');
+    // const inputTotalPrice = document.getElementById('iptvol-total');
+    // const labelTotalPrice = document.getElementById('labeliptvol');
+
+    // function calculateAdjustedDays() {
+    //     const startDate = new Date(dateStartInput.value);
+    //     const endDate = new Date(dateEndInput.value);
+    //     let dayDifference = 0;
+    //     if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
+    //         const timeDifference = endDate - startDate;
+    //         dayDifference = timeDifference / (1000 * 3600 * 24);
+    //     }
+    //     const adjustedDays = Math.floor((dayDifference) / 2) + 1;
+    //     labelTotalPrice.textContent = `${dayDifference+1} Hari ${adjustedDays} malam (${dayDifference+1}D${adjustedDays}M)`;
+    //     console.log("perubahan waktu masuk dan keluar");
+    //     return adjustedDays;
+    // }
+
+    // dateStartInput.addEventListener('change', calculateAdjustedDays);
+    // dateEndInput.addEventListener('change', calculateAdjustedDays);
+
+    // function updateTotalPrice() {
+    //     let totalPrice = 0;
+    //     let adjustedDays = calculateAdjustedDays();
+
+    //     inputPrice.forEach(span => {
+    //         let price = parseInt(span.textContent);
+    //         if (!isNaN(price)) {
+    //             totalPrice += price;
+    //         }
+    //     });
+
+    //     totalPrice *= adjustedDays;
+    //     inputTotalPrice.textContent = totalPrice;
+    // }
+
+    // inputGroups.forEach((group, index) => {
+    //     const inputField = group.querySelector('input[type="number"]');
+    //     const incrementButton = group.querySelector('button[data-input-vol="ipt+"]');
+    //     const decrementButton = group.querySelector('button[data-input-vol="ipt-"]');
+    //     const price = parseInt(group.getAttribute('data-price-vol'));
+
+    //     incrementButton.addEventListener('click', () => {
+    //         // tambah nilai inputfield
+    //         let currentValue = parseInt(inputField.value);
+    //         if (isNaN(currentValue)) {
+    //             currentValue = 0;
+    //         }
+    //         inputField.value = currentValue + 1;
+
+    //         // masukkan nilai harga ke inputprice urutan each goup
+    //         inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
+    //         // update total price
+    //         updateTotalPrice()
+    //     });
+
+    //     decrementButton.addEventListener('click', () => {
+    //         let currentValue = parseInt(inputField.value);
+    //         if (isNaN(currentValue)) {
+    //             currentValue = 0;
+    //         }
+    //         if (currentValue == 0) {
+    //             currentValue = 0;
+    //         } else {
+    //             inputField.value = parseInt(inputField.value) - 1;
+    //         }
+
+    //         // masukkan nilai harga ke inputprice urutan each goup
+    //         inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
+    //         // update total price
+    //         updateTotalPrice()
+    //     });
+    // });
+</script>
+
+
 @endsection

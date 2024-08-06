@@ -44,6 +44,8 @@ class booking extends Controller
                 $query->where('id_destinasi', $uid);
             })
             ->get();
+        $paket = gk_paket_tiket::where("id", $id)->first();
+        $tiket_pendaki = gk_tiket_pendaki::all();
 
 
         // return $tiket;
@@ -52,6 +54,8 @@ class booking extends Controller
             "tiket" => $tiket,
             "gambar" => $gambar_destinasi,
             "jenis_tiket" => $id,
+            "paket" =>$paket,
+            "tiket_pendaki" => $tiket_pendaki
         ]);
     }
 
