@@ -36,11 +36,12 @@ class booking extends Controller
 
     public function bookingPaket($id)
     {
-        $destinasi = destinasi::with('gates')->where('id',$id)->first();
-        $gambar_destinasi = gambar_destinasi::where('id_destinasi',$id)->get();
+        $uid = 1;
+        $destinasi = destinasi::with('gates')->where('id',$uid)->first();
+        $gambar_destinasi = gambar_destinasi::where('id_destinasi',$uid)->get();
         $tiket = gk_tiket_pendaki::with(['paket_tiket'])
-            ->whereHas('paket_tiket', function ($query) use ($id) {
-                $query->where('id_destinasi', $id);
+            ->whereHas('paket_tiket', function ($query) use ($uid) {
+                $query->where('id_destinasi', $uid);
             })
             ->get();
 
@@ -50,6 +51,7 @@ class booking extends Controller
             "destinasi" => $destinasi,
             "tiket" => $tiket,
             "gambar" => $gambar_destinasi,
+            "jenis_tiket" => $id,
         ]);
     }
 
