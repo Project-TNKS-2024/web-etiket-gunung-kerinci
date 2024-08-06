@@ -1,10 +1,15 @@
 <table class="w-full rounded">
     <thead>
         <tr>
-            @foreach (["Destinasi", "Nama", "Tipe", "Kategori", "Keterangan", "HTM", "Min Pendaki", "Aksi"] as $h)
-            <th class="p-3 gk-bg-base-white font-bold col">{{ $h }}</th>
-
-            @endforeach
+            <th class="p-3 gk-bg-base-white font-bold col">Destinasi</th>
+            <th class="p-3 gk-bg-base-white font-bold col">Nama</th>
+            <th class="p-3 gk-bg-base-white font-bold col">Tipe</th>
+            <th class="p-3 gk-bg-base-white font-bold col">Kategori</th>
+            <th class="p-3 gk-bg-base-white font-bold col">Keterangan</th>
+            <th class="p-3 gk-bg-base-white font-bold col">HTM Weekday</th>
+            <th class="p-3 gk-bg-base-white font-bold col">HTM Weekend</th>
+            <th class="p-3 gk-bg-base-white font-bold col">Min Pendaki</th>
+            <th class="p-3 gk-bg-base-white font-bold col">Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -16,7 +21,8 @@
             <td class="p-3 font-medium col">{{$d->kategori_hari == "wd" ? "Weekday" : "Weekend"}}</td>
             <td class="p-3 font-medium col">{{$d->kategori_pendaki == "wna" ? "Mancanegara" : "Nusantara"}}</td>
             <td class="p-3 font-medium col">{{$d->paket_tiket->keterangan}}</td>
-            <td class="p-3 font-medium col">Rp {{number_format($d->harga_masuk)}}</td>
+            <td class="p-3 font-medium col-2">Rp {{number_format($d->harga_masuk_wd)}}</td>
+            <td class="p-3 font-medium col-2">Rp {{number_format($d->harga_masuk_wk)}}</td>
             {{-- <td class="p-3 font-medium col">Rp xxx</td> --}}
             <td class="p-3 font-medium col text-center">{!! $d->paket_tiket->min_pendaki == null ? '<span class="text-2xl">&infin;</span>' : $d->paket_tiket->min_pendaki !!}</td>
 

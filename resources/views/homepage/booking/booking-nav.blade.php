@@ -60,6 +60,7 @@
  		background-color: blue !important;
  	}
  </style>
+
  <div class="px-5 w-100 step-proses">
  	<input type="hidden" id="step" value="{{$step}}">
  	<div class="steps mb-auto">

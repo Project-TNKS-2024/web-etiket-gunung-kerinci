@@ -45,7 +45,7 @@ class booking extends Controller
             })
             ->get();
         $paket = gk_paket_tiket::where("id", $id)->first();
-        $tiket_pendaki = gk_tiket_pendaki::all();
+        $tiket_pendaki = gk_tiket_pendaki::where('id_paket_tiket',$id)->get();
 
 
         // return $tiket;
@@ -81,7 +81,7 @@ class booking extends Controller
             ]);
 
 
-            // $booking = gk_booking::where('id_tiket', $request->id_tiket)->where('status', '<', 3)->first();
+            $booking = gk_booking::where('id_user', Auth::user()->id)->where('id_booking', $request->id_booking)->where('status', '<', 3)->first();
             // if ($booking) {
 
             //     // update data booking dengan yang baru

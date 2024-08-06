@@ -32,7 +32,7 @@
                 </a>
                 <div onclick="openModal({{ json_encode($gambar) }}.filter(o => o.id_destinasi === {{$d->id}}))">
                     <!-- <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/tnks-detail.svg')}}" /> -->
-                    <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/img_rol.svg')}}" />
+                    <img class="gk-bg-success100 rounded " width="25" src="{{asset('assets/icon/tnks/img_rol-dark.svg')}}" />
                 </div>
             </td>
         </tr>
