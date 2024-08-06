@@ -8,6 +8,8 @@ use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
 use App\Models\gk_gates;
 use App\Models\gk_pendaki;
+use App\Models\destinasi;
+use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ class booking extends Controller
 {
     public function booking($id)
     {
+
         $paket = gk_paket_tiket::where('id_destinasi', $id)->get();
         $gunung = destinasi::find($id);
         $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id)->get();
@@ -58,52 +61,52 @@ class booking extends Controller
 
         if (Auth::user()->role == 'user') {
             $request->validate([
-                'id_tiket' => 'required',
-                'date-start' => 'required|date',
-                'date-end' => 'required|date',
+                'date_start' => 'required|date',
+                'date_end' => 'required|date',
                 'wni' => 'required|numeric',
                 'wna' => 'required|numeric',
-                'gerbang-masuk' => 'required',
-                'gerbang-keluar' => 'required',
+                'jenis_tiket' => 'required|string',
+                'gerbang_masuk' => 'required',
+                'gerbang_keluar' => 'required',
             ]);
 
 
-            $booking = gk_booking::where('id_tiket', $request->id_tiket)->where('status', '<', 3)->first();
-            if ($booking) {
+            // $booking = gk_booking::where('id_tiket', $request->id_tiket)->where('status', '<', 3)->first();
+            // if ($booking) {
 
-                // update data booking dengan yang baru
-                $booking->update([
-                    'total_pendaki' => $request->wni + $request->wna,
-                    'wni' => $request->wni,
-                    'wna' => $request->wna,
-                    'gate_masuk' => $request['gerbang-masuk'],
-                    'gate_keluar' => $request['gerbang-keluar'],
-                    'tanggal_masuk' => $request['date-start'],
-                    'tanggal_keluar' => $request['date-end'],
-                ]);
+            //     // update data booking dengan yang baru
+            //     $booking->update([
+            //         'total_pendaki' => $request->wni + $request->wna,
+            //         'wni' => $request->wni,
+            //         'wna' => $request->wna,
+            //         'gate_masuk' => $request['gerbang-masuk'],
+            //         'gate_keluar' => $request['gerbang-keluar'],
+            //         'tanggal_masuk' => $request['date-start'],
+            //         'tanggal_keluar' => $request['date-end'],
+            //     ]);
 
-                return redirect()->route('homepage.booking-snk', ['id' => $booking->id])->with('success', 'Update Booking');
-            } else {
-                // buat booking baru
-                $newBooking = gk_booking::create([
-                    'id_user' => Auth::user()->id,
-                    'id_tiket' => $request->id_tiket,
-                    'status' => 0,
-                    'id_booking_master' => 0,
-                    'total_pendaki' => $request->wni + $request->wna,
-                    'wni' => $request->wni,
-                    'wna' => $request->wna,
-                    'keterangan' => $request->keterangan,
-                    'QR' => null,
-                    'pembayaran' => false,
-                    'gate_masuk' => $request['gerbang-masuk'],
-                    'gate_keluar' => $request['gerbang-keluar'],
-                    'tanggal_masuk' => $request['date-start'],
-                    'tanggal_keluar' => $request['date-end'],
-                ]);
-                // return $newBooking;
-                return redirect()->route('homepage.booking-snk', ['id' => $newBooking->id])->with('success', 'Create Booking');
-            }
+            //     return redirect()->route('homepage.booking-snk', ['id' => $booking->id])->with('success', 'Update Booking');
+            // } else {
+            //     // buat booking baru
+            //     $newBooking = gk_booking::create([
+            //         'id_user' => Auth::user()->id,
+            //         'id_tiket' => $request->id_tiket,
+            //         'status' => 0,
+            //         'id_booking_master' => 0,
+            //         'total_pendaki' => $request->wni + $request->wna,
+            //         'wni' => $request->wni,
+            //         'wna' => $request->wna,
+            //         'keterangan' => $request->keterangan,
+            //         'QR' => null,
+            //         'pembayaran' => false,
+            //         'gate_masuk' => $request['gerbang-masuk'],
+            //         'gate_keluar' => $request['gerbang-keluar'],
+            //         'tanggal_masuk' => $request['date-start'],
+            //         'tanggal_keluar' => $request['date-end'],
+            //     ]);
+            //     // return $newBooking;
+            //     return redirect()->route('homepage.booking-snk', ['id' => $newBooking->id])->with('success', 'Create Booking');
+            // }
 
             // return redirect()->route('homepage.booking-snk', ['id' => $request->id]);
         } else {

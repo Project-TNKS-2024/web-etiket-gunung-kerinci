@@ -1,6 +1,8 @@
 <table class="w-full rounded">
     <thead>
         <tr>
+            @foreach (["Destinasi", "Nama", "Tipe", "Kategori", "Keterangan", "HTM", "Min Pendaki", "Aksi"] as $h)
+
 
             @foreach (["Destinasi", "Nama", "Tipe", "Kategori", "Keterangan", "HTM", "Kuota", "Aksi"] as $h)
                 <th class="p-3 gk-bg-base-white font-bold col">{{ $h }}</th>

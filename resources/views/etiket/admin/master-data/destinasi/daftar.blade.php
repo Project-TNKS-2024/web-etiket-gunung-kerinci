@@ -23,6 +23,7 @@
             <td class="p-3 ">{{$d->lokasi}}</td>
             <td class="p-3 ">{{$d->detail}}</td>
             <td class="p-3 d-flex gap-1 bg-transparent align-items-center justify-content-start">
+
                 <a href="{{route('admin.destinasi.edit', ['id' => $d->id])}}" class="cursor-pointer">
                     <img width="25" class="gk-bg-primary100 rounded shadow-sm" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent" />
                 </a>
