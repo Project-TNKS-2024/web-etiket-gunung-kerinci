@@ -8,7 +8,6 @@ use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
 use App\Models\gk_gates;
 use App\Models\gk_pendaki;
-use App\Models\destinasi;
 use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;

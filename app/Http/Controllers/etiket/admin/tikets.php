@@ -21,6 +21,8 @@ class tikets extends Controller
         $jenisTiket = ['Weekday', 'Weekend'];
         $totalTerjual = 122;
 
+        // return $jenisTiket;
+
         return view('etiket.admin.master-data.tiket', [
             "tiket" => $data,
             "totalTerjual" => $totalTerjual,
@@ -73,9 +75,6 @@ class tikets extends Controller
         $destinasi = Destinasi::all();
         $gates = Gates::all();
         $jenisTiket = ['Weekday', 'Weekend'];
-
-
-
         $data = gk_paket_tiket::with(['destinasi', 'tiket_pendaki'])->where('gk_paket_tikets.id', $id)->first();
 
 
@@ -85,7 +84,7 @@ class tikets extends Controller
             "destinasi" => $destinasi,
             "gate" => $gates,
             "jenisTiket" => $jenisTiket,
-            "paket_tiket" => $paket_tiket,
+            // "paket_tiket" => $paket_tiket,
         ]);
     }
 
