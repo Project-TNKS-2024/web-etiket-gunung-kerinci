@@ -225,9 +225,9 @@
         "Desember"
     ];
 
-    function generateDate(input, label) {
+    function generateCalendar() {
         const datePrev = document.getElementById("date-prev");
-        const selectButton = document.getElementById("select-date");
+
         if (currentMonth === currentDate.getMonth()) {
             datePrev.classList.add("d-none");
             datePrev.classList.remove("d-block");
@@ -238,21 +238,21 @@
         const dateContainer = document.getElementById("modal-date-container");
         dateContainer.classList.add("d-flex");
         dateContainer.classList.remove("d-none");
+
         const year = currentYear;
         const month = currentMonth;
         const day = currentDay;
-        const dateMonth = document.getElementById("date-month").textContent = months[month];
-        const dateYear = document.getElementById("date-year").textContent = year;
+
+        document.getElementById("date-month").textContent = months[month];
+        document.getElementById("date-year").textContent = year;
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        const row = Math.floor(daysInMonth / 7);
         const dayStart = getDayOfWeek(1, month, year);
-
-
         const dataBody = document.getElementById("date-body");
-        let count = 0;
         let tr = document.createElement("tr");
         tr.classList.add(...("row justify-content-center text-center mt-2 week-row".split(" ")));
+
+
         for (i = 0; i < dayStart; i++) {
             const td = document.createElement("td");
             td.classList.add(...("col font-medium gk-text-neutrals500".split(" ")));
@@ -273,7 +273,9 @@
             td.style.cursor = "pointer";
 
             td.addEventListener("click", function(event) {
-                if (parseInt(td.textContent) >= currentDate.getDate()) {
+                if (
+                    (parseInt(td.textContent) >= currentDate.getDate() && currentMonth === currentDate.getMonth() && currentYear === currentDate.getFullYear()) || (currentMonth > currentDate.getMonth() && currentYear === currentDate.getFullYear())
+                ) {
                     document.querySelectorAll(".week-row").forEach(o => {
                         const tableData = o.querySelectorAll(".border .border-primary, .gk-bg-primary700, .text-white, .rounded-pill");
                         if (tableData.length > 0) {
@@ -305,15 +307,26 @@
             }
         }
 
-        selectButton.addEventListener("click", function(event) {
+    }
+
+    function generateDate(input, label) {
+
+        const selectButton = document.getElementById("select-date");
+
+        generateCalendar();
+        // Remove existing event listeners before adding a new one
+        const newSelectButton = selectButton.cloneNode(true);
+        selectButton.parentNode.replaceChild(newSelectButton, selectButton);
+
+        newSelectButton.addEventListener("click", function(event) {
             if (currentDay < currentDate.getDate()) {
                 return;
             }
-            const dateLabel = document.getElementById(label); //.textContent(`${currentDay}-${currentMonth}-${currentYear}`);
-            document.getElementById(input).value = `${currentDay}-${currentMonth}-${currentYear}`;
-            dateLabel.textContent = `${currentDay}/${currentMonth}/${currentYear}`;
+            const dateLabel = document.getElementById(label);
+            document.getElementById(input).value = `${currentMonth + 1}/${currentDay}/${currentYear}`;
+            dateLabel.textContent = `${currentDay}/${currentMonth + 1}/${currentYear}`;
             closeDate();
-        })
+        });
     }
 
     function closeDate() {
@@ -322,7 +335,7 @@
         dateContainer.classList.remove("d-flex");
         clearDate();
         currentMonth = currentDate.getMonth();
-        currentYear = currentDate.getFullYear()
+        currentYear = currentDate.getFullYear();
 
     }
 
@@ -349,7 +362,8 @@
             currentMonth = 11;
             currentYear--;
         }
-        generateDate();
+        // generateDate();
+        generateCalendar();
     }
 
     function nextMonth() {
@@ -359,7 +373,8 @@
             currentMonth = 0;
             currentYear++;
         }
-        generateDate();
+        // generateDate();
+        generateCalendar();
     }
 </script>
 
@@ -367,10 +382,10 @@
 <script>
     // Get all elements with the class 'inputVolume1'
     const inputGroups = document.querySelectorAll('.inputVolume1');
-    
+
     const inputDate = document.getElementById('iptdatevol');
-    const dateStartInput = inputDate.querySelector('input[name="date-start"]');
-    const dateEndInput = inputDate.querySelector('input[name="date-end"]');
+    const dateStartInput = inputDate.querySelector('input#date-start-value');
+    const dateEndInput = inputDate.querySelector('input#date-end-value');
 
 
     const inputPrice = document.querySelectorAll('.iptvol');
@@ -390,9 +405,6 @@
         console.log("perubahan waktu masuk dan keluar");
         return adjustedDays;
     }
-
-    dateStartInput.addEventListener('change', calculateAdjustedDays);
-    dateEndInput.addEventListener('change', calculateAdjustedDays);
 
     function updateTotalPrice() {
         let totalPrice = 0;
