@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\etiket\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\uploadFileControlller;
 use Illuminate\Http\Request;
 use App\Models\destinasi;
 use App\Models\gk_gates;
@@ -119,9 +120,10 @@ class destinasis extends Controller
         try {
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
-                $fileName = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('upload/img/destinasi/'), $fileName);
-                $fileUrl = 'upload/img/destinasi/' . $fileName;
+
+
+                $uploadController = new uploadFileControlller();
+                $fileUrl = $uploadController->create('img', 'destinasi', $file);
 
                 gambar_destinasi::create([
                     "src" => $fileUrl,
