@@ -19,8 +19,8 @@
                 @endif
             </td>
             <td class="p-3 ">{{$d->nama}}</td>
+            <td class="p-3">{{ $d->destinasi ? $d->destinasi->nama : 'No Destinasi' }}</td>
             <td class="p-3 ">{{$d->lokasi}}</td>
-            <td class="p-3 ">{{$d->destinasi->nama}}</td>
             <td class="p-3 ">{{$d->detail}}</td>
             <td class="p-3 d-flex gap-1 bg-transparent align-items-center justify-content-center">
                 <a href="{{route('admin.gate.edit', ['id' => $d->id])}}" class="bg-transparent rounded gk-bg-primary100 cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent" /></a>

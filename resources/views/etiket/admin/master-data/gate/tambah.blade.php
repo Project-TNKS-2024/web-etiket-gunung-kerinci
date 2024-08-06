@@ -32,14 +32,16 @@
                     @if ($errors->any())
                     <div class="row">
                         <div class="col btn btn-danger">
-                            @error('nama') nama tidak valid @enderror
-                            @error('lokasi') lokasi tidak valid @enderror
-                            @error('detail') detail tidak valid @enderror
+                            @error('nama') {{ $message }} @enderror
+                            @error('lokasi') {{ $message }} @enderror
+                            @error('detail') {{ $message }} @enderror
+                            @error('destinasi') {{ $message }} @enderror
+                            @error('status') {{ $message }} @enderror
+                            @error('max_pendaki_hari') {{ $message }} @enderror
                         </div>
                     </div>
                     @endif
 
-                    <input type="hidden" name="destinasi" id="destinasi-value" />
 
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
@@ -56,6 +58,7 @@
                                 <li><a onclick="select(event, 'destinasi','destinasi-value', '{{$d->id}}')" class="dropdown-item" href="#">{{$d->nama}}</a></li>
                                 @endforeach
                             </ul>
+                            <input type="hidden" name="id_destinasi" id="destinasi-value" required />
                         </div>
                     </div>
                     <div class="row">
@@ -71,28 +74,34 @@
                             <input class="form-control borderx bg-white" name="max_pendaki_hari" id="max_pendaki_hari" type="number" value="" placeholder="Max Pendaki per Hari" required />
                         </div>
                         <div class="col-md-4 col-sm-6">
-                            <label class="form-label" for="max_pendaki_hari">Max Pendaki / Hari</label>
-                            <input class="form-control borderx bg-white" name="max_pendaki_hari" id="max_pendaki_hari" type="number" value="" placeholder="Max Pendaki per Hari" required />
+                            <label class="form-label" for="min_pendaki_booking">Min Pendaki / Booking</label>
+                            <input class="form-control borderx bg-white" name="min_pendaki_booking" id="min_pendaki_booking" type="number" value="" placeholder="Max Pendaki per Hari" required />
                         </div>
                     </div>
 
 
                     <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div>
+                                <label class="form-label" for="lokasi">Lokasi</label>
+                                <input class="form-control borderx bg-white" name="lokasi" id="lokasi" type="text" value="" placeholder="Alamat" required />
+                            </div>
+                        </div>
                         <div class="col-md-6 col-sm-12">
                             <label class="form-label">Detail</label>
                             <textarea name="detail" id="lokasi-detail" class="form-control bg-white borderx" style="min-height: 75px;" placeholder="Detail"></textarea>
                         </div>
                     </div>
-
-
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <button type="submit" class="btn font-bold text-black btn-outline w-fit text-start shadow" style="border-color: var(--neutrals700)">
-                                <i class="ti ti-device-floppy gk-text-primary600"></i>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn font-bold btn-primary gk-bg-primary700 w-fit text-start shadow d-flex align-items-center gap-1 px-3 ms-auto" style="border-color: var(--neutrals700)">
+                                <img width="20" src="{{asset('assets/icon/tnks/save-light.svg')}}" class="gk-bg-primary700" />
                                 Simpan
                             </button>
+
                         </div>
                     </div>
+
                 </form>
     </main>
 </div>
