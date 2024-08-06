@@ -66,7 +66,10 @@ class booking extends Controller
             return redirect()->route('etiket.in.login');
         }
 
-        if (Auth::user()->role == 'user') {
+        if (Auth::user()->role != "user") {
+            return redirect()->route("homepage.beranda");
+        }
+
             $request->validate([
                 'date_start' => 'required|date',
                 'date_end' => 'required|date',
@@ -116,17 +119,13 @@ class booking extends Controller
             // }
 
             // return redirect()->route('homepage.booking-snk', ['id' => $request->id]);
-        } else {
-            return redirect()->back();
-        }
     }
     // =========================================================================================
     public function bookingSnk($id)
     {
         // id booking
         $booking = gk_booking::find($id);
-        // return $booking;
-        return view('homepage.booking.booking-snk', ['id' => $id, 'status' => $booking->status]);
+        return view('homepage.booking.booking-snk', ['id' => $id, 'status' => false]);
     }
     public function bookingSnkStore(Request $request)
     {
