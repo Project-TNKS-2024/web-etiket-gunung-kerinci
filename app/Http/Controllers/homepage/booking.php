@@ -36,17 +36,19 @@ class booking extends Controller
 
     public function bookingPaket($id)
     {
-        $gunung = destinasi::find($id);
-        $paket = gk_paket_tiket::find($id);
-        $tiket = gk_paket_tiket::where('id_destinasi', $id)->get();
-        $gates = gk_gates::where('id_destinasi', $id)->get();
-        $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id)->get();
+        $destinasi = destinasi::with('gates')->where('id',$id)->first();
+        $gambar_destinasi = gambar_destinasi::where('id_destinasi',$id)->get();
+        $tiket = gk_tiket_pendaki::with(['paket_tiket'])
+            ->whereHas('paket_tiket', function ($query) use ($id) {
+                $query->where('id_destinasi', $id);
+            })
+            ->get();
+
+
         // return $tiket;
         return view("homepage.booking.booking-paket", [
-            "gunung" => $gunung,
-            "paket" => $paket,
+            "destinasi" => $destinasi,
             "tiket" => $tiket,
-            "gates" => $gates,
             "gambar" => $gambar_destinasi,
         ]);
     }
