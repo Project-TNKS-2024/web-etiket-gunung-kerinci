@@ -180,7 +180,10 @@ class booking extends Controller
 
     public function bookingFP($id)
     {
-        $booking = gk_booking::find($id);
+        if (!Auth::check()) {
+            abort(403);
+        }
+        $booking = gk_booking::with('gktiket')->where("id", $id)->first();
         if (!$booking) {
             abort(404);
         }

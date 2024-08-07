@@ -75,7 +75,7 @@
 @section('main')
 @include('homepage.template.header', [
 'title' => 'Pendakian Gunung Kerinci',
-'caption' => 'Syarat dan Ketentuan',
+'caption' => "Formulir Paket ".$booking->gktiket->nama
 ])
 
 <div class="container my-5">
