@@ -90,7 +90,7 @@
          @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna-1); $i++)
             @include('homepage.booking.fp.formulir',[
             'index'=>$i,
-            'pendaki'=>$pendaki[$i]
+            'pendaki'=> count($pendaki) > 0 ? $pendaki[$i] : null
             ])
         @endfor
             <!-- barang -->
