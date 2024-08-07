@@ -257,7 +257,6 @@ class booking extends Controller
                     $data = gk_pendaki::where('id', $pendaki['id_pendaki'])
                         ->where('booking_id', $request->id_booking)
                         ->update([
-                            'wni' => $pendaki['jenis_identitas'] == 'KTP',
                             'nik' => $pendaki['identitas'],
                             'nama' => $pendaki['nama_depan'] . '<----->' . $pendaki['nama_belakang'],
                             'lampiran_identitas' => $lIdentitas,
@@ -270,20 +269,17 @@ class booking extends Controller
                             'kec' => $pendaki['kecamatan'],
                             'desa' => $pendaki['desa_kelurahan'],
                             'lampiran_surat_kesehatan' => $lSuratKesehatan,
-                            'lampiran_simaksi' => $lSimaksi,
-                            'ketua' => $pendaki['ketua'] ?? false,
                             'tiket_id' => $tiket_pendaki->id,
                             'lampiran_surat_izin_ortu' => $lSuratIzin,
                             'tagihan' => $tagihan,
                             'kategori_pendaki' => $nationality,
                             'jenis_kelamin' => $pendaki['jenis_kelamin'] == "Laki-Laki" ? "l" : "p",
-                            'jenis_identtias' => $pendaki['jenis_identitas'],
+                            'jenis_identitas' => $pendaki['jenis_identitas'],
                         ]);
-                    return $data;
+                    // return $data;
                 } else {
                     $data = gk_pendaki::create([
                         'booking_id' => $request->id_booking,
-                        'wni' => $pendaki['jenis_identitas'] == 'KTP',
                         'nik' => $pendaki['identitas'],
                         'nama' => $pendaki['nama_depan'] . '<----->' . $pendaki['nama_belakang'],
                         'lampiran_identitas' => $lIdentitas,
@@ -296,14 +292,12 @@ class booking extends Controller
                         'kec' => $pendaki['kecamatan'],
                         'desa' => $pendaki['desa_kelurahan'],
                         'lampiran_surat_kesehatan' => $lSuratKesehatan,
-                        'lampiran_simaksi' => $lSimaksi,
-                        'ketua' => $pendaki['ketua'] ?? false,
                         'tiket_id' => $tiket_pendaki->id,
                         'lampiran_surat_izin_ortu' => $lSuratIzin,
                         'tagihan' => $tagihan,
                         'kategori_pendaki' => $nationality,
                         'jenis_kelamin' => $pendaki['jenis_kelamin'] == "Laki-Laki" ? "l" : "p",
-                        'jenis_identtias' => $pendaki['jenis_identitas'],
+                        'jenis_identitas' => $pendaki['jenis_identitas'],
                     ]);
                 }
                 // return $data;

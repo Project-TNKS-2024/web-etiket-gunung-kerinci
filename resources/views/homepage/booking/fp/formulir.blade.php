@@ -4,7 +4,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
 @endphp
 
 <h1>{{$title}}</h1>
-<input type="hidden" name="formulir[{{$index}}][id_pendaki]">
+<input type="hidden" name="formulir[{{$index}}][id_pendaki]" value="{{$pendaki->id}}">
 <div class="row mb-3">
    <div class="col-12 col-md-6">
       <label for="kewarganegaraan" class="w-100 fw-bold mandatory">Jenis Kewarganegaraan</label>
@@ -13,7 +13,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
          <label class="form-check-label" for="kewarganegaraan-1-{{$index}}">Warga Negara Indonesia</label>
       </div>
       <div class="form-check form-check-inline">
-         <input class="form-check-input" type="radio" name="formulir[{{$index}}][kewarganegaraan]" id="kewarganegaraan-2-{{$index}}" value="Warga Negara Asing" {{$pendaki->kategori_pendaki == "wna" ? "checked" : ""}}>>
+         <input class="form-check-input" type="radio" name="formulir[{{$index}}][kewarganegaraan]" id="kewarganegaraan-2-{{$index}}" value="Warga Negara Asing" {{$pendaki->kategori_pendaki == "wna" ? "checked" : ""}}>
          <label class="form-check-label" for="kewarganegaraan-2-{{$index}}">Warga Negara Asing</label>
       </div>
       @error('formulir.'.$index.'.kewarganegaraan')
