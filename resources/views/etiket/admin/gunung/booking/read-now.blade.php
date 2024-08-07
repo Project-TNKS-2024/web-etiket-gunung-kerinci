@@ -11,10 +11,16 @@
 
    #inform-booking input {
       border: none;
+      background: none;
    }
 
    #inform-booking textarea {
       border: none;
+      background: none;
+   }
+
+   #qrcode_kodebooking img {
+      width: -webkit-fill-available !important;
    }
 </style>
 <link rel="stylesheet" href="/DataTables/datatables.css" />
@@ -32,7 +38,7 @@
 
    <div style="overflow: visible;">
       <div class="col-12 p-0 shadow rounded bg-white" style="overflow:auto;">
-         <div class="card m-0">
+         <div class="card m-0 shadow-none">
             <div class="card-body">
                <table id="myTable" class="display table table-hover table-bordered">
                   <thead class="table-primary text-nowrap">
@@ -98,14 +104,62 @@
 
 <div class="modal fade" id="modalDetailBoooking" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+      <div class="modal-content  gk-bg-primary100">
          <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Tiket</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
          <div class="modal-body">
             <form id="inform-booking">
-               <input type="text" name="" value="qwkjf qkwef iqe wfv we jfv hiwe jfv we dvjn weif " readonly>
+               <div class="card">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-md-4">
+                           <div id="qrcode_kodebooking"></div>
+                           <label for="ipt_kodebooking" class="w-100 text-center">Kode Booking</label>
+                           <input type="text" name="ipt_kodebooking" id="ipt_kodebooking" class="form-control text-center fw-bold" readonly style="font-size: 18px;">
+                        </div>
+                        <div class="col-md-8 row">
+                           <div class="col-12">
+                              <span class="badge text-bg-primary" id="ipt_statusbooking" style="    margin-left: auto;display: block;width: min-content;"></span>
+                           </div>
+                           <div class="col-6">
+                              <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
+                              <input type="text" name="ipt_namaketua" value="tes" id="ipt_namaketua" class="form-control" readonly>
+                              <label for="ipt_gerbangmasuk" class="fw-bold">Gerbang Masuk</label>
+                              <input type="text" name="ipt_gerbangmasuk" value="tes" id="ipt_gerbangmasuk" class="form-control" readonly>
+                              <label for="ipt_cekin" class="fw-bold">Cek In</label>
+                              <input type="text" name="ipt_cekin" value="tes" id="ipt_cekin" class="form-control" readonly>
+                              <label for="ipt_jumlahanggota" class="fw-bold">Jumlah Anggota</label>
+                              <input type="text" name="ipt_jumlahanggota" value="tes" id="ipt_jumlahanggota" class="form-control" readonly>
+                           </div>
+                           <div class="col-6">
+                              <label for="ipt_simaksi" class="fw-bold">Simaksi</label>
+                              <input type="text" name="ipt_simaksi" value="tes" id="ipt_simaksi" class="form-control" readonly>
+                              <label for="ipt_gerbangkeluar" class="fw-bold">Gerbang Keluar</label>
+                              <input type="text" name="ipt_gerbangkeluar" value="tes" id="ipt_gerbangkeluar" class="form-control" readonly>
+                              <label for="ipt_cekout" class="fw-bold">Cek Out</label>
+                              <input type="text" name="ipt_cekout" value="tes" id="ipt_cekout" class="form-control" readonly>
+                              <label for="ipt_kewarganegaraan" class="fw-bold">Jumlah Anggota</label>
+                              <div class="row">
+                                 <div class="col-6">
+                                    <input type="text" name="ipt_kewarganegaraanwni" value="tes" id="ipt_kewarganegaraanwni" class="form-control" readonly>
+                                 </div>
+                                 <div class="col-6">
+                                    <input type="text" name="ipt_kewarganegaraanwna" value="tes" id="ipt_kewarganegaraanwna" class="form-control" readonly>
+                                 </div>
+                              </div>
+
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-body">
+
+                  </div>
+               </div>
             </form>
          </div>
          <div class="modal-footer">
@@ -121,20 +175,50 @@
 @section('js')
 
 <script src="/DataTables/datatables.js"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script>
+   // jalankan perintah clear console di console
+   console.clear();
+
    $(document).ready(function() {
       $('#myTable').DataTable({
          paging: false
       });
    });
 
+   const informasiBooking = document.getElementById('inform-booking');
+
    function showDetailBooking(button) {
       // Ambil data booking dari atribut data-booking pada button
       const booking = button.getAttribute('data-booking');
       const bookingData = JSON.parse(booking);
+      const iptqrcode = document.getElementById('qrcode_kodebooking');
+      const iptstatusbooking = document.getElementById('ipt_statusbooking');
 
-      // form infrormasi booking
-      const informasiBooking = document.getElementById('inform-booking');
+      // Isi struk
+      informasiBooking.elements['ipt_kodebooking'].value = bookingData.unique_code;
+      informasiBooking.elements['ipt_namaketua'].value = bookingData.pendakis[0].nama;
+      informasiBooking.elements['ipt_gerbangmasuk'].value = bookingData.gate_masuk.nama;
+      informasiBooking.elements['ipt_cekin'].value = bookingData.tanggal_masuk;
+      informasiBooking.elements['ipt_jumlahanggota'].value = bookingData.pendakis.length + " Orang";
+      if (bookingData.lampiran_simaksi) {
+         informasiBooking.elements['ipt_simaksi'].value = 'Ada';
+         informasiBooking.elements['ipt_simaksi'].style.color = 'green';
+      } else {
+         informasiBooking.elements['ipt_simaksi'].value = 'Tidak ada';
+         informasiBooking.elements['ipt_simaksi'].style.color = 'red';
+      }
+      informasiBooking.elements['ipt_gerbangkeluar'].value = bookingData.gate_keluar.nama;
+      informasiBooking.elements['ipt_cekout'].value = bookingData.tanggal_keluar;
+      informasiBooking.elements['ipt_kewarganegaraanwni'].value = bookingData.total_pendaki_wni + " WNI";
+      informasiBooking.elements['ipt_kewarganegaraanwna'].value = bookingData.total_pendaki_wna + " WNA";
+      iptstatusbooking.innerText = bookingData.status_booking;
+
+
+      // buat qr
+      iptqrcode.innerText = "";
+      new QRCode(iptqrcode, bookingData.unique_code);
+
 
       console.log(bookingData);
       console.log(informasiBooking);

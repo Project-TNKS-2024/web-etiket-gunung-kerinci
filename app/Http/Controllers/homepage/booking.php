@@ -51,6 +51,8 @@ class booking extends Controller
             ->get();
         $paket = gk_paket_tiket::where("id", $id)->first();
         $tiket_pendaki = gk_tiket_pendaki::where('id_paket_tiket',$id)->get();
+
+
         // return $tiket;
         return view("homepage.booking.booking-paket", [
             "destinasi" => $destinasi,
@@ -72,12 +74,13 @@ class booking extends Controller
         if (Auth::user()->role != "user") {
             return redirect()->route("homepage.beranda");
         }
+
             $request->validate([
-                'id_paket_tiket' => 'required|integer',
                 'date_start' => 'required|date',
                 'date_end' => 'required|date',
                 'wni' => 'required|numeric',
                 'wna' => 'required|numeric',
+                'jenis_tiket' => 'required|string',
                 'gerbang_masuk' => 'required',
                 'gerbang_keluar' => 'required',
             ]);
