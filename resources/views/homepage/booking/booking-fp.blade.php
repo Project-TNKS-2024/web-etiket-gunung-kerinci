@@ -85,11 +85,12 @@
       <input type="hidden" name="id_booking" value="{{$id}}">
       <div class="shadow px-5 pt-1 pb-4 rounded">
          <!-- anggota -->
-         @for ($i = 0; $i <= $booking->total_pendaki; $i++) @include('homepage.booking.fp.formulir',[
+         @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna); $i++)
+            @include('homepage.booking.fp.formulir',[
             'index'=>$i,
             'pendaki'=>$booking[$i]
             ])
-            @endfor
+        @endfor
             <!-- barang -->
             @include('homepage.booking.fp.barang')
       </div>

@@ -106,7 +106,7 @@
                         <img src="{{ asset('assets/img/sampel/QR.png') }}" style="max-width: 150px;" width="100%" />
                         <div class="text-center w-100 text-sm mt-2">Kode Booking</div>
                         <div class="text-center w-100 text-lg">{{$book->unique_code}}</div>
-                        <a href="{{route('homepage.booking-fp', ['id' => $book->id])}}" class="w-fit btn btn-warning  d-block mx-auto p-1 px-3 rounded shadow " style="cursor: pointer;">
+                        <a href="{{route('homepage.booking-fp', ['id' => $book->id])}}" class="d-flex align-items-center gap-2 w-fit btn btn-warning  d-block mx-auto p-1 px-3 rounded shadow " style="cursor: pointer;">
                             <img src="{{asset('assets/icon/tnks/search_alt-dark.svg')}}" /> Detail
                         </a>
                     </div>
