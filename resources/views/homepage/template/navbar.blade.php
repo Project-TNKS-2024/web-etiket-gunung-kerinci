@@ -28,7 +28,7 @@
         </button>
         <div class="collapse navbar-collapse py-1" id="navbarSupportedContent">
 
-            <ul class="navbar-nav me-auto mb-2 mb-sm-0 d-flex align-items-center">
+            <ul class="navbar-nav me-auto mb-2 mb-sm-0 d-flex align-items-center align-items-md-center">
                 @include('homepage.template.navbar-list', [
                 'navlist' => [
                 [

@@ -47,6 +47,7 @@ class gk_booking extends Model
     /**
      * Get the entry gate for the booking.
      */
+
     public function gateMasuk()
     {
         return $this->belongsTo(gk_gates::class, 'gate_masuk');

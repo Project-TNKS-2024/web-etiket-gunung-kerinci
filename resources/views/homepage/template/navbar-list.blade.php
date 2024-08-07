@@ -1,8 +1,9 @@
 @foreach ($navlist as $nav)
-    <li class="nav-item">
-        <a href="{{ $nav['link'] }}" id="navigasi{{ $loop->index }}" class="nav-link text-white py-0 rounded-lg"
-            style="cursor: pointer; font-size: 14px;" aria-current="page"
-            onclick="navigate(event,`{{ $nav['link'] }}`, `navigasi{{ $loop->index }}`)">{{ $nav['name'] }}</a>
+    <li class="nav-item   ">
+        <a href="{{ $nav['link'] }}" id="navigasi{{ $loop->index }}" class="nav-link text-center text-white rounded-lg py-2 py-md-0 px-2 px-md-2 px-sm-1  mx-2 "
+            style="cursor: pointer; font-size: 14px;" aria-current="page" onclick="navigate(event,`{{ $nav['link'] }}`, `navigasi{{ $loop->index }}`)">
+            {{ $nav['name'] }}
+        </a>
     </li>
 @endforeach
 
