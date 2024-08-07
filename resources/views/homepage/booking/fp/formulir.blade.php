@@ -90,7 +90,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
       <div class="row">
          <div class="col-12 col-md-6">
             <label for="nomor_telepon-{{$index}}" class="w-100 fw-bold mandatory">Nomor Telepon</label>
-            <input type="text" class="form-control" name="formulir[{{$index}}][nomor_telepon]" id="nomor_telepon-{{$index}}" value="{{ old('formulir.'.$index.'.nomor_telepon') }}">
+            <input type="text" class="form-control" name="formulir[{{$index}}][nomor_telepon]" id="nomor_telepon-{{$index}}" value="{{ $pendaki->no_hp}}">
             <span class="keterangan">Isikan No. Telepon yang terkoneksi dengan WhatsApp</span>
             @error('formulir.'.$index.'.nomor_telepon')
             <div class="text-danger">{{ $message }}</div>
@@ -98,7 +98,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
          </div>
          <div class="col-12 col-md-6">
             <label for="nomor_telepon_darurat-{{$index}}" class="w-100 fw-bold mandatory">Nomor Telepon Darurat</label>
-            <input type="text" class="form-control" name="formulir[{{$index}}][nomor_telepon_darurat]" id="nomor_telepon_darurat-{{$index}}" value="{{ old('formulir.'.$index.'.nomor_telepon_darurat') }}">
+            <input type="text" class="form-control" name="formulir[{{$index}}][nomor_telepon_darurat]" id="nomor_telepon_darurat-{{$index}}" value="{{ $pendaki->no_hp_darurat}}">
             <span class="keterangan">*Silahkan diisi dengan No. Telepon Orang Tua / Kerabat</span>
             @error('formulir.'.$index.'.nomor_telepon_darurat')
             <div class="text-danger">{{ $message }}</div>
@@ -110,14 +110,14 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
       <div class="row">
          <div class="col-8">
             <label for="tanggal_lahir-{{$index}}" class="w-100 fw-bold">Tanggal Lahir</label>
-            <input type="date" class="form-control" name="formulir[{{$index}}][tanggal_lahir]" id="tanggal_lahir-{{$index}}" value="{{ old('formulir.'.$index.'.tanggal_lahir') }}">
+            <input type="date" class="form-control" name="formulir[{{$index}}][tanggal_lahir]" id="tanggal_lahir-{{$index}}" value="{{ Carbon\Carbon::parse($pendaki->tanggal_lahir)->format('Y-m-d') }}">
             @error('formulir.'.$index.'.tanggal_lahir')
             <div class="text-danger">{{ $message }}</div>
             @enderror
          </div>
          <div class="col-4">
             <label for="usia-{{$index}}" class="w-100 fw-bold">Usia</label>
-            <input type="number" class="form-control" name="formulir[{{$index}}][usia]" id="usia-{{$index}}" value="{{ old('formulir.'.$index.'.usia') }}" readonly>
+            <input type="number" class="form-control" name="formulir[{{$index}}][usia]" id="usia-{{$index}}" value="{{ $pendaki->usia }}" readonly>
             @error('formulir.'.$index.'.usia')
             <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -136,7 +136,6 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
             <label for="provinsi-{{$index}}" class="w-100">Provinsi</label>
             <select class="form-control ipt-provinsi" name="formulir[{{$index}}][provinsi]" id="provinsi-{{$index}}">
                <option value="Null">Pilih Provinsi</option>
-               <!-- Tambahkan opsi sesuai kebutuhan -->
             </select>
             @error('formulir.'.$index.'.provinsi')
             <div class="text-danger">{{ $message }}</div>

@@ -247,6 +247,7 @@ class booking extends Controller
                 $days = $this->countWeekdaysAndWeekends(Carbon::parse($booking->tanggal_masuk)->format('d-m-Y'),Carbon::parse($booking->tanggal_keluar)->format('d-m-Y'));
                 $tiket_pendaki = $tiket->tiket_pendaki->where('kategori_pendaki',$nationality)->where('id_paket_tiket', intval($booking->id_tiket))->first();
                 $tagihan = $days['weekends'] * $tiket_pendaki->harga_masuk_wk + $days['weekdays'] * $tiket_pendaki->harga_masuk_wd + $tiket_pendaki->harga_kemah * ( $days['weekends'] +  $days['weekdays'] - 1) + $tiket_pendaki->harga_traking + $tiket_pendaki->harga_ansuransi;
+                $pendakiUsia = Carbon::parse($pendaki['tanggal_lahir'])->age;
 
                 $lIdentitas = '-';
                 $lSuratKesehatan = '-';
@@ -263,7 +264,7 @@ class booking extends Controller
                             'no_hp' => $pendaki['nomor_telepon'],
                             'no_hp_darurat' => $pendaki['nomor_telepon_darurat'],
                             'tanggal_lahir' => $pendaki['tanggal_lahir'],
-                            'usia' => Carbon::parse($pendaki['usia'])->age,
+                            'usia' => $pendakiUsia,
                             'provinsi' => $pendaki['provinsi'],
                             'kabupaten' => $pendaki['kabupaten_kota'],
                             'kec' => $pendaki['kecamatan'],
@@ -289,7 +290,7 @@ class booking extends Controller
                         'no_hp' => $pendaki['nomor_telepon'],
                         'no_hp_darurat' => $pendaki['nomor_telepon_darurat'],
                         'tanggal_lahir' => $pendaki['tanggal_lahir'],
-                        'usia' => Carbon::parse($pendaki['usia'])->age,
+                        'usia' => $pendakiUsia,
                         'provinsi' => $pendaki['provinsi'],
                         'kabupaten' => $pendaki['kabupaten_kota'],
                         'kec' => $pendaki['kecamatan'],
