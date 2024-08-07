@@ -12,7 +12,7 @@
 
 @section('main')
 
-<div style="min-height: 100vh;">
+<div>
     <h3 class="font-bold mb-3 gk-text-base-black">Kelola Tiket</h3>
 
 

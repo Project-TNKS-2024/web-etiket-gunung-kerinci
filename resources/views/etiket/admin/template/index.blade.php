@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{asset('modernize/css/styles.css')}}" />
     <link rel="stylesheet" href="{{asset('componen/tailwind-classes.css')}}" />
     <link rel="stylesheet" href="{{asset('componen/colorplate.css')}}" />
+    <link rel="stylesheet" href="{{ asset('fontawesome-free-6.5.2-web/css/all.css') }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
@@ -53,6 +54,11 @@
             pointer-events: none;
             /* Ensure it doesn't block interactions with the img */
         }
+
+        .body-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
     @yield('css')
 </head>
@@ -71,20 +77,20 @@
         <!-- ========================================= -->
         @include('etiket.admin.template.sidebar')
         <!--  Main wrapper -->
-        <div class="body-wrapper " style="background-color: rgba(245, 246, 250, 1);">
+        <div class="body-wrapper " style="background-color: rgba(245, 246, 250, 1); min-height: 100vh;">
             <!--  Header Start -->
             <!-- ================================================ -->
             @include('etiket.admin.template.navbar')
             <!--  Header End -->
-            <div class="container-fluid">
+            <div class="container-fluid mx-3 my-3" style="width: -webkit-fill-available; max-width: none; flex:1;">
                 <!--  Row 1 -->
                 @yield('main')
 
 
-                <!-- footer  -->
-                <!-- ============================================== -->
-                @include('etiket.admin.template.footer')
             </div>
+            <!-- footer  -->
+            <!-- ============================================== -->
+            @include('etiket.admin.template.footer')
         </div>
     </div>
     <script src="{{asset('modernize/libs/jquery/dist/jquery.min.js')}}"></script>
