@@ -1,5 +1,7 @@
 <?php
 //admin
+
+use App\Http\Controllers\etiket\admin\booking as AdminBooking;
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
 use App\Http\Controllers\etiket\admin\tikets;
 use App\Http\Controllers\etiket\admin\destinasis;
@@ -91,6 +93,10 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/kelola/tambah-gate', [gates::class, 'tambahAction'])->name('admin.gate.tambahAction');
     Route::post('admin/kelola/edit-gate/{id}', [gates::class, 'editAction'])->name('admin.gate.editAction');
     Route::post('admin/kelola/hapus-gate/{id}', [gates::class, 'hapus'])->name('admin.gate.hapus');
+
+
+    // booking
+    Route::get('admin/kelola/booking', [AdminBooking::class, 'readNow'])->name('admin.booking.now.read');
 });
 
 // User routes
