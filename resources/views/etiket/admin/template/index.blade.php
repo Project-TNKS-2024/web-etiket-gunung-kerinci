@@ -99,7 +99,6 @@
     <script src="{{asset('modernize/js/sidebarmenu.js')}}"></script>
     <script src="{{asset('modernize/js/app.min.js')}}"></script>
 
-    <script src="{{asset('modernize/libs/apexcharts/dist/apexcharts.min.js')}}"></script>
     <script src="{{asset('modernize/libs/simplebar/dist/simplebar.js')}}"></script>
     <script src="{{asset('modernize/js/dashboard.js')}}"></script>
 

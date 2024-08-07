@@ -462,7 +462,7 @@
         const adjustedDays = dayDifference - 1; // total malam
         labelTotalPrice.textContent = `${dayDifference} Hari ${adjustedDays} malam (${dayDifference}D${adjustedDays}M)`;
         console.log("perubahan waktu masuk dan keluar");
-        form.elements['days_traking'].value = dayDifference;
+        form1.elements['days_traking'].value = dayDifference;
         return adjustedDays;
     }
 
