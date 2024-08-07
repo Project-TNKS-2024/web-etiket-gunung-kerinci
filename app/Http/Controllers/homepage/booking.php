@@ -36,7 +36,7 @@ class booking extends Controller
 
     public function bookingPaket($id)
     {
-        $gunung = destinasi::find($id);
+        $gunung = destinasi::find($id); /// yang ini salah
         $paket = gk_paket_tiket::find($id);
         $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)->get();
         $gates = gk_gates::where('id_destinasi', $id)->get();

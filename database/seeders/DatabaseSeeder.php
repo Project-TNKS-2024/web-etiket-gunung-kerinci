@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             userSeeder::class,
             destinasi_gate::class,
             paket_tiket::class,
+            Booking::class,
         ]);
     }
 }

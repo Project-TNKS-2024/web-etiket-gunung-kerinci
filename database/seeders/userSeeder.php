@@ -51,5 +51,16 @@ class userSeeder extends Seeder
             'fullname' => 'User 1',
             'path_foto' => 'user 1.jpg',
         ]);
+        // Create two Users
+        User::create([
+            'email' => 'user2@example.com',
+            'nik' => '088765456321',
+            'token' => 'admin_token',
+            'no_hp' => '08765782509',
+            'role' => 'user',
+            'password' => Hash::make('password'),
+            'fullname' => 'User 2',
+            'path_foto' => 'user 1.jpg',
+        ]);
     }
 }

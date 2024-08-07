@@ -59,4 +59,9 @@ class gk_booking extends Model
     {
         return $this->belongsTo(gk_gates::class, 'gate_keluar');
     }
+
+    public function pendakis()
+    {
+        return $this->hasMany(gk_pendaki::class, 'booking_id');
+    }
 }
