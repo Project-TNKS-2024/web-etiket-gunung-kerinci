@@ -28,6 +28,8 @@ class gk_pendaki extends Model
         'lampiran_surat_kesehatan',
         'lampiran_surat_izin_ortu',
         'tagihan',
+        'jenis_kelamin',
+        'jenis_ identitas',
     ];
 
     protected $casts = [

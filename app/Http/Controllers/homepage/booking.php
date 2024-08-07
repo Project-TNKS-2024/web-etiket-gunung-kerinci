@@ -234,31 +234,36 @@ class booking extends Controller
                 'action' => 'required|string|in:save,next',
             ]);
 
+
             // update pendaki
             $pendakis = $request->formulir;
+            $paket = gk_paket_tiket::all();
+            $booking = gk_booking::where('id', $request->id_booking)->first();
+            $tiket = gk_paket_tiket::with('tiket_pendaki')->where('id', $booking->id_tiket)->first();
             // return $pendakis[0];
 
             foreach ($pendakis as $pendaki) {
-                // menyimpan/update lampiran
+                $nationality = $pendaki['kewarganegaraan'] == "Warga Negara Indonesia" ? "wni" : "wna";
+                $days = $this->countWeekdaysAndWeekends(Carbon::parse($booking->tanggal_masuk)->format('d-m-Y'),Carbon::parse($booking->tanggal_keluar)->format('d-m-Y'));
+                $tiket_pendaki = $tiket->tiket_pendaki->where('kategori_pendaki',$nationality)->where('id_paket_tiket', intval($booking->id_tiket))->first();
+                $tagihan = $days['weekends'] * $tiket_pendaki->harga_masuk_wk + $days['weekdays'] * $tiket_pendaki->harga_masuk_wd + $tiket_pendaki->harga_kemah * ( $days['weekends'] +  $days['weekdays'] - 1) + $tiket_pendaki->harga_traking + $tiket_pendaki->harga_ansuransi;
+
                 $lIdentitas = '-';
                 $lSuratKesehatan = '-';
                 $lSimaksi = '-';
-
-                // return $pendaki;
-                // cek jika id pendaki ada
+                $lSuratIzin = '-';
                 if ($pendaki['id_pendaki'] != null) {
-                    // update data pndaki by id
                     $data = gk_pendaki::where('id', $pendaki['id_pendaki'])
                         ->where('booking_id', $request->id_booking)
                         ->update([
                             'wni' => $pendaki['jenis_identitas'] == 'KTP',
                             'nik' => $pendaki['identitas'],
-                            'nama' => $pendaki['nama_depan'] . ' ' . $pendaki['nama_belakang'],
+                            'nama' => $pendaki['nama_depan'] . '<----->' . $pendaki['nama_belakang'],
                             'lampiran_identitas' => $lIdentitas,
                             'no_hp' => $pendaki['nomor_telepon'],
                             'no_hp_darurat' => $pendaki['nomor_telepon_darurat'],
                             'tanggal_lahir' => $pendaki['tanggal_lahir'],
-                            'usia' => $pendaki['usia'],
+                            'usia' => Carbon::parse($pendaki['usia'])->age,
                             'provinsi' => $pendaki['provinsi'],
                             'kabupaten' => $pendaki['kabupaten_kota'],
                             'kec' => $pendaki['kecamatan'],
@@ -266,6 +271,12 @@ class booking extends Controller
                             'lampiran_surat_kesehatan' => $lSuratKesehatan,
                             'lampiran_simaksi' => $lSimaksi,
                             'ketua' => $pendaki['ketua'] ?? false,
+                            'tiket_id' => $tiket_pendaki->id,
+                            'lampiran_surat_izin_ortu' => $lSuratIzin,
+                            'tagihan' => $tagihan,
+                            'kategori_pendaki' => $nationality,
+                            'jenis_kelamin' => $pendaki['jenis_kelamin'] == "Laki-Laki" ? "l" : "p",
+                            'jenis_identtias' => $pendaki['jenis_identitas'],
                         ]);
                     return $data;
                 } else {
@@ -273,12 +284,12 @@ class booking extends Controller
                         'booking_id' => $request->id_booking,
                         'wni' => $pendaki['jenis_identitas'] == 'KTP',
                         'nik' => $pendaki['identitas'],
-                        'nama' => $pendaki['nama_depan'] . ' ' . $pendaki['nama_belakang'],
+                        'nama' => $pendaki['nama_depan'] . '<----->' . $pendaki['nama_belakang'],
                         'lampiran_identitas' => $lIdentitas,
                         'no_hp' => $pendaki['nomor_telepon'],
                         'no_hp_darurat' => $pendaki['nomor_telepon_darurat'],
                         'tanggal_lahir' => $pendaki['tanggal_lahir'],
-                        'usia' => $pendaki['usia'],
+                        'usia' => Carbon::parse($pendaki['usia'])->age,
                         'provinsi' => $pendaki['provinsi'],
                         'kabupaten' => $pendaki['kabupaten_kota'],
                         'kec' => $pendaki['kecamatan'],
@@ -286,12 +297,18 @@ class booking extends Controller
                         'lampiran_surat_kesehatan' => $lSuratKesehatan,
                         'lampiran_simaksi' => $lSimaksi,
                         'ketua' => $pendaki['ketua'] ?? false,
+                        'tiket_id' => $tiket_pendaki->id,
+                        'lampiran_surat_izin_ortu' => $lSuratIzin,
+                        'tagihan' => $tagihan,
+                        'kategori_pendaki' => $nationality,
+                        'jenis_kelamin' => $pendaki['jenis_kelamin'] == "Laki-Laki" ? "l" : "p",
+                        'jenis_identtias' => $pendaki['jenis_identitas'],
                     ]);
                 }
-                return $data;
+                // return $data;
             }
 
-            // return redirect()->back()->with('success', 'Data berhasil disimpan');
+            return redirect()->back()->with('success', 'Data berhasil disimpan');
         } else if ($request->action == "next") {
             return redirect()->route('homepage.booking-detail', ['id' => $request->id_booking])->with('success', 'Data berhasil disimpan');
             // $validatedData = $request->validate([

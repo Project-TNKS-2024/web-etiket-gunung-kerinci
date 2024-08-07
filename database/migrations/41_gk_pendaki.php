@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('kabupaten');
             $table->string('kec');
             $table->string('desa');
+            $table->enum('jenis_kelamin', ['l','p']);
+            $table->string('jenis_identitas',50);
 
             $table->string('lampiran_surat_kesehatan');
             $table->string('lampiran_surat_izin_ortu');
