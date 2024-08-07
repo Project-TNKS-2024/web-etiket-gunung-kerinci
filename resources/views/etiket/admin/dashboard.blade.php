@@ -353,3 +353,7 @@
    </div>
 </div>
 @endsection
+
+@section('js')
+<script src="{{asset('modernize/libs/apexcharts/dist/apexcharts.min.js')}}"></script>
+@endsection
