@@ -140,6 +140,7 @@ class booking extends Controller
                     'total_pembayaran' => $totalHarga,
                     'lampiran_simaksi' => "-",
                     'lampiran_stugas' => "-",
+                    'unique_code' => $this->generateRandomKey(10),
                 ]);
                 // return $newBooking;
                 return redirect()->route('homepage.booking-snk', ['id' => $newBooking->id])->with('success', 'Create Booking');
@@ -155,7 +156,7 @@ class booking extends Controller
         }
         $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $id)->first();
         if (!$booking){
-            abort(403);
+            abort(404);
         }
 
         if ($booking->status_booking ==1) {
@@ -181,7 +182,7 @@ class booking extends Controller
     {
         $booking = gk_booking::find($id);
         if (!$booking) {
-            abort(403);
+            abort(404);
         }
         if ($booking->status_booking == 0) {
             return redirect()->route("homepage.booking-snk", ["id"=> $id] );
@@ -326,7 +327,7 @@ class booking extends Controller
 
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar'])->where('id',$id)->first();
         if (!$booking) {
-            abort(403);
+            abort(404);
         }
 
         if ($booking->status_booking == 0) {
@@ -393,4 +394,13 @@ class booking extends Controller
         ];
     }
 
+    function generateRandomKey($length) {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
 }

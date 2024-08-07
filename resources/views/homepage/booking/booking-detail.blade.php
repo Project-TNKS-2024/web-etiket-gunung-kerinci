@@ -163,7 +163,7 @@
       </div>
 
       <div class="centered">
-         <a class="btn btn-primary mt-4 me-3" href="#">Formulir</a>
+         <a class="btn btn-primary mt-4 me-3" href="{{route('homepage.booking-fp', ['id' => $booking->id])}}">Formulir</a>
          <a class="btn btn-primary mt-4" href="#">Selanjutnya</a>
       </div>
 
