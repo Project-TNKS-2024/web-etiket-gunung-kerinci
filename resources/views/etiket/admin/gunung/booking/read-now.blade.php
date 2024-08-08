@@ -9,17 +9,32 @@
       /* vertical-align: middle !important; */
    }
 
-   #inform-booking input {
+   #model-booking input {
       border: none;
       background: none;
    }
 
-   #inform-booking textarea {
+   #model-booking textarea {
       border: none;
       background: none;
    }
 
    #qrcode_kodebooking img {
+      width: -webkit-fill-available !important;
+   }
+
+   .karcis-per-orang p {
+      margin-bottom: 5px !important;
+   }
+
+   .qr_code_booking {
+      padding: 15px;
+      margin: 5px;
+      border-radius: 10px;
+      background-color: #ffffff;
+   }
+
+   .qr_code_booking img {
       width: -webkit-fill-available !important;
    }
 </style>
@@ -109,58 +124,74 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Tiket</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
-         <div class="modal-body">
-            <form id="inform-booking">
-               <div class="card">
-                  <div class="card-body">
+         <div class="modal-body" id="model-booking">
+            <div class="card">
+               <div class="card-body">
+                  <form id="inform-booking">
                      <div class="row">
                         <div class="col-md-4">
                            <div id="qrcode_kodebooking"></div>
                            <label for="ipt_kodebooking" class="w-100 text-center">Kode Booking</label>
                            <input type="text" name="ipt_kodebooking" id="ipt_kodebooking" class="form-control text-center fw-bold" readonly style="font-size: 18px;">
                         </div>
-                        <div class="col-md-8 row">
-                           <div class="col-12">
-                              <span class="badge text-bg-primary" id="ipt_statusbooking" style="    margin-left: auto;display: block;width: min-content;"></span>
-                           </div>
-                           <div class="col-6">
-                              <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
-                              <input type="text" name="ipt_namaketua" value="tes" id="ipt_namaketua" class="form-control" readonly>
-                              <label for="ipt_gerbangmasuk" class="fw-bold">Gerbang Masuk</label>
-                              <input type="text" name="ipt_gerbangmasuk" value="tes" id="ipt_gerbangmasuk" class="form-control" readonly>
-                              <label for="ipt_cekin" class="fw-bold">Cek In</label>
-                              <input type="text" name="ipt_cekin" value="tes" id="ipt_cekin" class="form-control" readonly>
-                              <label for="ipt_jumlahanggota" class="fw-bold">Jumlah Anggota</label>
-                              <input type="text" name="ipt_jumlahanggota" value="tes" id="ipt_jumlahanggota" class="form-control" readonly>
-                           </div>
-                           <div class="col-6">
-                              <label for="ipt_simaksi" class="fw-bold">Simaksi</label>
-                              <input type="text" name="ipt_simaksi" value="tes" id="ipt_simaksi" class="form-control" readonly>
-                              <label for="ipt_gerbangkeluar" class="fw-bold">Gerbang Keluar</label>
-                              <input type="text" name="ipt_gerbangkeluar" value="tes" id="ipt_gerbangkeluar" class="form-control" readonly>
-                              <label for="ipt_cekout" class="fw-bold">Cek Out</label>
-                              <input type="text" name="ipt_cekout" value="tes" id="ipt_cekout" class="form-control" readonly>
-                              <label for="ipt_kewarganegaraan" class="fw-bold">Jumlah Anggota</label>
-                              <div class="row">
-                                 <div class="col-6">
-                                    <input type="text" name="ipt_kewarganegaraanwni" value="tes" id="ipt_kewarganegaraanwni" class="form-control" readonly>
-                                 </div>
-                                 <div class="col-6">
-                                    <input type="text" name="ipt_kewarganegaraanwna" value="tes" id="ipt_kewarganegaraanwna" class="form-control" readonly>
+                        <div class="col-md-8">
+                           <div class="row">
+
+                              <div class="col-12">
+                                 <span class="badge text-bg-primary" id="ipt_statusbooking" style="    margin-left: auto;display: block;width: min-content;"></span>
+                              </div>
+                              <div class="col-6">
+                                 <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
+                                 <input type="text" name="ipt_namaketua" value="tes" id="ipt_namaketua" class="form-control" readonly>
+                                 <label for="ipt_gerbangmasuk" class="fw-bold">Gerbang Masuk</label>
+                                 <input type="text" name="ipt_gerbangmasuk" value="tes" id="ipt_gerbangmasuk" class="form-control" readonly>
+                                 <label for="ipt_cekin" class="fw-bold">Cek In</label>
+                                 <input type="text" name="ipt_cekin" value="tes" id="ipt_cekin" class="form-control" readonly>
+                                 <label for="ipt_jumlahanggota" class="fw-bold">Jumlah Anggota</label>
+                                 <input type="text" name="ipt_jumlahanggota" value="tes" id="ipt_jumlahanggota" class="form-control" readonly>
+                              </div>
+                              <div class="col-6">
+                                 <label for="ipt_simaksi" class="fw-bold">Simaksi</label>
+                                 <input type="text" name="ipt_simaksi" value="tes" id="ipt_simaksi" class="form-control" readonly>
+                                 <label for="ipt_gerbangkeluar" class="fw-bold">Gerbang Keluar</label>
+                                 <input type="text" name="ipt_gerbangkeluar" value="tes" id="ipt_gerbangkeluar" class="form-control" readonly>
+                                 <label for="ipt_cekout" class="fw-bold">Cek Out</label>
+                                 <input type="text" name="ipt_cekout" value="tes" id="ipt_cekout" class="form-control" readonly>
+                                 <label for="ipt_kewarganegaraan" class="fw-bold">Jumlah Anggota</label>
+                                 <div class="row">
+                                    <div class="col-6">
+                                       <input type="text" name="ipt_kewarganegaraanwni" value="tes" id="ipt_kewarganegaraanwni" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-6">
+                                       <input type="text" name="ipt_kewarganegaraanwna" value="tes" id="ipt_kewarganegaraanwna" class="form-control" readonly>
+                                    </div>
                                  </div>
                               </div>
-
                            </div>
                         </div>
                      </div>
-                  </div>
+                  </form>
                </div>
-               <div class="card">
-                  <div class="card-body">
+            </div>
+            <div id="karcis_pengunjung">
 
+            </div>
+            <div class="card karcis-per-orang overflow-hidden bg-transparent d-non">
+               <div class="row m-0">
+                  <div class="col-8" style="background-color: rgba(106, 169, 152, 1); color: white;border-radius: 25px; padding: 20px;">
+                     <p style="font-size: 18px; font-style: italic;">Nomor Seri : ${pendaki.id} /TNKS/NUS</p>
+                     <p style="font-size: 18px;">Karcis Masuk Pengunjung</p>
+                     <p style="font-size: 18px; font-weight: bold;">Pendakian Gunung Kerinci Melalui Pos 10</p>
+                     <p style="font-size: 18px; font-weight: bold;">Nama Pendaki : ${pendaki.nama}</p>
+                     <p style="font-size: 18px; font-weight: bold;">Berlaku untuk satu orang</p>
+                     <p style="font-size: 24px; font-weight: bold;">Rp. ${pendaki.tagihan}</p>
+                  </div>
+                  <div class="col-4" style="background-color: rgba(255, 209, 51, 1);border-radius: 25px; padding: 20px;">
+                     <div class="qr_code_booking"></div>
                   </div>
                </div>
-            </form>
+            </div>
+
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -219,9 +250,47 @@
       iptqrcode.innerText = "";
       new QRCode(iptqrcode, bookingData.unique_code);
 
+      // ambil template karcis dan isi dengan karcis pengunjung
+
+      const templateKarcis = document.getElementById('karcis_pengunjung');
+      templateKarcis.innerHTML = ''; // Clear previous content
+      bookingData.pendakis.forEach(pendaki => {
+         const karcisHtml = BuatKarcisPengunjung(pendaki);
+         templateKarcis.innerHTML += karcisHtml;
+      });
+
+      // buat qr untuk karcis pengunjung
+      const qrcodependaki = document.querySelectorAll('.qr_code_booking');
+      qrcodependaki.forEach(qr => {
+         new QRCode(qr, bookingData.unique_code);
+      });
+
+
 
       console.log(bookingData);
       console.log(informasiBooking);
+   }
+
+   function BuatKarcisPengunjung(pendaki) {
+      let karcis = `
+        <div class="card karcis-per-orang overflow-hidden bg-transparent">
+               <div class="row m-0">
+                  <div class="col-8" style="background-color: rgba(106, 169, 152, 1); color: white;border-radius: 25px; padding: 20px;">
+                     <p style="font-size: 18px; font-style: italic;">Nomor Seri : ${pendaki.id} /TNKS/NUS</p>
+                     <p style="font-size: 18px;">Karcis Masuk Pengunjung</p>
+                     <p style="font-size: 18px; font-weight: bold;">Pendakian Gunung Kerinci Melalui Pos 10</p>
+                     <p style="font-size: 18px; font-weight: bold;">Nama Pendaki : ${pendaki.nama}</p>
+                     <p style="font-size: 18px; font-weight: bold;">Berlaku untuk satu orang</p>
+                     <p style="font-size: 24px; font-weight: bold;">Rp. ${pendaki.tagihan}</p>
+                  </div>
+                  <div class="col-4" style="background-color: rgba(255, 209, 51, 1);border-radius: 25px; padding: 20px;">
+                     <div class="qr_code_booking"></div>
+                  </div>
+               </div>
+            </div>
+    `;
+
+      return karcis;
    }
 </script>
 

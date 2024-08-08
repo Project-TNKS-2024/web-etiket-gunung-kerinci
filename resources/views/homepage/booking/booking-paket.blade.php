@@ -155,7 +155,7 @@
                   <p class="fw-bold">{{ $booking->total_pendaki_wni}} x WNI <span class="float-right">Rp. {{number_format($totalHargaWni)}}</span></p>
                   <p>WNA <span class="float-right">Rp. {{number_format($totalHargaWna/$booking->total_pendaki_wna)}}</span></p>
                   <p class="fw-bold">{{$booking->total_pendaki_wna}} x WNA <span class="float-right">Rp. {{number_format($totalHargaWna)}}</span></p>
-                  <p class="fw-bold c-blue">Total <span class="float-right">Rp.  {{number_format($booking->total_pembayaran)}}</span></p>
+                  <p class="fw-bold c-blue">Total <span class="float-right">Rp. {{number_format($booking->total_pembayaran)}}</span></p>
                   <p class="span">*{{$days['weekdays']+$days['weekends']}} hari {{$days['weekdays']+$days['weekends']-1}} malam (2D1M)</p>
                </div>
             </div>
