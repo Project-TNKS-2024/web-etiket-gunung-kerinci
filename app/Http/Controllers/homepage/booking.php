@@ -17,6 +17,12 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
 
+use App\Models\Provinsi;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
+
+
 use function PHPUnit\Framework\isNull;
 
 class booking extends Controller
@@ -51,6 +57,11 @@ class booking extends Controller
             ->get();
         $paket = gk_paket_tiket::where("id", $id)->first();
         $tiket_pendaki = gk_tiket_pendaki::where('id_paket_tiket', $id)->get();
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> main
         // return $tiket;
         return view("homepage.booking.booking-paket", [
             "destinasi" => $destinasi,
@@ -63,7 +74,6 @@ class booking extends Controller
     }
 
     public function postBooking(Request $request)
-
     {
         if (!Auth::check()) {
             return redirect()->route('etiket.in.login');
@@ -72,12 +82,21 @@ class booking extends Controller
         if (Auth::user()->role != "user") {
             return redirect()->route("homepage.beranda");
         }
+<<<<<<< HEAD
         $request->validate([
             'id_paket_tiket' => 'required|integer',
+=======
+
+        $request->validate([
+>>>>>>> main
             'date_start' => 'required|date',
             'date_end' => 'required|date',
             'wni' => 'required|numeric',
             'wna' => 'required|numeric',
+<<<<<<< HEAD
+=======
+            'jenis_tiket' => 'required|string',
+>>>>>>> main
             'gerbang_masuk' => 'required',
             'gerbang_keluar' => 'required',
         ]);
@@ -188,12 +207,24 @@ class booking extends Controller
         }
         $pendaki = gk_pendaki::where('booking_id', $booking->id)->get();
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
+        // $provinsi = Provinsi::all();
+        // $kabupaten = Kabupaten::all();
+        // $kecamatan = Kecamatan::all();
+        // $kelurahan = Kelurahan::all();
+        // $provinsi = Provinsi::with(['kabupatens'])->get();
+        // $kabupaten = Kabupaten::with(['provinsis', 'kecamatans'])->get();
+        // $kecamatan = Kecamatan::with(['kabupatens', 'kelurahans'])->get();
+        // $kelurahan = Kelurahan::with(['kecamatans'])->get();
+
+
 
         return view('homepage.booking.booking-fp', [
             'id' => $id,
             'booking' => $booking,
             'pendaki' => $pendaki,
-            'barang' => $barang
+            'barang' => $barang,
+            // 'kabupaten' => $kabupaten,
+            // 'kecamatan' => $kecamatan,
         ]);
     }
     public function bookingFPStore(Request $request)
@@ -216,11 +247,11 @@ class booking extends Controller
                 'formulir.*.kecamatan' => 'nullable|string',
                 'formulir.*.desa_kelurahan' => 'nullable|string',
 
-                'barangWajib' => 'required|array',
-                'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
-                'barangWajib.trash_bag' => 'required|boolean|accepted',
-                'barangWajib.p3k_standart' => 'required|boolean|accepted',
-                'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
+                // 'barangWajib' => 'required|array',
+                // 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
+                // 'barangWajib.trash_bag' => 'required|boolean|accepted',
+                // 'barangWajib.p3k_standart' => 'required|boolean|accepted',
+                // 'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
 
                 'jumlah_barang' => 'required|integer|min:0',
 
@@ -230,64 +261,76 @@ class booking extends Controller
                 'action' => 'required|string|in:save,next',
             ]);
 
+
             // update pendaki
             $pendakis = $request->formulir;
+            $paket = gk_paket_tiket::all();
+            $booking = gk_booking::where('id', $request->id_booking)->first();
+            $tiket = gk_paket_tiket::with('tiket_pendaki')->where('id', $booking->id_tiket)->first();
             // return $pendakis[0];
 
             foreach ($pendakis as $pendaki) {
-                // menyimpan/update lampiran
+                $nationality = $pendaki['kewarganegaraan'] == "Warga Negara Indonesia" ? "wni" : "wna";
+                $days = $this->countWeekdaysAndWeekends(Carbon::parse($booking->tanggal_masuk)->format('d-m-Y'), Carbon::parse($booking->tanggal_keluar)->format('d-m-Y'));
+                $tiket_pendaki = $tiket->tiket_pendaki->where('kategori_pendaki', $nationality)->where('id_paket_tiket', intval($booking->id_tiket))->first();
+                $tagihan = $days['weekends'] * $tiket_pendaki->harga_masuk_wk + $days['weekdays'] * $tiket_pendaki->harga_masuk_wd + $tiket_pendaki->harga_kemah * ($days['weekends'] +  $days['weekdays'] - 1) + $tiket_pendaki->harga_traking + $tiket_pendaki->harga_ansuransi;
+                $pendakiUsia = Carbon::parse($pendaki['tanggal_lahir'])->age;
+
                 $lIdentitas = '-';
                 $lSuratKesehatan = '-';
                 $lSimaksi = '-';
-
-                // return $pendaki;
-                // cek jika id pendaki ada
+                $lSuratIzin = '-';
                 if ($pendaki['id_pendaki'] != null) {
-                    // update data pndaki by id
                     $data = gk_pendaki::where('id', $pendaki['id_pendaki'])
                         ->where('booking_id', $request->id_booking)
                         ->update([
-                            'wni' => $pendaki['jenis_identitas'] == 'KTP',
                             'nik' => $pendaki['identitas'],
-                            'nama' => $pendaki['nama_depan'] . ' ' . $pendaki['nama_belakang'],
+                            'nama' => $pendaki['nama_depan'] . '<----->' . $pendaki['nama_belakang'],
                             'lampiran_identitas' => $lIdentitas,
                             'no_hp' => $pendaki['nomor_telepon'],
                             'no_hp_darurat' => $pendaki['nomor_telepon_darurat'],
                             'tanggal_lahir' => $pendaki['tanggal_lahir'],
-                            'usia' => $pendaki['usia'],
+                            'usia' => $pendakiUsia,
                             'provinsi' => $pendaki['provinsi'],
                             'kabupaten' => $pendaki['kabupaten_kota'],
                             'kec' => $pendaki['kecamatan'],
                             'desa' => $pendaki['desa_kelurahan'],
                             'lampiran_surat_kesehatan' => $lSuratKesehatan,
-                            'lampiran_simaksi' => $lSimaksi,
-                            'ketua' => $pendaki['ketua'] ?? false,
+                            'tiket_id' => $tiket_pendaki->id,
+                            'lampiran_surat_izin_ortu' => $lSuratIzin,
+                            'tagihan' => $tagihan,
+                            'kategori_pendaki' => $nationality,
+                            'jenis_kelamin' => $pendaki['jenis_kelamin'] == "Laki-Laki" ? "l" : "p",
+                            'jenis_identitas' => $pendaki['jenis_identitas'],
                         ]);
-                    return $data;
+                    // return $data;
                 } else {
                     $data = gk_pendaki::create([
                         'booking_id' => $request->id_booking,
-                        'wni' => $pendaki['jenis_identitas'] == 'KTP',
                         'nik' => $pendaki['identitas'],
-                        'nama' => $pendaki['nama_depan'] . ' ' . $pendaki['nama_belakang'],
+                        'nama' => $pendaki['nama_depan'] . '<----->' . $pendaki['nama_belakang'],
                         'lampiran_identitas' => $lIdentitas,
                         'no_hp' => $pendaki['nomor_telepon'],
                         'no_hp_darurat' => $pendaki['nomor_telepon_darurat'],
                         'tanggal_lahir' => $pendaki['tanggal_lahir'],
-                        'usia' => $pendaki['usia'],
+                        'usia' => $pendakiUsia,
                         'provinsi' => $pendaki['provinsi'],
                         'kabupaten' => $pendaki['kabupaten_kota'],
                         'kec' => $pendaki['kecamatan'],
                         'desa' => $pendaki['desa_kelurahan'],
                         'lampiran_surat_kesehatan' => $lSuratKesehatan,
-                        'lampiran_simaksi' => $lSimaksi,
-                        'ketua' => $pendaki['ketua'] ?? false,
+                        'tiket_id' => $tiket_pendaki->id,
+                        'lampiran_surat_izin_ortu' => $lSuratIzin,
+                        'tagihan' => $tagihan,
+                        'kategori_pendaki' => $nationality,
+                        'jenis_kelamin' => $pendaki['jenis_kelamin'] == "Laki-Laki" ? "l" : "p",
+                        'jenis_identitas' => $pendaki['jenis_identitas'],
                     ]);
                 }
-                return $data;
+                // return $data;
             }
 
-            // return redirect()->back()->with('success', 'Data berhasil disimpan');
+            return redirect()->back()->with('success', 'Data berhasil disimpan');
         } else if ($request->action == "next") {
             return redirect()->route('homepage.booking-detail', ['id' => $request->id_booking])->with('success', 'Data berhasil disimpan');
             // $validatedData = $request->validate([

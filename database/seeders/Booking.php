@@ -81,11 +81,11 @@ class Booking extends Seeder
                     'kabupaten' => 'Kabupaten ' . $i,
                     'kec' => 'Kecamatan ' . $i,
                     'desa' => 'Desa ' . $i,
+                    'jenis_kelamin' => 'l',
+
                     'lampiran_surat_kesehatan' => 'path/to/kesehatan' . $i . '.pdf',
                     'lampiran_surat_izin_ortu' => 'path/to/izinortu' . $i . '.pdf',
                     'tagihan' => 250000 * $i,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
                 ]);
             }
         }

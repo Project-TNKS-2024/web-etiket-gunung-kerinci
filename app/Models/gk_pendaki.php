@@ -25,6 +25,8 @@ class gk_pendaki extends Model
         'kabupaten',
         'kec',
         'desa',
+        'jenis_kelamin',
+
         'lampiran_surat_kesehatan',
         'lampiran_surat_izin_ortu',
         'tagihan',

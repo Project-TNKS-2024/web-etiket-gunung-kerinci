@@ -78,6 +78,8 @@
 'caption' => "Formulir Paket ".$booking->gktiket->nama
 ])
 
+<script>
+</script>
 <div class="container my-5">
    @include('homepage.booking.booking-nav', ['step' => $booking->status])
    <form id="formulir" action="{{route('homepage.booking-fp.store')}}" method="post" enctype="multipart/form-data">
@@ -85,10 +87,10 @@
       <input type="hidden" name="id_booking" value="{{$id}}">
       <div class="shadow px-5 pt-1 pb-4 rounded">
          <!-- anggota -->
-         @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna); $i++)
+         @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna-1); $i++)
             @include('homepage.booking.fp.formulir',[
             'index'=>$i,
-            'pendaki'=>$booking[$i]
+            'pendaki'=> count($pendaki) > 0 ? $pendaki[$i] : null
             ])
         @endfor
             <!-- barang -->
@@ -114,8 +116,8 @@
    const kabupatenSelect = document.querySelectorAll('select.ipt-kabupaten-kota');
    const kecamatanSelect = document.querySelectorAll('select.ipt-kecamatan');
    const kelurahanSelect = document.querySelectorAll('select.ipt-desa-kelurahan');
-   document.addEventListener('DOMContentLoaded', function() {
 
+   document.addEventListener('DOMContentLoaded', function() {
       fetch('/assets/json/provinsi.json')
          .then(response => response.json())
          .then(data => {
