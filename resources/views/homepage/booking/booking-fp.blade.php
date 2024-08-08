@@ -116,8 +116,8 @@
    const kabupatenSelect = document.querySelectorAll('select.ipt-kabupaten-kota');
    const kecamatanSelect = document.querySelectorAll('select.ipt-kecamatan');
    const kelurahanSelect = document.querySelectorAll('select.ipt-desa-kelurahan');
-   document.addEventListener('DOMContentLoaded', function() {
 
+   document.addEventListener('DOMContentLoaded', function() {
       fetch('/assets/json/provinsi.json')
          .then(response => response.json())
          .then(data => {

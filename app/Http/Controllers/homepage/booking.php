@@ -17,6 +17,12 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
 
+use App\Models\Provinsi;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
+
+
 use function PHPUnit\Framework\isNull;
 
 class booking extends Controller
@@ -192,12 +198,24 @@ class booking extends Controller
         }
         $pendaki = gk_pendaki::where('booking_id', $booking->id)->get();
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
+        // $provinsi = Provinsi::all();
+        // $kabupaten = Kabupaten::all();
+        // $kecamatan = Kecamatan::all();
+        // $kelurahan = Kelurahan::all();
+        // $provinsi = Provinsi::with(['kabupatens'])->get();
+        // $kabupaten = Kabupaten::with(['provinsis', 'kecamatans'])->get();
+        // $kecamatan = Kecamatan::with(['kabupatens', 'kelurahans'])->get();
+        // $kelurahan = Kelurahan::with(['kecamatans'])->get();
+
+
 
         return view('homepage.booking.booking-fp', [
             'id' => $id,
             'booking' => $booking,
             'pendaki' => $pendaki,
-            'barang' => $barang
+            'barang' => $barang,
+            // 'kabupaten' => $kabupaten,
+            // 'kecamatan' => $kecamatan,
         ]);
     }
     public function bookingFPStore(Request $request)
@@ -220,11 +238,11 @@ class booking extends Controller
                 'formulir.*.kecamatan' => 'nullable|string',
                 'formulir.*.desa_kelurahan' => 'nullable|string',
 
-                'barangWajib' => 'required|array',
-                'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
-                'barangWajib.trash_bag' => 'required|boolean|accepted',
-                'barangWajib.p3k_standart' => 'required|boolean|accepted',
-                'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
+                // 'barangWajib' => 'required|array',
+                // 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
+                // 'barangWajib.trash_bag' => 'required|boolean|accepted',
+                // 'barangWajib.p3k_standart' => 'required|boolean|accepted',
+                // 'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
 
                 'jumlah_barang' => 'required|integer|min:0',
 
