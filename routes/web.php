@@ -129,3 +129,4 @@ Route::get('/unauthorized', function () {
     // return view('errors.abort');
     return redirect('beranda');
 });
+

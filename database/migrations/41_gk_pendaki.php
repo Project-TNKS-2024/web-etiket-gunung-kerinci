@@ -26,13 +26,11 @@ return new class extends Migration
             $table->string('kabupaten');
             $table->string('kec');
             $table->string('desa');
-            $table->enum('jenis_kelamin', ['l','p']);
-            $table->string('jenis_identitas',50);
+            $table->enum('jenis_kelamin', ['l', 'p']);
 
             $table->string('lampiran_surat_kesehatan');
             $table->string('lampiran_surat_izin_ortu');
             $table->integer('tagihan');
-            // $table->string('lampiran_simaksi');
             $table->timestamps();
 
             $table->foreign('booking_id')->references('id')->on('gk_bookings')->onDelete('cascade');

@@ -12,24 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::create('provinsis', function (Blueprint $table) {
+        Schema::create('d_provinsis', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('name');
             $table->unsignedBigInteger("code");
+            $table->timestamps();
         });
 
-        Schema::create('kabupatens', function (Blueprint $table) {
+        Schema::create('d_kabupatens', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('name');
             $table->unsignedBigInteger("code");
             $table->string("type");
             $table->string("full_code");
             $table->unsignedBigInteger("provinsi_id");
+            $table->timestamps();
         });
 
-        Schema::create('kecamatans', function (Blueprint $table) {
+        Schema::create('d_kecamatans', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name');
@@ -38,7 +38,7 @@ return new class extends Migration
             $table->unsignedBigInteger("kabupaten_id");
         });
 
-        Schema::create('kelurahans', function (Blueprint $table) {
+        Schema::create('d_kelurahans', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('name');
@@ -54,6 +54,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        // Schema::dropIfExists('d_provinsis');
+        // Schema::dropIfExists('d_kabupatens');
+        // Schema::dropIfExists('d_kecamatans');
+        // Schema::dropIfExists('d_kelurahans');
     }
 };

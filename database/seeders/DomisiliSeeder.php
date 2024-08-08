@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Provinsi;
-use App\Models\Kabupaten;
-use App\Models\Kecamatan;
-use App\Models\Kelurahan;
+use App\Models\d_Provinsi as Provinsi;
+use App\Models\d_Kabupaten as Kabupaten;
+use App\Models\d_Kecamatan as Kecamatan;
+use App\Models\d_Kelurahan as Kelurahan;
 use Illuminate\Support\Facades\File;
 
 class DomisiliSeeder extends Seeder
@@ -22,10 +22,10 @@ class DomisiliSeeder extends Seeder
         $this->kabupatens();
         $this->kecamatans();
         $this->kelurahans();
-
     }
 
-    public function provinsis() {
+    public function provinsis()
+    {
         $json = File::get(public_path('assets/json/provinsi.json'));
         $data = json_decode($json, true);
 
@@ -38,7 +38,8 @@ class DomisiliSeeder extends Seeder
         }
     }
 
-    public function kabupatens() {
+    public function kabupatens()
+    {
         $json = File::get(public_path('assets/json/kabupaten.json'));
         $data = json_decode($json, true);
 
@@ -54,7 +55,8 @@ class DomisiliSeeder extends Seeder
         }
     }
 
-    public function kecamatans() {
+    public function kecamatans()
+    {
         $json = File::get(public_path('assets/json/kecamatan.json'));
         $data = json_decode($json, true);
 
@@ -69,7 +71,8 @@ class DomisiliSeeder extends Seeder
         }
     }
 
-    public function kelurahans() {
+    public function kelurahans()
+    {
         $json = File::get(public_path('assets/json/kelurahan.json'));
         $data = json_decode($json, true);
 
