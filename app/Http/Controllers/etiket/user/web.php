@@ -9,7 +9,6 @@ use App\Http\Controllers\etiket\admin\gates;
 
 //user
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
-use App\Http\Controllers\etiket\user\profile as profileUser;
 use App\Http\Controllers\etiket\user\gantipassword as resetPasswordUser;
 use App\Http\Controllers\etiket\user\riwayat as riwayatUser;
 
@@ -102,10 +101,8 @@ Route::middleware(['check.role:admin'])->group(function () {
 
 // User routes
 Route::middleware(['check.role:user'])->group(function () {
-
     Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
-    Route::get('dashboard/profile', [profileUser::class, 'index'])->name('user.dashboard.profile');
-    Route::post('dashboard/profile/{id}', [profileUser::class, 'action'])->name('user.dashboard.action');
+    Route::post('dashboard/{id}', [dasUser::class, 'action'])->name('user.dashboard.action');
     Route::get('dashboard/riwayat-booking', [riwayatUser::class, 'index'])->name('user.dashboard.riwayat');
 
     //reset password

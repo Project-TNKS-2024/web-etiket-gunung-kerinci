@@ -9,12 +9,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 
-class dashboard extends Controller
+class profile extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        return view('etiket.user.sections.dashboard', [
+        return view('etiket.user.sections.profile', [
             'user' => $user,
         ]);
     }
