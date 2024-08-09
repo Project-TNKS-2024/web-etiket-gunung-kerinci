@@ -17,7 +17,7 @@ use App\Http\Controllers\etiket\in\login;
 use App\Http\Controllers\etiket\in\register;
 use App\Http\Controllers\etiket\in\lupapassword;
 use App\Http\Controllers\etiket\in\resetpassword;
-
+use App\Http\Controllers\helper\BookingHelperController;
 //homepage
 use App\Http\Controllers\homepage\beranda;
 use App\Http\Controllers\homepage\panduan;
@@ -39,25 +39,36 @@ Route::get('panduan', [panduan::class, 'panduan'])->name('homepage.panduan');
 
 Route::get('booking/{id}', [booking::class, 'booking'])->name('homepage.booking');
 Route::get('booking/paket/{id}', [booking::class, 'bookingPaket'])->name('homepage.bookingpaket');
-Route::post('booking/paket', [booking::class, 'postBooking'])->name('homepage.postBooking');
+Route::post('booking/tiket', [booking::class, 'postBooking'])->name('homepage.postBooking');
+
+Route::middleware('auth')->group(function () {
+    // booking
+    Route::get('booking-snk/{id}', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
+    Route::post('booking-snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
+    Route::get('booking-fp/{id}', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
+    Route::post('booking-fp', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
+    Route::get('booking-detail/{id}', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
+
+    // logout
+    Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
+});
 
 Route::middleware('guest')->group(function () {
+    // login register
     Route::get('login', [login::class, 'login'])->name('etiket.in.login');
     Route::post('login', [login::class, 'actionlogin'])->name('etiket.in.actionlogin');
-
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
 
+    // lupa password
     Route::get('lupaPassword/sentEmail', [login::class, 'lp_sentEmail'])->name('etiket.in.lp.sentEmail');
     // Route::get('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
     Route::post('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('etiket.in.lp.confirmEmail');
     // route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
     // route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
-
     route::get('reset-password/{token}', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
     route::post('reset-password/action/{token}/', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
 });
-Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
 
 // Admin routes
 Route::middleware(['check.role:admin'])->group(function () {
@@ -75,7 +86,6 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/kelola/edit-tiket/{id}', [tikets::class, 'editAction'])->name('admin.tiket.editAction');
     Route::post('admin/kelola/hapus-tiket/{id}', [tikets::class, 'hapus'])->name('admin.tiket.hapus');
 
-
     //destinasi
     Route::get('admin/kelola/destinasi', [destinasis::class, 'daftar'])->name('admin.destinasi.daftar');
     Route::get('admin/kelola/tambah-destinasi', [destinasis::class, 'tambah'])->name('admin.destinasi.tambah');
@@ -85,7 +95,6 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/kelola/hapus-destinasi/{id}', [destinasis::class, 'hapus'])->name('admin.destinasi.hapus');
     Route::post('admin/kelola/upload-destinasi/{id}', [destinasis::class, 'upload'])->name('admin.destinasi.upload');
 
-
     //gate
     Route::get('admin/kelola/gate', [gates::class, 'daftar'])->name('admin.gate.daftar');
     Route::get('admin/kelola/tambah-gate', [gates::class, 'tambah'])->name('admin.gate.tambah');
@@ -93,7 +102,6 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/kelola/tambah-gate', [gates::class, 'tambahAction'])->name('admin.gate.tambahAction');
     Route::post('admin/kelola/edit-gate/{id}', [gates::class, 'editAction'])->name('admin.gate.editAction');
     Route::post('admin/kelola/hapus-gate/{id}', [gates::class, 'hapus'])->name('admin.gate.hapus');
-
 
     // booking
     Route::get('admin/kelola/booking', [AdminBooking::class, 'readNow'])->name('admin.booking.now.read');
@@ -108,20 +116,14 @@ Route::middleware(['check.role:user'])->group(function () {
     //reset password
     Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
     Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
-
-    // booking
-    Route::get('booking-snk/{id}', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
-    Route::post('booking-snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
-    Route::get('booking-fp/{id}', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
-    Route::post('booking-fp', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
-    Route::get('booking-detail/{id}', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
 });
 
 
 // sampel
-Route::get('sampel/{blade}', [sampel::class, 'index'])->name('sampel.index');
-Route::get('sampel/tesnotif', [sampel::class, 'tesnotif'])->name('sampel.tesnotif');
-Route::post('sampel/tesnotif', [sampel::class, 'actiontesnotif'])->name('sampel.actiontesnotif');
+// Route::get('sampel/{blade}', [sampel::class, 'index'])->name('sampel.index');
+// Route::get('sampel/tesnotif', [sampel::class, 'tesnotif'])->name('sampel.tesnotif');
+Route::get('sampel/tess/{id}', [BookingHelperController::class, 'validatPendaki'])->name('sampel.tesnotif');
+// Route::post('sampel/tesnotif', [sampel::class, 'actiontesnotif'])->name('sampel.actiontesnotif');
 
 
 //test
@@ -129,4 +131,3 @@ Route::get('/unauthorized', function () {
     // return view('errors.abort');
     return redirect('beranda');
 });
-

@@ -52,7 +52,6 @@
         <div class="col-12 col-sm-12 col-lg-7 ">
             <div id="carouselExample" class="carousel slide">
                 <div class="carousel-inner">
-
                     @foreach ($gambar as $g)
                     <div class="carousel-item {{ $loop->index == 0 ? 'active' : ''}}">
                         <img src="{{ url('/').'/'.$g->src }}" class="d-block w-100" style="object-fit: cover;height: 480px;" alt="...">
@@ -82,11 +81,6 @@
                 </div>
             </div>
             @endforeach
-
-
-
-
-
         </div>
     </div>
 </div>

@@ -11,21 +11,24 @@ class gk_pendaki extends Model
     protected $table = 'gk_pendakis';
 
     protected $fillable = [
-        'booking_id',
-        'tiket_id',
-        'kategori_pendaki',
-        'nama',
-        'nik',
-        'lampiran_identitas',
-        'no_hp',
-        'no_hp_darurat',
+        'booking_id', // v
+        'tiket_id',  //
+
+        'kategori_pendaki', // v
+        'nama', // v
+        'nik', // v
+        'lampiran_identitas', //v
+
+        'no_hp', // v
+        'no_hp_darurat', // v
+        'jenis_kelamin', // v
         'tanggal_lahir',
         'usia',
+
         'provinsi',
         'kabupaten',
         'kec',
         'desa',
-        'jenis_kelamin',
 
         'lampiran_surat_kesehatan',
         'lampiran_surat_izin_ortu',
@@ -39,5 +42,27 @@ class gk_pendaki extends Model
     public function booking()
     {
         return $this->belongsTo(gk_booking::class, 'booking_id');
+    }
+
+    // hubungkan kolom provinsi, kabupaten, kecamatan, kelurahan dengan tabel d_provinsi, d_kabupaten, d_kecamatan, d_kelurahan
+    public function provinsi()
+    {
+        return $this->belongsTo(d_Provinsi::class, 'provinsi');
+    }
+    public function kabupaten()
+    {
+        return $this->belongsTo(d_Kabupaten::class, 'kabupaten');
+    }
+    public function kecamatan()
+    {
+        return $this->belongsTo(d_Kecamatan::class, 'kec');
+    }
+    public function kelurahan()
+    {
+        return $this->belongsTo(d_Kelurahan::class, 'desa');
+    }
+    public function tiket()
+    {
+        return $this->belongsTo(gk_tiket_pendaki::class, 'tiket_id');
     }
 }
