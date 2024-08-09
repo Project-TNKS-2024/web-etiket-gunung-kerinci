@@ -10,21 +10,21 @@
 <div class="col py-5 px-4 my-5 my-md-0" style="min-height: 700px; overflow-y: auto;">
     <h3 class="font-semibold">Selamat datang di website E-Tiket TNKS, {{auth()->user()->fullname}}</h3>
     <div class="row gap-3 px-2">
-        <div class="col-sm-12 col-md-6 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
+        <div class="col-sm-12 col-md-12 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
             <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40"/></div>
             <div>
                 <div>Explorasi Selesasi</div>
                 <div>1 Explorasi</div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
+        <div class="col-sm-12 col-md-12 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
             <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40"/></div>
             <div>
                 <div>Status Pendaftaran</div>
                 <div>1 Explorasi</div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
+        <div class="col-sm-12 col-md-12 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
             <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40"/></div>
             <div>
                 <div>Hitung Mundur Check-In</div>
