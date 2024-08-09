@@ -11,6 +11,9 @@
         font-family: 'Poppins';
         margin: 0 auto;
         position: relative;
+        height: 100vh;
+        display: flex;
+        align-items: center;
     }
 
     .berita-img {
@@ -124,15 +127,15 @@
                 </div>
             </div>
             <div class="my-0">
-                <button class="my-0 btn btn-sm border-0 btn-primary gk-bg-primary700 gk-text-base-white rounded-pill">Booking
-                    Online</button>
+                <a href="{{route('homepage.booking', ['id' => 1])}}" class="my-0 btn btn-sm border-0 btn-primary gk-bg-primary700 gk-text-base-white rounded-pill">Booking
+                    Online</a>
             </div>
         </div>
     </div>
 </div>
 
 
-<div class="container my-5">
+{{-- <div class="container my-5">
     <header class="">
         <h4 class="text-center font-semibold">Destinasi Jelajah</h4>
         <h4 class="text-center font-semibold">Taman Nasional Kerinci Seblat</h4>
@@ -170,7 +173,5 @@
         </div>
         @endfor
     </div>
-
-</div>
-</div>
+</div> --}}
 @endsection

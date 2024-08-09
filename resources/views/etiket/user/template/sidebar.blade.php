@@ -1,4 +1,4 @@
-<div class="card mb-3 useradmin overflow-hidden py-0 position-relative shadow rounded-2xl h-full"
+<div class="card mb-3 useradmin overflow-hidden position-relative shadow rounded-2xl h-full"
     style="min-height: 500px;">
     <div class="position-absolute w-100 bg-linear-gradient-primary rounded-xl" style="max-height: 141px; height:100%;">
     </div>
@@ -10,7 +10,9 @@
         <h4 class="fw-semibold py-0 my-0">{{ auth()->user()->fullname }}</h4>
         <h6 class="fw-light py-0 my-0">{{ auth()->user()->email }}</h6>
         <div class="d-flex flex-column gap-2 px-4 w-100 h-100 pb-4 ">
-            <a href="{{ route('user.dashboard') }}" id="dashboard-profile"
+            <a href="{{ route('user.dashboard') }}" id="dashboard"
+                class="dashboard-sidebar-btn rounded-lg">Dashboard</a>
+            <a href="{{ route('user.dashboard.profile') }}" id="dashboard-profile"
                 class="dashboard-sidebar-btn rounded-lg">Profile</a>
             <a href="{{ route('user.dashboard.riwayat') }}" id="dashboard-riwayat"
                 class="dashboard-sidebar-btn rounded-lg">Riwayat Booking</a>
