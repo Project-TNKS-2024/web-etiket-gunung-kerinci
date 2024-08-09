@@ -114,7 +114,7 @@
                   <h4>Nama Ketua</h4>
                   <p>{{$pendakis[0]->nama}}</p>
                   <h4>Gerbang Masuk</h4>
-                  <p>{{$booking->gate_masuk->nama}}</p>
+                  <p>{{$booking->gateMasuk->nama}}</p>
                   <h4>Check In</h4>
                   <p>{{$booking->tanggal_masuk}}</p>
                   <h4>Jumlah Anggota</h4>
@@ -130,7 +130,7 @@
                      @endif
                   </p>
                   <h4>Gerbang Keluar</h4>
-                  <p>{{$booking->gate_keluar->nama}}</p>
+                  <p>{{$booking->gateKeluar->nama}}</p>
                   <h4>Check out</h4>
                   <p>{{$booking->tanggal_keluar}}</p>
                   <h4>Kewarganegaraan</h4>

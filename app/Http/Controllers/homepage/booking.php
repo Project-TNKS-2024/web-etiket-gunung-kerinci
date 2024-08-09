@@ -373,12 +373,29 @@ class booking extends Controller
         if ($booking->status_booking == 0) {
             return redirect()->route("homepage.booking-snk", ["id" => $id]);
         }
+
         $ClassHelper = new BookingHelperController();
 
-        $data = $ClassHelper->validasiBooking($booking->id);
-        $dataBooking =  $data->getData()->data;
+        // main
+        // $tes =  $ClassHelper->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
+        // return $tes->getData()->weekdays + $tes->getData()->weekends;
 
-        // return $dataBooking;
+        // return $booking->pendakis[1];
+        // return $booking->pendakis[1]->booking_id;
+
+
+
+
+
+
+        // return $ClassHelper->getTagihanPendaki($booking->pendakis[1]);
+
+
+        // end main
+        $ClassHelper->validasiBooking($booking->id);
+        $dataBooking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+
+        // return $dataBooking->gateMasuk;
 
         return view('homepage.booking.booking-detail', [
             'booking' => $dataBooking,

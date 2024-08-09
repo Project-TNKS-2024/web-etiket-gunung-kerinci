@@ -74,6 +74,7 @@ class BookingHelperController extends Controller
         $pendaki = gk_pendaki::where('id', $idpendaki)
             ->with('booking')->first();
 
+
         if ($pendaki) {
             // validasi tiket pendaki
             $tiketPendaki = $this->getTiketPendaki($pendaki);
@@ -118,16 +119,20 @@ class BookingHelperController extends Controller
     }
     public function getTagihanPendaki($pendaki)
     {
+        // tiket
         $idtiket = $pendaki->tiket_id;
         $tiket = gk_tiket_pendaki::find($idtiket);
-        $totalDays = $pendaki->booking->total_hari;
-        $kategoriDays = $this->getKategoriDay($pendaki->booking->tanggal_masuk);
-        if ($kategoriDays == "wk") {
-            $tagihanPendaki = $tiket->harga_tiket_wk * $totalDays + $tiket->harga_kemah * ($totalDays - 1) + $tiket->harga_traking + $tiket->harga_ansuransi;
-        } else {
-            $tagihanPendaki = $tiket->harga_tiket_wd * $totalDays + $tiket->harga_kemah * ($totalDays - 1) + $tiket->harga_traking + $tiket->harga_ansuransi;
-        }
-        return $tagihanPendaki;
+
+        // booking
+        $booking = gk_booking::find($pendaki->booking_id);
+
+        // total hari
+        $hari = $this->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
+
+        $tagihanMasuk =  ($tiket->harga_masuk_wk * $hari->getData()->weekends) + ($tiket->harga_masuk_wd * $hari->getData()->weekdays);
+        $tagihanKemah = ($hari->getData()->weekends + $hari->getData()->weekdays - 1) * $tiket->harga_kemah;
+        $tagihanTraking = $tiket->harga_traking;
+        return ($tagihanMasuk + $tagihanKemah + $tagihanTraking);
     }
     public function getKategoriDay($tanggal)
     {
@@ -161,7 +166,7 @@ class BookingHelperController extends Controller
         $booking->total_hari = $this->getTotalHari($booking->tanggal_masuk, $booking->tanggal_keluar);
         $booking->save();
 
-        // validasi data pendaki
+        // validasi jumlah pendaki
         $totalPendaki = $booking->total_pendaki_wna + $booking->total_pendaki_wni;
         $pendakis = $booking->pendakis;
 
@@ -201,7 +206,7 @@ class BookingHelperController extends Controller
         $tanggalMasuk = Carbon::parse($tanggalMasuk);
         $tanggalKeluar = Carbon::parse($tanggalKeluar);
         $totalHari = $tanggalMasuk->diffInDays($tanggalKeluar);
-        return $totalHari;
+        return $totalHari + 1;
     }
 
 
@@ -209,12 +214,15 @@ class BookingHelperController extends Controller
         $dateStart,
         $dateEnd
     ) {
+
         // Convert string dates to Carbon instances
         $start = Carbon::createFromFormat(
-            'd-m-Y',
+            // 'd-m-Y',
+            'Y-m-d',
             $dateStart
         );
-        $end = Carbon::createFromFormat('d-m-Y', $dateEnd);
+        // return $dateStart;
+        $end = Carbon::createFromFormat('Y-m-d', $dateEnd);
 
         // Create a CarbonPeriod instance
         $period = CarbonPeriod::create($start, $end);
@@ -232,9 +240,9 @@ class BookingHelperController extends Controller
             }
         }
 
-        return [
+        return response()->json([
             'weekdays' => $weekdays,
             'weekends' => $weekends
-        ];
+        ]);
     }
 }
