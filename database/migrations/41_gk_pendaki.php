@@ -18,15 +18,18 @@ return new class extends Migration
             $table->string('nama');
             $table->string('nik');
             $table->string('lampiran_identitas');
+
             $table->string('no_hp');
             $table->string('no_hp_darurat');
+            $table->enum('jenis_kelamin', ['l', 'p']);
             $table->date('tanggal_lahir');
             $table->integer('usia');
+
             $table->string('provinsi');
             $table->string('kabupaten');
             $table->string('kec');
             $table->string('desa');
-            $table->enum('jenis_kelamin', ['l', 'p']);
+            
 
             $table->string('lampiran_surat_kesehatan');
             $table->string('lampiran_surat_izin_ortu');

@@ -20,12 +20,14 @@ return new class extends Migration
             $table->integer('total_pendaki_wna');
             $table->unsignedBigInteger('gate_masuk');
             $table->unsignedBigInteger('gate_keluar');
-            $table->unsignedTinyInteger('status_booking'); // (1, 2, 3)
+            $table->unsignedTinyInteger('status_booking'); // 
+            // {1: SNK, 2: Formulir, 3: Menunggu Pembayaran,  4:Sudah Bayar, 5:Confirmasi, 6: Check in, 7: Check Out, 8: Selesai}
             $table->integer('total_pembayaran');
+            // {1: Menunggu Pembayaran, 2: Menunggu Konfirmasi, 3: Selesai}
             $table->boolean('status_pembayaran')->default(false);
 
-            $table->text('lampiran_simaksi');
-            $table->text('lampiran_stugas');
+            $table->text('lampiran_simaksi')->nullable();
+            $table->text('lampiran_stugas')->nullable();
             $table->string('unique_code')->nullable();
             $table->text('keterangan')->nullable();
 
