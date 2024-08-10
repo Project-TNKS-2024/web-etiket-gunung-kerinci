@@ -43,6 +43,7 @@ class booking extends Controller
     {
         // id = id paket
         $paket = gk_paket_tiket::where("id", $id)->first();
+        
         // // ambil data destinasi
         $id_destinasi = $paket->id_destinasi;
         $destinasi = destinasi::with('gates')->where('id', $id_destinasi)->first();
@@ -90,13 +91,11 @@ class booking extends Controller
             return back()->with('error', 'Error: tanggal tidak sesuai');
         }
 
-
         $booking = gk_booking::where('id_user', Auth::user()->id)
             ->where('status_booking', '<', 3)
             ->orderBy('created_at', 'desc')
             ->first();
 
-        // return $request;
 
         if ($booking) {
             $booking->update([
@@ -172,6 +171,7 @@ class booking extends Controller
         if (!$booking) {
             abort(404);
         }
+
         if ($booking->status_booking == 0) {
             return redirect()->route("homepage.booking-snk", ["id" => $id]);
         }
@@ -242,47 +242,44 @@ class booking extends Controller
     }
     public function bookingFPStore(Request $request)
     {
+        $request->validate([
+            'id_booking' => 'required|integer',
+            'action' => 'nullable|string|in:save,next',
+        ]);
         $booking = gk_booking::with('gktiket')->find($request->id_booking);
 
+        if (!$booking) {
+            abort(404);
+        }
+
         if ($request->action == "save") {
-            $validatedData = $request->validate([
-                'id_booking' => 'required|integer',
+            // falidasi formulir biodata pendaki
+            $request->validate([
                 'formulir' => 'required|array',
 
                 'formulir.*.id_pendaki' => 'nullable|string',
-                'formulir.*.kewarganegaraan' => 'nullable|string',
-                'formulir.*.jenis_kelamin' => 'nullable|string',
-                // 'formulir.*.jenis_identitas' => 'nullable|string',
-                'formulir.*.identitas' => 'nullable|string',
-                // 'formulir.*.lampiran_identitas' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
                 'formulir.*.nama' => 'nullable|string',
+                'formulir.*.kewarganegaraan' => 'nullable|string',
+                'formulir.*.identitas' => 'nullable|string',
+
+                'formulir.*.jenis_kelamin' => 'nullable|string',
+                'formulir.*.tanggal_lahir' => 'nullable|date',
+                // 'formulir.*.usia' => 'nullable|integer',
+                // tambahh tinggi dan berat badan
+
                 'formulir.*.no_hp' => 'nullable|string',
                 'formulir.*.no_hp_darurat' => 'nullable|string',
-                'formulir.*.tanggal_lahir' => 'nullable|date',
-                'formulir.*.usia' => 'nullable|integer',
 
                 'formulir.*.provinsi' => 'nullable|string',
                 'formulir.*.kabupaten_kota' => 'nullable|string',
                 'formulir.*.kecamatan' => 'nullable|string',
                 'formulir.*.desa_kelurahan' => 'nullable|string',
 
+                // 'formulir.*.lampiran_identitas' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
                 // 'formulir.0.surat_simaksi' => 'nullable|string',
                 // 'formulir.*.surat_izin_ortu' => 'nullable|string',
                 // 'formulir.*.surat_keterangan_sehat' => 'nullable|string',
-
-                // 'barangWajib' => 'required|array',
-                // 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
-                // 'barangWajib.trash_bag' => 'required|boolean|accepted',
-                // 'barangWajib.p3k_standart' => 'required|boolean|accepted',
-                // 'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
-
-                'jumlah_barang' => 'integer|min:0',
-
-                'barangTambahan' => 'nullable|array',
-                'barangTambahan.*.nama' => 'nullable|string',
-                'barangTambahan.*.jumlah' => 'nullable|integer|min:0',
             ]);
-
             // update pendaki
             $pendakis = $request->formulir;
             foreach ($pendakis as $pendaki) {
@@ -290,24 +287,39 @@ class booking extends Controller
                 // return $pendaki;
             }
 
+            // $request->validate([
+            //     'barangWajib' => 'required|array',
+            //     'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
+            //     'barangWajib.trash_bag' => 'required|boolean|accepted',
+            //     'barangWajib.p3k_standart' => 'required|boolean|accepted',
+            //     'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
+            // ]);
+
+            // $request->validate([
+            //     'jumlah_barang' => 'integer|min:0',
+            //     'barangTambahan' => 'nullable|array',
+            //     'barangTambahan.*.nama' => 'nullable|string',
+            //     'barangTambahan.*.jumlah' => 'nullable|integer|min:0',
+            // ]);
+
+
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } else if ($request->action == "next") {
-            $validatedData = $request->validate([
-                'id_booking' => 'required|integer',
+            $request->validate([
                 'formulir' => 'required|array',
 
                 'formulir.*.id_pendaki' => 'required|string',
-                'formulir.*.kewarganegaraan' => 'required|string',
-                'formulir.*.jenis_kelamin' => 'required|string',
-                // 'formulir.*.jenis_identitas' => 'required|string',
-                // 'formulir.*.lampiran_identitas' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-                'formulir.*.identitas' => 'required|string',
                 'formulir.*.nama' => 'required|string',
+                'formulir.*.kewarganegaraan' => 'required|string',
+                'formulir.*.identitas' => 'required|string',
+
+                'formulir.*.jenis_kelamin' => 'required|string',
+                'formulir.*.tanggal_lahir' => 'required|date',
+                // 'formulir.*.usia' => 'required|integer',
+                // tambahh tinggi dan berat badan
 
                 'formulir.*.no_hp' => 'required|string',
                 'formulir.*.no_hp_darurat' => 'required|string',
-                'formulir.*.tanggal_lahir' => 'required|date',
-                'formulir.*.usia' => 'required|integer',
 
                 'formulir.*.provinsi' => 'required|string',
                 'formulir.*.kabupaten_kota' => 'required|string',
@@ -315,40 +327,46 @@ class booking extends Controller
                 'formulir.*.desa_kelurahan' => 'required|string',
 
                 // surat tipe file
+                // 'formulir.*.lampiran_identitas' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
                 // 'formulir.0.surat_simaksi' => 'required|file|mimes:pdf|max:2048',
                 // 'formulir.*.surat_izin_ortu' => 'required|file|mimes:pdf|max:2048',
                 // 'formulir.*.surat_keterangan_sehat' => 'required|file|mimes:pdf|max:2048',
-
-
-                'barangWajib' => 'required|array',
-                'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
-                'barangWajib.trash_bag' => 'required|boolean|accepted',
-                'barangWajib.p3k_standart' => 'required|boolean|accepted',
-                'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
-
-                'jumlah_barang' => 'nullable|integer|min:0',
-                'barangTambahan' => 'nullable|array',
-                'barangTambahan.*.nama' => 'nullable|string',
-                'barangTambahan.*.jumlah' => 'nullable|integer|min:0',
-                'action' => 'nullable|string|in:save,next',
             ]);
-
             // update pendaki
             $pendakis = $request->formulir;
             foreach ($pendakis as $pendaki) {
                 $this->updatePendaki($pendaki, $request->id_booking, $booking->id_tiket);
-                // return $pendaki;
             }
+
+
+            $request->validate([
+                // 'barangWajib' => 'required|array',
+                // 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
+                // 'barangWajib.trash_bag' => 'required|boolean|accepted',
+                // 'barangWajib.p3k_standart' => 'required|boolean|accepted',
+                // 'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
+            ]);
+            $request->validate([
+                // 'jumlah_barang' => 'nullable|integer|min:0',
+                // 'barangTambahan' => 'nullable|array',
+                // 'barangTambahan.*.nama' => 'nullable|string',
+                // 'barangTambahan.*.jumlah' => 'nullable|integer|min:0',
+            ]);
+
+
 
             // update barang
             $barangs = $request->barangTambahan;
-            foreach ($barangs as $barang) {
-                gk_barang_bawaan::create([
-                    'id_booking' => $request->id_booking,
-                    'nama_barang' => $barang['nama'],
-                    'jumlah' => $barang['jumlah'],
-                ]);
+            if (isset($barangs)) {
+                foreach ($barangs as $barang) {
+                    gk_barang_bawaan::create([
+                        'id_booking' => $request->id_booking,
+                        'nama_barang' => $barang['nama'],
+                        'jumlah' => $barang['jumlah'],
+                    ]);
+                }
             }
+
             $booking->update([
                 'status_booking' => 2,
             ]);
@@ -376,22 +394,9 @@ class booking extends Controller
 
         $ClassHelper = new BookingHelperController();
 
-        // main
-        // $tes =  $ClassHelper->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
-        // return $tes->getData()->weekdays + $tes->getData()->weekends;
+        // main tes
 
-        // return $booking->pendakis[1];
-        // return $booking->pendakis[1]->booking_id;
-
-
-
-
-
-
-        // return $ClassHelper->getTagihanPendaki($booking->pendakis[1]);
-
-
-        // end main
+        // end main tes
         $ClassHelper->validasiBooking($booking->id);
         $dataBooking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
 

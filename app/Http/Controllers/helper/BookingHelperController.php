@@ -134,15 +134,6 @@ class BookingHelperController extends Controller
         $tagihanTraking = $tiket->harga_traking;
         return ($tagihanMasuk + $tagihanKemah + $tagihanTraking);
     }
-    public function getKategoriDay($tanggal)
-    {
-        $hari = Carbon::parse($tanggal)->format('l');
-        if ($hari == 'Saturday' || $hari == 'Sunday') {
-            return "wk";
-        } else {
-            return "wd";
-        }
-    }
 
     public function getDomisili($idprovinsi, $idkabupaten, $idkecamatan, $idkelurahan)
     {

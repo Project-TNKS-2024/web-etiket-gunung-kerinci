@@ -135,7 +135,7 @@
 </div>
 
 
-{{-- <div class="container my-5">
+<div class="container my-5">
     <header class="">
         <h4 class="text-center font-semibold">Destinasi Jelajah</h4>
         <h4 class="text-center font-semibold">Taman Nasional Kerinci Seblat</h4>
@@ -147,6 +147,7 @@
 </div>
 
 
+{{--
 <div class="py-5">
     <div class="container">
         <div class="w-100 mb-4">
@@ -159,19 +160,22 @@
 
 
         <div class="row mt-3 index-kartu-1">
-            @for ($i = 1; $i <= 6; $i++) <div class="col-12 col-md-6 col-lg-4 mb-3">
+
+            @for ($i = 1; $i <= 6; $i++)
+                <div class="col-12 col-md-6 col-lg-4 mb-3">
                 <div class="card h-100 rounded" style="max-height: 256px; position: relative; overflow:hidden;">
                     <img src="{{ asset('assets/img/cover/document-xx.png') }}" class="rounded berita-img" alt="Jalur Pendakian Kersik Tuo" style="object-fit: cover; max-height: fit-content; height: 100%;"></img>
-                    <div class="overlay rounded"></div> <!-- Dark overlay -->
-                    <div class="card-body rounded gk-text-base-white d-flex flex-column justify-content-end h-100" style="top: 0; left: 0; position: absolute;">
-                        <p class="card-title font-semibold">PEMBATASAN PENDAKIAN GUNUNG KERINCI SAMPAI RADIUS 3 KM
-                            DARI KAWAH
-                            AKTIF</p>
-                        <p class="card-text text-sm py-0 my-0 ">Last uploaded 3 mins ago</p>
-                    </div>
-                </div>
-        </div>
-        @endfor
-    </div>
-</div> --}}
+<div class="overlay rounded"></div> <!-- Dark overlay -->
+<div class="card-body rounded gk-text-base-white d-flex flex-column justify-content-end h-100" style="top: 0; left: 0; position: absolute;">
+    <p class="card-title font-semibold">PEMBATASAN PENDAKIAN GUNUNG KERINCI SAMPAI RADIUS 3 KM
+        DARI KAWAH
+        AKTIF</p>
+    <p class="card-text text-sm py-0 my-0 ">Last uploaded 3 mins ago</p>
+</div>
+</div>
+</div>
+@endfor
+</div>
+</div>
+--}}
 @endsection
