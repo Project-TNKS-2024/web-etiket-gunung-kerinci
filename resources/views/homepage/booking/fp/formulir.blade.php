@@ -99,7 +99,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
       <div class="row">
          <div class="col-8">
             <label for="tanggal_lahir-{{$index}}" class="w-100 fw-bold">Tanggal Lahir</label>
-            <input type="date" class="form-control" name="formulir[{{$index}}][tanggal_lahir]" id="tanggal_lahir-{{$index}}" value="{{ !$pendaki ? '' :Carbon\Carbon::parse($pendaki->tanggal_lahir)->format('Y-m-d') }}">
+            <input type="date" class="form-control" name="formulir[{{$index}}][tanggal_lahir]" id="tanggal_lahir-{{$index}}" value="{{ !$pendaki ? '' :Carbon\Carbon::parse($pendaki->tanggal_lahir)->format('Y-m-d') }}" onkeyup="generateUsia('{{$index}}')" onchange="generateUsia('{{$index}}')">
             @error('formulir.'.$index.'.tanggal_lahir')
             <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -195,3 +195,33 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
       </div>
    </div>
 </div>
+
+<script>
+   function generateUsia(index) {
+      // Ambil elemen input tanggal lahir berdasarkan index
+      var tanggalLahirInput = document.getElementById('tanggal_lahir-' + index);
+      var usiaInput = document.getElementById('usia-' + index);
+
+      // Ambil nilai tanggal lahir dari input
+      var tanggalLahir = new Date(tanggalLahirInput.value);
+      var today = new Date();
+
+      // Periksa apakah input tanggal lahir diisi
+      if (!isNaN(tanggalLahir.getTime())) {
+         // Hitung usia berdasarkan tanggal lahir
+         var age = today.getFullYear() - tanggalLahir.getFullYear();
+         var monthDiff = today.getMonth() - tanggalLahir.getMonth();
+
+         // Jika bulan belum lewat, kurangi usia
+         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < tanggalLahir.getDate())) {
+            age--;
+         }
+
+         // Isi input usia dengan nilai yang dihitung
+         usiaInput.value = age;
+      } else {
+         // Jika tanggal lahir tidak valid, kosongkan input usia
+         usiaInput.value = 0;
+      }
+   }
+</script>

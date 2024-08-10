@@ -85,6 +85,7 @@
    <form id="formulir" action="{{route('homepage.booking-fp.store')}}" method="post" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="id_booking" value="{{$id}}">
+      
       <div class="shadow px-5 pt-1 pb-4 rounded">
          <!-- anggota -->
          @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna-1); $i++)
@@ -100,11 +101,15 @@
             'pendaki' => null
             ])
             @endif
-            <hr style="border-width: 5px;">
 
+            <hr style="border-width: 5px;">
             @endfor
+
+
             <!-- barang -->
-            @include('homepage.booking.fp.barang')
+            {{--
+               @include('homepage.booking.fp.barang')
+               --}}
       </div>
       <div class="row">
          <div class="col-12 col-md-4"></div>

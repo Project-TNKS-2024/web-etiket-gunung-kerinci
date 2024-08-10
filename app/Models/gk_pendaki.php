@@ -11,28 +11,39 @@ class gk_pendaki extends Model
     protected $table = 'gk_pendakis';
 
     protected $fillable = [
-        'booking_id', // v
-        'tiket_id',  //
+        // data booking
+        'booking_id',
+        'tiket_id',
+        'tagihan',
 
-        'kategori_pendaki', // v
-        'nama', // v
-        'nik', // v
-        'lampiran_identitas', //v
+        // input identias
+        'kategori_pendaki',
+        'nama',
+        'nik',
+        'jenis_kelamin',
 
-        'no_hp', // v
-        'no_hp_darurat', // v
-        'jenis_kelamin', // v
+        // kesehatan
         'tanggal_lahir',
         'usia',
+        // berat badan
+        // tinggi badan
 
+        // input hp
+        'no_hp',
+        'no_hp_darurat',
+
+        // input domisili
         'provinsi',
         'kabupaten',
         'kec',
         'desa',
 
+        // input lampiran
+        'lampiran_identitas',
         'lampiran_surat_kesehatan',
         'lampiran_surat_izin_ortu',
-        'tagihan',
+
+
     ];
 
     protected $casts = [

@@ -9,7 +9,7 @@ use App\Models\d_Kabupaten;
 use App\Models\d_Kecamatan;
 use App\Models\d_Kelurahan;
 
-class getDomisiliController extends Controller
+class DomisiliController extends Controller
 {
     // get list profinsi
     public function getProvinsi()

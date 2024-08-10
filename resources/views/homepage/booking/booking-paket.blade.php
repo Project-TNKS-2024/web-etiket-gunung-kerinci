@@ -154,7 +154,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mt-2">Perbandingan Harga</h5>
+                    <h5 class="card-title mt-2">Tarif PNBP <span style="font-size: 15px;">(Pendapatan Negara Bukan Pajak )</span></h5>
                 </div>
                 <div class="card-body" style="overflow-x: auto">
                     <form action="#" method="get" id="booking_price">
@@ -554,87 +554,7 @@
 
 
 <script>
-    // Get all elements with the class 'inputVolume1'
-    // const inputGroups = document.querySelectorAll('.inputVolume1');
 
-    // const inputDate = document.getElementById('iptdatevol');
-    // const dateStartInput = inputDate.querySelector('input[name="date-start"]');
-    // const dateEndInput = inputDate.querySelector('input[name="date-end"]');
-
-
-    // const inputPrice = document.querySelectorAll('.iptvol');
-    // const inputTotalPrice = document.getElementById('iptvol-total');
-    // const labelTotalPrice = document.getElementById('labeliptvol');
-
-    // function calculateAdjustedDays() {
-    //     const startDate = new Date(dateStartInput.value);
-    //     const endDate = new Date(dateEndInput.value);
-    //     let dayDifference = 0;
-    //     if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
-    //         const timeDifference = endDate - startDate;
-    //         dayDifference = timeDifference / (1000 * 3600 * 24);
-    //     }
-    //     const adjustedDays = Math.floor((dayDifference) / 2) + 1;
-    //     labelTotalPrice.textContent = `${dayDifference+1} Hari ${adjustedDays} malam (${dayDifference+1}D${adjustedDays}M)`;
-    //     console.log("perubahan waktu masuk dan keluar");
-    //     return adjustedDays;
-    // }
-
-    // dateStartInput.addEventListener('change', calculateAdjustedDays);
-    // dateEndInput.addEventListener('change', calculateAdjustedDays);
-
-    // function updateTotalPrice() {
-    //     let totalPrice = 0;
-    //     let adjustedDays = calculateAdjustedDays();
-
-    //     inputPrice.forEach(span => {
-    //         let price = parseInt(span.textContent);
-    //         if (!isNaN(price)) {
-    //             totalPrice += price;
-    //         }
-    //     });
-
-    //     totalPrice *= adjustedDays;
-    //     inputTotalPrice.textContent = totalPrice;
-    // }
-
-    // inputGroups.forEach((group, index) => {
-    //     const inputField = group.querySelector('input[type="number"]');
-    //     const incrementButton = group.querySelector('button[data-input-vol="ipt+"]');
-    //     const decrementButton = group.querySelector('button[data-input-vol="ipt-"]');
-    //     const price = parseInt(group.getAttribute('data-price-vol'));
-
-    //     incrementButton.addEventListener('click', () => {
-    //         // tambah nilai inputfield
-    //         let currentValue = parseInt(inputField.value);
-    //         if (isNaN(currentValue)) {
-    //             currentValue = 0;
-    //         }
-    //         inputField.value = currentValue + 1;
-
-    //         // masukkan nilai harga ke inputprice urutan each goup
-    //         inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
-    //         // update total price
-    //         updateTotalPrice()
-    //     });
-
-    //     decrementButton.addEventListener('click', () => {
-    //         let currentValue = parseInt(inputField.value);
-    //         if (isNaN(currentValue)) {
-    //             currentValue = 0;
-    //         }
-    //         if (currentValue == 0) {
-    //             currentValue = 0;
-    //         } else {
-    //             inputField.value = parseInt(inputField.value) - 1;
-    //         }
-
-    //         // masukkan nilai harga ke inputprice urutan each goup
-    //         inputPrice[index].textContent = parseInt(price) * parseInt(inputField.value);
-    //         // update total price
-    //         updateTotalPrice()
-    //     });
-    // });
 </script>
 
 

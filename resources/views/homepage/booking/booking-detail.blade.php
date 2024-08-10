@@ -92,9 +92,25 @@
       display: flex;
       justify-content: center;
    }
+
+   .pilihmetodepembayaran {
+      /* margin-top: 5px; */
+      /* background-color: #e0ffff; */
+      padding: 5px;
+      border-radius: 10px;
+      /* border: 1px solid #9adbdb; */
+   }
+
+   .pilihmetodepembayaran input {
+      margin-left: 5px !important;
+      margin-right: 10px;
+      border: 1px solid #9adbdb;
+   }
 </style>
 
 @endsection
+
+
 @section('main')
 @include('homepage.template.header', [
 'title' => 'Pendakian Gunung Kerinci',
@@ -104,60 +120,75 @@
 <div class="container my-5">
    @include('homepage.booking.booking-nav', ['step' => 2])
 
-   <div id="booking-detail">
-      <h1>Detail Pemesanan</h1>
+   <form method="post">
+      <div id="booking-detail">
+         <h1>Detail Pemesanan</h1>
 
-      <div class="row mt-3">
-         <div class="col-12 col-md-6" id="formulir">
-            <div class="row">
-               <div class="col">
-                  <h4>Nama Ketua</h4>
-                  <p>{{$pendakis[0]->nama}}</p>
-                  <h4>Gerbang Masuk</h4>
-                  <p>{{$booking->gateMasuk->nama}}</p>
-                  <h4>Check In</h4>
-                  <p>{{$booking->tanggal_masuk}}</p>
-                  <h4>Jumlah Anggota</h4>
-                  <p>5 orang</p>
-               </div>
-               <div class="col">
-                  <h4>SIMAKSI</h4>
-                  <p>
-                     @if ($booking->lampiran_simaksi == null)
-                     <span class="c-red">Tidak</span>
-                     @else
-                     <span class="c-green">Ya</span>
-                     @endif
-                  </p>
-                  <h4>Gerbang Keluar</h4>
-                  <p>{{$booking->gateKeluar->nama}}</p>
-                  <h4>Check out</h4>
-                  <p>{{$booking->tanggal_keluar}}</p>
-                  <h4>Kewarganegaraan</h4>
-                  <div class="row">
-                     <div class="col">
-                        <p>{{$booking->total_pendaki_wni}} WNI</p>
-                     </div>
-                     <div class="col">
-                        <p>{{$booking->total_pendaki_wna}} WNA</p>
+         <div class="row mt-3">
+            <div class="col-12 col-md-6" id="formulir">
+               <div class="row">
+                  <div class="col">
+                     <h4>Nama Ketua</h4>
+                     <p>{{$pendakis[0]->nama}}</p>
+                     <h4>Gerbang Masuk</h4>
+                     <p>{{$booking->gateMasuk->nama}}</p>
+                     <h4>Check In</h4>
+                     <p>{{$booking->tanggal_masuk}}</p>
+                     <h4>Jumlah Anggota</h4>
+                     <p>5 orang</p>
+                  </div>
+                  <div class="col">
+                     <h4>SIMAKSI</h4>
+                     <p>
+                        @if ($booking->lampiran_simaksi == null)
+                        <span class="c-red">Tidak</span>
+                        @else
+                        <span class="c-green">Ya</span>
+                        @endif
+                     </p>
+                     <h4>Gerbang Keluar</h4>
+                     <p>{{$booking->gateKeluar->nama}}</p>
+                     <h4>Check out</h4>
+                     <p>{{$booking->tanggal_keluar}}</p>
+                     <h4>Kewarganegaraan</h4>
+                     <div class="row">
+                        <div class="col">
+                           <p>{{$booking->total_pendaki_wni}} WNI</p>
+                        </div>
+                        <div class="col">
+                           <p>{{$booking->total_pendaki_wna}} WNA</p>
+                        </div>
                      </div>
                   </div>
                </div>
             </div>
-
-            <div>
-               <h4>Pilih Metode Pembayaran</h4>
+            <div class="col-12 col-md-6">
+               <div class="card" id="pembayaran">
+                  <div class="card-body">
+                     <h4>Total Pembayaran</h4>
+                     @foreach ($pendakis as $pen)
+                     <p>{{$pen->nama}}<span class="float-right">Rp. {{number_format($pen->tagihan)}}</span></p>
+                     @endforeach
+                     <p class="fw-bold c-blue">Total <span class="float-right">Rp. {{number_format($booking->total_pembayaran)}}</span></p>
+                     <p class="span">*{{$booking->total_hari}} hari {{$booking->total_hari-1}} malam ({{$booking->total_hari}}D{{$booking->total_hari-1}}M)</p>
+                  </div>
+               </div>
             </div>
          </div>
-         <div class="col-12 col-md-6">
-            <div class="card" id="pembayaran">
-               <div class="card-body">
-                  <h4>Total Pembayaran</h4>
-                  @foreach ($pendakis as $pen)
-                  <p>{{$pen->nama}}<span class="float-right">Rp. {{number_format($pen->tagihan)}}</span></p>
-                  @endforeach
-                  <p class="fw-bold c-blue">Total <span class="float-right">Rp. {{number_format($booking->total_pembayaran)}}</span></p>
-                  <p class="span">*{{$booking->total_hari}} hari {{$booking->total_hari-1}} malam ({{$booking->total_hari}}D{{$booking->total_hari-1}}M)</p>
+         <h1 class="mt-5 text-start fw-bold">Pilih Metode Pembayaran</h1>
+         <div class="row">
+            <div class="col-12 col-md-6">
+               <div class="form-check pilihmetodepembayaran">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <label class="form-check-label" for="flexRadioDefault1">
+                     Default radio
+                  </label>
+               </div>
+               <div class="form-check pilihmetodepembayaran">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                  <label class="form-check-label" for="flexRadioDefault2">
+                     Default checked radio
+                  </label>
                </div>
             </div>
          </div>
@@ -168,12 +199,27 @@
          <a class="btn btn-primary mt-4" href="#">Selanjutnya</a>
       </div>
 
-   </div>
-
-</div>
+   </form>
+   <button id="pay-button">Pay!</button>
 </div>
 
 @endsection
 @section('js')
 
+<script type="text/javascript"
+   src="https://app.sandbox.midtrans.com/snap/snap.js"
+   data-client-key="SB-Mid-client-8mWWkdmzeR1xRVmL"></script>
+<!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
+</head>
+
+
+<script type="text/javascript">
+   // For example trigger on button clicked, or any time you need
+   var payButton = document.getElementById('pay-button');
+   payButton.addEventListener('click', function() {
+      // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
+      window.snap.pay('{{$snaptoken}}');
+      // customer will be redirected after completing payment pop-up
+   });
+</script>
 @endsection

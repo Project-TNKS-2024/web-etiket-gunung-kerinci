@@ -31,8 +31,8 @@
                 <p class="card-text index-text" style="height: auto">
                     {{ $item['detail'] }}
                 </p>
-                <a href="{{ $item['id'] }}" class="btn btn-primary w-100 gk-text-base-white">Pilih Jalur
-                    Pendakian</a>
+                <!-- <a href="{{ $item['id'] }}" class="btn btn-primary w-100 gk-text-base-white">Pilih Jalur
+                    Pendakian</a> -->
             </div>
         </div>
     </div>
