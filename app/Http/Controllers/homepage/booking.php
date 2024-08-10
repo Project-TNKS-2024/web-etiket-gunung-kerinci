@@ -43,7 +43,7 @@ class booking extends Controller
     {
         // id = id paket
         $paket = gk_paket_tiket::where("id", $id)->first();
-        
+
         // // ambil data destinasi
         $id_destinasi = $paket->id_destinasi;
         $destinasi = destinasi::with('gates')->where('id', $id_destinasi)->first();
@@ -380,10 +380,8 @@ class booking extends Controller
     public function bookingDetail($id)
     {
         // id booking
-
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
-        // return $booking;
-
+        $user = Auth::user();
         if (!$booking) {
             abort(404);
         }
@@ -392,19 +390,40 @@ class booking extends Controller
             return redirect()->route("homepage.booking-snk", ["id" => $id]);
         }
 
+        // validasi booking
         $ClassHelper = new BookingHelperController();
-
-        // main tes
-
-        // end main tes
         $ClassHelper->validasiBooking($booking->id);
-        $dataBooking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        $ketua = $booking->pendakis[0];
+
+        // mitrans
+        include('../app/Http/Controllers/helper/Midtrans.Params.php');
+
+        $params = array(
+            'transaction_details' => array(
+                // 'order_id' => $booking->id,
+                'order_id' => rand(),
+                'gross_amount' => $booking->total_pembayaran,
+            ),
+            'customer_details' => array(
+                'first_name' => $ketua->nama,
+                'last_name' => $user->fullname,
+                'email' => $user->email,
+                'phone' => $user->no_hp
+            ),
+        );
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+        // return $snapToken;
+        // return [$params, $snapToken];
 
         // return $dataBooking->gateMasuk;
-
         return view('homepage.booking.booking-detail', [
-            'booking' => $dataBooking,
-            'pendakis' => $dataBooking->pendakis
+            'snaptoken' => $snapToken,
+            'booking' => $booking,
+            'pendakis' => $booking->pendakis
         ]);
     }
 }

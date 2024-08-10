@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('guest')->group(function () {
     // login register
-    Route::get('login', [login::class, 'login'])->name('etiket.in.login');
+    Route::get('login', [login::class, 'login'])->name('login');
     Route::post('login', [login::class, 'actionlogin'])->name('etiket.in.actionlogin');
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
     Route::post('register', [register::class, 'actionregister'])->name('etiket.in.actionregister');
