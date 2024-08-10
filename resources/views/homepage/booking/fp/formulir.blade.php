@@ -4,16 +4,16 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
 @endphp
 
 <h1>{{$title}}</h1>
-<input type="hidden" name="formulir[{{$index}}][id_pendaki]" value="{{$pendaki ? $pendaki->id : null}}">
+<input type="hidden" name="formulir[{{$index}}][id_pendaki]" value="{{ old('formulir.'.$index.'.id_pendaki', $pendaki ? $pendaki->id : null) }}">
 <div class="row mb-3">
    <div class="col-12 col-md-6">
       <label for="kewarganegaraan" class="w-100 fw-bold mandatory">Jenis Kewarganegaraan</label>
       <div class="form-check form-check-inline">
-         <input class="form-check-input" type="radio" name="formulir[{{$index}}][kewarganegaraan]" id="kewarganegaraan-1-{{$index}}" value="wni" {{!$pendaki ? "" : ($pendaki->kategori_pendaki == "wni" ? "checked" : "")}}>
+         <input class="form-check-input" type="radio" name="formulir[{{$index}}][kewarganegaraan]" id="kewarganegaraan-1-{{$index}}" value="wni" {{ old('formulir.'.$index.'.kewarganegaraan', !$pendaki ? '' : $pendaki->kategori_pendaki) == 'wni' ? 'checked' : '' }}>
          <label class="form-check-label" for="kewarganegaraan-1-{{$index}}">Warga Negara Indonesia</label>
       </div>
       <div class="form-check form-check-inline">
-         <input class="form-check-input" type="radio" name="formulir[{{$index}}][kewarganegaraan]" id="kewarganegaraan-2-{{$index}}" value="wna" {{!$pendaki ? "" : ($pendaki->kategori_pendaki == "wna" ? "checked" : "")}}>
+         <input class="form-check-input" type="radio" name="formulir[{{$index}}][kewarganegaraan]" id="kewarganegaraan-2-{{$index}}" value="wna" {{ old('formulir.'.$index.'.kewarganegaraan', !$pendaki ? '' : $pendaki->kategori_pendaki) == 'wna' ? 'checked' : '' }}>
          <label class="form-check-label" for="kewarganegaraan-2-{{$index}}">Warga Negara Asing</label>
       </div>
       @error('formulir.'.$index.'.kewarganegaraan')
@@ -23,11 +23,11 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
    <div class="col-12 col-md-6">
       <label for="jenis_kelamin-{{$index}}" class="w-100 fw-bold mandatory">Jenis Kelamin</label>
       <div class="form-check form-check-inline">
-         <input class="form-check-input" type="radio" name="formulir[{{$index}}][jenis_kelamin]" id="jenis_kelamin-1-{{$index}}" value="l" {{!$pendaki ? "" : ($pendaki->jenis_kelamin == "l" ? "checked" : "")}}>
+         <input class="form-check-input" type="radio" name="formulir[{{$index}}][jenis_kelamin]" id="jenis_kelamin-1-{{$index}}" value="l" {{ old('formulir.'.$index.'.jenis_kelamin', !$pendaki ? '' : $pendaki->jenis_kelamin) == 'l' ? 'checked' : '' }}>
          <label class="form-check-label" for="jenis_kelamin-1-{{$index}}">Laki-Laki</label>
       </div>
       <div class="form-check form-check-inline">
-         <input class="form-check-input" type="radio" name="formulir[{{$index}}][jenis_kelamin]" id="jenis_kelamin-2-{{$index}}" value="p" {{!$pendaki ? "" : ($pendaki->jenis_kelamin == "p" ? "checked" : "")}}>
+         <input class="form-check-input" type="radio" name="formulir[{{$index}}][jenis_kelamin]" id="jenis_kelamin-2-{{$index}}" value="p" {{ old('formulir.'.$index.'.jenis_kelamin', !$pendaki ? '' : $pendaki->jenis_kelamin) == 'p' ? 'checked' : '' }}>
          <label class="form-check-label" for="jenis_kelamin-2-{{$index}}">Perempuan</label>
       </div>
       @error('formulir.'.$index.'.jenis_kelamin')
@@ -40,8 +40,8 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
    <div class="col-12 col-md-6">
       <label for="jenis_identitas-{{$index}}" class="w-100 fw-bold mandatory">Jenis Identitas</label>
       <select class="form-control" name="formulir[{{$index}}][jenis_identitas]" id="jenis_identitas-{{$index}}" readonly>
-         <option value="ktp" {{ !$pendaki ? "" :($pendaki->kategori_pendaki == "wni" ? 'selected' : '' )}}>KTP</option>
-         <option value="pasport" {{ !$pendaki ? "" :($pendaki->kategori_pendaki == "wna" ? 'selected' : '' )}}>Pasport</option>
+         <option value="ktp" {{ old('formulir.'.$index.'.jenis_identitas', !$pendaki ? '' : $pendaki->kategori_pendaki) == 'wni' ? 'selected' : '' }}>KTP</option>
+         <option value="pasport" {{ old('formulir.'.$index.'.jenis_identitas', !$pendaki ? '' : $pendaki->kategori_pendaki) == 'wna' ? 'selected' : '' }}>Pasport</option>
       </select>
       @error('formulir.'.$index.'.jenis_identitas')
       <div class="text-danger">{{ $message }}</div>
@@ -49,7 +49,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
    </div>
    <div class="col-12 col-md-6">
       <label for="identitas" class="w-100 fw-bold mandatory">Identitas</label>
-      <input type="text" class="form-control" name="formulir[{{$index}}][identitas]" id="identitas" value="{{ $pendaki? $pendaki->nik : '' }}">
+      <input type="text" class="form-control" name="formulir[{{$index}}][identitas]" id="identitas" value="{{ old('formulir.'.$index.'.identitas', $pendaki ? $pendaki->nik : '') }}">
       @error('formulir.'.$index.'.identitas')
       <div class="text-danger">{{ $message }}</div>
       @enderror
@@ -59,7 +59,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
 <div class="row mb-3">
    <div class="col-12 col-md-6">
       <label for="nama-{{$index}}" class="w-100 fw-bold">Nama</label>
-      <input type="text" class="form-control" name="formulir[{{$index}}][nama]" id="nama-{{$index}}" value="{{ !$pendaki ? '' :$pendaki->nama }}">
+      <input type="text" class="form-control" name="formulir[{{$index}}][nama]" id="nama-{{$index}}" value="{{ old('formulir.'.$index.'.nama', !$pendaki ? '' :$pendaki->nama) }}">
       @error('formulir.' .$index. '.nama')
       <div class="text-danger">{{ $message }}</div>
       @enderror
@@ -79,7 +79,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
       <div class="row">
          <div class="col-12 col-md-6">
             <label for="no_hp-{{$index}}" class="w-100 fw-bold mandatory">Nomor Telepon</label>
-            <input type="text" class="form-control" name="formulir[{{$index}}][no_hp]" id="no_hp-{{$index}}" value="{{ !$pendaki ? '' :$pendaki->no_hp}}">
+            <input type="text" class="form-control" name="formulir[{{$index}}][no_hp]" id="no_hp-{{$index}}" value="{{ old('formulir.'.$index.'.no_hp', !$pendaki ? '' :$pendaki->no_hp) }}">
             <span class="keterangan">Isikan No. Telepon yang terkoneksi dengan WhatsApp</span>
             @error('formulir.'.$index.'.no_hp')
             <div class="text-danger">{{ $message }}</div>
@@ -87,7 +87,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
          </div>
          <div class="col-12 col-md-6">
             <label for="no_hp_darurat-{{$index}}" class="w-100 fw-bold mandatory">Nomor Telepon Darurat</label>
-            <input type="text" class="form-control" name="formulir[{{$index}}][no_hp_darurat]" id="no_hp_darurat-{{$index}}" value="{{ !$pendaki ? '' :$pendaki->no_hp_darurat}}">
+            <input type="text" class="form-control" name="formulir[{{$index}}][no_hp_darurat]" id="no_hp_darurat-{{$index}}" value="{{ old('formulir.'.$index.'.no_hp_darurat', !$pendaki ? '' :$pendaki->no_hp_darurat) }}">
             <span class="keterangan">*Silahkan diisi dengan No. Telepon Orang Tua / Kerabat</span>
             @error('formulir.'.$index.'.no_hp_darurat')
             <div class="text-danger">{{ $message }}</div>
@@ -99,14 +99,14 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
       <div class="row">
          <div class="col-8">
             <label for="tanggal_lahir-{{$index}}" class="w-100 fw-bold">Tanggal Lahir</label>
-            <input type="date" class="form-control" name="formulir[{{$index}}][tanggal_lahir]" id="tanggal_lahir-{{$index}}" value="{{ !$pendaki ? '' :Carbon\Carbon::parse($pendaki->tanggal_lahir)->format('Y-m-d') }}" onkeyup="generateUsia('{{$index}}')" onchange="generateUsia('{{$index}}')">
+            <input type="date" class="form-control" name="formulir[{{$index}}][tanggal_lahir]" id="tanggal_lahir-{{$index}}" value="{{ old('formulir.'.$index.'.tanggal_lahir', !$pendaki ? '' :Carbon\Carbon::parse($pendaki->tanggal_lahir)->format('Y-m-d')) }}" onkeyup="generateUsia('{{$index}}')" onchange="generateUsia('{{$index}}')">
             @error('formulir.'.$index.'.tanggal_lahir')
             <div class="text-danger">{{ $message }}</div>
             @enderror
          </div>
          <div class="col-4">
             <label for="usia-{{$index}}" class="w-100 fw-bold">Usia</label>
-            <input type="number" class="form-control" name="formulir[{{$index}}][usia]" id="usia-{{$index}}" value="{{ !$pendaki ? '' :$pendaki->usia }}" readonly>
+            <input type="number" class="form-control" name="formulir[{{$index}}][usia]" id="usia-{{$index}}" value="{{ old('formulir.'.$index.'.usia', !$pendaki ? '' :$pendaki->usia) }}" readonly>
             @error('formulir.'.$index.'.usia')
             <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -114,6 +114,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
       </div>
    </div>
 </div>
+
 
 <div class="row">
    <label for="alamat_domisili" class="w-100 fw-bold mandatory">Alamat Domisili</label>

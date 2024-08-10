@@ -44,12 +44,14 @@ Route::post('booking/tiket', [booking::class, 'postBooking'])->name('homepage.po
 
 Route::middleware('auth')->group(function () {
     // booking
-    Route::get('booking-snk/{id}', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
-    Route::post('booking-snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
-    Route::get('booking-fp/{id}', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
-    Route::post('booking-fp', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
-    Route::get('booking-detail/{id}', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
+    Route::get('booking/{id}/snk', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
+    Route::post('booking/snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
+    Route::get('booking/{id}/formulir', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
+    Route::post('booking/formulir', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
+    Route::get('booking/{id}/detail', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
 
+    Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');
+    Route::get('booking/{id}/tiket', [booking::class, 'tiketBooking'])->name('homepage.booking.tiket');
     // logout
     Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
 });

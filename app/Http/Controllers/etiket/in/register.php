@@ -45,10 +45,9 @@ class register extends Controller
         ]);
 
         // Redirect ke halaman login setelah registrasi berhasil
-        return redirect()->route('etiket.in.login')->with(
+        return redirect()->route('login')->with(
             'success',
             'Registrasi berhasil. Silakan login untuk melanjutkan.'
         );
     }
-
 }

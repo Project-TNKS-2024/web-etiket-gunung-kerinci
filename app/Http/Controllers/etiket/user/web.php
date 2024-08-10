@@ -42,7 +42,7 @@ Route::get('booking/paket/{id}', [booking::class, 'bookingPaket'])->name('homepa
 Route::post('booking/paket', [booking::class, 'postBooking'])->name('homepage.postBooking');
 
 Route::middleware('guest')->group(function () {
-    Route::get('login', [login::class, 'login'])->name('etiket.in.login');
+    Route::get('login', [login::class, 'login'])->name('login');
     Route::post('login', [login::class, 'actionlogin'])->name('etiket.in.actionlogin');
 
     Route::get('register', [register::class, 'register'])->name('etiket.in.register');
@@ -129,4 +129,3 @@ Route::get('/unauthorized', function () {
     // return view('errors.abort');
     return redirect('beranda');
 });
-

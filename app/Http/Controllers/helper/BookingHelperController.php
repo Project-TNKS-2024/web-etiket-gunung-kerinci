@@ -16,13 +16,13 @@ use PhpParser\Node\Expr\FuncCall;
 class BookingHelperController extends Controller
 {
     // function generateUniqueCode(idpendaki)
-    public function generateUniqueCode($idpendaki)
+    public function generateUniqueCode($idbooking)
     {
         $timestap = time();
         return response()->json([
             'status' => 200,
             'message' => 'berhasil',
-            'data' => $timestap
+            'data' => $timestap + $idbooking,
         ]);
     }
     public function validasiFormulirPendaki($pendaki)
