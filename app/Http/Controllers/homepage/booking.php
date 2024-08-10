@@ -415,8 +415,8 @@ class booking extends Controller
 
         $params = array(
             'transaction_details' => array(
-                // 'order_id' => $booking->id,
-                'order_id' => rand(),
+                'order_id' => $booking->id,
+                // 'order_id' => rand(),
                 'gross_amount' => $booking->total_pembayaran,
             ),
             'customer_details' => array(
@@ -447,10 +447,12 @@ class booking extends Controller
             'redirect_url' => route('homepage.booking', ['id' => 1]),
         ];
 
+
         if (isset($booking)) {
             $midtrans = new MidtransController;
             $status = $midtrans->checkPaymentStatus($booking->id);
-            // $status = $midtrans->checkPaymentStatus(5);
+
+            // return $status;
             if (isset($status->getData()->status_code)) {
                 if ($status->getData()->status_code == 200) {
                     $helper = new BookingHelperController();
@@ -507,6 +509,9 @@ class booking extends Controller
     public function tiketBooking($id)
     {
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        if ($booking->status_pembayaran > 4) {
+            abort(404);
+        }
         // return [
         //     'booking' => $booking,
         //     'pendakis' => $booking->pendakis

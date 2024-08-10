@@ -2,119 +2,121 @@
 
 @section('sub-css')
 <style>
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 12px;
+    #tiket-booking input {
+        border: none;
+        background: none;
     }
 
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: #f1f1f1;
+    #tiket-booking textarea {
+        border: none;
+        background: none;
     }
 
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background-color: #888;
-        border-radius: 10px;
-        border: 3px solid #f1f1f1;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-
-    /* Custom scrollbar styles for Firefox */
-    .custom-scrollbar {
-        scrollbar-width: thin;
-        scrollbar-color: #888 #f1f1f1;
-    }
-
-    .ticket {
-        max-width: 971px;
-    }
-
-    .ticket-content {
-        display: flex;
+    #qrcode_kodebooking img {
+        width: -webkit-fill-available !important;
     }
 </style>
 @endsection
 
 
 @section('sub-main')
-<div class="col py-5 px-4 my-5 my-md-0 " style="min-height: 500px; max-height: 100%; overflow-y: auto;">
-    <script>
-        console.log(@json($booking))
-        const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");
-        sidebarMenu.forEach((o, i) => {
-            sidebarMenu[i].classList.remove("active");
-        });
-        const riwayat = document.querySelector("#dashboard-riwayat");
-        riwayat.classList.add("active");
-    </script>
+<div class="col py-5 px-4 my-5 my-md-0" style="min-height: 500px; overflow-y: auto;">
+    <div class="custom-scrollbar d-flex gap-2 flex-column" id="tiket-booking">
+        @foreach ($bookings as $booking)
+        <div class="card m-auto" style="max-width: 900px;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="qrcode_kodebooking" data-qr="{{ $booking->unique_code }}"></div>
+                        <!-- <label for="ipt_kodebooking" class="w-100 text-center">Kode Booking</label> -->
+                        <input type="text" name="ipt_kodebooking" value="{{ $booking->unique_code }}" id="ipt_kodebooking" class="form-control text-center fw-bold" readonly style="font-size: 18px;">
 
-
-    <div class="custom-scrollbar d-flex gap-2 flex-column">
-        @foreach ($booking as $book)
-        <div class="row rounded-2xl card ticket px-4 p-sm-4 p-md-5 pt-md-3 pt-3" style="padding-bottom: 30px; padding-right: 30px;">
-            <div class="{{$book->status_booking ? "gk-bg-success200" : "gk-bg-error200"}} rounded-md px-4 py-2 font-bold" style="width: fit-content">Aktif</div>
-            <div class="row ticket-content  mx-0">
-                <div class="col-sm-12 col-md-12 col-lg-8">
-                    <div class="row my-2 ">
-                        <div class="col-6 ">
-                            <div class="font-semibold">Nama Ketua</div>
-                            <div class="">{{auth()->user()->fullname}}</div>
-                        </div>
-                        <div class="col-6 ">
-                            <div class="font-semibold">SIMAKSI</div>
-                            <div class="" style="color: red;">Tidak</div>
-                        </div>
+                        <a href="{{route('homepage.booking.tiket', ['id' => $booking->id])}}" class="d-flex align-items-center gap-2 w-fit btn btn-warning  d-block mx-auto p-1 px-3 rounded shadow " style="cursor: pointer;">
+                            <img src="{{asset('assets/icon/tnks/search_alt-dark.svg')}}" /> Detail
+                        </a>
                     </div>
-                    <div class="row my-2">
-                        <div class="col-6">
-                            <div class="font-semibold">Gerbang Masuk</div>
-                            <div class="">{{$book->gateMasuk->nama}}</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="font-semibold">Gerbang Keluar</div>
-                            <div class="">{{$book->gateKeluar->nama}}</div>
-                        </div>
-                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="badge text-bg-primary" id="ipt_statusbooking" style="margin-left: auto; display: block; width: min-content;">
+                                    {{-- Status booking --}}
+                                    @if($booking->status_booking == 4)
+                                    Sukses
+                                    @endif
+                                    @if ($booking->status_booking < 4)
+                                        Sedang booking
+                                        @else
+                                        Menunggu Pembayaran
+                                        @endif
+                                        </span>
+                            </div>
+                            <div class="col-6">
+                                <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
+                                <input type="text" name="ipt_namaketua" value="{{ $booking->pendakis[0]->nama }}" id="ipt_namaketua" class="form-control" readonly>
 
-                    <div class="row my-2">
-                        <div class="col-6">
-                            <div class="font-semibold">Check In</div>
-                            <div class="">{{$book->tanggal_masuk}}</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="font-semibold">Check Out</div>
-                            <div class="">{{$book->tanggal_keluar}}</div>
-                        </div>
-                    </div>
+                                <label for="ipt_gerbangmasuk" class="fw-bold">Gerbang Masuk</label>
+                                <input type="text" name="ipt_gerbangmasuk" value="{{ $booking->gateMasuk->nama }}" id="ipt_gerbangmasuk" class="form-control" readonly>
 
-                    <div class="row my-2 ">
-                        <div class="col-6">
-                            <div class="font-semibold text-nowrap">Jumlah Anggota</div>
-                            <div class="">{{$book->total_pendaki_wni+$book->total_pendaki_wna}} Orang</div>
-                        </div>
-                        <div class="col-6" style="width: fit-content">
-                            <div class="font-semibold">Kewarganegaraan</div>
-                            <div class="row">
-                                <div class="col">{{$book->total_pendaki_wni}} WNI</div>
-                                <div class="col">{{$book->total_pendaki_wna}} WNA</div>
+                                <label for="ipt_cekin" class="fw-bold">Cek In</label>
+                                <input type="text" name="ipt_cekin" value="{{ $booking->tanggal_masuk }}" id="ipt_cekin" class="form-control" readonly>
+
+                                <label for="ipt_jumlahanggota" class="fw-bold">Jumlah Anggota</label>
+                                <input type="text" name="ipt_jumlahanggota" value="{{ $booking->total_pendaki_wni + $booking->total_pendaki_wna }}" id="ipt_jumlahanggota" class="form-control" readonly>
+                            </div>
+                            <div class="col-6">
+                                <label for="ipt_simaksi" class="fw-bold">Simaksi</label>
+                                <input type="text" name="ipt_simaksi" value="{{ $booking->id }}" id="ipt_simaksi" class="form-control" readonly>
+
+                                <label for="ipt_gerbangkeluar" class="fw-bold">Gerbang Keluar</label>
+                                <input type="text" name="ipt_gerbangkeluar" value="{{ $booking->gateKeluar->nama }}" id="ipt_gerbangkeluar" class="form-control" readonly>
+
+                                <label for="ipt_cekout" class="fw-bold">Cek Out</label>
+                                <input type="text" name="ipt_cekout" value="{{ $booking->tanggal_keluar }}" id="ipt_cekout" class="form-control" readonly>
+
+                                <label for="ipt_kewarganegaraan" class="fw-bold">Kewarganegaraan</label>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="text" name="ipt_kewarganegaraanwni" value="{{ $booking->total_pendaki_wni }} WNI" id="ipt_kewarganegaraanwni" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="text" name="ipt_kewarganegaraanwna" value="{{ $booking->total_pendaki_wna }} WNA" id="ipt_kewarganegaraanwna" class="form-control" readonly>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-4 text-center font-semibold ">
-                    <img src="{{ asset('assets/img/sampel/QR.png') }}" style="max-width: 150px;" width="100%" />
-                    <div class="text-center w-100 text-sm mt-2">Kode Booking</div>
-                    <div class="text-center w-100 text-lg">{{$book->unique_code}}</div>
-                    <a href="{{route('homepage.booking-fp', ['id' => $book->id])}}" class="d-flex align-items-center gap-2 w-fit btn btn-warning  d-block mx-auto p-1 px-3 rounded shadow " style="cursor: pointer;">
-                        <img src="{{asset('assets/icon/tnks/search_alt-dark.svg')}}" /> Detail
-                    </a>
-                </div>
             </div>
-
         </div>
         @endforeach
-
+        @if (count($bookings) == 0)
+        <p class="text-center">Belum ada Booking</p>
+        @endif
     </div>
 </div>
+@endsection
+
+@section('js')
+<script>
+    const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");
+    sidebarMenu.forEach((o, i) => {
+        sidebarMenu[i].classList.remove("active");
+    });
+    const password = document.querySelector("#dashboard-riwayat");
+    password.classList.add("active");
+</script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+    const div_qr = document.querySelectorAll('.qrcode_kodebooking');
+
+    div_qr.forEach(div => {
+        // ambl data
+        qr = div.dataset['qr'];
+        new QRCode(div, {
+            text: qr,
+            width: 200,
+            height: 200
+        });
+    });
+</script>
 @endsection

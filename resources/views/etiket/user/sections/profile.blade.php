@@ -13,13 +13,13 @@
         @csrf
         <div class="form-group ">
             @if ($errors->any())
-                <div class="row gap-1">
-                    @foreach ($errors->all() as $error)
-                        <div class="row btn btn-danger">
-                            {{ $error }}
-                        </div>
-                    @endforeach
+            <div class="row gap-1">
+                @foreach ($errors->all() as $error)
+                <div class="row btn btn-danger">
+                    {{ $error }}
                 </div>
+                @endforeach
+            </div>
             @endif
             <label class="mandatory text-base font-semibold">Jenis Kewarganageraan</label>
             <div class="form-group text-sm d-flex align-items-center gap-2 form-check row">
@@ -57,7 +57,6 @@
 </div>
 
 <script>
-    console.log('users: ', @json($user));
     let countriesData = [];
     const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");
     sidebarMenu.forEach((o, i) => {

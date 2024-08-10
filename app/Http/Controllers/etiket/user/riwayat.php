@@ -15,9 +15,10 @@ class riwayat extends Controller
         if (!Auth::check()) {
             abort(404);
         }
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar'])->where('id_user', Auth::user()->id)->get();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id_user', Auth::user()->id)->get();
+        // $booking = gk_booking::with(['gateMasuk', 'gateKeluar'])->where('id_user', Auth::user()->id)->get();
         return view('etiket.user.sections.riwayat', [
-            'booking' => $booking
+            'bookings' => $booking
         ]);
     }
 }

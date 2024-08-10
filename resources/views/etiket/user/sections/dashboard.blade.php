@@ -11,21 +11,21 @@
     <h3 class="font-semibold">Selamat datang di website E-Tiket TNKS, {{auth()->user()->fullname}}</h3>
     <div class="row gap-3 px-2">
         <div class="col-sm-12 col-md-12 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
-            <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40"/></div>
+            <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40" /></div>
             <div>
                 <div>Explorasi Selesasi</div>
                 <div>1 Explorasi</div>
             </div>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
-            <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40"/></div>
+            <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40" /></div>
             <div>
                 <div>Status Pendaftaran</div>
                 <div>1 Explorasi</div>
             </div>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3 col-12 text-sm p-2 rounded py-3 d-flex gap-3" style="border: 1px solid var(--neutrals300)">
-            <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40"/></div>
+            <div><img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40" /></div>
             <div>
                 <div>Hitung Mundur Check-In</div>
                 <div>1 Explorasi</div>
@@ -39,17 +39,16 @@
 
 </div>
 
-    <script>
-        console.log('users: ', @json($user));
-        let countriesData = [];
+<script>
+    let countriesData = [];
 
-        const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");
-        sidebarMenu.forEach((o, i) => {
-            sidebarMenu[i].classList.remove("active");
-        });
-        const profile = document.querySelector("#dashboard");
-        profile.classList.add("active");
-    </script>
+    const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");
+    sidebarMenu.forEach((o, i) => {
+        sidebarMenu[i].classList.remove("active");
+    });
+    const profile = document.querySelector("#dashboard");
+    profile.classList.add("active");
+</script>
 @endsection
 
 @push('scripts')
