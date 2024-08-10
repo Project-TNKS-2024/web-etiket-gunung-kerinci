@@ -57,7 +57,7 @@
                     <a class="nav-link text-white py-1 gk-bg-primary600 rounded-lg px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('etiket.in.register') }}" style="height: fit-content;">Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-lg px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('etiket.in.login') }}">Login</a>
+                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-lg px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('login') }}">Login</a>
                 </li>
 
 
