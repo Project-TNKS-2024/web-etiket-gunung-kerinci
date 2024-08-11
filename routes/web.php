@@ -5,6 +5,7 @@ use App\Http\Controllers\etiket\admin\booking as AdminBooking;
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
 use App\Http\Controllers\etiket\admin\tikets;
 use App\Http\Controllers\etiket\admin\destinasis;
+use App\Http\Controllers\etiket\admin\fitur\Scan;
 use App\Http\Controllers\etiket\admin\gates;
 
 //user
@@ -108,6 +109,11 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // booking
     Route::get('admin/kelola/booking', [AdminBooking::class, 'readNow'])->name('admin.booking.now.read');
+
+
+
+    Route::get('admin/fitur/scanTiket', [Scan::class, 'index'])->name('admin.fitur.scanTiket');
+    Route::get('admin/fitur/DetailTiket/{uq}', [Scan::class, 'detailtiket'])->name('admin.fitur.detailTiket');
 });
 
 // User routes

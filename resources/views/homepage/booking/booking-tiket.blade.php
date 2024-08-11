@@ -115,7 +115,11 @@
                         </div>
                         <div class="col-6">
                            <label for="ipt_simaksi" class="fw-bold">Simaksi</label>
-                           <input type="text" name="ipt_simaksi" value="{{ $booking->id }}" id="ipt_simaksi" class="form-control" readonly>
+                           @if ($booking->simaksi)
+                           <input type="text" name="ipt_simaksi" value="Ada" style="color: green;" id="ipt_simaksi" class="form-control" readonly>
+                           @else
+                           <input type="text" name="ipt_simaksi" value="Tidak" style="color: red;" id="ipt_simaksi" class="form-control" readonly>
+                           @endif
 
                            <label for="ipt_gerbangkeluar" class="fw-bold">Gerbang Keluar</label>
                            <input type="text" name="ipt_gerbangkeluar" value="{{ $booking->gateKeluar->nama }}" id="ipt_gerbangkeluar" class="form-control" readonly>
