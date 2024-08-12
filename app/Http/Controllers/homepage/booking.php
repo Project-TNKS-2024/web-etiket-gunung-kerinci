@@ -126,7 +126,7 @@ class booking extends Controller
                 'total_pembayaran' => 0,
                 'status_pembayaran' => false,
 
-                'lampiran_simaksi' => null,
+                // 'lampiran_simaksi' => null,
                 'lampiran_stugas' => null,
                 'unique_code' => null,
                 'keterangan' => null,
