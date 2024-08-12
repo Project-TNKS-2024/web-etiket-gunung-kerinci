@@ -1,7 +1,7 @@
 ## Project Progress
 
 ### Page
-- **Beranda** ![50%](https://progress-bar.dev/50) **[Tinggal Integrasi dengan DB]**
+- **Beranda** ![50%](https://progress-bar.dev/70) **[Tinggal Integrasi dengan DB]**
   - Integration with weather data: belum
   - Integration with destination data: sudah
   - Integration with TNKS exploration data: belum
