@@ -129,7 +129,7 @@
                             <a href="#" class="btn btn-outline-secondary w-100">Daftar Dengan Akun Google</a>
                         </div>
                         <div class="form-group mb-3 text-center">
-                            <p>Sudah Punya Akun? <a href="{{ route('etiket.in.login') }}">Log in</a></p>
+                            <p>Sudah Punya Akun? <a href="{{ route('login') }}">Log in</a></p>
                         </div>
                     </form>
                 </div>

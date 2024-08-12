@@ -40,6 +40,6 @@ class resetpassword extends Controller
         $user->save();
 
         DB::table('password_reset_tokens')->where('token', $token)->delete();
-        return redirect()->route('etiket.in.login')->with('success', 'Berhasil berhasil reset password');
+        return redirect()->route('login')->with('success', 'Berhasil berhasil reset password');
     }
 }

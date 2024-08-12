@@ -24,6 +24,7 @@
             "type" => "image"
             ],
             ],
+
             [
             "name" => "Master Data",
             "type" => "multiple",
@@ -56,6 +57,7 @@
             ],
             ],
             ],
+
             ],
             [
             "name" => "Gunung Kerinci",
@@ -64,7 +66,7 @@
             [
             "name" => "Data Pengguna",
             "type" => "single",
-            "link" => "",
+            "link" => "#",
             "icon" => [
             "name" => asset('assets/icon/tnks/user_alt-dark.svg'),
             "type" => "image"
@@ -113,7 +115,7 @@
 
             <hr>
             <li class="sidebar-item">
-               <a class="sidebar-link" href="./icon-tabler.html" aria-expanded="false">
+               <a class="sidebar-link" href="{{route('admin.fitur.scanTiket')}}" aria-expanded="false">
                   <span>
                      <img src="{{asset('assets/icon/tnks/group_scan-dark.svg')}}"></img>
                   </span>
@@ -121,7 +123,7 @@
                </a>
             </li>
             <li class="sidebar-item">
-               <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
+               <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
                      <img src="{{asset('assets/icon/tnks/file_dock-dark.svg')}}"></img>
                   </span>
@@ -129,7 +131,7 @@
                </a>
             </li>
             <li class="sidebar-item">
-               <a class="sidebar-link" href="./sample-page.html" aria-expanded="false">
+               <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
                      <img src="{{asset('assets/icon/tnks/setting_line-dark.svg')}}"></img>
                   </span>

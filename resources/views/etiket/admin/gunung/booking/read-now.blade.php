@@ -209,7 +209,6 @@
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script>
    // jalankan perintah clear console di console
-   console.clear();
 
    $(document).ready(function() {
       $('#myTable').DataTable({

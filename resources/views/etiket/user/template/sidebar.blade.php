@@ -1,5 +1,5 @@
-<div class="card mb-3 useradmin overflow-hidden position-relative shadow rounded-2xl h-full"
-    style="min-height: 500px;">
+<div class="card mb-3 useradmin position-relative shadow rounded-2xl h-full"
+    style="min-height: 550px;">
     <div class="position-absolute w-100 bg-linear-gradient-primary rounded-xl" style="max-height: 141px; height:100%;">
     </div>
     <div class="position-absolute w-100 h-100 d-flex flex-column align-items-center gap-2" style="top:0;left:0;">
@@ -18,9 +18,10 @@
                 class="dashboard-sidebar-btn rounded-lg">Riwayat Booking</a>
             <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
                 class="dashboard-sidebar-btn rounded-lg">Ubah Password</a>
+
             <form action="{{ route('etiket.in.logout') }}" class="mt-auto" method="post">
                 @csrf
-                <button href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
+                <button href="{{ route('user.dashboard.reset-password') }}"
                     class="btn close rounded-lg w-100 bg-linear-gradient-danger">Logout</button>
             </form>
         </div>

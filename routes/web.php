@@ -5,6 +5,7 @@ use App\Http\Controllers\etiket\admin\booking as AdminBooking;
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
 use App\Http\Controllers\etiket\admin\tikets;
 use App\Http\Controllers\etiket\admin\destinasis;
+use App\Http\Controllers\etiket\admin\fitur\Scan;
 use App\Http\Controllers\etiket\admin\gates;
 
 //user
@@ -44,12 +45,14 @@ Route::post('booking/tiket', [booking::class, 'postBooking'])->name('homepage.po
 
 Route::middleware('auth')->group(function () {
     // booking
-    Route::get('booking-snk/{id}', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
-    Route::post('booking-snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
-    Route::get('booking-fp/{id}', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
-    Route::post('booking-fp', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
-    Route::get('booking-detail/{id}', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
+    Route::get('booking/{id}/snk', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
+    Route::post('booking/snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
+    Route::get('booking/{id}/formulir', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
+    Route::post('booking/formulir', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
+    Route::get('booking/{id}/detail', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
 
+    Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');
+    Route::get('booking/{id}/tiket', [booking::class, 'tiketBooking'])->name('homepage.booking.tiket');
     // logout
     Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
 });
@@ -106,6 +109,11 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // booking
     Route::get('admin/kelola/booking', [AdminBooking::class, 'readNow'])->name('admin.booking.now.read');
+
+
+
+    Route::get('admin/fitur/scanTiket', [Scan::class, 'index'])->name('admin.fitur.scanTiket');
+    Route::get('admin/fitur/DetailTiket/{uq}', [Scan::class, 'detailtiket'])->name('admin.fitur.detailTiket');
 });
 
 // User routes

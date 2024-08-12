@@ -4,6 +4,7 @@ namespace App\Http\Controllers\homepage;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\BookingHelperController;
+use App\Http\Controllers\helper\MidtransController;
 use App\Models\destinasi;
 use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
@@ -64,7 +65,7 @@ class booking extends Controller
     public function postBooking(Request $request)
     {
         if (!Auth::check()) {
-            return redirect()->route('etiket.in.login');
+            return redirect()->route('login');
         }
 
         if (Auth::user()->role != "user") {
@@ -125,7 +126,7 @@ class booking extends Controller
                 'total_pembayaran' => 0,
                 'status_pembayaran' => false,
 
-                'lampiran_simaksi' => null,
+                // 'lampiran_simaksi' => null,
                 'lampiran_stugas' => null,
                 'unique_code' => null,
                 'keterangan' => null,
@@ -190,8 +191,8 @@ class booking extends Controller
     public function updatePendaki($pendaki, $idbooking, $idtiket)
     {
         // cek id_pendaki
-        if (isset($pendaki['id_pendaki'])) {
-            $getpendaki = gk_pendaki::find($pendaki['id_pendaki']);
+        $getpendaki = gk_pendaki::find($pendaki['id_pendaki']);
+        if (isset($getpendaki)) {
             $getpendaki->update([
                 'kategori_pendaki' => isset($pendaki['kewarganegaraan']) ? $pendaki['kewarganegaraan'] : 'wni',
                 'nama' => isset($pendaki['nama']) ? $pendaki['nama'] : '-',
@@ -212,6 +213,7 @@ class booking extends Controller
                 // 'lampiran_surat_kesehatan' => $pendaki['lampiran_surat_kesehatan'],
                 // 'lampiran_surat_izin_ortu' => $pendaki['lampiran_surat_izin_ortu'],
             ]);
+
             // return $pendaki;
         } else {
             gk_pendaki::create([
@@ -221,7 +223,6 @@ class booking extends Controller
                 'kategori_pendaki' => isset($pendaki['kewarganegaraan']) ? $pendaki['kewarganegaraan'] : 'wni',
                 'nama' => isset($pendaki['nama']) ? $pendaki['nama'] : '-',
                 'nik' => isset($pendaki['identitas']) ? $pendaki['identitas'] : '-',
-                // 'lampiran_identitas' => isset($pendaki['lampiran_identitas']) ? $pendaki['lampiran_identitas'] : '-',
 
                 'no_hp' => isset($pendaki['no_hp']) ? $pendaki['no_hp'] : '-',
                 'no_hp_darurat' => isset($pendaki['no_hp_darurat']) ? $pendaki['no_hp_darurat'] : '-',
@@ -234,6 +235,11 @@ class booking extends Controller
                 'kec' => isset($pendaki['kecamatan']) ? $pendaki['kecamatan'] : '-',
                 'desa' => isset($pendaki['desa_kelurahan']) ? $pendaki['desa_kelurahan'] : '-',
 
+                'lampiran_identitas' => '',
+                'lampiran_surat_kesehatan' => '',
+                'lampiran_surat_izin_ortu' => '',
+
+                // 'lampiran_identitas' => isset($pendaki['lampiran_identitas']) ? $pendaki['lampiran_identitas'] : '-',
                 // 'lampiran_surat_kesehatan' => isset($pendaki['lampiran_surat_kesehatan']) ? $pendaki['lampiran_surat_kesehatan'] : '-',
                 // 'lampiran_surat_izin_ortu' => isset($pendaki['lampiran_surat_izin_ortu']) ? $pendaki['lampiran_surat_izin_ortu'] : '-',
                 'tagihan' => 0,
@@ -283,7 +289,7 @@ class booking extends Controller
             // update pendaki
             $pendakis = $request->formulir;
             foreach ($pendakis as $pendaki) {
-                $this->updatePendaki($pendaki, $request->id_booking, $booking->id_tiket);
+                $this->updatePendaki($pendaki, $request->id_booking, 1);
                 // return $pendaki;
             }
 
@@ -308,7 +314,7 @@ class booking extends Controller
             $request->validate([
                 'formulir' => 'required|array',
 
-                'formulir.*.id_pendaki' => 'required|string',
+                'formulir.*.id_pendaki' => 'nullable|string',
                 'formulir.*.nama' => 'required|string',
                 'formulir.*.kewarganegaraan' => 'required|string',
                 'formulir.*.identitas' => 'required|string',
@@ -335,7 +341,7 @@ class booking extends Controller
             // update pendaki
             $pendakis = $request->formulir;
             foreach ($pendakis as $pendaki) {
-                $this->updatePendaki($pendaki, $request->id_booking, $booking->id_tiket);
+                $this->updatePendaki($pendaki, $request->id_booking, 1);
             }
 
 
@@ -356,23 +362,28 @@ class booking extends Controller
 
 
             // update barang
-            $barangs = $request->barangTambahan;
-            if (isset($barangs)) {
-                foreach ($barangs as $barang) {
-                    gk_barang_bawaan::create([
-                        'id_booking' => $request->id_booking,
-                        'nama_barang' => $barang['nama'],
-                        'jumlah' => $barang['jumlah'],
-                    ]);
-                }
-            }
+            // $barangs = $request->barangTambahan;
+            // if (isset($barangs)) {
+            //     foreach ($barangs as $barang) {
+            //         gk_barang_bawaan::create([
+            //             'id_booking' => $request->id_booking,
+            //             'nama_barang' => $barang['nama'],
+            //             'jumlah' => $barang['jumlah'],
+            //         ]);
+            //     }
+            // }
 
             $booking->update([
                 'status_booking' => 2,
             ]);
 
             // return $request;
-            return redirect()->route('homepage.booking-detail', ['id' => $request->id_booking])->with('success', 'Data berhasil disimpan');
+            return redirect()->route(
+                'homepage.booking-detail',
+                [
+                    'id' => $request->id_booking
+                ]
+            )->with('success', 'Data berhasil disimpan');
         }
     }
     // =========================================================================================
@@ -394,16 +405,18 @@ class booking extends Controller
         $ClassHelper = new BookingHelperController();
         $ClassHelper->validasiBooking($booking->id);
 
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
-        $ketua = $booking->pendakis[0];
+        // jika validasi gagal kembali ke halaman booking fp
 
-        // mitrans
-        include('../app/Http/Controllers/helper/Midtrans.Params.php');
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        $booking->update([
+            'status_booking' => 3
+        ]);
+        $ketua = $booking->pendakis[0];
 
         $params = array(
             'transaction_details' => array(
-                // 'order_id' => $booking->id,
-                'order_id' => rand(),
+                'order_id' => $booking->id,
+                // 'order_id' => rand(),
                 'gross_amount' => $booking->total_pembayaran,
             ),
             'customer_details' => array(
@@ -414,14 +427,96 @@ class booking extends Controller
             ),
         );
 
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        $midtrans = new MidtransController;
+        $snapToken = $midtrans->generateSnapToken($params);
 
-        // return $snapToken;
-        // return [$params, $snapToken];
-
-        // return $dataBooking->gateMasuk;
         return view('homepage.booking.booking-detail', [
             'snaptoken' => $snapToken,
+            'booking' => $booking,
+            'pendakis' => $booking->pendakis
+        ]);
+    }
+
+    public function bookingPayment($id)
+    {
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        $statusPayment = [
+            'status' => 000,
+            'message' => 'Data tidak ditemukan',
+            'redirect_name' => 'Booking Tiket',
+            'redirect_url' => route('homepage.booking', ['id' => 1]),
+        ];
+
+
+        if (isset($booking)) {
+            $midtrans = new MidtransController;
+            $status = $midtrans->checkPaymentStatus($booking->id);
+
+            // return $status;
+            if (isset($status->getData()->status_code)) {
+                if ($status->getData()->status_code == 200) {
+                    $helper = new BookingHelperController();
+                    $qr = $helper->generateUniqueCode($booking->id);
+                    $booking->update([
+                        'status_booking' => 4,
+                        'status_pembayaran' => 1,
+                        'unique_code' => $qr->getData()->data,
+                    ]);
+                    $statusPayment = [
+                        'status' => 200,
+                        'message' => 'Pembayaran berhasil',
+                        'redirect_name' => 'Cek Tiket',
+                        'redirect_url' => route('homepage.booking.tiket', ['id' => $booking->id])
+                    ];
+                } else if ($status->getData()->status_code == 201) {
+                    $statusPayment = [
+                        'status' => 201,
+                        'message' => 'Pembayaran Pending',
+                        'redirect_name' => 'Cek Pembayaran',
+                        'redirect_url' => route('homepage.booking-detail', ['id' => $booking->id])
+                    ];
+                } else if ($status->getData()->status_code == 407) {
+                    $statusPayment = [
+                        'status' => 407,
+                        'message' => 'Pembayaran Galal',
+                        'redirect_name' => 'Cek Pembayaran',
+                        'redirect_url' => route('homepage.booking-detail', ['id' => $booking->id])
+                    ];
+                } else {
+                    $statusPayment = [
+                        'status' => 404,
+                        'message' => 'Pembayaran Tidak Ditemukan',
+                        'redirect_name' => 'Cek Pembayaran',
+                        'redirect_url' => route('homepage.booking-detail', ['id' => $booking->id])
+                    ];
+                }
+            } else {
+                $statusPayment = [
+                    'status' => 404,
+                    'message' => 'Booking Tidak Ditemukan',
+                    'redirect_name' => 'Pesan Tiket',
+                    'redirect_url' => route('homepage.booking', ['id' => 1]),
+                ];
+            }
+        }
+        // return $statusPayment['status'];
+        return view('homepage.booking.booking-payment', [
+            'booking' => $booking,
+            'status' => $status,
+            'statusPayment' => $statusPayment
+        ]);
+    }
+    public function tiketBooking($id)
+    {
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        if ($booking->status_pembayaran > 4) {
+            abort(404);
+        }
+        // return [
+        //     'booking' => $booking,
+        //     'pendakis' => $booking->pendakis
+        // ];
+        return view('homepage.booking.booking-tiket', [
             'booking' => $booking,
             'pendakis' => $booking->pendakis
         ]);
