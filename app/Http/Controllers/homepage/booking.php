@@ -428,7 +428,16 @@ class booking extends Controller
         );
 
         $midtrans = new MidtransController;
-        $snapToken = $midtrans->generateSnapToken($params);
+        $snapTokenResponse = $midtrans->generateSnapToken($params);
+        if ($snapTokenResponse->getData()->status == 500) {
+            return $snapTokenResponse;
+        }
+        return [
+            'snaptoken' => $snapTokenResponse->getData()->status,
+            'booking' => $booking,
+        ];
+        $snapToken = $snapTokenResponse->getData()->data;
+        // return $booking;
 
         return view('homepage.booking.booking-detail', [
             'snaptoken' => $snapToken,

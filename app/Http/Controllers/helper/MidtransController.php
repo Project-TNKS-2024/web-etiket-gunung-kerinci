@@ -24,15 +24,33 @@ class MidtransController extends Controller
     {
         try {
             $status = Transaction::status($orderId);
-            return response()->json($status);
+            return response()->json([
+                'status' => 200,
+                'message' => 'berhasil',
+                'data' => $status
+            ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage(),
+            ]);
         }
     }
     // function generate snap token
     public function generateSnapToken($params)
     {
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
-        return $snapToken;
+        try {
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            return response()->json([
+                'status' => 200,
+                'message' => 'berhasil',
+                'data' => $snapToken
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 }
