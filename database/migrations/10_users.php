@@ -15,12 +15,17 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string('nik')->unique()->nullable();
-            $table->string('token')->nullable();
-            $table->string('no_hp')->nullable();
-            $table->string('role')->default('user');
-            $table->string('password');
             $table->string('fullname');
+            // full namae ganti user name 
+            $table->string('password');
+            $table->string('no_hp')->nullable();
+            $table->string('token')->nullable();
+
+            $table->string('nik')->unique()->nullable();
+            // fullname
+            // vrifikasi admingitv v
+
+            $table->string('role')->default('user');
             $table->string('path_foto')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\etiket\in;
+namespace App\Http\Controllers\etiket\auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;

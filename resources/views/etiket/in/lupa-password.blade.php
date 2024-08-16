@@ -8,7 +8,7 @@
     @if (session('success'))
     <p class="fw-bold text-center my-3">Silakan cek email untuk mereset kata sandi</p>
     <div class="form-group my-3 text-center">
-        <p>Ingat kata sandi? <a href="{{ route('etiket.in.register') }}">Login Sekarang</a>
+        <p>Ingat kata sandi? <a href="{{ route('register') }}">Login Sekarang</a>
         </p>
     </div>
     @else
@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group mb-3 text-center">
-            <p>Tidak Punya Akun? <a href="{{ route('etiket.in.register') }}">Daftar Sekarang</a>
+            <p>Tidak Punya Akun? <a href="{{ route('register') }}">Daftar Sekarang</a>
             </p>
         </div>
     </form>

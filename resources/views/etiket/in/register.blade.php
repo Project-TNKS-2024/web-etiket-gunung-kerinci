@@ -60,7 +60,7 @@
                 <div class="card-body">
                     <h5 class="text-center index-t1">Selamat Datang!</h5>
                     <h5 class="text-center fw-bold">Pendaftaran Akun Pendaki</h5>
-                    <form method="POST" action="{{ route('etiket.in.actionregister') }}" class="index-t2 mt-4">
+                    <form method="POST" action="{{ route('register.action') }}" class="index-t2 mt-4">
                         @csrf
                         <div class="row mb-3">
                             <div class="form-group col-6">

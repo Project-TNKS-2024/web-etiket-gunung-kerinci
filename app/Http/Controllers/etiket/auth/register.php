@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\etiket\in;
+namespace App\Http\Controllers\etiket\auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -12,7 +12,7 @@ class register extends Controller
 {
     public function register()
     {
-        return view('etiket.in.register'); // Ganti 'register' dengan nama view yang sesuai
+        return view('register'); // Ganti 'register' dengan nama view yang sesuai
     }
 
     public function actionregister(Request $request)
