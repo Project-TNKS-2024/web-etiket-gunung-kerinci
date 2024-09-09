@@ -177,7 +177,7 @@
    </div>
 
    <div class="centered">
-      <a class="btn btn-primary mt-4 me-3" href="{{route('homepage.booking-fp', ['id' => $booking->id])}}">Formulir</a>
+      <a class="btn btn-primary mt-4 me-3" href="{{route('homepage.booking.formulir', ['id' => $booking->id])}}">Formulir</a>
       <button class="btn btn-primary mt-4" href="#" id="pay-button">Selanjutnya</button>
    </div>
 </div>

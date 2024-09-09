@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\etiket\admin;
+namespace App\Http\Controllers\etiket\admin\destinasis;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\uploadFileControlller;

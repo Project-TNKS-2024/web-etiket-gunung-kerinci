@@ -1,4 +1,4 @@
-@extends('etiket.in.template.index')
+@extends('etiket.auth.template.index')
 @section('css')
 @endsection
 

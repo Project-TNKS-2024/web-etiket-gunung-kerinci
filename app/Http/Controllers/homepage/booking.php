@@ -108,7 +108,7 @@ class booking extends Controller
                 'tanggal_masuk' => $dateStart,
                 'tanggal_keluar' => $dateEnd,
             ]);
-            return redirect()->route('homepage.booking-snk', ['id' => $booking->id])->with('success', 'Update Booking');
+            return redirect()->route('homepage.booking.snk', ['id' => $booking->id])->with('success', 'Update Booking');
         } else {
             $newBooking = gk_booking::create([
                 'id_user' => Auth::user()->id,
@@ -133,7 +133,7 @@ class booking extends Controller
                 'id_booking_master' => null,
             ]);
             // return $newBooking;
-            return redirect()->route('homepage.booking-snk', ['id' => $newBooking->id])->with('success', 'Create Booking');
+            return redirect()->route('homepage.booking.snk', ['id' => $newBooking->id])->with('success', 'Create Booking');
         }
     }
     public function bookingSnk($id)
@@ -145,7 +145,7 @@ class booking extends Controller
         }
 
         if ($booking->status_booking == 1) {
-            return redirect()->route('homepage.booking-fp', ['id' => $id]);
+            return redirect()->route('homepage.booking.formulir', ['id' => $id]);
         }
 
         return view('homepage.booking.booking-snk', ['id' => $id, 'status' => false]);
@@ -156,7 +156,7 @@ class booking extends Controller
         if ($request->snk) {
             $booking = gk_booking::find($request->id);
             $booking->update(['status_booking' => 1]);
-            return redirect()->route('homepage.booking-fp', ['id' => $request->id]);
+            return redirect()->route('homepage.booking.formulir', ['id' => $request->id]);
         } else {
             return back()->withErrors(['snk' => 'Silahkan ceklis data diri anda']);
         }
@@ -174,7 +174,7 @@ class booking extends Controller
         }
 
         if ($booking->status_booking == 0) {
-            return redirect()->route("homepage.booking-snk", ["id" => $id]);
+            return redirect()->route("homepage.booking.snk", ["id" => $id]);
         }
         $pendaki = gk_pendaki::where('booking_id', $booking->id)->get();
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
@@ -379,7 +379,7 @@ class booking extends Controller
 
             // return $request;
             return redirect()->route(
-                'homepage.booking-detail',
+                'homepage.booking.detail',
                 [
                     'id' => $request->id_booking
                 ]
@@ -398,7 +398,7 @@ class booking extends Controller
         }
 
         if ($booking->status_booking == 0) {
-            return redirect()->route("homepage.booking-snk", ["id" => $id]);
+            return redirect()->route("homepage.booking.snk", ["id" => $id]);
         }
 
         // validasi booking
@@ -473,21 +473,21 @@ class booking extends Controller
                         'status' => 201,
                         'message' => 'Pembayaran Pending',
                         'redirect_name' => 'Cek Pembayaran',
-                        'redirect_url' => route('homepage.booking-detail', ['id' => $booking->id])
+                        'redirect_url' => route('homepage.booking.detail', ['id' => $booking->id])
                     ];
                 } else if ($status->getData()->status_code == 407) {
                     $statusPayment = [
                         'status' => 407,
                         'message' => 'Pembayaran Galal',
                         'redirect_name' => 'Cek Pembayaran',
-                        'redirect_url' => route('homepage.booking-detail', ['id' => $booking->id])
+                        'redirect_url' => route('homepage.booking.detail', ['id' => $booking->id])
                     ];
                 } else {
                     $statusPayment = [
                         'status' => 404,
                         'message' => 'Pembayaran Tidak Ditemukan',
                         'redirect_name' => 'Cek Pembayaran',
-                        'redirect_url' => route('homepage.booking-detail', ['id' => $booking->id])
+                        'redirect_url' => route('homepage.booking.detail', ['id' => $booking->id])
                     ];
                 }
             } else {

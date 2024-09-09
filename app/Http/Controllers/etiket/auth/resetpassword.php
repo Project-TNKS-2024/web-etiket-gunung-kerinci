@@ -17,17 +17,21 @@ class resetpassword extends Controller
         if (!$tokenExists) {
             abort(404);
         }
-        return view('etiket.in.reset-password', ['token' => $token]); // Ganti 'register' dengan nama view yang sesuai
+        return view('etiket.auth.reset-password', ['token' => $token]); // Ganti 'register' dengan nama view yang sesuai
     }
 
-    public function actionResetPassword(Request $request, $token)
+    public function actionresetpassword(Request $request)
     {
         // Validate the request data
         $request->validate([
             'password' => 'required|string|min:8|confirmed',
+            'token' => 'required|string'
         ], [
             'password.confirmed' => 'The password confirmation does not match.',
         ]);
+
+        $token = $request->token;
+
         $record = DB::table('password_reset_tokens')->where('token', $token)->first();
         if (!$record) {
             abort(404);

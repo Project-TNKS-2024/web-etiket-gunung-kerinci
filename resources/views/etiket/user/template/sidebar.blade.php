@@ -19,7 +19,7 @@
             <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
                 class="dashboard-sidebar-btn rounded-lg">Ubah Password</a>
 
-            <form action="{{ route('etiket.in.logout') }}" class="mt-auto" method="post">
+            <form action="{{ route('etiket.auth.logout') }}" class="mt-auto" method="post">
                 @csrf
                 <button href="{{ route('user.dashboard.reset-password') }}"
                     class="btn close rounded-lg w-100 bg-linear-gradient-danger">Logout</button>

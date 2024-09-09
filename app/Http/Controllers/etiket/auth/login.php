@@ -10,7 +10,7 @@ class login extends Controller
 {
     public function login()
     {
-        return view('etiket.in.login'); // Ganti 'login' dengan nama view yang sesuai
+        return view('etiket.auth.login'); // Ganti 'login' dengan nama view yang sesuai
     }
 
     public function actionlogin(Request $request)
@@ -27,7 +27,9 @@ class login extends Controller
         // Attempt authentication
         if (Auth::attempt($credentials)) {
             if (Auth::user()->role == 'admin') {
-                return redirect()->intended(route('admin.dashboard'));
+                return redirect()
+                    ->intended(route('admin.dashboard'))
+                    ->with('success', ['berhasil login']);
             } else if (Auth::user()->role == 'user') {
                 return redirect()->intended(route('user.dashboard'));
             }

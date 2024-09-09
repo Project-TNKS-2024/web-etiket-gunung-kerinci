@@ -19,7 +19,8 @@ class dashboard extends Controller
         ]);
     }
 
-    public function action(Request $request, $id) {
+    public function action(Request $request, $id)
+    {
         $request->validate([
             // 'kewarganegaraan' => 'required',
             'nama_lengkap' => 'required',
@@ -39,5 +40,4 @@ class dashboard extends Controller
 
         return back()->with('success', 'Berhasil mengubah data');
     }
-
 }

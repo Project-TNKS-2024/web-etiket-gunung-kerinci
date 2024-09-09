@@ -1,4 +1,4 @@
-@extends('etiket.in.template.index')
+@extends('etiket.auth.template.index')
 @section('css')
 @endsection
 
@@ -12,7 +12,7 @@
         </p>
     </div>
     @else
-    <form method="POST" action="{{ route('etiket.in.actionlupapassword') }}">
+    <form method="POST" action="{{ route('lupaPassword.action') }}">
         @csrf
         <div class="form-group mb-3">
             <label for="email" class="form-label ">Email</label>

@@ -4,12 +4,16 @@ use Illuminate\Support\Facades\Route;
 
 
 //admin
-use App\Http\Controllers\etiket\admin\booking as AdminBooking;
+use App\Http\Controllers\etiket\admin\destinasis\booking as AdminBooking;
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
-use App\Http\Controllers\etiket\admin\tikets;
-use App\Http\Controllers\etiket\admin\destinasis;
+use App\Http\Controllers\etiket\admin\destinasis\tikets;
+use App\Http\Controllers\etiket\admin\destinasis\destinasis;
 use App\Http\Controllers\etiket\admin\fitur\Scan;
-use App\Http\Controllers\etiket\admin\gates;
+use App\Http\Controllers\etiket\admin\destinasis\gates;
+
+// destinasi
+use App\Http\Controllers\etiket\admin\destinasi\destinasi;
+
 
 // Admin routes
 Route::middleware(['check.role:admin'])->group(function () {
@@ -18,6 +22,21 @@ Route::middleware(['check.role:admin'])->group(function () {
    });
 
    Route::get('admin/dashboard', [dasAdmin::class, 'index'])->name('admin.dashboard');
+
+   // Destinasi - destinasi
+   Route::get('admin/destinasi/{id}/detail', [destinasi::class, 'detail'])->name('admin.destinasi.detail');
+
+   // Destinasi - sop
+
+   // Destinasi - booking
+
+   // Destinasi - pendaki
+
+   // Destinasi - monitoring
+
+   // Destinasi - laporan
+
+
 
    //tiket
    Route::get('admin/kelola/tiket', [tikets::class, 'daftar'])->name('admin.tiket.daftar');

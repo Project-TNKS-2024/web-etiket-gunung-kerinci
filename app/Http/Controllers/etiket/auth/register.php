@@ -12,7 +12,7 @@ class register extends Controller
 {
     public function register()
     {
-        return view('register'); // Ganti 'register' dengan nama view yang sesuai
+        return view('etiket.auth.register'); // Ganti 'register' dengan nama view yang sesuai
     }
 
     public function actionregister(Request $request)

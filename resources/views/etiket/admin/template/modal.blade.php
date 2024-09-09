@@ -1,6 +1,3 @@
-
-
-
 <div id="modal-confirmation-container" class="d-none position-fixed w-screen h-screen top-0 left-0 d-flex justify-content-center align-items-center" style="background-color: rgba(0,0,0,.2)">
     <form method="post" id="modal-confirmation-form" class="bg-white shadow rounded" style="min-width: 300px;">
         @csrf
@@ -13,7 +10,7 @@
     </form>
 </div>
 
-<script >
+<script>
     function closeConfirmationModal() {
         console.log('123')
         const el = document.getElementById('modal-confirmation-container');

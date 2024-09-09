@@ -4,7 +4,7 @@
 use App\Http\Controllers\etiket\admin\booking as AdminBooking;
 use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
 use App\Http\Controllers\etiket\admin\tikets;
-use App\Http\Controllers\etiket\admin\destinasis;
+use App\Http\Controllers\etiket\admin\destinasiss;
 use App\Http\Controllers\etiket\admin\gates;
 
 //user
@@ -51,13 +51,13 @@ Route::middleware('guest')->group(function () {
     Route::get('lupaPassword/sentEmail', [login::class, 'lp_sentEmail'])->name('lupaPassword');
     // Route::get('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('lupaPassword.action');
     Route::post('lupaPassword/confirmEmail', [login::class, 'lp_confirmEmail'])->name('lupaPassword.action');
-    // route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.in.lupapassword');
-    // route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.in.actionlupapassword');
+    // route::get('lupa-password', [lupapassword::class, 'lupapassword'])->name('etiket.auth.lupapassword');
+    // route::post('lupa-password', [lupapassword::class, 'actionlupapassword'])->name('etiket.auth.actionlupapassword');
 
-    route::get('reset-password/{token}', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
-    route::post('reset-password/action/{token}/', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
+    route::get('reset-password/{token}', [resetpassword::class, 'resetpassword'])->name('resetpassword');
+    route::post('reset-password/action/{token}/', [resetpassword::class, 'actionresetpassword'])->name('resetpassword.action');
 });
-Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
+Route::post('logout', [login::class, 'logout'])->name('etiket.auth.logout');
 
 // Admin routes
 Route::middleware(['check.role:admin'])->group(function () {
@@ -110,11 +110,11 @@ Route::middleware(['check.role:user'])->group(function () {
     Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
 
     // booking
-    Route::get('booking-snk/{id}', [booking::class, 'bookingSnk'])->name('homepage.booking-snk');
-    Route::post('booking-snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking-snk.store');
-    Route::get('booking-fp/{id}', [booking::class, 'bookingFP'])->name('homepage.booking-fp');
-    Route::post('booking-fp', [booking::class, 'bookingFPStore'])->name('homepage.booking-fp.store');
-    Route::get('booking-detail/{id}', [booking::class, 'bookingDetail'])->name('homepage.booking-detail');
+    Route::get('booking-snk/{id}', [booking::class, 'bookingSnk'])->name('homepage.booking.snk');
+    Route::post('booking-snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking.snk.action');
+    Route::get('booking-fp/{id}', [booking::class, 'bookingFP'])->name('homepage.booking.formulir');
+    Route::post('booking-fp', [booking::class, 'bookingFPStore'])->name('homepage.booking.formulir.action');
+    Route::get('booking-detail/{id}', [booking::class, 'bookingDetail'])->name('homepage.booking.detail');
 });
 
 

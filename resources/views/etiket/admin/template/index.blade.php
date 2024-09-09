@@ -55,6 +55,11 @@
             /* Ensure it doesn't block interactions with the img */
         }
 
+        .lis-collapse-destinasi {
+            background-color: #d4e3f6;
+            border-radius: 0 0 10px 10px;
+        }
+
         .body-wrapper {
             display: flex;
             flex-direction: column;
@@ -104,7 +109,8 @@
 
     @yield('js')
 
-    @include('etiket.admin.components.modal')
+    @include('etiket.admin.template.modal')
+    @include('etiket.admin.template.modal-notif')
 
 
     <script>

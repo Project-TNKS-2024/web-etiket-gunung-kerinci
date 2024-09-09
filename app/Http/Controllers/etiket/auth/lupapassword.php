@@ -13,7 +13,9 @@ class lupapassword extends Controller
 {
     public function sentEmail()
     {
-        return view('etiket.in.lupapw-sent email');
+        // return view('etiket.auth.lupapw-sent email');
+        return view('etiket.auth.lupa-password');
+        // return view('etiket.auth.lupa-confirm');
     }
     public function confirmEmail(Request $request)
     {
@@ -42,8 +44,10 @@ class lupapassword extends Controller
             ]);
         }
 
+        // return $credentials['email'];
+
         Mail::to($credentials['email'])->send(new MyTestEmail($token));
-        return view('etiket.in.lupapw-confm email', ['email' => $credentials['email']]);
+        return view('etiket.auth.lupa-confirm', ['email' => $credentials['email']]);
     }
 
 

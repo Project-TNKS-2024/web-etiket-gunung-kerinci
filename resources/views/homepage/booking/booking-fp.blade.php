@@ -82,10 +82,10 @@
 </script>
 <div class="container my-5">
    @include('homepage.booking.booking-nav', ['step' => $booking->status_booking])
-   <form id="formulir" action="{{route('homepage.booking-fp.store')}}" method="post" enctype="multipart/form-data">
+   <form id="formulir" action="{{route('homepage.booking.formulir.action')}}" method="post" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="id_booking" value="{{$id}}">
-      
+
       <div class="shadow px-5 pt-1 pb-4 rounded">
          <!-- anggota -->
          @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna-1); $i++)

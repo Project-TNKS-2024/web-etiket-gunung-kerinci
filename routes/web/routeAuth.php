@@ -21,8 +21,8 @@ Route::middleware('guest')->group(function () {
    // lupa password
    Route::get('lupaPassword', [lupapassword::class, 'sentEmail'])->name('lupaPassword');
    Route::post('lupaPassword', [lupapassword::class, 'confirmEmail'])->name('lupaPassword.action');
-   route::get('resetPassword/{token}', [resetpassword::class, 'resetpassword'])->name('etiket.in.resetpassword');
-   route::post('resetPassword/', [resetpassword::class, 'actionresetpassword'])->name('etiket.in.actionresetpassword');
+   route::get('resetPassword/{token}', [resetpassword::class, 'resetpassword'])->name('resetpassword');
+   route::post('resetPassword', [resetpassword::class, 'actionresetpassword'])->name('resetpassword.action');
 });
 
-Route::post('logout', [login::class, 'logout'])->name('etiket.in.logout');
+Route::post('logout', [login::class, 'logout'])->name('etiket.auth.logout');
