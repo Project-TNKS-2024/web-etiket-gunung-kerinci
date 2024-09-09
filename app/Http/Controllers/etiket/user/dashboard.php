@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\gk_booking;
 
 
 class dashboard extends Controller
@@ -14,8 +15,10 @@ class dashboard extends Controller
     public function index()
     {
         $user = Auth::user();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar'])->where('id_user', Auth::user()->id)->get();
         return view('etiket.user.sections.dashboard', [
             'user' => $user,
+            'booking' => $booking,
         ]);
     }
 

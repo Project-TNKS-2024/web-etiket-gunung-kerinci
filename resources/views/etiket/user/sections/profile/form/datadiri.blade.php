@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-8 my-3">
                 <label class="mandatory text-base font-semibold text-nowrap">Tanggal Lahir</label>
-                <input type="datetime-local" class="form-control border-secondary" id="tgl-lahir" name="tgl_lahir">
+                <input type="date" class="form-control border-secondary" id="tgl-lahir" name="tgl_lahir">
             </div>
             <div class="col-4 my-3">
 

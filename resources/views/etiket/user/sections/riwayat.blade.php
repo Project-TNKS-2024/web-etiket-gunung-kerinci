@@ -52,8 +52,8 @@
 
     <div class="custom-scrollbar d-flex gap-2 flex-column">
         @foreach ($booking as $book)
-        <div class="row rounded-2xl card ticket px-4 p-sm-4 p-md-5 pt-md-3 pt-3" style="padding-bottom: 30px; padding-right: 30px;">
-            <div class="{{$book->status_booking ? "gk-bg-success200" : "gk-bg-error200"}} rounded-md px-4 py-2 font-bold" style="width: fit-content">Aktif</div>
+            <div class="row rounded-2xl card ticket px-4 p-sm-4 p-md-5 pt-md-3 pt-3" style="padding-bottom: 30px; padding-right: 30px;">
+                <div class="{{$book->status_booking ? "gk-bg-success200" : "gk-bg-error200"}} rounded-md px-4 py-2 font-bold" style="width: fit-content">Aktif</div>
                 <div class="row ticket-content  mx-0">
                     <div class="col-sm-12 col-md-12 col-lg-8">
                         <div class="row my-2 ">
@@ -111,7 +111,6 @@
                         </a>
                     </div>
                 </div>
-
             </div>
         @endforeach
 
