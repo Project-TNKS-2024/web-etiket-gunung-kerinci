@@ -94,7 +94,7 @@
                </div>
             </li>
 
-            <li class="sidebar-item">
+            <!-- <li class="sidebar-item">
                <a class="sidebar-link" href="{{ route('admin.destinasi.daftar') }}" aria-expanded="false">
                   <span>
                      <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
@@ -125,7 +125,7 @@
                   </span>
                   <span class="hide-menu">Data Booking</span>
                </a>
-            </li>
+            </li> -->
 
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
