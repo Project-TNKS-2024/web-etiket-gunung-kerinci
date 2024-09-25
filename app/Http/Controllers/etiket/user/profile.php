@@ -14,30 +14,32 @@ class profile extends Controller
     public function index()
     {
         $user = Auth::user();
+        $user->nama_depan = explode(' ', $user->fullname)[0]; // Ambil kata pertama sebagai nama depan
+        $user->nama_belakang = implode(' ', array_slice(explode(' ', $user->fullname), 1)); // Gabungkan sisanya sebagai nama belakang
+        // return $user;
         return view('etiket.user.sections.profile', [
             'user' => $user,
         ]);
     }
 
-    public function action(Request $request, $id) {
+    public function action(Request $request)
+    {
+        $user  = Auth::user();
+        // return $request;
         $request->validate([
+            'nama_depan' => 'required',
+            'nama_belakang' => 'required',
             // 'kewarganegaraan' => 'required',
-            'nama_lengkap' => 'required',
-            // 'jenis_identitas' => 'required',
-            'id_pendaftar' => 'required',
+            'nik' => 'required',
             'nomor_telepon' => 'required',
-            // 'nomor_telepon_darurat' => 'required',
-            // 'tgl_lahir' => 'required',
-            // 'usia' => 'required',
         ]);
 
-        User::where('id', $id)->update([
-            "nik" => $request->id_pendaftar,
+        User::where('id', $user->id)->update([
+            "nik" => $request->nik,
             "no_hp" => $request->nomor_telepon,
-            "fullname" => $request->nama_lengkap,
+            "fullname" => $request->nama_depan . ' ' . $request->nama_belakang,
         ]);
 
         return back()->with('success', 'Berhasil mengubah data');
     }
-
 }

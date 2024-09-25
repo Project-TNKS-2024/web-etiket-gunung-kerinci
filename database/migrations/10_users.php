@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('no_hp')->nullable();
             $table->string('token')->nullable();
-
+            $table->enum('kewarganegaraan', ['wna', 'wni']);
             $table->string('nik')->unique()->nullable();
             // fullname
             // vrifikasi admingitv v
