@@ -1,5 +1,5 @@
 ## Project Progress
-
+SELESAIN WOIII
 ### Page
 - **Beranda** ![50%](https://progress-bar.dev/70) **[Tinggal Integrasi dengan DB]**
   - Integration with weather data: belum
