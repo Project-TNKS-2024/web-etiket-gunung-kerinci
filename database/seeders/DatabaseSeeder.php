@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             destinasi_gate::class,
             paket_tiket::class,
             Booking::class,
-            DomisiliSeeder::class
+            DomisiliSeeder::class,
+            CheckpointSeeder::class
         ]);
     }
 }

@@ -4,15 +4,16 @@ use Illuminate\Support\Facades\Route;
 
 
 //admin
-use App\Http\Controllers\etiket\admin\destinasis\booking as AdminBooking;
-use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
-use App\Http\Controllers\etiket\admin\destinasis\tikets;
-use App\Http\Controllers\etiket\admin\destinasis\destinasis;
 use App\Http\Controllers\etiket\admin\fitur\Scan;
 use App\Http\Controllers\etiket\admin\destinasis\gates;
+use App\Http\Controllers\etiket\admin\destinasis\tikets;
+use App\Http\Controllers\etiket\admin\destinasi\destinasi;
+use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
+use App\Http\Controllers\etiket\admin\destinasis\destinasis;
 
 // destinasi
-use App\Http\Controllers\etiket\admin\destinasi\destinasi;
+use App\Http\Controllers\tracking\admin\checkpoint\CheckpointController;
+use App\Http\Controllers\etiket\admin\destinasis\booking as AdminBooking;
 
 
 // Admin routes
@@ -65,6 +66,15 @@ Route::middleware(['check.role:admin'])->group(function () {
 
    // booking
    Route::get('admin/kelola/booking', [AdminBooking::class, 'readNow'])->name('admin.booking.now.read');
+
+   //tracking
+   Route::get('admin/kelola/chekpoint', [CheckpointController::class, 'daftar'])->name('admin.checkpoint.daftar');
+   Route::get('admin/kelola/tambah-chekpoint', [CheckpointController::class, 'tambah'])->name('admin.checkpoint.tambah');
+   Route::post('admin/kelola/tambah-checkoint', [CheckpointController::class, 'tambahAction'])->name('admin.checkpoint.tambahAction');
+   Route::get('admin/kelola/edit-checkpoint/{id}', [CheckpointController::class, 'edit'])->name('admin.checkpoint.edit');
+   Route::post('admin/kelola/edit-checkpoint/{id}', [CheckpointController::class, 'editAction'])->name('admin.checkpoint.editAction');
+   Route::post('admin/kelola/hapus-checkpoint/{id}', [CheckpointController::class, 'hapus'])->name('admin.checkpoint.hapus');
+
 
 
 

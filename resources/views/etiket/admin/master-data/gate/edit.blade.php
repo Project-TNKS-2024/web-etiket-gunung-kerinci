@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <label class="form-label">Nama Gate</label>
-                            <input class="form-control borderx bg-white" name="nama" id="lokasi-nama" value="{{$data->nama}}" placeholder="Nama Gate" required />
+                            <input class="form-control borderx bg-white" name="nama" id="lokasi-nama" value="$checkpoints = gk_checkpoint::orderBy('urutan', 'asc')->get();" placeholder="Nama Gate" required />
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <label class="form-label">Destinasi Gate</label>
