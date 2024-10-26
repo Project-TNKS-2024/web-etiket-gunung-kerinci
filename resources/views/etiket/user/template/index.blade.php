@@ -7,7 +7,7 @@
     }
 
     .dashboard-sidebar {
-        min-width: 338px;
+        /* min-width: 338px; */
         min-height: 500px;
     }
 
@@ -36,15 +36,15 @@
 @endsection
 
 @section('main')
-<main class="container-fluid gk-bg-neutrals100 px-5" style="overflow: hidden">
+<main class="container-fluid gk-bg-neutrals100 px-md-5" style="overflow: hidden">
 
     <div class="row mx-auto justify-content-center py-4" style="min-height: 500px;">
 
-        <div class="col-12 col-sm-12 col-md-3 dashboard-sidebar ">
+        <div class="col-12 col-sm-12 col-md-5 col-lg-3 dashboard-sidebar">
             @include('etiket.user.template.sidebar')
         </div>
 
-        <div class="col mt-4 mt-md-0">
+        <div class="col-12 col-sm-12 col-md-7 col-lg-9 mt-4 mt-md-0">
             @yield('sub-main')
         </div>
     </div>

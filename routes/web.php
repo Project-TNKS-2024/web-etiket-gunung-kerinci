@@ -3,7 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 //homepage
-use App\Http\Controllers\etiket\HomepageController;
+use App\Http\Controllers\homepage\HomepageController;
 use App\Http\Controllers\homepage\booking;
 
 Route::get('/', function () {

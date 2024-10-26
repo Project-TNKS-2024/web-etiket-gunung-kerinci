@@ -7,8 +7,8 @@ use App\Http\Controllers\helper\uploadFileControlller;
 use Illuminate\Http\Request;
 use App\Models\destinasi;
 use App\Models\gk_gates;
-use App\Models\gambar_destinasi;
 use Illuminate\Support\Facades\DB;
+use App\Models\gambar_destinasi;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -63,44 +63,44 @@ class destinasis extends Controller
         return back()->with('success', 'Berhasil menambah destinasi');
     }
 
-    public function edit($id)
-    {
-        $data = Destinasi::where('id', $id)->first();
-        $gates = gk_gates::with(['destinasi'])->where('gk_gates.id_destinasi', $id)->get();
-        $gambar = gambar_destinasi::with(['destinasi'])->where('id_destinasi', $id)->get();
+    // public function edit($id)
+    // {
+    //     $data = Destinasi::where('id', $id)->first();
+    //     $gates = gk_gates::with(['destinasi'])->where('gk_gates.id_destinasi', $id)->get();
+    //     $gambar = gambar_destinasi::with(['destinasi'])->where('id_destinasi', $id)->get();
 
-        return view('etiket.admin.master-data.destinasi.edit', [
-            'data' => $data,
-            'gates' => $gates,
-            'gambar' => $gambar,
-        ]);
-    }
+    //     return view('etiket.admin.master-data.destinasi.edit', [
+    //         'data' => $data,
+    //         'gates' => $gates,
+    //         'gambar' => $gambar,
+    //     ]);
+    // }
 
-    public function editAction(Request $request, $id)
-    {
-        $request->validate([
-            'nama' => 'required',
-            'status' => 'required',
-            'kategori' => 'required',
-            'lokasi' => 'required',
-            'detail' => 'required',
-            'status' => 'required',
-        ]);
+    // public function editAction(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'nama' => 'required',
+    //         'status' => 'required',
+    //         'kategori' => 'required',
+    //         'lokasi' => 'required',
+    //         'detail' => 'required',
+    //         'status' => 'required',
+    //     ]);
 
-        // return $request;
+    //     // return $request;
 
-        if (!destinasi::where('id', $id)->update([
-            'nama' => $request->nama,
-            'status' => $request->status,
-            'kategori' => $request->kategori,
-            'lokasi' => $request->lokasi,
-            'detail' => $request->detail,
-        ])) {
-            return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);
-        }
+    //     if (!destinasi::where('id', $id)->update([
+    //         'nama' => $request->nama,
+    //         'status' => $request->status,
+    //         'kategori' => $request->kategori,
+    //         'lokasi' => $request->lokasi,
+    //         'detail' => $request->detail,
+    //     ])) {
+    //         return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);
+    //     }
 
-        return back()->with('success', 'Berhasil memperbarui tiket');
-    }
+    //     return back()->with('success', 'Berhasil memperbarui tiket');
+    // }
 
     public function hapus(Request $reqeust, $id)
     {

@@ -7,8 +7,10 @@
             style="border-radius: 100%; width: 100px; height: 100px; filter: drop-shadow(0px 0px 3px var(--neutrals600));">
             <img src="{{ asset('assets/img/dashboard/Ellipse 143.png') }}" width="100" />
         </div>
-        <h4 class="fw-semibold py-0 my-0">{{ auth()->user()->fullname }}</h4>
-        <h6 class="fw-light py-0 my-0">{{ auth()->user()->email }}</h6>
+        <div class="py-0 my-0 px-4 w-100 text-center">
+            <h4 class="fw-semibold ">{{ auth()->user()->fullname }}</h4>
+            <h6 class="fw-light ">{{ auth()->user()->email }}</h6>
+        </div>
     </div>
 
     <!-- Bagian Link Navigasi -->

@@ -34,15 +34,6 @@
             font-family: "Poppins", sans-serif;
         }
 
-
-        .tiket-row:nth-child(odd) {
-            background-color: rgb(233, 233, 233);
-        }
-
-        .tiket-row:nth-child(even) {
-            background-color: rgb(250, 250, 250);
-        }
-
         .gradient-top {
             position: absolute;
             bottom: 0;
@@ -64,7 +55,12 @@
             display: flex;
             flex-direction: column;
         }
+
+        .borderx {
+            border-color: var(--neutrals500);
+        }
     </style>
+
     @yield('css')
 </head>
 

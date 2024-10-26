@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\etiket;
+namespace App\Http\Controllers\homepage;
 
 use App\Http\Controllers\Controller;
 use App\Models\destinasi;

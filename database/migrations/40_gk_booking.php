@@ -9,7 +9,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('gk_bookings', function (Blueprint $table) {
-            $table->id();
+            // $table->id(); uuid
+            $table->uuid('id')->primary();
             $table->unsignedBigInteger('id_user');
             $table->unsignedBigInteger('id_tiket');
             $table->date('tanggal_masuk');

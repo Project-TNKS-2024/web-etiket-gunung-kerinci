@@ -2,23 +2,17 @@
 
 @section('css')
 <style>
-   .borderx {
-      border-color: var(--neutrals500);
-   }
+
 </style>
 @endsection
 
 @section('main')
-<div style="min-height: 100vh;">
-   <main class="p-10 d-flex flex-column gap-3">
-      <a class="btn btn-primary w-fit text-start" href="{{ route('admin.destinasi.daftar') }}">
-         <i class="ti ti-arrow-left"></i>
-         Kembali
-      </a>
-      <div class="row">
-         <div class="col-md-8 col-sm-12">
+<div class="row">
+   <div class="col-md-8 col-sm-12">
+      <div class="card">
+         <div class="card-body">
             <label class="text-2xl font-bold gk-text-base-black mb-2">Detail Destinasi</label>
-            <form class="row gap-2" action="{{ route('admin.destinasi.editAction', ['id' => $destinasi->id]) }}" method="post">
+            <form class="row gap-2" action="{{ route('admin.destinasi.detail.update', ['id' => $destinasi->id]) }}" method="post">
                @csrf
                @if (session('success'))
                <div class="row">
@@ -84,9 +78,13 @@
 
             </form>
          </div>
-         <div class="col-md-4 col-sm-12">
+      </div>
+   </div>
+   <div class="col-md-4 col-sm-12">
+      <div class="card">
+         <div class="card-body">
             <label class="text-2xl font-bold gk-text-base-black mb-2">Tambah Foto</label>
-            <form class="form row gap-2" action="{{route('admin.destinasi.upload', ['id' => $destinasi->id])}}" method="post" enctype="multipart/form-data">
+            <form class="form row gap-2" action="{{route('admin.destinasi.picture.add.action', ['id' => $destinasi->id])}}" method="post" enctype="multipart/form-data">
                @csrf
                <div class="col-12">
                   <label class="form-label">Judul Foto</label>
@@ -109,7 +107,7 @@
                </div>
                <div class="col-12">
                   <label class="form-label">Detail Foto</label>
-                  <textarea cols="1" name="foto_detail" id="foto-detail" class="form-control bg-white borderx" placeholder="Detail Foto" required></textarea>
+                  <textarea cols="1" name="foto_detail" style="height: 130px;" id="foto-detail" class="form-control bg-white borderx" placeholder="Detail Foto" required></textarea>
                </div>
                <div class="col-12">
                   <button type="submit" class="btn btn-primary gk-bg-primary700 d-flex align-items-center gap-1 ms-auto"><img width="20" src="{{asset('assets/icon/tnks/save-light.svg')}}" />Upload</button>
@@ -117,89 +115,89 @@
             </form>
          </div>
       </div>
-      <div class="mt-3 text-base font-medium text-black">Daftar Gates</div>
-      <div class="row">
-         <div class="col">
-            <table class="rounded table table-striped table-bordered">
-               <thead>
-                  <tr class="bg-white">
-                     <th>No</th>
-                     <th>Nama</th>
-                     <th>Detail</th>
-                     <th class="col-2 text-center">Aksi</th>
-                  </tr>
-               </thead>
-               <tbody class="table-group-divider">
-                  @foreach ($gates as $g)
-                  <tr class="tiket-row">
-                     <td>{{$loop->index+1}}</td>
-                     <td>{{$g->nama}}</td>
-                     <td>{{$g->detail}}</td>
-                     <td class="text-center">
-                        <a href="{{route('admin.gate.edit', ['id' => $g->id])}}" class="bg-transparent rounded gk-bg-primary100 cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent" /></a>
-                        <a onclick="confirmDelete(event, '{{json_encode($g)}}',  `{{ route('admin.gate.hapus', ['id' => $g->id])}}`)" href="#" class="rounded cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/icon/tnks-bin.svg')}}" /></a>
-                     </td>
-                  </tr>
-                  @endforeach
-               </tbody>
-            </table>
-         </div>
-      </div>
-
-      <div class="mt-3 text-base font-medium text-black">Daftar Gambar
-      </div>
-      <div class="row">
-         <div class="col">
-            <table class="table table-striped table-bordered">
-               <thead>
-                  <tr class="bg-white">
-                     <th class="col-1">No</th>
-                     <th class="col-4">Nama</th>
-                     <th class="col-4">Detail</th>
-                     <th class="col-2 text-center">Aksi</th>
-                  </tr>
-               </thead>
-               <tbody id="data-body" class="table-group-divider">
-                  @if(count($gambar) == 0)
-                  <tr>
-                     <td colspan="4">Belum Ada Gambar</td>
-                  </tr>
-                  @else
-                  @foreach ($gambar as $g)
-                  <tr class="tiket-row">
-                     <td class="col-1">{{$loop->index+1}}</td>
-                     <td class="col-4">{{$g->nama}}</td>
-                     <td class="col-4">{{$g->detail}}</td>
-                     <td class="d-flex gap-1 bg-transparent align-items-center justify-content-center">
-                        <div onclick="openModal([ {{$g}} ])" class="text-black h-fit d-flex align-items-center gap-1">
-                           <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/img_rol.svg')}}" />
-                        </div>
-                        <div class="text-black h-fit d-flex align-items-center gap-1">
-                           <img width="25" class="rounded shadow-sm" src="{{asset('assets/icon/tnks-bin.svg')}}" />
-                        </div>
-                     </td>
-                  </tr>
-                  @endforeach
-                  @endif
-               </tbody>
-            </table>
-         </div>
-      </div>
-   </main>
+   </div>
 </div>
 
-<script>
-   const selectedFiles = [];
 
-   function collectPics(event) {
-      const fileInput = event.target;
-      if (fileInput.files.length > 0) {
-         const file = fileInput.files[0];
-         const inputFileLabel = document.getElementById("input-file-label");
-         inputFileLabel.textContent = event.target.value.split("\\").slice(-1);
+<div class="card">
+   <div class="card-body">
+      <h5 class="text-2x1 font-bold gk-text-base-black mb-3">Daftar Gates</h5>
+      <table class="rounded table table-striped table-bordered">
+         <thead>
+            <tr class="bg-white">
+               <th>No</th>
+               <th>Nama</th>
+               <th>Detail</th>
+               <th class="col-2 text-center">Aksi</th>
+            </tr>
+         </thead>
+         <tbody class="table-group-divider">
+            @foreach ($gates as $g)
+            <tr class="tiket-row">
+               <td>{{$loop->index+1}}</td>
+               <td>{{$g->nama}}</td>
+               <td>{{$g->detail}}</td>
+               <td class="text-center">
+                  <a href="{{route('admin.gate.edit', ['id' => $g->id])}}" class="bg-transparent rounded gk-bg-primary100 cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent" /></a>
+                  <a onclick="confirmDelete(event, '{{json_encode($g)}}',  `{{ route('admin.gate.hapus', ['id' => $g->id])}}`)" href="#" class="rounded cursor-pointer shadow-sm"><img width="25" src="{{asset('assets/icon/tnks-bin.svg')}}" /></a>
+               </td>
+            </tr>
+            @endforeach
+         </tbody>
+      </table>
+
+   </div>
+</div>
+<div class="card">
+   <div class="card-body">
+      <h5 class="text-2x1 font-bold gk-text-base-black mb-3">Daftar Gambar</h5>
+      <table class="table table-striped table-bordered">
+         <thead>
+            <tr class="bg-white">
+               <th class="col-1">No</th>
+               <th class="col-4">Nama</th>
+               <th class="col-4">Detail</th>
+               <th class="col-2 text-center">Aksi</th>
+            </tr>
+         </thead>
+         <tbody id="data-body" class="table-group-divider">
+            @if(count($gambar) == 0)
+            <tr>
+               <td colspan="4">Belum Ada Gambar</td>
+            </tr>
+            @else
+            @foreach ($gambar as $g)
+            <tr class="tiket-row">
+               <td class="col-1">{{$loop->index+1}}</td>
+               <td class="col-4">{{$g->nama}}</td>
+               <td class="col-4">{{$g->detail}}</td>
+               <td class="d-flex gap-1 bg-transparent align-items-center justify-content-center">
+                  <div onclick="openModal([ {{$g}} ])" class="text-black h-fit d-flex align-items-center gap-1">
+                     <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/img_rol.svg')}}" />
+                  </div>
+                  <div class="text-black h-fit d-flex align-items-center gap-1">
+                     <img width="25" class="rounded shadow-sm" src="{{asset('assets/icon/tnks-bin.svg')}}" />
+                  </div>
+               </td>
+            </tr>
+            @endforeach
+            @endif
+         </tbody>
+      </table>
+   </div>
+
+   <script>
+      const selectedFiles = [];
+
+      function collectPics(event) {
+         const fileInput = event.target;
+         if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const inputFileLabel = document.getElementById("input-file-label");
+            inputFileLabel.textContent = event.target.value.split("\\").slice(-1);
+         }
+
+
       }
-
-
-   }
-</script>
-@endsection
+   </script>
+   @endsection

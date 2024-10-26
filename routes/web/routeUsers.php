@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
 use App\Http\Controllers\etiket\user\profile as profileUser;
 use App\Http\Controllers\etiket\user\gantipassword as resetPasswordUser;
-use App\Http\Controllers\etiket\user\riwayat as riwayatUser;
 
 
 // User routes

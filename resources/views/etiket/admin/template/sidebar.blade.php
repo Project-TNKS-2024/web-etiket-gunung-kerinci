@@ -43,13 +43,14 @@
                         </a>
                      </li>
                      <li class="sidebar-item">
-                        <a class="sidebar-link" href="{{route('admin.tiket.daftar')}}" aria-expanded="false">
+                        <a class="sidebar-link" href="{{route('admin.destinasi.tiket', ['id' => 1])}}" aria-expanded="false">
                            <span>
                               <img src="{{ asset('assets/icon/tnks/ticket-dark.svg') }}"></img>
                            </span>
                            <span class="hide-menu">Kelola Tiket</span>
                         </a>
                      </li>
+                     <!-- ---------------------------------------------------------------------------------- -->
                      <li class="sidebar-item">
                         <a class="sidebar-link" href="{{ route('admin.gate.daftar') }}" aria-expanded="false">
                            <span>
@@ -94,38 +95,7 @@
                </div>
             </li>
 
-            <!-- <li class="sidebar-item">
-               <a class="sidebar-link" href="{{ route('admin.destinasi.daftar') }}" aria-expanded="false">
-                  <span>
-                     <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
-                  </span>
-                  <span class="hide-menu">Kelola Destinasi</span>
-               </a>
-            </li>
-            <li class="sidebar-item">
-               <a class="sidebar-link" href="{{route('admin.tiket.daftar')}}" aria-expanded="false">
-                  <span>
-                     <img src="{{ asset('assets/icon/tnks/ticket-dark.svg') }}"></img>
-                  </span>
-                  <span class="hide-menu">Kelola Tiket</span>
-               </a>
-            </li>
-            <li class="sidebar-item">
-               <a class="sidebar-link" href="{{ route('admin.gate.daftar') }}" aria-expanded="false">
-                  <span>
-                     <img src="{{ asset('assets/icon/tnks/pointers-dark.svg') }}"></img>
-                  </span>
-                  <span class="hide-menu">Kelola Gate</span>
-               </a>
-            </li>
-            <li class="sidebar-item">
-               <a class="sidebar-link" href="{{ route('admin.booking.now.read') }}" aria-expanded="false">
-                  <span>
-                     <img src="{{ asset('assets/icon/tnks/ticket_alt-dark.svg') }}"></img>
-                  </span>
-                  <span class="hide-menu">Data Booking</span>
-               </a>
-            </li> -->
+
 
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>

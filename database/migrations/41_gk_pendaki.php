@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('gk_pendakis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('booking_id');
+            $table->uuid('booking_id');
             $table->unsignedBigInteger('tiket_id');
             // enum wna/wni
             $table->enum('kategori_pendaki', ['wna', 'wni']);
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('kabupaten');
             $table->string('kec');
             $table->string('desa');
-            
+
 
             $table->string('lampiran_surat_kesehatan');
             $table->string('lampiran_surat_izin_ortu');

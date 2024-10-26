@@ -21,7 +21,7 @@ class tikets extends Controller
         $jenisTiket = ['Weekday', 'Weekend'];
         $totalTerjual = 122;
 
-        // return $jenisTiket;
+        // return $jenisTiket; 
 
         return view('etiket.admin.master-data.tiket', [
             "tiket" => $data,

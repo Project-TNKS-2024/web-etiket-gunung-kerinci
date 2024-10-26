@@ -6,14 +6,6 @@
                 <div>Taman Nasional Kelinci Seblat</div>
             </a>
             <div class="d-none d-sm-flex align-items-center ">
-
-                <div class="d-flex gap-2" style="font-size:12px; width: 100%;">
-                    <div>Status Gunung:</div>
-                    <div class="d-flex fw-bold gap-1 align-items-center ">
-                        <div style="width:10px;height: 10px;" class="rounded-pill gk-bg-success200"></div>
-                        <div>Normal</div>
-                    </div>
-                </div>
                 <select class="form-select border-0 form-select-sm w-100" style="background-color: transparent" aria-label="Small select example">
                     <option value="id" selected>Pilih Bahasa : Indonesia</option>
                     <option value="en">Select Language: English</option>

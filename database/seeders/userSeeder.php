@@ -16,11 +16,11 @@ class userSeeder extends Seeder
     {
         // Create Superadmin
         User::create([
-            'email' => 'superadmin@example.com',
+            'email' => 'superadmin@tnks.com',
             'nik' => '1234567890',
             'token' => 'superadmin_token',
             'no_hp' => '08123456789',
-            'role' => 'superadmin',
+            'role' => 'admin',
             'password' => Hash::make('password'),
             'fullname' => 'Superadmin User',
             'path_foto' => 'superadmin.jpg',
@@ -29,7 +29,7 @@ class userSeeder extends Seeder
 
         // Create Admin
         User::create([
-            'email' => 'admin@example.com',
+            'email' => 'admin@tnks.com',
             'nik' => '0987654321',
             'token' => 'admin_token',
             'no_hp' => '08765432109',
