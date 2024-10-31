@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\destinasi as ModelDestinasi;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('etiket.admin.template.sidebar', function ($view) {
+            $destinasi = ModelDestinasi::all();
+            $view->with('DataDestinasi', $destinasi);
+        });
     }
 }

@@ -25,17 +25,18 @@
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                <span class="hide-menu">Destinasi</span>
             </li>
+            @foreach ($DataDestinasi as $itemDestinasi)
             <li class="sidebar-item">
-               <a class="sidebar-link" data-bs-toggle="collapse" href="#collapseGunungKerinci" role="button" aria-expanded="false" aria-controls="collapseGunungKerinci">
+               <a class="sidebar-link has-arrow" data-bs-toggle="collapse" href="#collapseDestinasi{{$itemDestinasi->id}}" role="button" aria-expanded="false" aria-controls="collapseDestinasi{{$itemDestinasi->id}}">
                   <span>
                      <img src="{{ asset('assets/icon/tnks/mountain-sun-solid.svg') }}"></img>
                   </span>
-                  <span class="hide-menu">Gunung Kerinci</span>
+                  <span class="hide-menu">{{$itemDestinasi->nama}}</span>
                </a>
-               <div class="collapse lis-collapse-destinasi" id="collapseGunungKerinci">
+               <div class="collapse lis-collapse-destinasi" id="collapseDestinasi{{$itemDestinasi->id}}">
                   <ul class="list-unstyled">
                      <li class="sidebar-item">
-                        <a class="sidebar-link" href="{{ route('admin.destinasi.detail', ['id' => 1]) }}" aria-expanded="false">
+                        <a class="sidebar-link" href="{{ route('admin.destinasi.detail', ['id' => $itemDestinasi->id]) }}" aria-expanded="false">
                            <span>
                               <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
                            </span>
@@ -43,7 +44,7 @@
                         </a>
                      </li>
                      <li class="sidebar-item">
-                        <a class="sidebar-link" href="{{route('admin.destinasi.tiket', ['id' => 1])}}" aria-expanded="false">
+                        <a class="sidebar-link" href="{{route('admin.destinasi.tiket', ['id' => $itemDestinasi->id])}}" aria-expanded="false">
                            <span>
                               <img src="{{ asset('assets/icon/tnks/ticket-dark.svg') }}"></img>
                            </span>
@@ -52,7 +53,7 @@
                      </li>
                      <!-- ---------------------------------------------------------------------------------- -->
                      <li class="sidebar-item">
-                        <a class="sidebar-link" href="" aria-expanded="false">
+                        <a class="sidebar-link" href="{{ route('admin.destinasi.booking',  ['id' => $itemDestinasi->id] )}}" aria-expanded="false">
                            <span>
                               <img src="{{ asset('assets/icon/tnks/ticket_alt-dark.svg') }}"></img>
                            </span>
@@ -86,6 +87,7 @@
                   </ul>
                </div>
             </li>
+            @endforeach
 
 
 
@@ -165,5 +167,7 @@
       </nav>
       <!-- End Sidebar navigation -->
    </div>
+
+
    <!-- End Sidebar scroll-->
 </aside>

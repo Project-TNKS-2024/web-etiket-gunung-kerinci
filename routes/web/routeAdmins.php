@@ -9,6 +9,7 @@ use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
 use App\Http\Controllers\etiket\admin\destinasi\destinasiController;
 use App\Http\Controllers\etiket\admin\destinasi\tiketController;
 use App\Http\Controllers\etiket\admin\master\destinasisController;
+use App\Http\Controllers\etiket\admin\destinasi\bookingController;
 
 
 
@@ -46,6 +47,7 @@ Route::middleware(['check.role:admin'])->group(function () {
    Route::post('admin/destinasi/tiket/delete', [tiketController::class, 'deleteAction'])->name('admin.destinasi.tiket.deleteAction');
 
    // Destinasi - booking
+   Route::get('admin/destinasi/{id}/booking', [bookingController::class, 'index'])->name('admin.destinasi.booking');
 
    // Destinasi - pendaki
 
@@ -58,21 +60,20 @@ Route::middleware(['check.role:admin'])->group(function () {
 
    // Master - Destinasi
    Route::get('admin/master/destinasi', [destinasisController::class, 'index'])->name('admin.master.destinasi');
+   Route::get('admin/master/destinasi/add', [destinasisController::class, 'add'])->name('admin.master.destinasi.add');
+   Route::post('admin/master/destinasi/add', [destinasisController::class, 'addAction'])->name('admin.master.destinasi.addAction');
+   Route::post('admin/master/destinasi/delete', [destinasisController::class, 'deleteAction'])->name('admin.master.destinasi.deleteAction');
 
 
 
-   //sampel destinasi
-   Route::get('admin/kelola/destinasi', [destinasis::class, 'daftar'])->name('admin.destinasi.daftar');
-   Route::get('admin/kelola/tambah-destinasi', [destinasis::class, 'tambah'])->name('admin.destinasi.tambah');
-   Route::post('admin/kelola/tambah-destinasi', [destinasis::class, 'tambahAction'])->name('admin.destinasi.tambahAction');
-   Route::post('admin/kelola/hapus-destinasi/{id}', [destinasis::class, 'hapus'])->name('admin.destinasi.hapus');
+
 
 
    // booking
    // Route::get('admin/kelola/booking', [AdminBooking::class, 'readNow'])->name('admin.booking.now.read');
 
 
-
+   // fitur - scan tiket
    Route::get('admin/fitur/scanTiket', [Scan::class, 'index'])->name('admin.fitur.scanTiket');
    Route::get('admin/fitur/DetailTiket/{uq}', [Scan::class, 'detailtiket'])->name('admin.fitur.detailTiket');
 });

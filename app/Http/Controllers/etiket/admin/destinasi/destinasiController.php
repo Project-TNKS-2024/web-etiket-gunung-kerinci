@@ -57,12 +57,12 @@ class destinasiController extends Controller
 
         return back()->with('success', 'Berhasil memperbarui tiket');
     }
-    public function pictureAddAction(Request $request, $id)
+    public function pictureAddAction(Request $request)
     {
         // Validate the request
         $request->validate([
             'id_destinasi' => 'required',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Added max size constraint
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5048', // Added max size constraint
             'foto_nama' => 'required|string|max:255', // Added max length constraint
             'foto_detail' => 'required|string|max:500', // Added max length constraint
         ]);
