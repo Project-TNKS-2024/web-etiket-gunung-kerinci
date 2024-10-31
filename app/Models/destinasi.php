@@ -29,17 +29,18 @@ class destinasi extends Model
     ];
 
 
-    public function gambar_destinasi() {
+    public function gambar_destinasi()
+    {
         return $this->hasMany(gambar_destinasi::class, 'id_destinasi');
     }
 
-    public function destinasi()
+    public function paket()
     {
         return $this->hasMany(gk_paket_tiket::class, 'id_destinasi');
     }
 
-    public function gates() {
+    public function gates()
+    {
         return $this->hasMany(gk_gates::class, 'id_destinasi');
     }
-
 }

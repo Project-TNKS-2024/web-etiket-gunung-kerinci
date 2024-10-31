@@ -408,7 +408,7 @@ class booking extends Controller
         // jika validasi gagal kembali ke halaman booking fp
 
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
-        $booking->update([
+        $booking->update([ 
             'status_booking' => 3
         ]);
         $ketua = $booking->pendakis[0];

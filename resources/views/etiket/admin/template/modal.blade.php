@@ -1,20 +1,87 @@
-<div id="modal-confirmation-container" class="d-none position-fixed w-screen h-screen top-0 left-0 d-flex justify-content-center align-items-center" style="background-color: rgba(0,0,0,.2)">
-    <form method="post" id="modal-confirmation-form" class="bg-white shadow rounded" style="min-width: 300px;">
-        @csrf
-        <div id="modal-confirmation-title" class="p-2 py-2 w-100 text-center" style="border-bottom: 1px solid var(--neutrals300)">Title</div>
-        <div id="modal-confirmation-body" class="p-2">Body</div>
-        <div id="modal-confirmation-footer" class="row p-2 px-4 d-flex justify-content-between align-items-center" style="border-top: 1px solid var(--neutrals300)">
-            <button type="submit" id="modal-confirmation-target" class="col-5 btn btn-primary">Konfirmasi</button>
-            <a onclick="closeConfirmationModal()" class="col-5 btn btn-primary gk-bg-neutrals500">Kembali</a>
+<!-- ========================================= Modal Delete =========================================  -->
+<!-- <a href="#" class="cursor-pointer shadow-sm"
+    data-bs-toggle="modal"
+    data-bs-target="#ModalDelete"
+    data-bs-action="google.com"
+    data-bs-input-hidden-input_hiddem="1"
+    data-bs-input-text-input_text="isian text"
+    data-bs-input-number-input_number="245"
+    data-bs-input-date-input_date="2023-01-01"
+    data-bs-title="title modal"
+    data-bs-body="pesan modal">
+</a> -->
+
+<div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="ModalDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+            <form id="deleteForm" method="POST" action="#">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalDeleteLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>...</p>
+                    <!-- Tempat untuk menampung input yang akan ditambahkan -->
+                    <div id="modalInputs"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 
 <script>
-    function closeConfirmationModal() {
-        console.log('123')
-        const el = document.getElementById('modal-confirmation-container');
-        el.classList.remove('d-flex');
-        el.classList.add('d-none');
-    }
+    // Script untuk menampilkan modal delete
+    const ModalDelete = document.getElementById('ModalDelete');
+    ModalDelete.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget; // Tombol yang men-trigger modal
+        const modalTitle = button.getAttribute('data-bs-title');
+        const modalBody = button.getAttribute('data-bs-body');
+        const modalActionUrl = button.getAttribute('data-bs-action'); // URL tujuan dari tombol Hapus
+        const modal = this;
+
+        // Mengatur konten title dan body
+        modal.querySelector('.modal-title').textContent = modalTitle;
+        modal.querySelector('.modal-body p').textContent = modalBody;
+        modal.querySelector('#deleteForm').setAttribute('action', modalActionUrl);
+
+        // Menghapus input lama jika ada
+        const modalInputs = modal.querySelector('#modalInputs');
+        modalInputs.innerHTML = ''; // Kosongkan isi sebelumnya
+
+        // Menambahkan input dari semua atribut data-bs-input-*
+        Array.from(button.attributes).forEach(attr => {
+            if (attr.name.startsWith('data-bs-input-')) {
+                // Mendapatkan nama input
+                const inputAttr = attr.name.replace('data-bs-input-', ''); // Ambil nama input dari atribut
+                const [inputType, inputName] = inputAttr.split('-');
+                const inputValue = attr.value;
+
+                // Membuat elemen input container dengan template literal
+                let inputContainer;
+
+                if (inputType === 'hidden') {
+                    // Untuk tipe hidden, tidak ada label
+                    inputContainer = `
+                    <input type="hidden" name="${inputName}" value="${inputValue}">
+                    `;
+                } else {
+                    // Untuk tipe lainnya, buat label dan input
+                    inputContainer = `
+                      <div class="mb-3">
+                        <label for="mdlipt_${inputName}" class="form-label">${inputName.charAt(0).toUpperCase() + inputName.slice(1).replace(/_/g, ' ')}</label>
+                        <input type="${inputType}" name="${inputName}" class="form-control" id="mdlipt_${inputName}" value="${inputValue}">
+                    </div>
+                    `;
+                }
+
+                // Tambahkan inputContainer ke modalInputs
+                modalInputs.innerHTML += inputContainer; // Menambahkan HTML ke dalam modalInputs
+            }
+        });
+    });
 </script>

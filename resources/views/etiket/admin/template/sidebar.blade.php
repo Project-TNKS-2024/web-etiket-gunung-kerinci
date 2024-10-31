@@ -52,15 +52,7 @@
                      </li>
                      <!-- ---------------------------------------------------------------------------------- -->
                      <li class="sidebar-item">
-                        <a class="sidebar-link" href="{{ route('admin.gate.daftar') }}" aria-expanded="false">
-                           <span>
-                              <img src="{{ asset('assets/icon/tnks/pointers-dark.svg') }}"></img>
-                           </span>
-                           <span class="hide-menu">Kelola Gate</span>
-                        </a>
-                     </li>
-                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="{{ route('admin.booking.now.read') }}" aria-expanded="false">
+                        <a class="sidebar-link" href="" aria-expanded="false">
                            <span>
                               <img src="{{ asset('assets/icon/tnks/ticket_alt-dark.svg') }}"></img>
                            </span>
@@ -102,7 +94,7 @@
                <span class="hide-menu">Master Data</span>
             </li>
             <li class="sidebar-item">
-               <a class="sidebar-link" href="{{ route('admin.destinasi.daftar') }}" aria-expanded="false">
+               <a class="sidebar-link" href="{{ route('admin.master.destinasi') }}" aria-expanded="false">
                   <span>
                      <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
                   </span>
