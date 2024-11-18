@@ -127,11 +127,150 @@
 @endsection
 @section('js')
 <script>
+   let dataProvinsi = [];
+   let dataKabupaten = [];
+   let dataKecamatan = [];
+   let dataKelurahan = [];
+
+   async function loadData() {
+      try {
+         const responseProvinsi = await fetch('/assets/json/provinsi.json');
+         dataProvinsi = await responseProvinsi.json();
+         // console.log('Data provinsi:', dataProvinsi);
+
+         const responseKabupaten = await fetch('/assets/json/kabupaten.json');
+         dataKabupaten = await responseKabupaten.json();
+         // console.log('Data kabupaten:', dataKabupaten);
+
+         const responseKecamatan = await fetch('/assets/json/kecamatan.json');
+         dataKecamatan = await responseKecamatan.json();
+         // console.log('Data kecamatan:', dataKecamatan);
+
+         const responseKelurahan = await fetch('/assets/json/kelurahan.json');
+         dataKelurahan = await responseKelurahan.json();
+         // console.log('Data kelurahan:', dataKelurahan);
+
+      } catch (error) {
+         console.error('Gagal memuat data:', error);
+      }
+   }
+
    const provinsiSelects = document.querySelectorAll('select.ipt-provinsi');
    const kabupatenSelect = document.querySelectorAll('select.ipt-kabupaten-kota');
    const kecamatanSelect = document.querySelectorAll('select.ipt-kecamatan');
    const kelurahanSelect = document.querySelectorAll('select.ipt-desa-kelurahan');
 
+   function refreshKabupaten(provinsiId, kabupatenSelect, kabupatenId = 0) {
+      const kabupatenOptions = dataKabupaten.filter(kabupaten => kabupaten.provinsi_id == provinsiId);
+      kabupatenSelect.innerHTML = '';
+      kabupatenOptions.forEach(kabupaten => {
+         let option = document.createElement('option');
+         option.value = kabupaten.id;
+         option.id = kabupaten.id;
+         option.textContent = kabupaten.name;
+         if (kabupaten.id == kabupatenId) {
+            option.selected = true;
+         }
+         kabupatenSelect.appendChild(option);
+      });
+   }
+
+   function refreshKecamatan(kabupatenId, kecamatanSelect, kecamatanId = 0) {
+      const kecamatanOptions = dataKecamatan.filter(kecamatan => kecamatan.kabupaten_id == kabupatenId);
+      kecamatanSelect.innerHTML = '';
+      kecamatanOptions.forEach(kecamatan => {
+         let option = document.createElement('option');
+         option.value = kecamatan.id;
+         option.id = kecamatan.id;
+         option.textContent = kecamatan.name;
+         if (kecamatan.id == kecamatanId) {
+            option.selected = true;
+         }
+         kecamatanSelect.appendChild(option);
+      });
+   }
+
+   function refreshKelurahan(kecamatanId, kelurahanSelect, kelurahanId = 0) {
+      const kelurahanOptions = dataKelurahan.filter(kelurahan => kelurahan.kecamatan_id == kecamatanId);
+      kelurahanSelect.innerHTML = '';
+      kelurahanOptions.forEach(kelurahan => {
+         let option = document.createElement('option');
+         option.value = kelurahan.id;
+         option.id = kelurahan.id;
+         option.textContent = kelurahan.name;
+         if (kelurahan.id == kelurahanId) {
+            option.selected = true;
+         }
+         kelurahanSelect.appendChild(option);
+      });
+   }
+
+   // Panggil fungsi saat halaman selesai dimuat
+   document.addEventListener('DOMContentLoaded', async function() {
+      await loadData();
+
+      provinsiSelects.forEach(select => {
+         const idProvinsi = select.value;
+
+         select.innerHTML = '';
+         dataProvinsi.forEach(provinsi => {
+            let option = document.createElement('option');
+            option.value = provinsi.id;
+            option.id = provinsi.id;
+            option.textContent = provinsi.name;
+            if (provinsi.id == idProvinsi) {
+               option.selected = true;
+            }
+            select.appendChild(option);
+         });
+         // event
+         select.addEventListener('change', function() {
+            index = this.id.split('-')[1];
+            const idProvinsi = this.value;
+            selectKabupaten = document.getElementById('kabupaten_kota-' + index);
+            console.log(selectKabupaten);
+            refreshKabupaten(idProvinsi, selectKabupaten);
+         })
+      })
+
+      kabupatenSelect.forEach(select => {
+         const idKabupaten = select.value;
+         index = select.id.split('-')[1];
+         idProvinsi = document.getElementById('provinsi-' + index).value;
+         refreshKabupaten(idProvinsi, select, idKabupaten);
+         // event
+         select.addEventListener('change', function() {
+            const idKabupaten = this.value;
+            selectKecamatan = document.getElementById('kecamatan-' + index);
+            refreshKecamatan(idKabupaten, selectKecamatan);
+         })
+      })
+
+      kecamatanSelect.forEach(select => {
+         const idKecamatan = select.value;
+         indexKabupaten = select.id.split('-')[1];
+         idKabupaten = document.getElementById('kabupaten_kota-' + indexKabupaten).value;
+         refreshKecamatan(idKabupaten, select, idKecamatan);
+         // event
+         select.addEventListener('change', function() {
+            const idKecamatan = this.value;
+            selectKelurahan = document.getElementById('desa_kelurahan-' + indexKabupaten);
+            refreshKelurahan(idKecamatan, selectKelurahan);
+         })
+
+
+      })
+      kelurahanSelect.forEach(select => {
+         const idKelurahan = select.value;
+         indexKecamatan = select.id.split('-')[1];
+         idKecamatan = document.getElementById('kecamatan-' + indexKecamatan).value;
+         refreshKelurahan(idKecamatan, select, idKelurahan);
+
+      });
+   });
+</script>
+
+<!-- <script>
    document.addEventListener('DOMContentLoaded', function() {
       fetch('/assets/json/provinsi.json')
          .then(response => response.json())
@@ -235,5 +374,5 @@
          fetchKelurahan(selectedKecamatanId, kelurahanSelect);
       }
    });
-</script>
+</script> -->
 @endsection

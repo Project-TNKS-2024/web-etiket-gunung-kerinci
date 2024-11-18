@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
-class uploadFileControlller extends Controller
+class uploadFileControlller extends HelperController
 {
     public function create(string $type, string $folder, UploadedFile $file)
     {

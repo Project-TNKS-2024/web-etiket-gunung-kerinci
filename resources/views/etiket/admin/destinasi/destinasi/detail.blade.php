@@ -249,7 +249,7 @@
                <td class="col-4">{{$g->nama}}</td>
                <td class="col-4">{{$g->detail}}</td>
                <td class="d-flex gap-1 bg-transparent align-items-center justify-content-center">
-                  <div onclick="openModal([ {{$g}} ])" class="text-black h-fit d-flex align-items-center gap-1">
+                  <div onclick="openModal([ {{ $g }} ])" class="text-black h-fit d-flex align-items-center gap-1">
                      <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/img_rol.svg')}}" />
                   </div>
                   <div class="text-black h-fit d-flex align-items-center gap-1">

@@ -59,9 +59,7 @@
             width: 50px;
             margin: 20px 0;
         }
-    </style>
 
-    <style>
         .border-between {
             border-top: 2px solid white;
             width: 50px;
@@ -236,6 +234,26 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
 
     @include('homepage.template.modal-notif')
+
+    <!-- script navigasi navbar homepage -->
+    <script>
+        function navigate(e, link, id) {}
+
+        const navItems = document.querySelectorAll(".nav-link");
+        for (let i = 0; i < navItems.length; i++) {
+            if (window.location.href !== navItems[i].href) {
+                navItems[i].classList.remove('gk-bg-base-white');
+                navItems[i].classList.remove('gk-text-primary700');
+                navItems[i].classList.remove('font-semibold');
+                navItems[i].classList.add('text-white');
+            } else {
+                navItems[i].classList.add('gk-bg-base-white');
+                navItems[i].classList.add('gk-text-primary700');
+                navItems[i].classList.add('font-semibold');
+                navItems[i].classList.remove('text-white');
+            }
+        }
+    </script>
 
     @yield('js')
 

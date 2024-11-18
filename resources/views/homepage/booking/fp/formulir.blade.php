@@ -125,7 +125,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
          <div class="col-12 col-md-6">
             <label for="provinsi-{{$index}}" class="w-100">Provinsi</label>
             <select class="form-control ipt-provinsi" name="formulir[{{$index}}][provinsi]" id="provinsi-{{$index}}">
-               <option value="Null">{{$pendaki ? $pendaki->provinsi : "Pilih Provinsi"}}</option>
+               <option value="{{$pendaki ? $pendaki->provinsi : 0 }}" selected>Pilih Provinsi</option>
             </select>
             @error('formulir.'.$index.'.provinsi')
             <div class="text-danger">{{ $message }}</div>
@@ -134,7 +134,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
          <div class="col-12 col-md-6">
             <label for="kabupaten_kota-{{$index}}" class="w-100">Kabupaten/Kota</label>
             <select class="form-control ipt-kabupaten-kota" name="formulir[{{$index}}][kabupaten_kota]" id="kabupaten_kota-{{$index}}">
-               <option value="Null">{{$pendaki ? $pendaki->kabupaten : "Pilih Kabupaten/Kota"}}</option>
+               <option value="{{$pendaki ? $pendaki->kabupaten : 0 }}" selected>Pilih Kabupaten/Kota</option>
                <!-- Tambahkan opsi sesuai kebutuhan -->
             </select>
             @error('formulir.'.$index.'.kabupaten_kota')
@@ -148,7 +148,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
          <div class="col-12 col-md-6">
             <label for="kecamatan-{{$index}}" class="w-100">Kecamatan</label>
             <select class="form-control ipt-kecamatan" name="formulir[{{$index}}][kecamatan]" id="kecamatan-{{$index}}">
-               <option value="Null">{{$pendaki ? $pendaki->kec : "Pilih Kecamatan"}}</option>
+               <option value="{{$pendaki ? $pendaki->kec : 0 }}" selected>Pilih Kecamatan</option>
                <!-- Tambahkan opsi sesuai kebutuhan -->
             </select>
             @error('formulir.'.$index.'.kecamatan')
@@ -158,7 +158,7 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
          <div class="col-12 col-md-6">
             <label for="desa_kelurahan-{{$index }}" class="w-100">Desa/Kelurahan</label>
             <select class="form-control ipt-desa-kelurahan" name="formulir[{{$index}}][desa_kelurahan]" id="desa_kelurahan-{{$index }}">
-               <option value="Null">{{$pendaki ? $pendaki->desa : "Pilih Desa/Kelurahan"}}</option>
+               <option value="{{$pendaki ? $pendaki->desa : 0 }}" selected>Pilih Desa/Kelurahan"</option>
                <!-- Tambahkan opsi sesuai kebutuhan -->
             </select>
             @error('formulir.'.$index.'.desa_kelurahan')

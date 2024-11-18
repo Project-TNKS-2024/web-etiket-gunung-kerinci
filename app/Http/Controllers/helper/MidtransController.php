@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Midtrans\Transaction;
 
-class MidtransController extends Controller
+class MidtransController extends HelperController
 {
     public function __construct()
     {

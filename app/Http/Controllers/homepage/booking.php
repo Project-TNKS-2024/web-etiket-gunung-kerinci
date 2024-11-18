@@ -249,7 +249,7 @@ class booking extends Controller
     public function bookingFPStore(Request $request)
     {
         $request->validate([
-            'id_booking' => 'required|integer',
+            'id_booking' => 'required',
             'action' => 'nullable|string|in:save,next',
         ]);
         $booking = gk_booking::with('gktiket')->find($request->id_booking);
@@ -408,7 +408,7 @@ class booking extends Controller
         // jika validasi gagal kembali ke halaman booking fp
 
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
-        $booking->update([ 
+        $booking->update([
             'status_booking' => 3
         ]);
         $ketua = $booking->pendakis[0];
