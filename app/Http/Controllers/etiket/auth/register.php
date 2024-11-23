@@ -19,13 +19,16 @@ class register extends Controller
     {
         // Validasi data yang diterima dari form registrasi
         $request->validate([
-            'fullname' => 'required|string|max:255',
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
             'phone' => 'required|string|max:20', // Sesuaikan dengan kebutuhan Anda
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ], [
-            'fullname.required' => 'Nama lengkap harus diisi.',
-            'fullname.max' => 'Nama lengkap maksimal :max karakter.',
+            'firstName.required' => 'Nama lengkap harus diisi.',
+            'firstName.max' => 'Nama lengkap maksimal :max karakter.',
+            'lastName.required' => 'Nama lengkap harus diisi.',
+            'lastName.max' => 'Nama lengkap maksimal :max karakter.',
             'phone.required' => 'Nomor handphone harus diisi.',
             'phone.max' => 'Nomor handphone maksimal :max karakter.',
             'email.required' => 'Email harus diisi.',
@@ -38,7 +41,8 @@ class register extends Controller
         ]);
         // Membuat user baru berdasarkan data yang diterima
         $user = User::create([
-            'fullname' => $request->fullname,
+            'firstName' => $request->firstName,
+            'lastName' => $request->lastName,
             'no_hp' => $request->phone,
             'email' => $request->email,
             'password' => Hash::make($request->password),

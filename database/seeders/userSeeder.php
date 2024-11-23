@@ -22,7 +22,8 @@ class userSeeder extends Seeder
             'no_hp' => '08123456789',
             'role' => 'admin',
             'password' => Hash::make('password'),
-            'fullname' => 'Superadmin User',
+            'firstname' => 'Superadmin',
+            'lastname' => 'User',
             'path_foto' => 'superadmin.jpg',
             'email_verified_at' => now(),
         ]);
@@ -35,7 +36,8 @@ class userSeeder extends Seeder
             'no_hp' => '08765432109',
             'role' => 'admin',
             'password' => Hash::make('password'),
-            'fullname' => 'Admin User',
+            'firstname' => 'Admin',
+            'lastname' => 'User',
             'path_foto' => 'admin.jpg',
             'email_verified_at' => now(),
         ]);
@@ -48,7 +50,8 @@ class userSeeder extends Seeder
             'no_hp' => '08765432509',
             'role' => 'user',
             'password' => Hash::make('password'),
-            'fullname' => 'User 1',
+            'firstname' => 'User',
+            'lastname' => '1',
             'path_foto' => 'user 1.jpg',
         ]);
         // Create two Users
@@ -59,7 +62,8 @@ class userSeeder extends Seeder
             'no_hp' => '08765782509',
             'role' => 'user',
             'password' => Hash::make('password'),
-            'fullname' => 'User 2',
+            'firstname' => 'User',
+            'lastname' => '2',
             'path_foto' => 'user 1.jpg',
         ]);
     }

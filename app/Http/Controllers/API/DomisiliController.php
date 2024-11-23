@@ -11,10 +11,26 @@ use App\Models\d_Kelurahan;
 
 class DomisiliController extends Controller
 {
+    public $profinsi;
+    public $kabupaten;
+    public $kecamatan;
+    public $kelurahan;
+
+    public function __construct()
+    {
+        $this->profinsi = file_get_contents(public_path('assets/json/provinsi.json'));
+        $this->profinsi = json_decode($this->profinsi, true);
+        $this->kabupaten = file_get_contents(public_path('assets/json/kabupaten.json'));
+        $this->kabupaten = json_decode($this->kabupaten, true);
+        $this->kecamatan = file_get_contents(public_path('assets/json/kecamatan.json'));
+        $this->kecamatan = json_decode($this->kecamatan, true);
+        $this->kelurahan = file_get_contents(public_path('assets/json/kelurahan.json'));
+        $this->kelurahan = json_decode($this->kelurahan, true);
+    }
     // get list profinsi
     public function getProvinsi()
     {
-        $data = d_Provinsi::all();
+        $data = $this->profinsi;
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -24,15 +40,19 @@ class DomisiliController extends Controller
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'gagal mengambil data semua provinsi',
+                'message' => 'gagal mengambil data provinsi',
                 'data' => $data
             ]);
         }
     }
+
     // get list kabupaten by id provinsi
-    public function getKabupaten($id)
+    public function getKabupatenByIdProvinsi($id)
     {
-        $data = d_Kabupaten::where('provinsi_id', $id)->get();
+        $data = $this->kabupaten;
+        $data = array_filter($data, function ($item) use ($id) {
+            return $item['provinsi_id'] == $id;
+        });
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -42,15 +62,19 @@ class DomisiliController extends Controller
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'gagal mengambil data semua kabupaten dari provinsi id ' . $id,
+                'message' => 'gagal mengambil data kabupaten',
                 'data' => $data
             ]);
         }
     }
+
     // get list kecamatan by id kabupaten
-    public function getKecamatan($id)
+    public function getKecamatanByIdKabupaten($id)
     {
-        $data = d_Kecamatan::where('kabupaten_id', $id)->get();
+        $data = $this->kecamatan;
+        $data = array_filter($data, function ($item) use ($id) {
+            return $item['kabupaten_id'] == $id;
+        });
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -60,15 +84,19 @@ class DomisiliController extends Controller
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'gagal mengambil data semua kecamatan dari kabupaten id ' . $id,
+                'message' => 'gagal mengambil data kecamatan',
                 'data' => $data
             ]);
         }
     }
+
     // get list desa by id kecamatan
-    public function getKelurahan($id)
+    public function getKelurahanByIdKecamatan($id)
     {
-        $data = d_Kelurahan::where('kecamatan_id', $id)->get();
+        $data = $this->kelurahan;
+        $data = array_filter($data, function ($item) use ($id) {
+            return $item['kecamatan_id'] == $id;
+        });
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -78,7 +106,7 @@ class DomisiliController extends Controller
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'gagal mengambil data semua desa dari kecamatan id ' . $id,
+                'message' => 'gagal mengambil data desa',
                 'data' => $data
             ]);
         }
@@ -87,7 +115,10 @@ class DomisiliController extends Controller
     // get detail provinsi by id
     public function getProvinsiById($id)
     {
-        $data = d_Provinsi::where('id', $id)->first();
+        $data = $this->profinsi;
+        $data = array_filter($data, function ($item) use ($id) {
+            return $item['id'] == $id;
+        });
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -97,15 +128,19 @@ class DomisiliController extends Controller
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'gagal mengambil data provinsi dengan id ' . $id,
+                'message' => 'gagal mengambil data provinsi',
                 'data' => $data
             ]);
         }
     }
+
     // get detail kabupaten by id  
     public function getKabupatenById($id)
     {
-        $data = d_Kabupaten::where('id', $id)->first();
+        $data = $this->kabupaten;
+        $data = array_filter($data, function ($item) use ($id) {
+            return $item['id'] == $id;
+        });
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -115,15 +150,19 @@ class DomisiliController extends Controller
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'gagal mengambil data kabupaten dengan id ' . $id,
+                'message' => 'gagal mengambil data kabupaten',
                 'data' => $data
             ]);
         }
     }
+
     // get detail kecamatan by id
     public function getKecamatanById($id)
     {
-        $data = d_Kecamatan::where('id', $id)->first();
+        $data = $this->kecamatan;
+        $data = array_filter($data, function ($item) use ($id) {
+            return $item['id'] == $id;
+        });
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -133,15 +172,19 @@ class DomisiliController extends Controller
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'gagal mengambil data kecamatan dengan id ' . $id,
+                'message' => 'gagal mengambil data kecamatan',
                 'data' => $data
             ]);
         }
     }
+
     // get detail desa by id
     public function getKelurahanById($id)
     {
-        $data = d_Kelurahan::where('id', $id)->first();
+        $data = $this->kelurahan;
+        $data = array_filter($data, function ($item) use ($id) {
+            return $item['id'] == $id;
+        });
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -151,7 +194,7 @@ class DomisiliController extends Controller
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'gagal mengambil data desa dengan id ' . $id,
+                'message' => 'gagal mengambil data desa',
                 'data' => $data
             ]);
         }

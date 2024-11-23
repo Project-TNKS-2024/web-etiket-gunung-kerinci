@@ -36,6 +36,11 @@
             color: white;
         }
 
+        @media (max-width: 425px) {
+            #navbarSupportedContent .navbar-nav .nav-item {
+                width: -webkit-fill-available;
+            }
+        }
 
         .header-bg::before {
             content: '';
@@ -228,8 +233,8 @@
 
     @yield('modal')
 
-    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.bundle.js') }}"></script>
+    <!-- <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.min.js') }}"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
 
@@ -237,8 +242,6 @@
 
     <!-- script navigasi navbar homepage -->
     <script>
-        function navigate(e, link, id) {}
-
         const navItems = document.querySelectorAll(".nav-link");
         for (let i = 0; i < navItems.length; i++) {
             if (window.location.href !== navItems[i].href) {

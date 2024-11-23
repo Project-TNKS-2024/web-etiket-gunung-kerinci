@@ -30,4 +30,13 @@ class uploadFileControlller extends HelperController
         }
         return false;
     }
+    public function get($path)
+    {
+        if (file_exists(public_path($path))) {
+            return public_path($path);
+        } else {
+            return public_path('assets/img/sampel/sampel 2.png');
+        }
+        return null;
+    }
 }

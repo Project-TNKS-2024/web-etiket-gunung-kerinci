@@ -64,14 +64,25 @@
                         @csrf
                         <div class="row mb-3">
                             <div class="form-group col-6">
-                                <label for="fullname" class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-control @error('fullname') is-invalid @enderror" id="fullname" name="fullname" value="{{ old('fullname') }}" required>
-                                @error('fullname')
+                                <label for="firstName" class="form-label">Nama Depan</label>
+                                <input type="text" class="form-control @error('firstName') is-invalid @enderror" id="firstName" name="firstName" value="{{ old('firstName') }}" required>
+                                @error('firstName')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
+                            <div class="form-group col-6">
+                                <label for="lastName" class="form-label">Nama Belakang</label>
+                                <input type="text" class="form-control @error('lastName') is-invalid @enderror" id="lastName" name="lastName" value="{{ old('lastName') }}" required>
+                                @error('lastName')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mb-3">
                             <div class="form-group col-6">
                                 <label for="phone" class="form-label">Nomor Handphone</label>
                                 <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
@@ -81,16 +92,15 @@
                                 </span>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
-                            @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-
+                            <div class="form-group col-6 ">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                                @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
                         <div class="row mb-3">
                             <div class="form-group col-6">

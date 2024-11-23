@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\helper;
 
 use App\Http\Controllers\Controller;
-use App\Models\d_Provinsi;
 use App\Models\gk_booking;
 use App\Models\gk_pendaki;
 use App\Models\gk_tiket_pendaki;
@@ -137,16 +136,13 @@ class BookingHelperController extends Controller
 
     public function getDomisili($idprovinsi, $idkabupaten, $idkecamatan, $idkelurahan)
     {
-        $provinsi = d_Provinsi::find($idprovinsi);
-        $kabupaten = $provinsi->kabupaten()->find($idkabupaten);
-        $kecamatan = $kabupaten->kecamatan()->find($idkecamatan);
-        $kelurahan = $kecamatan->kelurahan()->find($idkelurahan);
-        return [
-            'provinsi' => $provinsi->name,
-            'kabupaten' => $kabupaten->name,
-            'kecamatan' => $kecamatan->name,
-            'kelurahan' => $kelurahan->name,
-        ];
+        //   
+        // return [
+        //     'provinsi' => $provinsi->name,
+        //     'kabupaten' => $kabupaten->name,
+        //     'kecamatan' => $kecamatan->name,
+        //     'kelurahan' => $kelurahan->name,
+        // ];
     }
 
     public function validasiBooking($idbooking)

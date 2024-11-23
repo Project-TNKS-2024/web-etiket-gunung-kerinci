@@ -18,35 +18,31 @@
         <button class="navbar-toggler index-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse py-1" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse py-2" id="navbarSupportedContent">
 
             <ul class="navbar-nav me-auto mb-2 mb-sm-0 d-flex align-items-center align-items-md-center">
 
-                <li class="nav-item">
-                    <a href="{{ route('homepage.beranda') }}" id="navigasi0" class="nav-link text-center text-white rounded-lg py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
-                        style="cursor: pointer; font-size: 14px;" aria-current="page"
-                        onclick="navigate(event, '{{ route('homepage.beranda') }}', 'navigasi0')">
+                <li class="nav-item ">
+                    <a href="{{ route('homepage.beranda') }}" id="navigasi0" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        style="cursor: pointer; font-size: 14px;" aria-current="page">
                         Beranda
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('homepage.sop') }}" id="navigasi1" class="nav-link text-center text-white rounded-lg py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
-                        style="cursor: pointer; font-size: 14px;" aria-current="page"
-                        onclick="navigate(event, '{{ route('homepage.sop') }}', 'navigasi1')">
+                <li class="nav-item ">
+                    <a href="{{ route('homepage.sop') }}" id="navigasi1" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        style="cursor: pointer; font-size: 14px;" aria-current="page">
                         SOP Pendakian
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('homepage.panduan') }}" id="navigasi2" class="nav-link text-center text-white rounded-lg py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
-                        style="cursor: pointer; font-size: 14px;" aria-current="page"
-                        onclick="navigate(event, '{{ route('homepage.panduan') }}', 'navigasi2')">
+                <li class="nav-item ">
+                    <a href="{{ route('homepage.panduan') }}" id="navigasi2" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        style="cursor: pointer; font-size: 14px;" aria-current="page">
                         Panduan Booking
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('homepage.booking', ['id' => 1]) }}" id="navigasi3" class="nav-link text-center text-white rounded-lg py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
-                        style="cursor: pointer; font-size: 14px;" aria-current="page"
-                        onclick="navigate(event, '{{ route('homepage.booking', ['id' => 1]) }}', 'navigasi3')">
+                <li class="nav-item ">
+                    <a href="{{ route('homepage.booking', ['id' => 1]) }}" id="navigasi3" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        style="cursor: pointer; font-size: 14px;" aria-current="page">
                         Booking Online
                     </a>
                 </li>
@@ -54,28 +50,29 @@
 
             </ul>
 
-            <ul class="navbar-nav mb-2 mb-sm-0 d-flex gap-2">
+            <ul class="navbar-nav mb-2 mb-sm-0 d-flex align-items-center ">
                 @guest
                 <!-- If the user is not logged in -->
                 <li class="nav-item" style="height: fit-content">
-                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-lg px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('register') }}" style="height: fit-content;">Register</a>
+                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-4 px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('register') }}" style="height: fit-content;">Register</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-lg px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('login') }}">Login</a>
+                <li class="nav-item ">
+                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-4 px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('login') }}">Login</a>
                 </li>
                 @endguest
 
                 @auth
                 <!-- If the user is logged in with the role 'user' -->
                 @if (Auth::user()->role == 'user')
-                <li class="nav-item">
-                    <a class="nav-link text-white" aria-current="page" href="{{ route('user.dashboard') }}">Dashboard</a>
+                <li class="nav-item ">
+                    <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2" aria-current="page" href="{{ route('user.dashboard') }}">Dashboard</a>
                 </li>
                 @endif
                 @if (Auth::user()->role == 'admin')
-                <li class="nav-item">
-                    <a class="nav-link text-white" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <li class="nav-item ">
+                    <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard</a>
                 </li>
+
                 @endif
                 @endauth
             </ul>

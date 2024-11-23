@@ -15,13 +15,13 @@
                 <div class="row">
                     <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
                         <label class="mandatory text-base font-semibold">Nama Depan</label>
-                        <input value="{{ $user->nama_depan }}" type="text" class="form-control border-secondary"
-                            id="nama-depan" name="nama_depan" placeholder="Nama Depan">
+                        <input value="{{ $user->firstName }}" type="text" class="form-control border-secondary"
+                            id="nama-depan" name="firstName" placeholder="Nama Depan">
                     </div>
                     <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
                         <label class="mandatory text-base font-semibold">Nama Belakang</label>
-                        <input value="{{ $user->nama_belakang }}" type="text" class="form-control border-secondary"
-                            id="nama-belakang" name="nama_belakang" placeholder="Nama Belakang">
+                        <input value="{{ $user->lastName }}" type="text" class="form-control border-secondary"
+                            id="nama-belakang" name="lastName" placeholder="Nama Belakang">
                     </div>
                 </div>
                 <div class="row">
@@ -31,15 +31,15 @@
                             <button
                                 class="w-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
                                 id="dropdown-kewarganegaraan" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                WNI
+                                {{$user->kewarganegaraan}}
                             </button>
 
                             <ul class="dropdown-menu w-100 shadow">
-                                <li><a onclick="select(event, 'dropdown-kewarganegaraan','kewarganegaraan', 'WNI')" class="dropdown-item" href="#">WNA</a></li>
-                                <li><a onclick="select(event, 'dropdown-kewarganegaraan','kewarganegaraan', 'WNA')" class="dropdown-item" href="#">WNI</a></li>
+                                <li><a onclick="selectKwn(event, 'dropdown-kewarganegaraan','kewarganegaraan', 'WNA')" class="dropdown-item" href="#">Warga Negara Indonesia (WNA)</a></li>
+                                <li><a onclick="selectKwn(event, 'dropdown-kewarganegaraan','kewarganegaraan', 'WNI')" class="dropdown-item" href="#">Warga Negara Asing WNI</a></li>
                             </ul>
                         </div>
-                        <input name="kewarganegaraan" id="kewarganegaraan" value="" type="hidden" />
+                        <input name="kewarganegaraan" id="kewarganegaraan" value="{{$user->kewarganegaraan}}" type="hidden" />
                     </div>
                     <div class="form-group my-3 col-12 col-sm-12 col-md-12 col-lg-6">
                         <label class="mandatory text-base font-semibold" for="id-pendaftar">NIK/Passport</label>
@@ -59,24 +59,27 @@
                         <label class="mandatory text-base font-semibold">Nomor Telepon</label>
                         <div class="d-flex gap-2">
                             <div class="dropdown custom-dropdown-item">
-                                <button type="button"
+                                <button
                                     class="h-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center"
-                                    id="dropdown-identitas" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="{{ asset('assets/img/logo/id-flag.png') }}" width="20" />
+                                    id="dropdown-country" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                                    <!-- <img src="{{ asset('assets/img/logo/id-flag.png') }}" width="20" /> -->
+                                    {{$user->telp_country}}
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="dropdown-identitas">
-                                    <div id="telepon-item"
-                                        style="overflow-y:auto; width: fit-content; max-height: 200px; overflow-x:hidden;">
-                                    </div>
-                                    <div class="position-fixed w-100 *: " style="bottom: -40px;width:fit-content;">
+                                    <div class="position-fixed w-100 *: " style="width:fit-content;">
                                         <input type="text" class="form-control rounded-sm" id="cariTelepon"
                                             placeholder="Cari Negara">
                                     </div>
+                                    <div id="telepon-item"
+                                        style="overflow-y:auto; width: fit-content; max-height: 200px; overflow-x:hidden; margin-top:40px;">
+                                    </div>
                                 </div>
                             </div>
-                            <input value="{{ auth()->user()->no_hp }}" type="text" class="form-control border-secondary "
+                            <input value="{{ $user->no_hp }}" type="text" class="form-control border-secondary "
                                 id="nomor-telepon" name="nomor_telepon" placeholder="Nama Telepon">
+                            <input type="hidden" name="telp_country" value="{{$user->telp_country}}" id="telp_country">
                         </div>
                     </div>
                 </div>
@@ -94,7 +97,6 @@
         </div>
     </div>
 </div>
-@include('etiket.user.template.profile.flags-script')
 
 @endsection
 
@@ -102,10 +104,12 @@
 
 
 @section('js')
+<!-- script dropdown no telp -->
+@include('etiket.user.template.profile.flags-script')
 
 <!-- script dropdown kewarganegaraan -->
 <script>
-    function select(event, callerId, inputId, value) {
+    function selectKwn(event, callerId, inputId, value) {
         const caller = document.getElementById(callerId);
         const input = document.getElementById(inputId);
 
@@ -114,6 +118,7 @@
     }
 </script>
 
+<!-- menu active -->
 <script>
     let countriesData = [];
     const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");

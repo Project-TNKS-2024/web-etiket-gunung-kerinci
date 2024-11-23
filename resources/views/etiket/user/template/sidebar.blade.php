@@ -19,6 +19,9 @@
             class="dashboard-sidebar-btn rounded-lg">Dashboard</a>
         <a href="{{ route('user.dashboard.profile') }}" id="dashboard-profile"
             class="dashboard-sidebar-btn rounded-lg">Profile</a>
+        <a href="{{ route('user.dashboard.profile') }}" id="dashboard-profile"
+            class="dashboard-sidebar-btn rounded-lg">Riwayat Booking</a>
+
         <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
             class="dashboard-sidebar-btn rounded-lg">Ubah Password</a>
 

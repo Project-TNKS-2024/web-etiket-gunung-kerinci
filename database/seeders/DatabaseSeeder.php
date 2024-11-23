@@ -15,11 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         $this->call([
-            // userSeeder::class,
-            // destinasi_gate::class,
-            // paket_tiket::class,
-            // Booking::class,
-            DomisiliSeeder::class
+            userSeeder::class,
+            destinasi_gate::class,
+            paket_tiket::class,
+            Booking::class,
         ]);
     }
 }
