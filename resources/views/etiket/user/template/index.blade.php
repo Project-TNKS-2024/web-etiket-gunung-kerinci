@@ -1,6 +1,7 @@
 @extends('homepage.template.index')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('componen/tailwind-classes.css') }}">
 <style>
     .dashboard-sidebar.accessories {
         height: 141px;
@@ -32,6 +33,7 @@
         border-color: var(--neutrals500)
     }
 </style>
+
 @yield('sub-css')
 @endsection
 
@@ -51,11 +53,20 @@
 </main>
 @endsection
 
+<!-- menu active -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let menuDFash = document.querySelectorAll('.dashboard-sidebar-btn');
+        menuDFash.forEach(element => {
+            if (window.location.href === element.href) {
+                element.classList.add('active');
+            } else {
+                element.classList.remove('active');
+            }
+        });
+    });
+</script>
 @section('js')
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-<script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.min.js') }}"></script>
 
-@stack('scripts')
 @endsection

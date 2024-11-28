@@ -46,9 +46,9 @@ class profile extends Controller
         ]);
 
         if ($request->nomor_telepon[0] == 0) {
-            $request->nomor_telepon = substr($request->nomor_telepon, 1);
+            $request['nomor_telepon'] = substr($request->nomor_telepon, 1);
         }
-        $request->nomor_telepon = $request->telp_country . ' ' . $request->nomor_telepon;
+        $request['nomor_telepon'] = $request->telp_country . ' ' . $request->nomor_telepon;
 
 
         User::where('id', $user->id)->update([

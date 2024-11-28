@@ -118,14 +118,4 @@
     }
 </script>
 
-<!-- menu active -->
-<script>
-    let countriesData = [];
-    const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");
-    sidebarMenu.forEach((o, i) => {
-        sidebarMenu[i].classList.remove("active");
-    });
-    const profile = document.querySelector("#dashboard-profile");
-    profile.classList.add("active");
-</script>
 @endsection

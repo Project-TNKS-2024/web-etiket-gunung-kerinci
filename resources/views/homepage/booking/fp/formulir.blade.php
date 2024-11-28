@@ -58,11 +58,17 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
 
 <div class="row mb-3">
    <div class="col-12 col-md-6">
-      <label for="nama-{{$index}}" class="w-100 fw-bold">Nama</label>
-      <input type="text" class="form-control" name="formulir[{{$index}}][nama]" id="nama-{{$index}}" value="{{ old('formulir.'.$index.'.nama', !$pendaki ? '' :$pendaki->nama) }}">
-      @error('formulir.' .$index. '.nama')
-      <div class="text-danger">{{ $message }}</div>
-      @enderror
+      <div class="row">
+         <div class="col-12 col-md-6">
+            <label for="nama-{{$index}}" class="w-100 fw-bold">Nama</label>
+            <input type="text" class="form-control" name="formulir[{{$index}}][nama]" id="nama-{{$index}}" value="{{ old('formulir.'.$index.'.nama', !$pendaki ? '' :$pendaki->nama) }}">
+            @error('formulir.' .$index. '.nama')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+         </div>
+         <div class="col-12 col-md-6">
+         </div>
+      </div>
    </div>
    <div class="col-12 col-md-6">
       <label for="lampiran_identitas-{{$index}}" class="w-100 fw-bold mandatory">Lampiran Identitas</label>

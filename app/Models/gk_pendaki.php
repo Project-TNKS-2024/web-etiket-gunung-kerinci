@@ -18,7 +18,8 @@ class gk_pendaki extends Model
 
         // input identias
         'kategori_pendaki',
-        'nama',
+        'first_name',
+        'last_name',
         'nik',
         'jenis_kelamin',
 

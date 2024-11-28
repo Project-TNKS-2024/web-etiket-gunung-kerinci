@@ -52,11 +52,15 @@
         <div class="col-12 col-sm-12 col-lg-7 ">
             <div id="carouselExample" class="carousel slide">
                 <div class="carousel-inner">
-                    @foreach ($gambar as $g)
+                    @forelse ($gambar as $g)
                     <div class="carousel-item {{ $loop->index == 0 ? 'active' : ''}}">
                         <img src="{{ url('/').'/'.$g->src }}" class="d-block w-100" style="object-fit: cover;height: 480px;" alt="...">
                     </div>
-                    @endforeach
+                    @empty
+                    <div class="carousel-item active">
+                        <img src="{{ asset('assets/img/sampel/sampel 2.png') }}" class="d-block w-100" style="object-fit: cover;height: 480px;" alt="...">
+                    </div>
+                    @endforelse
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -77,7 +81,7 @@
                 <div class="card-body">
                     <h5 class="card-title fw-bold">{{$p->nama}}</h5>
                     <p class="card-text">{{$p->keterangan}}</p>
-                    <a href="{{route('homepage.bookingpaket',['id' => $p->id])}}" style="display: table;" class="btn btn-primary ms-auto">Pesan</a>
+                    <a href="{{route('homepage.booking.destinasi.paket.tiket',['id' => $p->id])}}" style="display: table;" class="btn btn-primary ms-auto">Pesan</a>
                 </div>
             </div>
             @endforeach

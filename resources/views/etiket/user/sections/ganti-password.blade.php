@@ -32,48 +32,25 @@
                     <div class="col-12 col-lg-6">
                         <div class="text-start form-group">
                             <label class="font-semibold form-label" for="new_password">Password Baru</label>
-                            <input class="form-control @error('password_baru')  is-invalid @enderror " name="password_baru"
-                                id="password_baru" type="password" placeholder="Password Baru" required autofocus />
-                            @error('password_baru')
-                            <span class="invalid-feedback" role="alert">
-                                {{ $message }}
-                            </span>
-                            @enderror
-                            <label class="text-start text-sm gk-text-neutrals400">Password <span
-                                    id="passwordStrength"></span></label>
+                            <input class="form-control @error('password_baru')  is-invalid @enderror " name="password_baru" id="password_baru" type="password" placeholder="Password Baru" required autofocus />
+                            <label class="text-start text-sm gk-text-neutrals400">
+                                Password <span id="passwordStrength"></span>
+                            </label>
                         </div>
                     </div>
                     <div class="col-12 col-lg-6">
                         <div class="text-start form-group">
-                            <label class="font-semibold" for="password_baru">Konfirmasi Password Baru</label>
+                            <label class="font-semibold form-label" for="password_baru">Konfirmasi Password Baru</label>
                             <input class="form-control" name="password_baru_confirmation" id="password_baru_confirmation"
                                 type="password" oninput="confirmPassword" placeholder="Password Baru" required />
                             <label class="text-start text-sm gk-text-neutrals400" id="passwordConfirmed"></label>
                         </div>
-                        <div class="text-start form-group ">
-                            <button type=" submit" class="btn shadow bg-linear-gradient-primary">Atur Ulang Kata Sandi</button>
-
+                        <div class="text-start form-group mt-2">
+                            <button type=" submit" class="btn btn-gl-primary ">Atur Ulang Kata Sandi</button>
                         </div>
                     </div>
-
-                    {{--
-
-                <div class="text-start my-4">
-                    <button onclick="changepage(event)" class="btn btn-outline-secondary w-100 py-2 text-sm border-0">
-                        Check Halaman Success
-                    </button>
-                </div>
-                --}}
-
                 </div>
             </form>
-
-            <div class="form h-full d-flex flex-column justify-content-center reset-form gk-bg-base-white px-4 rounded-2xl text-center d-none align-items-center"
-                onclick="changepage(event)" id="resetSuccess" style="">
-                <img src="{{ asset('assets/img/dashboard/Successmark.png') }}" width="120" />
-                <h3 class="text-xl font-bold mt-4">Atur Ulang Password Berhasil</h3>
-                <p class="text-sm gk-text-neutrals400">Password anda telah sukses di ubah</p>
-            </div>
         </div>
     </div>
 </div>
@@ -154,34 +131,6 @@
         }
         return strength;
     }
-
-    function changepage(e) {
-        e.preventDefault();
-        const form = document.getElementById("resetForm");
-        const successPage = document.getElementById("resetSuccess");
-
-        if (form.classList.contains("d-flex")) {
-            form.classList.remove("d-flex");
-            form.classList.add("d-none");
-
-            successPage.classList.add("d-flex");
-            successPage.classList.remove("d-none");
-        } else {
-            successPage.classList.remove("d-flex");
-            successPage.classList.add("d-none");
-
-            form.classList.add("d-flex");
-            form.classList.remove("d-none");
-        }
-    }
 </script>
 
-<script>
-    const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");
-    sidebarMenu.forEach((o, i) => {
-        sidebarMenu[i].classList.remove("active");
-    });
-    const password = document.querySelector("#dashboard-password");
-    password.classList.add("active");
-</script>
 @endsection

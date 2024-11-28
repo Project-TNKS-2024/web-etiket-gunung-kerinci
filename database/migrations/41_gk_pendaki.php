@@ -15,7 +15,8 @@ return new class extends Migration
             $table->unsignedBigInteger('tiket_id');
             // enum wna/wni
             $table->enum('kategori_pendaki', ['wna', 'wni']);
-            $table->string('nama');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('nik');
             $table->string('lampiran_identitas');
 

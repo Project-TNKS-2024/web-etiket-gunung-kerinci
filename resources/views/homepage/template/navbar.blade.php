@@ -41,7 +41,7 @@
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a href="{{ route('homepage.booking', ['id' => 1]) }}" id="navigasi3" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                    <a href="{{ route('homepage.booking.destinasi.list') }}" id="navigasi3" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-0 mx-md-2"
                         style="cursor: pointer; font-size: 14px;" aria-current="page">
                         Booking Online
                     </a>
@@ -54,10 +54,10 @@
                 @guest
                 <!-- If the user is not logged in -->
                 <li class="nav-item" style="height: fit-content">
-                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-4 px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('register') }}" style="height: fit-content;">Register</a>
+                    <a class="nav-link text-white py-2 py-md-0 gk-bg-primary600 rounded-4 px-3 my-1 my-md-0" style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('register') }}" style="height: fit-content;">Register</a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-4 px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('login') }}">Login</a>
+                    <a class="nav-link text-white py-2 py-md-0 gk-bg-primary600 rounded-4 px-3 ms-0 ms-md-3 my-1 my-md-0" style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('login') }}">Login</a>
                 </li>
                 @endguest
 
@@ -70,7 +70,7 @@
                 @endif
                 @if (Auth::user()->role == 'admin')
                 <li class="nav-item ">
-                    <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                    <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
                 </li>
 
                 @endif

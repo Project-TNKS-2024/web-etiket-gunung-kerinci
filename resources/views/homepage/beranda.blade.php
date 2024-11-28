@@ -127,7 +127,7 @@
                 </div>
             </div>
             <div class="my-0">
-                <a href="{{route('homepage.booking', ['id' => 1])}}" class="my-0 btn btn-sm border-0 btn-primary gk-bg-primary700 gk-text-base-white rounded-pill">Booking
+                <a href="{{route('homepage.booking.destinasi.paket', ['id' => 1])}}" class="my-0 btn btn-sm border-0 btn-primary gk-bg-primary700 gk-text-base-white rounded-pill">Booking
                     Online</a>
             </div>
         </div>

@@ -19,7 +19,7 @@
             class="dashboard-sidebar-btn rounded-lg">Dashboard</a>
         <a href="{{ route('user.dashboard.profile') }}" id="dashboard-profile"
             class="dashboard-sidebar-btn rounded-lg">Profile</a>
-        <a href="{{ route('user.dashboard.profile') }}" id="dashboard-profile"
+        <a href="{{ route('user.dashboard.reiwayat') }}" id="dashboard-profile"
             class="dashboard-sidebar-btn rounded-lg">Riwayat Booking</a>
 
         <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
@@ -29,7 +29,7 @@
         <form action="{{ route('etiket.auth.logout') }}" class="mt-auto" method="post">
             @csrf
             <button type="submit"
-                class="btn close rounded-lg w-100 bg-linear-gradient-danger">Logout</button>
+                class="btn close rounded-lg w-100 bg-linear-gradient-danger py-2">Logout</button>
         </form>
     </div>
 </div>

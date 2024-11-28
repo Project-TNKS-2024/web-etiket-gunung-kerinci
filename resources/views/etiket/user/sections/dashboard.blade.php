@@ -46,7 +46,7 @@
 <div class="card shadow">
     <div class="card-body">
         <div class="container-fluid">
-            <h4 class="font-semibold">Riwayat Booking</h4>
+            <h4 class="font-semibold">Booking</h4>
 
             <div class="card-container mb-3" style="overflow-x: auto; white-space: nowrap;">
 
@@ -71,7 +71,7 @@
                             <div class="row tiket-detail mt-3">
                                 <div class="col-6">
                                     <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
-                                    <input type="text" name="ipt_namaketua" value="{{ $booking->pendakis[0]->nama }}" id="ipt_namaketua" class="form-control" readonly>
+                                    <input type="text" name="ipt_namaketua" value="{{ isset($booking->pendakis[0]->nama) ? $booking->pendakis[0]->nama : '---' }}" id="ipt_namaketua" class="form-control" readonly>
 
                                     <label for="ipt_gerbangmasuk" class="fw-bold">Gerbang Masuk</label>
                                     <input type="text" name="ipt_gerbangmasuk" value="{{ $booking->gateMasuk->nama }}" id="ipt_gerbangmasuk" class="form-control" readonly>
@@ -117,6 +117,12 @@
                 </div>
                 @endforeach
 
+                @if (count($bookings) == 0)
+                <div>
+                    <p class="gk-text-neutrals700 text-center">Tidak ada tiket yang aktif</p>
+                </div>
+                @endif
+
             </div>
 
 
@@ -127,16 +133,6 @@
 @endsection
 
 @section('js')
-<script>
-    let countriesData = [];
-
-    const sidebarMenu = document.querySelectorAll(".dashboard-sidebar-btn");
-    sidebarMenu.forEach((o, i) => {
-        sidebarMenu[i].classList.remove("active");
-    });
-    const profile = document.querySelector("#dashboard");
-    profile.classList.add("active");
-</script>
 
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script>
