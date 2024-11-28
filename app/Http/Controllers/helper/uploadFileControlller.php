@@ -13,7 +13,7 @@ class uploadFileControlller extends HelperController
 
         if ($file) {
             $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $path = "upload/" . $type . "/" . $folder . "/";
+            $path = "upload/" . $folder . "/" .  $type . "/";
             $file->move(public_path($path), $fileName);
             $fileUrl = $path . $fileName;
 

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\File;
 
 return new class extends Migration
 // masih dk seuaai
@@ -45,5 +46,7 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('gk_pendakis');
+        // hapus hasil upload
+
     }
 };

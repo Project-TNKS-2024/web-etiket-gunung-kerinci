@@ -28,6 +28,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('gambar_destinasis');
-        // buat agar menghapus folder public/upload/img/destinasi
     }
 };
