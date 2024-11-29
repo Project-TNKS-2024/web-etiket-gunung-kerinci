@@ -57,22 +57,7 @@ class gk_pendaki extends Model
     }
 
     // hubungkan kolom provinsi, kabupaten, kecamatan, kelurahan dengan tabel d_provinsi, d_kabupaten, d_kecamatan, d_kelurahan
-    public function provinsi()
-    {
-        return $this->belongsTo(d_Provinsi::class, 'provinsi');
-    }
-    public function kabupaten()
-    {
-        return $this->belongsTo(d_Kabupaten::class, 'kabupaten');
-    }
-    public function kecamatan()
-    {
-        return $this->belongsTo(d_Kecamatan::class, 'kec');
-    }
-    public function kelurahan()
-    {
-        return $this->belongsTo(d_Kelurahan::class, 'desa');
-    }
+
     public function tiket()
     {
         return $this->belongsTo(gk_tiket_pendaki::class, 'tiket_id');

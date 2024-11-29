@@ -107,9 +107,9 @@
 
 
             <!-- barang -->
-            {{--
-               @include('homepage.booking.fp.barang')
-               --}}
+
+            @include('homepage.booking.fp.barang')
+
       </div>
       <div class="row">
          <div class="col-12 col-md-4"></div>
@@ -160,112 +160,162 @@
    const kecamatanSelect = document.querySelectorAll('select.ipt-kecamatan');
    const kelurahanSelect = document.querySelectorAll('select.ipt-desa-kelurahan');
 
-   function refreshKabupaten(provinsiId, kabupatenSelect, kabupatenId = 0) {
-      const kabupatenOptions = dataKabupaten.filter(kabupaten => kabupaten.provinsi_id == provinsiId);
-      kabupatenSelect.innerHTML = '';
-      kabupatenOptions.forEach(kabupaten => {
-         let option = document.createElement('option');
-         option.value = kabupaten.id;
-         option.id = kabupaten.id;
-         option.textContent = kabupaten.name;
-         if (kabupaten.id == kabupatenId) {
-            option.selected = true;
-         }
-         kabupatenSelect.appendChild(option);
+   function RefreshSelect(name, select, data = [], value = 0) {
+      select.innerHTML = '';
+      select.innerHTML += `<option value="0" ${value == 0 ? 'selected' : ''} disabled >Pilih ${name}</option>`;
+      data.forEach(function(item) {
+         select.innerHTML += `<option value="${item.id}" ${value == item.id ? 'selected' : ''}>${item.name}</option>`;
       });
+
    }
 
-   function refreshKecamatan(kabupatenId, kecamatanSelect, kecamatanId = 0) {
-      const kecamatanOptions = dataKecamatan.filter(kecamatan => kecamatan.kabupaten_id == kabupatenId);
-      kecamatanSelect.innerHTML = '';
-      kecamatanOptions.forEach(kecamatan => {
-         let option = document.createElement('option');
-         option.value = kecamatan.id;
-         option.id = kecamatan.id;
-         option.textContent = kecamatan.name;
-         if (kecamatan.id == kecamatanId) {
-            option.selected = true;
-         }
-         kecamatanSelect.appendChild(option);
-      });
-   }
-
-   function refreshKelurahan(kecamatanId, kelurahanSelect, kelurahanId = 0) {
-      const kelurahanOptions = dataKelurahan.filter(kelurahan => kelurahan.kecamatan_id == kecamatanId);
-      kelurahanSelect.innerHTML = '';
-      kelurahanOptions.forEach(kelurahan => {
-         let option = document.createElement('option');
-         option.value = kelurahan.id;
-         option.id = kelurahan.id;
-         option.textContent = kelurahan.name;
-         if (kelurahan.id == kelurahanId) {
-            option.selected = true;
-         }
-         kelurahanSelect.appendChild(option);
-      });
-   }
-
-   // Panggil fungsi saat halaman selesai dimuat
    document.addEventListener('DOMContentLoaded', async function() {
       await loadData();
 
-      provinsiSelects.forEach(select => {
-         const idProvinsi = select.value;
-
-         select.innerHTML = '';
-         dataProvinsi.forEach(provinsi => {
-            let option = document.createElement('option');
-            option.value = provinsi.id;
-            option.id = provinsi.id;
-            option.textContent = provinsi.name;
-            if (provinsi.id == idProvinsi) {
-               option.selected = true;
-            }
-            select.appendChild(option);
+      provinsiSelects.forEach(function(select) {
+         const value = select.value;
+         const index = select.getAttribute('data-index');
+         RefreshSelect(
+            'Provinsi',
+            select,
+            dataProvinsi,
+            value
+         );
+         select.addEventListener('change', function(e) {
+            const index = e.target.getAttribute('data-index');
+            const idProv = e.target.value;
+            RefreshSelect(
+               'Kabupaten',
+               kabupatenSelect[index],
+               dataKabupaten.filter(item => item.provinsi_id == idProv),
+               0
+            );
+            RefreshSelect(
+               'Kecamatan',
+               kecamatanSelect[index],
+               [],
+               0
+            );
+            RefreshSelect(
+               'Kelurahan',
+               kelurahanSelect[index],
+               [],
+               0
+            );
          });
-         // event
-         select.addEventListener('change', function() {
-            index = this.id.split('-')[1];
-            const idProvinsi = this.value;
-            selectKabupaten = document.getElementById('kabupaten_kota-' + index);
-            console.log(selectKabupaten);
-            refreshKabupaten(idProvinsi, selectKabupaten);
-         })
-      })
+      });
 
-      kabupatenSelect.forEach(select => {
-         const idKabupaten = select.value;
-         index = select.id.split('-')[1];
-         idProvinsi = document.getElementById('provinsi-' + index).value;
-         refreshKabupaten(idProvinsi, select, idKabupaten);
-         // event
-         select.addEventListener('change', function() {
-            const idKabupaten = this.value;
-            selectKecamatan = document.getElementById('kecamatan-' + index);
-            refreshKecamatan(idKabupaten, selectKecamatan);
-         })
-      })
+      kabupatenSelect.forEach(function(select) {
+         const value = select.value;
+         const index = select.getAttribute('data-index');
+         //ambil id provinsi
+         const idProv = provinsiSelects[index].value;
+         RefreshSelect(
+            'Kabupaten',
+            select,
+            dataKabupaten.filter(item => item.provinsi_id == idProv),
+            value
+         );
+         select.addEventListener('change', function(e) {
+            const index = e.target.getAttribute('data-index');
+            const idKab = e.target.value;
+            RefreshSelect(
+               'Kecamatan',
+               kecamatanSelect[index],
+               dataKecamatan.filter(item => item.kabupaten_id == idKab),
+               0
+            );
+            RefreshSelect(
+               'Kelurahan',
+               kelurahanSelect[index],
+               [],
+               0
+            );
+         });
+      });
 
-      kecamatanSelect.forEach(select => {
-         const idKecamatan = select.value;
-         indexKabupaten = select.id.split('-')[1];
-         idKabupaten = document.getElementById('kabupaten_kota-' + indexKabupaten).value;
-         refreshKecamatan(idKabupaten, select, idKecamatan);
-         // event
-         select.addEventListener('change', function() {
-            const idKecamatan = this.value;
-            selectKelurahan = document.getElementById('desa_kelurahan-' + indexKabupaten);
-            refreshKelurahan(idKecamatan, selectKelurahan);
-         })
+      kecamatanSelect.forEach(function(select) {
+         const value = select.value;
+         const index = select.getAttribute('data-index');
+         //ambil id kabupaten
+         const idKab = kabupatenSelect[index].value;
+         RefreshSelect(
+            'Kecamatan',
+            select,
+            dataKecamatan.filter(item => item.kabupaten_id == idKab),
+            value
+         );
+         select.addEventListener('change', function(e) {
+            const index = e.target.getAttribute('data-index');
+            const idKec = e.target.value;
+            RefreshSelect(
+               'Kelurahan',
+               kelurahanSelect[index],
+               dataKelurahan.filter(item => item.kecamatan_id == idKec),
+               0
+            );
+         });
+      });
+      kelurahanSelect.forEach(function(select) {
+         const value = select.value;
+         const index = select.getAttribute('data-index');
+         //ambil id kecamatan
+         const idKec = kecamatanSelect[index].value;
+         RefreshSelect(
+            'Kelurahan',
+            select,
+            dataKelurahan.filter(item => item.kecamatan_id == idKec),
+            value
+         );
+      });
 
 
-      })
-      kelurahanSelect.forEach(select => {
-         const idKelurahan = select.value;
-         indexKecamatan = select.id.split('-')[1];
-         idKecamatan = document.getElementById('kecamatan-' + indexKecamatan).value;
-         refreshKelurahan(idKecamatan, select, idKelurahan);
+   });
+</script>
 
+<script>
+   function generateUsia(index) {
+      // Ambil elemen input tanggal lahir berdasarkan index
+      var tanggalLahirInput = document.getElementById('tanggal_lahir-' + index);
+      var usiaInput = document.getElementById('usia-' + index);
+      var divSuratIzin = document.getElementById('div-surat_izin_ortu-' + index);
+
+      // Ambil nilai tanggal lahir dari input
+      var tanggalLahir = new Date(tanggalLahirInput.value);
+      var today = new Date();
+
+      // Periksa apakah input tanggal lahir diisi
+      if (!isNaN(tanggalLahir.getTime())) {
+         // Hitung usia berdasarkan tanggal lahir
+         var age = today.getFullYear() - tanggalLahir.getFullYear();
+         var monthDiff = today.getMonth() - tanggalLahir.getMonth();
+
+         // Jika bulan belum lewat, kurangi usia
+         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < tanggalLahir.getDate())) {
+            age--;
+         }
+         // Isi input usia dengan nilai yang dihitung
+         usiaInput.value = age;
+
+         if (age >= 17) {
+            divSuratIzin.classList.add('d-none');
+         } else {
+            divSuratIzin.classList.remove('d-none');
+         }
+      } else {
+         // Jika tanggal lahir tidak valid, kosongkan input usia
+         usiaInput.value = 0;
+      }
+   }
+
+   const inputsTanggalLahir = document.querySelectorAll('input.ipt-tanggal-lahir');
+   document.addEventListener('DOMContentLoaded', function() {
+      inputsTanggalLahir.forEach(function(input) {
+         const index = input.getAttribute('data-index');
+         generateUsia(index);
+         input.addEventListener('change', function() {
+            generateUsia(index);
+         });
       });
    });
 </script>

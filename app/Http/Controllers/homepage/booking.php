@@ -213,7 +213,8 @@ class booking extends Controller
         if (isset($getpendaki)) {
             $getpendaki->update([
                 'kategori_pendaki' => isset($pendaki['kewarganegaraan']) ? $pendaki['kewarganegaraan'] : 'wni',
-                'nama' => isset($pendaki['nama']) ? $pendaki['nama'] : '-',
+                'first_name' => isset($pendaki['first_name']) ? $pendaki['first_name'] : '-',
+                'last_name' => isset($pendaki['last_name']) ? $pendaki['last_name'] : '-',
                 'nik' => isset($pendaki['identitas']) ? $pendaki['identitas'] : '-',
                 // 'lampiran_identitas' => isset($pendaki['lampiran_identitas']),
 
@@ -239,7 +240,8 @@ class booking extends Controller
                 'tiket_id' => $idtiket,
 
                 'kategori_pendaki' => isset($pendaki['kewarganegaraan']) ? $pendaki['kewarganegaraan'] : 'wni',
-                'nama' => isset($pendaki['nama']) ? $pendaki['nama'] : '-',
+                'first_name' => isset($pendaki['first_name']) ? $pendaki['first_name'] : '-',
+                'last_name' => isset($pendaki['last_name']) ? $pendaki['last_name'] : '-',
                 'nik' => isset($pendaki['identitas']) ? $pendaki['identitas'] : '-',
 
                 'no_hp' => isset($pendaki['no_hp']) ? $pendaki['no_hp'] : '-',
@@ -282,6 +284,8 @@ class booking extends Controller
                 'formulir' => 'required|array',
 
                 'formulir.*.id_pendaki' => 'nullable|string',
+                'formulir.*.first_name' => 'nullable|string',
+                'formulir.*.last_name' => 'nullable|string',
                 'formulir.*.nama' => 'nullable|string',
                 'formulir.*.kewarganegaraan' => 'nullable|string',
                 'formulir.*.identitas' => 'nullable|string',
@@ -333,7 +337,8 @@ class booking extends Controller
                 'formulir' => 'required|array',
 
                 'formulir.*.id_pendaki' => 'nullable|string',
-                'formulir.*.nama' => 'required|string',
+                'formulir.*.first_name' => 'required|string',
+                'formulir.*.last_name' => 'nullable|string',
                 'formulir.*.kewarganegaraan' => 'required|string',
                 'formulir.*.identitas' => 'required|string',
 

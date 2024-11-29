@@ -272,6 +272,9 @@
         }
     </script>
 
+    <!-- script untuk generate input -->
+    <script src="{{asset('componen/generateInput.js')}}"></script>
+
     @yield('js')
 
 </body>
