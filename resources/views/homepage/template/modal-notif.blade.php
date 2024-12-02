@@ -40,18 +40,27 @@
     </div>
     @endforeach
     @endif
+
 </div>
 
-<!-- Bootstrap and jQuery scripts -->
+<!-- script notif -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const toastElements = document.querySelectorAll('.toast');
         toastElements.forEach(toastElement => {
             const toast = new bootstrap.Toast(toastElement, {
                 autohide: true,
-                delay: 5000 // 2000 milliseconds = 2 seconds
+                delay: 5000 // 1000 milliseconds = 1 seconds
             });
             toast.show();
         });
     });
+
+    class myNotif {
+        constructor() {}
+        primay() {}
+        warning() {}
+        danger() {}
+        success() {}
+    }
 </script>

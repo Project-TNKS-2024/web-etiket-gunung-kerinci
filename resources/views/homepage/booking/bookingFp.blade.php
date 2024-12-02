@@ -65,9 +65,34 @@
    }
 
    /* button newBarang barang ketika di click bukan hover*/
-   #formulir .btn-newBarang:active {
-      /* background-color: #007bff; */
+   /* #formulir .btn-newBarang:active {
+      background-color: #007bff;
 
+   } */
+
+   /* modal preview file */
+   .modal-dialog {
+      height: calc(100vh - 50px);
+      /* Kurangi sedikit untuk margin */
+      margin: 15px auto;
+      /* Margin atas dan bawah */
+   }
+
+   .modal-content {
+      height: 100%;
+   }
+
+   .modal-body {
+      height: calc(100% - 60px);
+      /* Kurangi tinggi header dan footer modal */
+      overflow: hidden;
+      /* Agar tidak ada scroll di modal-body */
+   }
+
+   #filePreview {
+      height: 100%;
+      width: 100%;
+      border: none;
    }
 </style>
 
@@ -126,6 +151,8 @@
 
 @endsection
 @section('js')
+
+<!-- scipt refresh option select domisili -->
 <script>
    let dataProvinsi = [];
    let dataKabupaten = [];
@@ -273,6 +300,7 @@
    });
 </script>
 
+<!-- script auto generate usia -->
 <script>
    function generateUsia(index) {
       // Ambil elemen input tanggal lahir berdasarkan index
@@ -318,6 +346,87 @@
          });
       });
    });
+</script>
+
+<!-- script show upload file -->
+<script>
+   // Pilih modal berdasarkan ID
+   const modalElement = document.getElementById('ModalShowFile');
+   // Buat instance modal Bootstrap
+   const modalInstance = new bootstrap.Modal(modalElement);
+
+   // Pilih semua input file
+   const inputFiles = document.querySelectorAll('input[type="file"]');
+
+   document.addEventListener('DOMContentLoaded', function() {
+      inputFiles.forEach(function(input) {
+         // ambil id
+         const idInput = input.getAttribute('id');
+         const buttonShow = document.querySelector(`button[data-id-target="${idInput}"]`);
+         const fileExist = document.querySelector(`input[id="${idInput}_existing"]`);
+         const filePreview = document.getElementById('filePreview');
+
+         // cek file ada atau tidak
+         if (fileExist && fileExist.value) {
+            buttonShow.classList.remove('d-none');
+         }
+
+         // beri event change
+         input.addEventListener('change', function() {
+            const file = input.files[0];
+            const maxSize = 1 * 1024 * 1024; // 1MB
+
+            if (file) {
+               // Cek tipe file
+               const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
+               if (!validTypes.includes(file.type)) {
+                  // error = 'Hanya file gambar (JPEG, PNG, GIF) dan PDF yang diizinkan.';
+                  // panggil  notif error
+                  console.log('Hanya file gambar (JPEG, PNG, GIF) dan PDF yang diizinkan.');
+                  input.value = ''; // Reset input file
+                  return;
+               } else if (file.size > maxSize) {
+                  // error = 'Ukuran file tidak boleh lebih dari 1MB.';
+                  // panggil  notif error
+                  console.log('Ukuran file tidak boleh lebih dari 1MB.');
+                  input.value = ''; // Reset input file
+                  return;
+               } else {
+                  console.log('File valid.');
+                  buttonShow.classList.remove('d-none');
+                  fileExist.value = null;
+               }
+            }
+         });
+
+         buttonShow.addEventListener('click', function() {
+            // tampilkan modal
+            let fileURL = '';
+
+            if (input.files.length > 0) {
+               // Preview file yang baru diunggah
+               const file = input.files[0];
+               if (file.type === 'application/pdf' || file.type.startsWith('image/')) {
+                  fileURL = URL.createObjectURL(file);
+               } else {
+                  alert('Jenis file tidak didukung untuk pratinjau.');
+                  return;
+               }
+            } else if (fileExist.value) {
+               // Preview file yang ada di server
+               fileURL = fileExist.value; // Pastikan ini adalah URL file yang valid
+            }
+
+            if (fileURL) {
+               filePreview.src = fileURL;
+               modalInstance.show();
+            }
+
+         });
+      });
+
+
+   })
 </script>
 
 @endsection

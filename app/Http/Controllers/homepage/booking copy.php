@@ -5,7 +5,6 @@ namespace App\Http\Controllers\homepage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\BookingHelperController;
 use App\Http\Controllers\helper\MidtransController;
-use App\Http\Controllers\helper\uploadFileControlller;
 use App\Models\destinasi;
 use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
@@ -196,10 +195,6 @@ class booking extends Controller
         $pendaki = gk_pendaki::where('booking_id', $booking->id)->get();
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
 
-        // return $pendaki;
-
-        // return $booking;
-
         return view('homepage.booking.bookingFp', [
             'id' => $id,
             'booking' => $booking,
@@ -208,114 +203,212 @@ class booking extends Controller
         ]);
     }
 
+    // =========================================================================================
+    public function updatePendaki($pendaki, $idbooking, $idtiket)
+    {
+        // cek id_pendaki
+        $getpendaki = gk_pendaki::find($pendaki['id_pendaki']);
+        if (isset($getpendaki)) {
+            $getpendaki->update([
+                'kategori_pendaki' => isset($pendaki['kewarganegaraan']) ? $pendaki['kewarganegaraan'] : 'wni',
+                'first_name' => isset($pendaki['first_name']) ? $pendaki['first_name'] : '-',
+                'last_name' => isset($pendaki['last_name']) ? $pendaki['last_name'] : '-',
+                'nik' => isset($pendaki['identitas']) ? $pendaki['identitas'] : '-',
+                // 'lampiran_identitas' => isset($pendaki['lampiran_identitas']),
+
+                'no_hp' => isset($pendaki['no_hp']) ? $pendaki['no_hp'] : '-',
+                'no_hp_darurat' => isset($pendaki['no_hp_darurat']) ? $pendaki['no_hp_darurat'] : '-',
+                'jenis_kelamin' => isset($pendaki['jenis_kelamin']) ? $pendaki['jenis_kelamin'] : 'l',
+                'tanggal_lahir' => isset($pendaki['tanggal_lahir']) ? $pendaki['tanggal_lahir'] : '',
+                'usia' => isset($pendaki['usia']) ? $pendaki['usia'] : 0,
+
+                'provinsi' => isset($pendaki['provinsi']) ? $pendaki['provinsi'] : '-',
+                'kabupaten' => isset($pendaki['kabupaten_kota']) ? $pendaki['kabupaten_kota'] : '-',
+                'kec' => isset($pendaki['kecamatan']) ? $pendaki['kecamatan'] : '-',
+                'desa' => isset($pendaki['desa_kelurahan']) ? $pendaki['desa_kelurahan'] : '-',
+
+                // 'lampiran_surat_kesehatan' => $pendaki['lampiran_surat_kesehatan'],
+                // 'lampiran_surat_izin_ortu' => $pendaki['lampiran_surat_izin_ortu'],
+            ]);
+
+            // return $pendaki;
+        } else {
+            gk_pendaki::create([
+                'booking_id' => $idbooking,
+                'tiket_id' => $idtiket,
+
+                'kategori_pendaki' => isset($pendaki['kewarganegaraan']) ? $pendaki['kewarganegaraan'] : 'wni',
+                'first_name' => isset($pendaki['first_name']) ? $pendaki['first_name'] : '-',
+                'last_name' => isset($pendaki['last_name']) ? $pendaki['last_name'] : '-',
+                'nik' => isset($pendaki['identitas']) ? $pendaki['identitas'] : '-',
+
+                'no_hp' => isset($pendaki['no_hp']) ? $pendaki['no_hp'] : '-',
+                'no_hp_darurat' => isset($pendaki['no_hp_darurat']) ? $pendaki['no_hp_darurat'] : '-',
+                'jenis_kelamin' => isset($pendaki['jenis_kelamin']) ? $pendaki['jenis_kelamin'] : 'l',
+                'tanggal_lahir' => isset($pendaki['tanggal_lahir']) ? $pendaki['tanggal_lahir'] : time(),
+                'usia' => isset($pendaki['usia']) ? $pendaki['usia'] : 0,
+
+                'provinsi' => isset($pendaki['provinsi']) ? $pendaki['provinsi'] : '-',
+                'kabupaten' => isset($pendaki['kabupaten_kota']) ? $pendaki['kabupaten_kota'] : '-',
+                'kec' => isset($pendaki['kecamatan']) ? $pendaki['kecamatan'] : '-',
+                'desa' => isset($pendaki['desa_kelurahan']) ? $pendaki['desa_kelurahan'] : '-',
+
+                'lampiran_identitas' => '',
+                'lampiran_surat_kesehatan' => '',
+                'lampiran_surat_izin_ortu' => '',
+
+                // 'lampiran_identitas' => isset($pendaki['lampiran_identitas']) ? $pendaki['lampiran_identitas'] : '-',
+                // 'lampiran_surat_kesehatan' => isset($pendaki['lampiran_surat_kesehatan']) ? $pendaki['lampiran_surat_kesehatan'] : '-',
+                // 'lampiran_surat_izin_ortu' => isset($pendaki['lampiran_surat_izin_ortu']) ? $pendaki['lampiran_surat_izin_ortu'] : '-',
+                'tagihan' => 0,
+            ]);
+        }
+    }
     public function bookingFPStore(Request $request)
     {
         $request->validate([
-            'id_booking' => 'required|string',
-            'action' => 'required|string',
-
-            'formulir' => 'required|array',
-
-            'formulir.*.id_pendaki' => 'nullable|string',
-            'formulir.*.first_name' => 'nullable|string',
-            'formulir.*.last_name' => 'nullable|string',
-            'formulir.*.kewarganegaraan' => 'nullable|string',
-            'formulir.*.identitas' => 'nullable|string',
-
-            'formulir.*.jenis_kelamin' => 'nullable|string',
-            'formulir.*.tanggal_lahir' => 'nullable|date',
-            // 'formulir.*.tinggi_badan' => 'nullable|numeric',
-            // 'formulir.*.berat_badan' => 'nullable|numeric',
-
-            'formulir.*.no_hp' => 'nullable|string',
-            'formulir.*.no_hp_darurat' => 'nullable|string',
-
-            'formulir.*.provinsi' => 'nullable|string',
-            'formulir.*.kabupaten_kota' => 'nullable|string',
-            'formulir.*.kecamatan' => 'nullable|string',
-            'formulir.*.desa_kelurahan' => 'nullable|string',
-
-            'formulir.*.lampiran_identitas' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'formulir.0.surat_stugas' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'formulir.*.surat_izin_ortu' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'formulir.*.surat_keterangan_sehat' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-
-            'barangWajib' => 'nullable|array',
-            'barangWajib.perlengkapan_gunung_standar' => 'nullable|boolean',
-            'barangWajib.trash_bag' => 'nullable|boolean',
-            'barangWajib.p3k_standart' => 'nullable|boolean',
-            'barangWajib.survival_kit_standart' => 'nullable|boolean',
+            'id_booking' => 'required',
+            'action' => 'nullable|string|in:save,next',
         ]);
-
         $booking = gk_booking::with('gktiket')->find($request->id_booking);
-        $formulirPendakis = $request->formulir;
-        $upload = new uploadFileControlller();
 
-        foreach ($formulirPendakis as $key => $formulir) {
-            $pendaki = gk_pendaki::find($formulir['id_pendaki']);
-
-            // return $pendaki;
-
-            if (!$pendaki) {
-                $pendaki = new gk_pendaki();
-                $pendaki->booking_id = $booking->id;
-            }
-
-            $pendaki->first_name = $formulir['first_name'];
-            $pendaki->last_name = $formulir['last_name'];
-            $pendaki->kategori_pendaki = $formulir['kewarganegaraan'];
-            $pendaki->nik = $formulir['identitas'];
-            $pendaki->jenis_kelamin = $formulir['jenis_kelamin'];
-            $pendaki->tanggal_lahir = $formulir['tanggal_lahir'];
-            // $pendaki->tinggi_badan = $formulir['tinggi_badan'];
-            // $pendaki->berat_badan = $formulir['berat_badan'];
-            $pendaki->no_hp = $formulir['no_hp'];
-            $pendaki->no_hp_darurat = $formulir['no_hp_darurat'];
-            $pendaki->provinsi = $formulir['provinsi'];
-            $pendaki->kabupaten = $formulir['kabupaten_kota'];
-            $pendaki->kec = $formulir['kecamatan'];
-            $pendaki->desa = $formulir['desa_kelurahan'];
-
-            if (isset($formulir['lampiran_identitas'])) {
-                $path = null;
-                if (strlen($pendaki->lampiran_identitas) > 0) {
-                    $path = $upload->upadate($pendaki->lampiran_identitas, $formulir['lampiran_identitas']);
-                } else {
-                    $path = $upload->create($booking->id, 'booking', $formulir['lampiran_identitas']);
-                }
-                $pendaki->lampiran_identitas = $path;
-            }
-
-            if (isset($formulir['surat_izin_ortu'])) {
-                $path = null;
-                if (strlen($pendaki->lampiran_surat_izin_ortu) > 0) {
-                    $path = $upload->upadate($pendaki->lampiran_surat_izin_ortu, $formulir['surat_izin_ortu']);
-                } else {
-                    $path = $upload->create($booking->id, 'booking', $formulir['surat_izin_ortu']);
-                }
-                $pendaki->lampiran_surat_izin_ortu = $path;
-            }
-
-            if (isset($formulir['surat_keterangan_sehat'])) {
-                $path = null;
-                if (strlen($pendaki->lampiran_surat_kesehatan) > 0) {
-                    $path = $upload->upadate($pendaki->lampiran_surat_kesehatan, $formulir['surat_keterangan_sehat']);
-                } else {
-                    $path = $upload->create($booking->id, 'booking', $formulir['surat_keterangan_sehat']);
-                }
-                $pendaki->lampiran_surat_kesehatan = $path;
-            }
-            $pendaki->save();
+        if (!$booking) {
+            abort(404);
         }
 
-        if ($request->action == 'next') {
+        if ($request->action == "save") {
+            // falidasi formulir biodata pendaki
+            $request->validate([
+                'formulir' => 'required|array',
 
-            return "okw";
-        } else if ($request->action == 'save') {
+                'formulir.*.id_pendaki' => 'nullable|string',
+                'formulir.*.first_name' => 'nullable|string',
+                'formulir.*.last_name' => 'nullable|string',
+                'formulir.*.nama' => 'nullable|string',
+                'formulir.*.kewarganegaraan' => 'nullable|string',
+                'formulir.*.identitas' => 'nullable|string',
+
+                'formulir.*.jenis_kelamin' => 'nullable|string',
+                'formulir.*.tanggal_lahir' => 'nullable|date',
+                // 'formulir.*.usia' => 'nullable|integer',
+                // tambahh tinggi dan berat badan
+
+                'formulir.*.no_hp' => 'nullable|string',
+                'formulir.*.no_hp_darurat' => 'nullable|string',
+
+                'formulir.*.provinsi' => 'nullable|string',
+                'formulir.*.kabupaten_kota' => 'nullable|string',
+                'formulir.*.kecamatan' => 'nullable|string',
+                'formulir.*.desa_kelurahan' => 'nullable|string',
+
+                'formulir.*.lampiran_identitas' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+                'formulir.0.surat_stugas' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+                'formulir.*.surat_izin_ortu' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+                'formulir.*.surat_keterangan_sehat' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            ]);
+
+            // return $request;
+            return $booking;
+            // update pendaki
+            $pendakis = $request->formulir;
+            foreach ($pendakis as $pendaki) {
+                $this->updatePendaki($pendaki, $request->id_booking, $booking->id_tiket);
+                // return $pendaki;
+            }
+
+            // $request->validate([
+            //     'barangWajib' => 'required|array',
+            //     'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
+            //     'barangWajib.trash_bag' => 'required|boolean|accepted',
+            //     'barangWajib.p3k_standart' => 'required|boolean|accepted',
+            //     'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
+            // ]);
+
+            // $request->validate([
+            //     'jumlah_barang' => 'integer|min:0',
+            //     'barangTambahan' => 'nullable|array',
+            //     'barangTambahan.*.nama' => 'nullable|string',
+            //     'barangTambahan.*.jumlah' => 'nullable|integer|min:0',
+            // ]);
+
+
             return redirect()->back()->with('success', 'Data berhasil disimpan');
-        }
+        } else if ($request->action == "next") {
+            $request->validate([
+                'formulir' => 'required|array',
 
-        return redirect()->back()->withErrors('error', 'Action tidak falid');
+                'formulir.*.id_pendaki' => 'nullable|string',
+                'formulir.*.first_name' => 'required|string',
+                'formulir.*.last_name' => 'nullable|string',
+                'formulir.*.kewarganegaraan' => 'required|string',
+                'formulir.*.identitas' => 'required|string',
+
+                'formulir.*.jenis_kelamin' => 'required|string',
+                'formulir.*.tanggal_lahir' => 'required|date',
+                // 'formulir.*.usia' => 'required|integer',
+                // tambahh tinggi dan berat badan
+
+                'formulir.*.no_hp' => 'required|string',
+                'formulir.*.no_hp_darurat' => 'required|string',
+
+                'formulir.*.provinsi' => 'required|string',
+                'formulir.*.kabupaten_kota' => 'required|string',
+                'formulir.*.kecamatan' => 'required|string',
+                'formulir.*.desa_kelurahan' => 'required|string',
+
+                // surat tipe file
+                // 'formulir.*.lampiran_identitas' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+                // 'formulir.0.surat_simaksi' => 'required|file|mimes:pdf|max:2048',
+                // 'formulir.*.surat_izin_ortu' => 'required|file|mimes:pdf|max:2048',
+                // 'formulir.*.surat_keterangan_sehat' => 'required|file|mimes:pdf|max:2048',
+            ]);
+            // update pendaki
+            $pendakis = $request->formulir;
+            foreach ($pendakis as $pendaki) {
+                $this->updatePendaki($pendaki, $request->id_booking, $booking->id_tiket);
+            }
+
+
+            $request->validate([
+                // 'barangWajib' => 'required|array',
+                // 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean|accepted',
+                // 'barangWajib.trash_bag' => 'required|boolean|accepted',
+                // 'barangWajib.p3k_standart' => 'required|boolean|accepted',
+                // 'barangWajib.survival_kit_standart' => 'required|boolean|accepted',
+            ]);
+            $request->validate([
+                // 'jumlah_barang' => 'nullable|integer|min:0',
+                // 'barangTambahan' => 'nullable|array',
+                // 'barangTambahan.*.nama' => 'nullable|string',
+                // 'barangTambahan.*.jumlah' => 'nullable|integer|min:0',
+            ]);
+
+
+
+            // update barang
+            // $barangs = $request->barangTambahan;
+            // if (isset($barangs)) {
+            //     foreach ($barangs as $barang) {
+            //         gk_barang_bawaan::create([
+            //             'id_booking' => $request->id_booking,
+            //             'nama_barang' => $barang['nama'],
+            //             'jumlah' => $barang['jumlah'],
+            //         ]);
+            //     }
+            // }
+
+            $booking->update([
+                'status_booking' => 2,
+            ]);
+
+            // return $request;
+            return redirect()->route(
+                'homepage.booking.detail',
+                [
+                    'id' => $request->id_booking
+                ]
+            )->with('success', 'Data berhasil disimpan');
+        }
     }
     // =========================================================================================
 

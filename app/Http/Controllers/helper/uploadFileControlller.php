@@ -21,6 +21,18 @@ class uploadFileControlller extends HelperController
         }
         return null;
     }
+    public function upadate(string $url, UploadedFile $file)
+    {
+        if ($file && file_exists(public_path($url))) {
+            // ambil folder dan type dari url
+            $folder = explode("/", $url)[1];
+            $type = explode("/", $url)[2];
+            unlink(public_path($url));
+            $path = $this->create($type, $folder, $file);
+            return $path; 
+        }
+        return null;
+    }
 
     public function delete($path)
     {

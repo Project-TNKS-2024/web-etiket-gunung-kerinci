@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 //homepage
 use App\Http\Controllers\homepage\HomepageController;
 use App\Http\Controllers\homepage\booking;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return redirect('beranda');
