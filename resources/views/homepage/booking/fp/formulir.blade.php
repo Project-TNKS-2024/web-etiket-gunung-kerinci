@@ -170,16 +170,16 @@ $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
       </div>
 
    </div>
-   @if ($index == 0 && $booking->gktiket->penugasan !== null)
+   @if ($index == 0 && $booking->gktiket->penugasan !== null && strlen($booking->gktiket->penugasan) > 0)
    <div class="col-12 col-md-6 mb-3">
-      <label for="surat_stugas-{{$index}}" class="w-100 fw-bold mandatory">Surat Simaksi</label>
+      <label for="surat_stugas" class="w-100 fw-bold mandatory">Surat {{ $booking->gktiket->penugasan }}</label>
       <div class="input-group flex-nowrap">
-         <input class="form-control" type="file" name="formulir[{{$index}}][surat_stugas]" id="surat_stugas-{{$index}}">
+         <input class="form-control" type="file" name="surat_stugas" id="surat_stugas">
          </input>
          @if (isset($pendaki) && $booking->lampiran_stugas)
-         <input type="hidden" id="surat_stugas-{{$index}}_existing" value="{{asset($booking->lampiran_stugas)}}">
+         <input type="hidden" id="surat_stugas_existing" value="{{asset($booking->lampiran_stugas)}}">
          @endif
-         <button class="input-group-text d-none" type="button" data-id-target="surat_stugas-{{$index}}">
+         <button class="input-group-text d-none" type="button" data-id-target="surat_stugas">
             <i class="fa-regular fa-eye"></i>
          </button>
       </div>

@@ -13,7 +13,6 @@ return new class extends Migration
         Schema::create('gk_pendakis', function (Blueprint $table) {
             $table->id();
             $table->uuid('booking_id');
-            $table->unsignedBigInteger('tiket_id');
             // enum wna/wni
             $table->enum('kategori_pendaki', ['wna', 'wni']);
             $table->string('first_name');
@@ -39,7 +38,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('booking_id')->references('id')->on('gk_bookings')->onDelete('cascade');
-            $table->foreign('tiket_id')->references('id')->on('gk_tiket_pendakis')->onDelete('restrict');
         });
     }
 

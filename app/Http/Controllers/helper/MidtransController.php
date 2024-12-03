@@ -24,15 +24,40 @@ class MidtransController extends HelperController
     {
         try {
             $status = Transaction::status($orderId);
-            return response()->json($status);
+            return [
+                'success' => true,
+                'message' => 'Payment status retrieved successfully',
+                'data' => json_decode(json_encode($status), true),
+            ];
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            $errorData = json_decode(substr($e->getMessage(), strpos($e->getMessage(), '{')), true);
+            return [
+                'success' => false,
+                'message' => 'Failed to retrieve payment status: ' . $errorData['status_message'],
+                'data' => [
+                    'status_code' => $errorData['status_code'] ?? 500,
+                    'id' => $errorData['id'] ?? null,
+                ],
+            ];
         }
     }
     // function generate snap token
     public function generateSnapToken($params)
     {
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
-        return $snapToken;
+        try {
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            return [
+                'success' => true,
+                'message' => 'Snap token generated successfully',
+                'data' => $snapToken,
+            ];
+        } catch (\Exception $e) {
+            // throw new \Exception('Failed to generate Snap token: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to generate Snap token: ' . $e->getMessage(),
+                'data' => null,
+            ];
+        }
     }
 }

@@ -13,7 +13,6 @@ class gk_pendaki extends Model
     protected $fillable = [
         // data booking
         'booking_id',
-        'tiket_id',
         'tagihan',
 
         // input identias
@@ -58,8 +57,4 @@ class gk_pendaki extends Model
 
     // hubungkan kolom provinsi, kabupaten, kecamatan, kelurahan dengan tabel d_provinsi, d_kabupaten, d_kecamatan, d_kelurahan
 
-    public function tiket()
-    {
-        return $this->belongsTo(gk_tiket_pendaki::class, 'tiket_id');
-    }
 }

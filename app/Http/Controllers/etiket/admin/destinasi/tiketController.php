@@ -96,6 +96,7 @@ class tiketController extends Controller
         $destinasi = ModelDestinasi::find($tiket->id_destinasi);
         // $destinasi 
 
+        // return $tiket;
         return view('etiket.admin.destinasi.tiket.tiketUpdate', [
             "tiket" => $tiket,
             "destinasi" => $destinasi,

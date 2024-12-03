@@ -14,6 +14,7 @@ use App\Models\gk_pendaki;
 use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
+use App\Models\pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -55,7 +56,7 @@ class booking extends Controller
         // id = id paket
         $paket = gk_paket_tiket::where("id", $id)->first();
 
-        // // ambil data destinasi
+        // ambil data destinasi
         $id_destinasi = $paket->id_destinasi;
         $destinasi = destinasi::with('gates')->where('id', $id_destinasi)->first();
         $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id_destinasi)->get();
@@ -156,9 +157,38 @@ class booking extends Controller
         }
     }
 
+    public function bookingId($id)
+    {
+        $booking = gk_booking::with('gktiket')->find($id);
+        if (!$booking) {
+            abort(404);
+        }
+
+        switch ($booking->status_booking) {
+            case '1':
+                return redirect()->route('homepage.booking.snk', ['id' => $id]);
+                break;
+
+            case '2':
+                return redirect()->route('homepage.booking.formulir', ['id' => $id]);
+                break;
+
+            case '3':
+                return redirect()->route('homepage.booking.detail', ['id' => $id]);
+                break;
+
+                // 4, 5, 6, 7
+
+            default:
+                return redirect()->route('homepage.booking.destinasi.paket', ['id' => $id]);
+                break;
+        }
+    }
+
     public function bookingSnk($id)
     {
         $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $id)->first();
+        // ================================ cek booking sattus ============================================
         // return $booking;
         if (!$booking) {
             abort(404);
@@ -185,6 +215,7 @@ class booking extends Controller
         if (!Auth::check()) {
             abort(403);
         }
+        // ================================ cek booking sattus ============================================
         $booking = gk_booking::with('gktiket')->where("id", $id)->first();
 
         if (!$booking) {
@@ -195,10 +226,6 @@ class booking extends Controller
 
         $pendaki = gk_pendaki::where('booking_id', $booking->id)->get();
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
-
-        // return $pendaki;
-
-        // return $booking;
 
         return view('homepage.booking.bookingFp', [
             'id' => $id,
@@ -236,7 +263,7 @@ class booking extends Controller
             'formulir.*.desa_kelurahan' => 'nullable|string',
 
             'formulir.*.lampiran_identitas' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'formulir.0.surat_stugas' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'surat_stugas' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'formulir.*.surat_izin_ortu' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'formulir.*.surat_keterangan_sehat' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
 
@@ -248,8 +275,23 @@ class booking extends Controller
         ]);
 
         $booking = gk_booking::with('gktiket')->find($request->id_booking);
+        // return $request;
         $formulirPendakis = $request->formulir;
         $upload = new uploadFileControlller();
+
+        if (strlen($booking->gktiket->penugasan) > 0) {
+            if (isset($request->surat_stugas)) {
+                $path = null;
+                if (strlen($booking->lampiran_stugas) > 0) {
+                    $path = $upload->upadate($booking->lampiran_stugas, $request->surat_stugas);
+                } else {
+                    $path = $upload->create($booking->id, 'booking', $request->surat_stugas);
+                }
+                $booking->lampiran_stugas = $path;
+
+                $booking->save();
+            }
+        }
 
         foreach ($formulirPendakis as $key => $formulir) {
             $pendaki = gk_pendaki::find($formulir['id_pendaki']);
@@ -260,21 +302,20 @@ class booking extends Controller
                 $pendaki = new gk_pendaki();
                 $pendaki->booking_id = $booking->id;
             }
-
-            $pendaki->first_name = $formulir['first_name'];
-            $pendaki->last_name = $formulir['last_name'];
-            $pendaki->kategori_pendaki = $formulir['kewarganegaraan'];
-            $pendaki->nik = $formulir['identitas'];
-            $pendaki->jenis_kelamin = $formulir['jenis_kelamin'];
-            $pendaki->tanggal_lahir = $formulir['tanggal_lahir'];
+            $pendaki->first_name = $formulir['first_name'] ?? '';
+            $pendaki->last_name = $formulir['last_name'] ?? '';
+            $pendaki->kategori_pendaki = $formulir['kewarganegaraan'] ?? '';
+            $pendaki->nik = $formulir['identitas'] ?? '';
+            $pendaki->jenis_kelamin = $formulir['jenis_kelamin'] ?? '';
+            $pendaki->tanggal_lahir = $formulir['tanggal_lahir'] ?? '';
             // $pendaki->tinggi_badan = $formulir['tinggi_badan'];
             // $pendaki->berat_badan = $formulir['berat_badan'];
-            $pendaki->no_hp = $formulir['no_hp'];
-            $pendaki->no_hp_darurat = $formulir['no_hp_darurat'];
-            $pendaki->provinsi = $formulir['provinsi'];
-            $pendaki->kabupaten = $formulir['kabupaten_kota'];
-            $pendaki->kec = $formulir['kecamatan'];
-            $pendaki->desa = $formulir['desa_kelurahan'];
+            $pendaki->no_hp = $formulir['no_hp'] ?? '';
+            $pendaki->no_hp_darurat = $formulir['no_hp_darurat'] ?? '';
+            $pendaki->provinsi = $formulir['provinsi'] ?? '';
+            $pendaki->kabupaten = $formulir['kabupaten_kota'] ?? '';
+            $pendaki->kec = $formulir['kecamatan'] ?? '';
+            $pendaki->desa = $formulir['desa_kelurahan'] ?? '';
 
             if (isset($formulir['lampiran_identitas'])) {
                 $path = null;
@@ -309,8 +350,11 @@ class booking extends Controller
         }
 
         if ($request->action == 'next') {
-
-            return "okw";
+            // update status booking
+            $booking->status_booking = 3;
+            $booking->save();
+            // pindah laman 
+            return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking BErhasil disimpan');
         } else if ($request->action == 'save') {
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         }
@@ -321,47 +365,115 @@ class booking extends Controller
 
     public function bookingDetail($id)
     {
-        // id booking
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
-        $user = Auth::user();
+        // cek booking
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $id)
+            ->where('id_user', Auth::id())
+            ->first();
+
+        // cek status booking
         if (!$booking) {
             abort(404);
+        } else if ($booking->status_booking !== 3) {
+            return redirect()->route("homepage.booking", ["id" => $id]);
         }
 
-        if ($booking->status_booking == 0) {
-            return redirect()->route("homepage.booking.snk", ["id" => $id]);
-        }
+        // validasi formulir pendaki'
 
-        // validasi booking
-        $ClassHelper = new BookingHelperController();
-        $ClassHelper->validasiBooking($booking->id);
-
-        // jika validasi gagal kembali ke halaman booking fp
-
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
-        $booking->update([
-            'status_booking' => 3
-        ]);
-        $ketua = $booking->pendakis[0];
-
-        $params = array(
-            'transaction_details' => array(
-                'order_id' => $booking->id,
-                // 'order_id' => rand(),
-                'gross_amount' => $booking->total_pembayaran,
-            ),
-            'customer_details' => array(
-                'first_name' => $ketua->nama,
-                'last_name' => $user->fullname,
-                'email' => $user->email,
-                'phone' => $user->no_hp
-            ),
-        );
-
+        // cek id transaksi booking
         $midtrans = new MidtransController;
-        $snapToken = $midtrans->generateSnapToken($params);
+        $snapToken = '';
+        $traksaksi = pembayaran::where('id_booking', $booking->id)->latest()->first();
 
-        return view('homepage.booking.booking-detail', [
+        if ($traksaksi) {
+            $status = $midtrans->checkPaymentStatus($traksaksi->id);
+            $statusTranskasi = $status['data']['status_code'];
+
+            // return $status;
+            if ($statusTranskasi == 200) {
+                return "transaksi berhasil";
+                // ubah status booking jadi 4
+                //    arah kan ke halaman selanjutnya
+            } else if ($statusTranskasi == 404) {
+                $params = array(
+                    'transaction_details' => array(
+                        'order_id' => $traksaksi->id,
+                        'gross_amount' => $booking->total_pembayaran,
+                    ),
+                    'customer_details' => array(
+                        'first_name' => $booking->pendakis[0]->first_name,
+                        'last_name' =>  $booking->pendakis[0]->last_name,
+                        'email' => Auth::user()->email,
+                        'phone' => Auth::user()->no_hp
+                    ),
+                );
+                $data = $midtrans->generateSnapToken($params);
+                $snapToken = $data['data'];
+                $traksaksi->spesial = $snapToken;
+                $traksaksi->save();
+            } else if ($statusTranskasi == 407) {
+                // return "transaksi belum di bayar";
+                $traksaksi->status = 'failed';
+                $traksaksi->save();
+                $traksaksi = pembayaran::create([
+                    'id_booking' => $booking->id,
+                    'spesial' => '',
+                    'amount' => $booking->total_pembayaran,
+                    'status' => 'pending',
+                    'payment_method' => 'midtrans',
+                    'deadline' => date('Y-m-d H:i:s', strtotime('+1 day'))
+                ]);
+
+                $params = array(
+                    'transaction_details' => array(
+                        'order_id' => $traksaksi->id,
+                        'gross_amount' => $booking->total_pembayaran,
+                    ),
+                    'customer_details' => array(
+                        'first_name' => $booking->pendakis[0]->first_name,
+                        'last_name' =>  $booking->pendakis[0]->last_name,
+                        'email' => Auth::user()->email,
+                        'phone' => Auth::user()->no_hp
+                    ),
+                );
+                $data = $midtrans->generateSnapToken($params);
+                $snapToken = $data['data'];
+                $traksaksi->spesial = $snapToken;
+                $traksaksi->save();
+            } else if ($statusTranskasi == 201) {
+                // return "transaksi pennding";
+                $snapToken = $traksaksi->spesial;
+            }
+        } else {
+            $traksaksi = pembayaran::create([
+                'id_booking' => $booking->id,
+                'spesial' => '',
+                'amount' => $booking->total_pembayaran,
+                'status' => 'pending',
+                'payment_method' => 'midtrans',
+                'deadline' => date('Y-m-d H:i:s', strtotime('+1 day'))
+            ]);
+
+            $params = array(
+                'transaction_details' => array(
+                    'order_id' => $traksaksi->id,
+                    'gross_amount' => $booking->total_pembayaran,
+                ),
+                'customer_details' => array(
+                    'first_name' => $booking->pendakis[0]->first_name,
+                    'last_name' =>  $booking->pendakis[0]->last_name,
+                    'email' => Auth::user()->email,
+                    'phone' => Auth::user()->no_hp
+                ),
+            );
+            // bikin snaop token
+            $data = $midtrans->generateSnapToken($params);
+            $snapToken = $data['data'];
+            $traksaksi->spesial = $snapToken;
+            $traksaksi->save();
+        }
+
+        return view('homepage.booking.bookingDetail', [
             'snaptoken' => $snapToken,
             'booking' => $booking,
             'pendakis' => $booking->pendakis

@@ -29,6 +29,7 @@ Route::post('booking/destinasi/paket/tiket', [booking::class, 'destinasiTiketSto
 
 // booking
 Route::middleware('auth')->group(function () {
+    Route::get('booking/{id}', [booking::class, 'bookingId'])->name('homepage.booking');
 
     Route::get('booking/{id}/snk', [booking::class, 'bookingSnk'])->name('homepage.booking.snk');
     Route::post('booking/snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking.snk.action');
