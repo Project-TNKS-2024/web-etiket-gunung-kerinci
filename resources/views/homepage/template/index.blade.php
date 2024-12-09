@@ -229,6 +229,18 @@
             color: white;
             border: none;
         }
+
+
+        body {
+            background-color: rgba(245, 246, 250, 1);
+            min-height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        footer {
+            background-color: white;
+        }
     </style>
 
     @yield('css')
@@ -240,7 +252,9 @@
 
     @include('homepage.template.navbar')
 
-    @yield('main')
+    <main>
+        @yield('main')
+    </main>
 
     @include('homepage.template.footer')
 

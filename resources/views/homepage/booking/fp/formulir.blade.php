@@ -3,7 +3,7 @@ $index = $index ?? 0;
 $title = ($index == 0) ? 'Biodata Ketua' : 'Biodata Anggota '.$index;
 @endphp
 
-<h1>{{$title}}</h1>
+<h1 class="fs-4 fw-bold mt-3">{{$title}}</h1>
 <input type="hidden" name="formulir[{{$index}}][id_pendaki]" value="{{ old('formulir.'.$index.'.id_pendaki', $pendaki ? $pendaki->id : null) }}">
 <div class="row mb-3">
    <div class="col-12 col-md-6">

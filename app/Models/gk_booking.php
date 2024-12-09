@@ -14,7 +14,7 @@ class gk_booking extends Model
         'id_tiket',
         'tanggal_masuk',
         'tanggal_keluar',
-        'kategori_hari',
+        'kategori_hari', //tidak perlu lagi
         'total_hari',
         'total_pendaki_wni',
         'total_pendaki_wna',

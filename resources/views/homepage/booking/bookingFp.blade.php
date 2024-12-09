@@ -3,73 +3,6 @@
 
 @section('css')
 <style>
-   .header-bg {
-      position: relative;
-      background: url("{{ asset('assets/img/bg/title-header-bg.png') }}") no-repeat;
-      background-size: cover;
-      background-position: 50% 50%;
-      color: white;
-   }
-
-
-   .header-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      /* Adjust the alpha value for the desired opacity */
-      z-index: 1;
-   }
-
-   .header-content {
-      position: relative;
-      z-index: 2;
-   }
-
-   .border-between {
-      border-top: 2px solid white;
-      width: 50px;
-      margin: 20px 0;
-   }
-
-   /* formulir anggota*/
-
-   #formulir label.mandatory::after {
-      content: " *";
-      color: red;
-   }
-
-   #formulir .keterangan {
-      color: gray;
-      font-size: 12px;
-   }
-
-   #formulir h1 {
-      font-size: 20px;
-      font-weight: bold;
-      margin-top: 20px;
-      margin-bottom: 10px;
-   }
-
-   /* formulir barang */
-   #formulir .btn-newBarang {
-      border: 1px solid #ccc;
-      padding: 5px;
-   }
-
-   #formulir .btn-newBarang:hover {
-      background-color: #ccc;
-   }
-
-   /* button newBarang barang ketika di click bukan hover*/
-   /* #formulir .btn-newBarang:active {
-      background-color: #007bff;
-
-   } */
-
    /* modal preview file */
    .modal-dialog {
       height: calc(100vh - 50px);
@@ -111,30 +44,31 @@
       @csrf
       <input type="hidden" name="id_booking" value="{{$id}}">
 
-      <div class="shadow px-5 pt-1 pb-4 rounded">
-         <!-- anggota -->
-         @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna-1); $i++)
+      <div class="card border-0 shadow">
+         <div class="card-body px-4 px-md-5">
+            <!-- anggota -->
+            @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna-1); $i++)
 
-            @if(isset($pendaki[$i]))
-            @include('homepage.booking.fp.formulir', [
-            'index' => $i,
-            'pendaki' => $pendaki[$i]
-            ])
-            @else
-            @include('homepage.booking.fp.formulir', [
-            'index' => $i,
-            'pendaki' => null
-            ])
-            @endif
+               @if(isset($pendaki[$i]))
+               @include('homepage.booking.fp.formulir', [
+               'index' => $i,
+               'pendaki' => $pendaki[$i]
+               ])
+               @else
+               @include('homepage.booking.fp.formulir', [
+               'index' => $i,
+               'pendaki' => null
+               ])
+               @endif
 
-            <hr style="border-width: 5px;">
-            @endfor
+               <hr style="border-width: 5px;">
+               @endfor
 
+               <!-- barang -->
 
-            <!-- barang -->
+               @include('homepage.booking.fp.barang')
 
-            @include('homepage.booking.fp.barang')
-
+         </div>
       </div>
       <div class="row">
          <div class="col-12 col-md-4"></div>

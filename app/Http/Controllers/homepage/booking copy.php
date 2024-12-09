@@ -165,7 +165,6 @@ class booking extends Controller
             abort(404);
         }
 
-
         switch ($booking->status_booking) {
             case '1':
                 return redirect()->route('homepage.booking.snk', ['id' => $id]);
@@ -176,13 +175,12 @@ class booking extends Controller
                 break;
 
             case '3':
-                return redirect()->route('homepage.booking.payment', ['id' => $id]);
+                // return redirect()->route('homepage.booking.detail', ['id' => $id]);
                 break;
 
                 // 4, 5, 6, 7
 
             default:
-                return $booking;
                 return redirect()->route('homepage.booking.destinasi.paket', ['id' => $id]);
                 break;
         }
@@ -206,7 +204,7 @@ class booking extends Controller
     {
         if ($request->snk) {
             $booking = gk_booking::find($request->id);
-            $booking->update(['status_booking' => 2]);
+            $booking->update(['status_booking' => 1]);
             return redirect()->route('homepage.booking.formulir', ['id' => $request->id]);
         } else {
             return back()->withErrors(['snk' => 'Silahkan ceklis data diri anda']);
@@ -279,7 +277,7 @@ class booking extends Controller
         ]);
 
         $booking = gk_booking::with('gktiket')->find($request->id_booking);
-
+        // return $request;
         $formulirPendakis = $request->formulir;
         $upload = new uploadFileControlller();
 
@@ -367,24 +365,15 @@ class booking extends Controller
                 'barangWajib.p3k_standart' => 'required|boolean',
                 'barangWajib.survival_kit_standart' => 'required|boolean',
             ]);
-
-            // validasi falid daya booking
-            $BookingValidator = new BookingValidator($booking->id);
-            $validasi =  $BookingValidator->validate();
-
-            if ($validasi['success']) {
-                return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking Berhasil disimpan');
-            } else {
-                return redirect()->back()->withErrors($validasi['message']);
-            }
-
             // pindah laman 
+            return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking BErhasil disimpan');
         } else if ($request->action == 'save') {
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         }
 
         return redirect()->back()->withErrors('error', 'Action tidak falid');
     }
+    // =========================================================================================
     public function bookingDetail($id)
     {
         // cek booking
@@ -393,22 +382,12 @@ class booking extends Controller
             ->where('id_user', Auth::id())
             ->first();
 
-        // return $booking;
         // cek status booking
         if (!$booking) {
             abort(404);
         } else if ($booking->status_booking !== 2) {
             return redirect()->route("homepage.booking", ["id" => $id]);
         }
-
-        // validasi falid daya booking
-        $BookingValidator = new BookingValidator($booking->id);
-        $validasi = $BookingValidator->validate();
-
-        if (!$validasi['success']) {
-            return redirect()->back()->withErrors($validasi['message']);
-        }
-
         // return $booking;
         return view('homepage.booking.bookingDetail', [
             'booking' => $booking,
@@ -427,20 +406,13 @@ class booking extends Controller
         // cek status booking
         if (!$booking) {
             abort(404);
-        } else if ($booking->status_booking == 2) {
-            // validasi formulir pendaki'
-            $BookingValidator = new BookingValidator($booking->id);
-            $validasi = $BookingValidator->validate();
-
-            // return $validasi;
-
-            if ($validasi['success']) {
-                $booking->status_booking = 3;
-                $booking->save();
-            } else {
-                return redirect()->route('homepage.booking.formulir', ['id' => $id])->withErrors($validasi['message']);
-            }
         } else if ($booking->status_booking !== 3) {
+            // validasi formulir pendaki'
+            $validasiBooking = new BookingValidator($booking->id);
+
+            return $validasiBooking;
+
+
             return redirect()->route("homepage.booking", ["id" => $id]);
         }
 
@@ -455,7 +427,9 @@ class booking extends Controller
 
             // return $status;
             if ($statusTranskasi == 200) {
-                return redirect()->route('dashboard.tiket', ['id' => $id])->with('success', 'Pembayaran Berhasil');
+                return "transaksi berhasil";
+                // ubah status booking jadi 4
+                //    arah kan ke halaman selanjutnya
             } else if ($statusTranskasi == 404) {
                 $params = array(
                     'transaction_details' => array(
@@ -469,10 +443,8 @@ class booking extends Controller
                         'phone' => Auth::user()->no_hp
                     ),
                 );
-
                 $data = $midtrans->generateSnapToken($params);
                 $snapToken = $data['data'];
-
                 $traksaksi->spesial = $snapToken;
                 $traksaksi->save();
             } else if ($statusTranskasi == 407) {
@@ -537,33 +509,93 @@ class booking extends Controller
             $traksaksi->save();
         }
 
-        // return $booking;
-
-        return view('homepage.booking.bookingPayment', [
+        return view('homepage.bookingPayment', [
             'snaptoken' => $snapToken,
             'booking' => $booking,
             'pendakis' => $booking->pendakis
         ]);
     }
 
-    // =========================================================================================
-
-    public function tiket($id)
+    public function bookingPayment1($id)
     {
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
-        // cek status booking
+        $statusPayment = [
+            'status' => 000,
+            'message' => 'Data tidak ditemukan',
+            'redirect_name' => 'Booking Tiket',
+            'redirect_url' => route('homepage.booking.destinasi.paket', ['id' => 1]),
+        ];
 
-        // return $booking;
 
+        if (isset($booking)) {
+            $midtrans = new MidtransController;
+            $status = $midtrans->checkPaymentStatus($booking->id);
 
-        if (!$booking) {
-            abort(404);
-        } else if ($booking->status_booking < 3) {
+            // return $status;
+            if (isset($status->getData()->status_code)) {
+                if ($status->getData()->status_code == 200) {
+                    $helper = new BookingHelperController();
+                    $qr = $helper->generateUniqueCode($booking->id);
+                    $booking->update([
+                        'status_booking' => 4,
+                        'status_pembayaran' => 1,
+                        'unique_code' => $qr->getData()->data,
+                    ]);
+                    $statusPayment = [
+                        'status' => 200,
+                        'message' => 'Pembayaran berhasil',
+                        'redirect_name' => 'Cek Tiket',
+                        'redirect_url' => route('homepage.booking.tiket', ['id' => $booking->id])
+                    ];
+                } else if ($status->getData()->status_code == 201) {
+                    $statusPayment = [
+                        'status' => 201,
+                        'message' => 'Pembayaran Pending',
+                        'redirect_name' => 'Cek Pembayaran',
+                        'redirect_url' => route('homepage.booking.detail', ['id' => $booking->id])
+                    ];
+                } else if ($status->getData()->status_code == 407) {
+                    $statusPayment = [
+                        'status' => 407,
+                        'message' => 'Pembayaran Galal',
+                        'redirect_name' => 'Cek Pembayaran',
+                        'redirect_url' => route('homepage.booking.detail', ['id' => $booking->id])
+                    ];
+                } else {
+                    $statusPayment = [
+                        'status' => 404,
+                        'message' => 'Pembayaran Tidak Ditemukan',
+                        'redirect_name' => 'Cek Pembayaran',
+                        'redirect_url' => route('homepage.booking.detail', ['id' => $booking->id])
+                    ];
+                }
+            } else {
+                $statusPayment = [
+                    'status' => 404,
+                    'message' => 'Booking Tidak Ditemukan',
+                    'redirect_name' => 'Pesan Tiket',
+                    'redirect_url' => route('homepage.booking.destinasi.paket', ['id' => 1]),
+                ];
+            }
+        }
+        // return $statusPayment['status'];
+        return view('homepage.booking.booking-payment', [
+            'booking' => $booking,
+            'status' => $status,
+            'statusPayment' => $statusPayment
+        ]);
+    }
+    public function tiketBooking($id)
+    {
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        if ($booking->status_pembayaran > 4) {
             abort(404);
         }
-
-
-        return view('homepage.booking.bookingTiket', [
+        // return [
+        //     'booking' => $booking,
+        //     'pendakis' => $booking->pendakis
+        // ];
+        return view('homepage.booking.booking-tiket', [
             'booking' => $booking,
             'pendakis' => $booking->pendakis
         ]);

@@ -29,7 +29,7 @@ class uploadFileControlller extends HelperController
             $type = explode("/", $url)[2];
             unlink(public_path($url));
             $path = $this->create($type, $folder, $file);
-            return $path; 
+            return $path;
         }
         return null;
     }
