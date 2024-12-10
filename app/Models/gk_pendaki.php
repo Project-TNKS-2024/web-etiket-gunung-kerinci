@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class gk_pendaki extends Model
 {
@@ -13,41 +14,31 @@ class gk_pendaki extends Model
     protected $fillable = [
         // data booking
         'booking_id',
-        'tiket_id',
         'tagihan',
 
-        // input identias
-        'kategori_pendaki',
-        'nama',
         'nik',
-        'jenis_kelamin',
+        //  ====== identitas
+        // 'kategori_pendaki',
+        // 'first_name',
+        // 'last_name',
+        // 'jenis_kelamin',
+        // 'tanggal_lahir',
+        // 'no_hp',
+        // 'no_hp_darurat',
+        // 'provinsi',
+        // 'kabupaten',
+        // 'kec',
+        // 'desa',
+        // 'lampiran_identitas',
 
-        // kesehatan
-        'tanggal_lahir',
+
         'usia',
-        // berat badan
-        // tinggi badan
-
-        // input hp
-        'no_hp',
-        'no_hp_darurat',
-
-        // input domisili
-        'provinsi',
-        'kabupaten',
-        'kec',
-        'desa',
+        'tinggi',
+        'berat',
 
         // input lampiran
-        'lampiran_identitas',
-        'lampiran_surat_kesehatan',
         'lampiran_surat_izin_ortu',
 
-
-    ];
-
-    protected $casts = [
-        'tanggal_lahir' => 'date',
     ];
 
     public function booking()
@@ -55,25 +46,58 @@ class gk_pendaki extends Model
         return $this->belongsTo(gk_booking::class, 'booking_id');
     }
 
-    // hubungkan kolom provinsi, kabupaten, kecamatan, kelurahan dengan tabel d_provinsi, d_kabupaten, d_kecamatan, d_kelurahan
+    public function biodata()
+    {
+        return $this->belongsTo(bio_pendaki::class, 'nik');
+    }
+
+    public function kategori_pendaki()
+    {
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('kategori_pendaki')->value('kategori_pendaki');
+    }
+    public function first_name()
+    {
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('first_name')->value('first_name');
+    }
+    public function last_name()
+    {
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('last_name')->value('last_name');
+    }
+    public function jenis_kelamin()
+    {
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('jenis_kelamin')->value('jenis_kelamin');
+    }
+    public function tanggal_lahir()
+    {
+        $tanggal = $this->belongsTo(bio_pendaki::class, 'nik')->select('tanggal_lahir')->value('tanggal_lahir');
+        return $tanggal ? Carbon::parse($tanggal) : null;
+    }
+    public function no_hp()
+    {
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('no_hp')->value('no_hp');
+    }
+    public function no_hp_darurat()
+    {
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('no_hp_darurat')->value('no_hp_darurat');
+    }
     public function provinsi()
     {
-        return $this->belongsTo(d_Provinsi::class, 'provinsi');
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('provinsi')->value('provinsi');
     }
     public function kabupaten()
     {
-        return $this->belongsTo(d_Kabupaten::class, 'kabupaten');
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('kabupaten')->value('kabupaten');
     }
-    public function kecamatan()
+    public function kec()
     {
-        return $this->belongsTo(d_Kecamatan::class, 'kec');
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('kec')->value('kec');
     }
-    public function kelurahan()
+    public function desa()
     {
-        return $this->belongsTo(d_Kelurahan::class, 'desa');
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('desa')->value('desa');
     }
-    public function tiket()
+    public function lampiran_identitas()
     {
-        return $this->belongsTo(gk_tiket_pendaki::class, 'tiket_id');
+        return $this->belongsTo(bio_pendaki::class, 'nik')->select('lampiran_identitas')->value('lampiran_identitas');
     }
 }

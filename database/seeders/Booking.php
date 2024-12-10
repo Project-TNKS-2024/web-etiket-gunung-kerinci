@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\bio_pendaki;
 use App\Models\gk_booking;
 use App\Models\gk_gates;
 use App\Models\gk_pendaki;
@@ -66,26 +67,38 @@ class Booking extends Seeder
 
         foreach ($bookings as $booking) {
             for ($i = 1; $i <= 2; $i++) {
-                gk_pendaki::create([
+
+                $data = gk_pendaki::create([
                     'booking_id' => $booking->id,
-                    'tiket_id' => $booking->id_tiket,
-                    'kategori_pendaki' => 'wni', // or 'wna' based on your logic
-                    'nama' => 'Pendaki ' . $i,
+                    'tagihan' => 0,
+
                     'nik' => Str::random(16),
+                    'usia' => 25 + $i,
+                    'tinggi' => 13 + $i,
+                    'berat' => 25 + $i,
+
+
+                    'lampiran_surat_izin_ortu' => '',
+                ]);
+
+                bio_pendaki::create([
+                    'nik' => $data->nik,
+                    'kategori_pendaki' => 'wni',
+                    'first_name' => 'Pendaki',
+                    'last_name' => 'gunung' . $i,
                     'lampiran_identitas' => 'path/to/identitas' . $i . '.pdf',
+
                     'no_hp' => '08123456789' . $i,
                     'no_hp_darurat' => '08123456780' . $i,
-                    'tanggal_lahir' => Carbon::now()->subYears(25 + $i)->format('Y-m-d'),
-                    'usia' => 25 + $i,
-                    'provinsi' => 'Provinsi ' . $i,
-                    'kabupaten' => 'Kabupaten ' . $i,
-                    'kec' => 'Kecamatan ' . $i,
-                    'desa' => 'Desa ' . $i,
-                    'jenis_kelamin' => 'l',
 
-                    'lampiran_surat_kesehatan' => 'path/to/kesehatan' . $i . '.pdf',
-                    'lampiran_surat_izin_ortu' => 'path/to/izinortu' . $i . '.pdf',
-                    'tagihan' => 250000 * $i,
+                    'jenis_kelamin' => 'l',
+                    'tanggal_lahir' => Carbon::now()->subYears(25 + $i)->format('Y-m-d'),
+
+                    'provinsi' =>   $i,
+                    'kabupaten' =>  $i,
+                    'kec' =>  $i,
+                    'desa' =>  $i,
+
                 ]);
             }
         }

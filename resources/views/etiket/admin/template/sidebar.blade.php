@@ -12,124 +12,148 @@
       <!-- Sidebar navigation-->
       <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
          <ul id="sidebarnav">
-
-            @include('etiket.admin.template.sidebar.list', [
-            "sidebar" => [
-            [
-            "name" => "Dashboard",
-            "type" => "single",
-            "link" => route('admin.dashboard'),
-            "icon" => [
-            "name" => asset('assets/icon/tnks/darhboard_alt-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-
-            [
-            "name" => "Master Data",
-            "type" => "multiple",
-            "list" => [
-            [
-            "name" => "Kelola Tiket",
-            "type" => "single",
-            "link" => route('admin.tiket.daftar'),
-            "icon" => [
-            "name" => asset('assets/icon/tnks/ticket-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-            [
-            "name" => "Kelola Destinasi",
-            "type" => "single",
-            "link" => route('admin.destinasi.daftar'),
-            "icon" => [
-            "name" => asset('assets/icon/tnks/map-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-            [
-            "name" => "Kelola Gate",
-            "type" => "single",
-            "link" => route('admin.gate.daftar'),
-            "icon" => [
-            "name" => asset('assets/icon/tnks/pointers-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-            ],
-
-            ],
-            [
-            "name" => "Gunung Kerinci",
-            "type" => "multiple",
-            "list" => [
-            [
-            "name" => "Data Pengguna",
-            "type" => "single",
-            "link" => "#",
-            "icon" => [
-            "name" => asset('assets/icon/tnks/user_alt-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-            [
-            "name" => "Data Booking",
-            "type" => "single",
-            "link" => route('admin.booking.now.read'),
-            "icon" => [
-            "name" => asset('assets/icon/tnks/ticket_alt-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-            [
-            "name" => "Data Pendaki",
-            "type" => "single",
-            "link" => "#",
-            "icon" => [
-            "name" => asset('assets/icon/tnks/group-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-            [
-            "name" => "Climber Tracking",
-            "type" => "single",
-            "link" => "#",
-            "icon" => [
-            "name" => asset('assets/icon/tnks/compass-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-            [
-            "name" => "Monitoring Gunung",
-            "type" => "single",
-            "link" => "#",
-            "icon" => [
-            "name" => asset('assets/icon/tnks/navigate-dark.svg'),
-            "type" => "image"
-            ],
-            ],
-            ]
-            ],
-            ],
-            ])
-
-            <hr>
             <li class="sidebar-item">
-               <a class="sidebar-link" href="{{route('admin.fitur.scanTiket')}}" aria-expanded="false">
+               <a class="sidebar-link" href="{{route('admin.dashboard')}}" aria-expanded="false">
                   <span>
-                     <img src="{{asset('assets/icon/tnks/group_scan-dark.svg')}}"></img>
+                     <img src="{{asset('assets/icon/tnks/darhboard_alt-dark.svg')}}"></img>
                   </span>
-                  <span class="hide-menu">Scan Qr</span>
+                  <span class="hide-menu">Dashboard</span>
+               </a>
+            </li>
+
+            <li class="nav-small-cap">
+               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+               <span class="hide-menu">Destinasi</span>
+            </li>
+            @foreach ($DataDestinasi as $itemDestinasi)
+            <li class="sidebar-item">
+               <a class="sidebar-link has-arrow" data-bs-toggle="collapse" href="#collapseDestinasi{{$itemDestinasi->id}}" role="button" aria-expanded="false" aria-controls="collapseDestinasi{{$itemDestinasi->id}}">
+                  <span>
+                     <img src="{{ asset('assets/icon/tnks/mountain-sun-solid.svg') }}"></img>
+                  </span>
+                  <span class="hide-menu">{{$itemDestinasi->nama}}</span>
+               </a>
+               <div class="collapse lis-collapse-destinasi" id="collapseDestinasi{{$itemDestinasi->id}}">
+                  <ul class="list-unstyled">
+                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="{{ route('admin.destinasi.detail', ['id' => $itemDestinasi->id]) }}" aria-expanded="false">
+                           <span>
+                              <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
+                           </span>
+                           <span class="hide-menu">Kelola Destinasi</span>
+                        </a>
+                     </li>
+                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="{{route('admin.destinasi.tiket', ['id' => $itemDestinasi->id])}}" aria-expanded="false">
+                           <span>
+                              <img src="{{ asset('assets/icon/tnks/ticket-dark.svg') }}"></img>
+                           </span>
+                           <span class="hide-menu">Kelola Tiket</span>
+                        </a>
+                     </li>
+                     <!-- ---------------------------------------------------------------------------------- -->
+                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="{{ route('admin.destinasi.booking',  ['id' => $itemDestinasi->id] )}}" aria-expanded="false">
+                           <span>
+                              <img src="{{ asset('assets/icon/tnks/ticket_alt-dark.svg') }}"></img>
+                           </span>
+                           <span class="hide-menu">Data Booking</span>
+                        </a>
+                     </li>
+                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                           <span>
+                              <img src="{{ asset('assets/icon/tnks/group-dark.svg') }}"></img>
+                           </span>
+                           <span class="hide-menu">Data Pendaki</span>
+                        </a>
+                     </li>
+                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                           <span>
+                              <img src="{{ asset('assets/icon/tnks/navigate-dark.svg') }}"></img>
+                           </span>
+                           <span class="hide-menu">Monitoring Gunung</span>
+                        </a>
+                     </li>
+                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                           <span>
+                              <img src="{{asset('assets/icon/tnks/file_dock-dark.svg')}}"></img>
+                           </span>
+                           <span class="hide-menu">Cetak Laporan</span>
+                        </a>
+                     </li>
+                  </ul>
+               </div>
+            </li>
+            @endforeach
+
+
+
+            <li class="nav-small-cap">
+               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+               <span class="hide-menu">Master Data</span>
+            </li>
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="{{ route('admin.master.destinasi') }}" aria-expanded="false">
+                  <span>
+                     <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
+                  </span>
+                  <span class="hide-menu">Data Destinasi</span>
                </a>
             </li>
             <li class="sidebar-item">
                <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
-                     <img src="{{asset('assets/icon/tnks/file_dock-dark.svg')}}"></img>
+                     <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
                   </span>
-                  <span class="hide-menu">Cetak Laporan</span>
+                  <span class="hide-menu">Account Pengunjung</span>
                </a>
             </li>
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="#" aria-expanded="false">
+                  <span>
+                     <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
+                  </span>
+                  <span class="hide-menu">Account Admin</span>
+               </a>
+            </li>
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="#" aria-expanded="false">
+                  <span>
+                     <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
+                  </span>
+                  <span class="hide-menu">Role Permision</span>
+               </a>
+            </li>
+
+            <li class="nav-small-cap">
+               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+               <span class="hide-menu">Traking</span>
+            </li>
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="#" aria-expanded="false">
+                  <span>
+                     <img src="{{ asset('assets/icon/tnks/compass-dark.svg') }}"></img>
+                  </span>
+                  <span class="hide-menu">Climber Tracking</span>
+               </a>
+            </li>
+
+            <li class="nav-small-cap">
+               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+               <span class="hide-menu">Fitur</span>
+            </li>
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="{{route('admin.fitur.scanTiket')}}" aria-expanded="false">
+                  <span>
+                     <img src="{{asset('assets/icon/tnks/group_scan-dark.svg')}}"></img>
+                  </span>
+                  <span class="hide-menu">Scan Tiket</span>
+               </a>
+            </li>
+            <hr>
             <li class="sidebar-item">
                <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
@@ -143,5 +167,7 @@
       </nav>
       <!-- End Sidebar navigation -->
    </div>
+
+
    <!-- End Sidebar scroll-->
 </aside>

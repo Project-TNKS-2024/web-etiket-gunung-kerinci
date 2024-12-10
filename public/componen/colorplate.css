@@ -62,6 +62,26 @@
     --error300: #ad0807;
 }
 
+.bg-linear-gradient-primary {
+    background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+    color: #fff;
+    /* border: none; */
+    /* padding: 10px 20px; */
+    /* text-align: center;
+    text-decoration: none;
+    display: inline-block; */
+}
+
+.bg-linear-gradient-danger {
+    background: linear-gradient(263deg, #da260e 12.63%, #FF6363 80.63%);
+    color: #fff;
+    /* border: none; */
+    /* padding: 10px 20px; */
+    /* text-align: center;
+    text-decoration: none;
+    display: inline-block; */
+}
+
 /* Base Colors */
 .gk-bg-base-white {
     background-color: var(--base-white);

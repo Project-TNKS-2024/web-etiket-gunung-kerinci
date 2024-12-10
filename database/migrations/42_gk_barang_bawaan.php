@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('gk_barang_bawaans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_booking');
+            $table->uuid('id_booking');
             $table->string('nama_barang');
             $table->integer('jumlah');
             $table->timestamps();

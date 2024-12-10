@@ -12,7 +12,7 @@ class gk_tiket_pendaki extends Model
         'id_paket_tiket',
         'kategori_pendaki',
         // kategori day diganti dengan harga masuk wk dan wd
-        'harga_masuk_wk', 
+        'harga_masuk_wk',
         'harga_masuk_wd',
         'harga_kemah',
         'harga_traking',

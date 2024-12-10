@@ -27,7 +27,7 @@
                         <i class="ti ti-list-check fs-6"></i>
                         <p class="mb-0 fs-3">My Task</p>
                      </a>
-                     <form action="{{route('etiket.in.logout')}}" method="post" class="mx-3">
+                     <form action="{{route('etiket.auth.logout')}}" method="post" class="mx-3">
                         @csrf
                         <button class="btn btn-outline-primary mt-2 d-block w-100">Logout</button>
                      </form>

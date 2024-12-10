@@ -9,9 +9,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('pembayarans', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('id_booking');
-            $table->string('spesial')->default(null);
+            $table->uuid('id')->primary();
+            $table->uuid('id_booking');
+            $table->string('spesial')->default(null); //snap_code
             $table->decimal('amount', 10, 2); // Jumlah pembayarans
             $table->string('status'); // Status pembayarans (contoh: pending, success, failed)
             $table->string('payment_method'); // Metode pembayarans (contoh: transfer bank, kartu kredit, dll.)

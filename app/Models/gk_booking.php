@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class gk_booking extends Model
 {
@@ -13,7 +14,7 @@ class gk_booking extends Model
         'id_tiket',
         'tanggal_masuk',
         'tanggal_keluar',
-        'kategori_hari',
+        'kategori_hari', //tidak perlu lagi
         'total_hari',
         'total_pendaki_wni',
         'total_pendaki_wna',
@@ -28,6 +29,21 @@ class gk_booking extends Model
         'keterangan',
         'id_booking_master',
     ];
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    // Generate UUID automatically
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
+            }
+        });
+    }
     /**
      * Get the user that owns the booking.
      */

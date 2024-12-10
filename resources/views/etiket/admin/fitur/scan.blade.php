@@ -51,7 +51,7 @@
    function onScanSuccess(decodedText, decodedResult) {
       console.log(decodedText);
       // cek decodedText ada atau tidak di dalam listcodetiket
-      if (!listcodetiket.includes(decodedText)) {
+      if (!listcodetiket.authcludes(decodedText)) {
          listcodetiket.push(decodedText);
 
          // Buat elemen anchor baru

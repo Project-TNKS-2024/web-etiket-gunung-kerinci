@@ -15,16 +15,18 @@ class User extends Authenticatable
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
+     * 
      */
+    protected $table = 'users';
     protected $fillable = [
         'email',
-        'nik',
-        'token',
-        'no_hp',
-        'role',
         'password',
-        'fullname',
-        'path_foto',
+        'role',
+        'nik',
+
+
+        'token',
+        'nik_verified_at',
         'email_verified_at',
     ];
 
@@ -47,6 +49,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'nik_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
