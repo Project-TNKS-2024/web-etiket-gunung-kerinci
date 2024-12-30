@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('nik')->unique();
-            $table->enum('kategori_pendaki', ['wna', 'wni']);
+            $table->enum('kenegaraan', ['wna', 'wni']);
             $table->string('first_name');
             $table->string('last_name');
             $table->string('lampiran_identitas');
@@ -29,6 +29,9 @@ return new class extends Migration
             $table->string('kabupaten');
             $table->string('kec');
             $table->string('desa');
+
+            $table->enum('verified', ['unverified', 'pending', 'verified'])->default("unverified");
+            $table->timestamp('verified_at')->nullable();
 
             $table->timestamps();
         });

@@ -13,7 +13,7 @@ class bio_pendaki extends Model
 
     protected $fillable = [
         'nik',
-        'kategori_pendaki',
+        'kenegaraan',
         'first_name',
         'last_name',
         'lampiran_identitas',
@@ -28,6 +28,7 @@ class bio_pendaki extends Model
         'kabupaten',
         'kec',
         'desa',
+        'verified'
 
     ];
 

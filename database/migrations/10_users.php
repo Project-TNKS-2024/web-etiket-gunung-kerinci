@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('role')->default('user');
 
-            $table->string('nik')->unique()->nullable();
+            $table->unsignedBigInteger('id_bio')->unique()->nullable();
             $table->timestamp('nik_verified_at')->nullable();
 
             $table->string('token')->nullable();

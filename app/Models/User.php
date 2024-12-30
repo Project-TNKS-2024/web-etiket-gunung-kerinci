@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'nik',
+        'id_bio',
 
 
         'token',
@@ -52,5 +52,10 @@ class User extends Authenticatable
             'nik_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function biodata()
+    {
+        return $this->hasOne(bio_pendaki::class, 'id_bio');
     }
 }
