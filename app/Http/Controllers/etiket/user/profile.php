@@ -43,7 +43,7 @@ class profile extends Controller
     {
         $user = Auth::user();
 
-        return $user;
+        // return $user;
         $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'string|max:255|nullable',
@@ -74,9 +74,15 @@ class profile extends Controller
             $filename = $upload->create($user->id, 'identitas', $request->file('lampiran_identitas'));
         }
 
+        // cek apakah sudah ada bio atau belum
+        if ($user->id_bio) {
+            $bio = bio_pendaki::find($user->id_bio);
+        } else {
+            $bio = new bio_pendaki();
+        }
 
-        // Update data user
-        $data = bio_pendaki::created([
+
+        $bio->update([
             'nik' => $request->nik,
             'kenegaraan' => $request->kewarganegaraan,
             'first_name' => $request->firstName,
@@ -84,7 +90,7 @@ class profile extends Controller
             'lampiran_identitas' => $filename,
 
             'no_hp' => $request->nomor_telepon,
-            'no_hp_darurat' => $request->nomor_telepon_darurat,
+            'no_hp_darurat' => "0000000000000000",
 
             'jenis_kelamin' => $request->jenis_kelamin,
             'tanggal_lahir' => $request->tanggal_lahir,
@@ -93,10 +99,10 @@ class profile extends Controller
             'kabupaten' => $request->kabupaten_kota,
             'kec' => $request->kecamatan,
             'desa' => $request->desa_kelurahan,
-            'verified' => 'unverified user',
+            'verified' => 'pending',
         ]);
 
-        return $data;
+        // return $bio;
 
         return back()->with('success', 'Berhasil mengubah data');
     }
