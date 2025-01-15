@@ -59,7 +59,7 @@
                     <!-- NIK/Passport -->
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold" for="id-pendaftar">NIK/Passport</label>
-                        <input value="{{ old('nik', isset($user->nik) ? $user->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport">
+                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport">
                     </div>
                 </div>
 
@@ -155,7 +155,7 @@
                 <!-- Submit Button -->
                 <div class="row mb-2">
                     <div class="col d-flex justify-content-end">
-                        @if (isset($user->biodata) and ($user->biodata->verified == 'unverified user' or $user->biodata->verified == 'unverified pendaki'))
+                        @if (isset($user->biodata) and ($user->biodata->verified == 'unverified'))
                         <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="verifikasi">Verifikasi Profile</button>
                         @elseif(isset($user->biodata) and $user->biodata->verified == 'verified')
                         <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="update">Update Profile</button>
@@ -216,7 +216,11 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('cariTelepon').addEventListener('input', cariTelepon);
-        fetch('https://restcountries.com/v3.1/all')
+        fetch('https://restcountries.com/v3.1/all', {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
             .then(response => response.json())
             .then(countriesData => {
                 // ambil nilai asli dari input dropdown

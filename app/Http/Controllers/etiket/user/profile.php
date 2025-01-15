@@ -43,6 +43,7 @@ class profile extends Controller
     {
         $user = Auth::user();
 
+        return $user;
         $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'string|max:255|nullable',
@@ -65,14 +66,6 @@ class profile extends Controller
         }
         $request['nomor_telepon'] = $request->telp_country . ' ' . $request->nomor_telepon;
 
-        // Cek apakah NIK sudah digunakan
-        $existingUser = User::where('nik', $request->nik)
-            ->where('id', '!=', $user->id)
-            ->first();
-
-        if ($existingUser) {
-            return back()->with('error', 'NIK sudah digunakan oleh pengguna lain');
-        }
 
         $upload = new uploadFileControlller();
 

@@ -56,6 +56,6 @@ class User extends Authenticatable
 
     public function biodata()
     {
-        return $this->hasOne(bio_pendaki::class, 'id_bio');
+        return $this->hasOne(bio_pendaki::class, 'id', 'id_bio',);
     }
 }
