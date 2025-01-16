@@ -72,9 +72,9 @@
       </div>
       <div class="row">
          <div class="col-12 col-md-4"></div>
-         <div class="col-12 col-md-4">
+         <!-- <div class="col-12 col-md-4">
             <button type="submit" class="btn btn-primary w-100 fw-bold mt-3" name="action" value="save">Simpan</button>
-         </div>
+         </div> -->
          <div class="col-12 col-md-4">
             <button type="submit" class="btn btn-primary w-100 fw-bold mt-3" name="action" value="next">Selanjutnya</button>
          </div>

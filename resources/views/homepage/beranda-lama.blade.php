@@ -171,8 +171,8 @@
                     </h5>
                     <p class="card-text index-text-cardDestinasi">
                         {{ $item['detail'] }}
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc vel tincidunt ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc vel tincidunt ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl.
+                        <!-- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc vel tincidunt ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc vel tincidunt ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl. -->
                     </p>
                     <!-- <a href="{{ $item['id'] }}" class="btn btn-primary w-100 gk-text-base-white">Pilih Jalur
                     Pendakian</a> -->
