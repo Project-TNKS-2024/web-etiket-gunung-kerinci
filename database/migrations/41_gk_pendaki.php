@@ -33,8 +33,8 @@ return new class extends Migration
             $table->string('desa');
 
 
-            $table->string('lampiran_surat_kesehatan');
-            $table->string('lampiran_surat_izin_ortu');
+            $table->string('lampiran_surat_kesehatan')->nullable();
+            $table->string('lampiran_surat_izin_ortu')->nullable();
             $table->timestamps();
 
             $table->foreign('booking_id')->references('id')->on('gk_bookings')->onDelete('cascade');

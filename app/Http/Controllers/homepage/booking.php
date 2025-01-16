@@ -19,8 +19,7 @@ use App\Models\pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-
-
+use DateTime;
 
 use function PHPUnit\Framework\isNull;
 
@@ -306,6 +305,15 @@ class booking extends Controller
                 $pendaki = new gk_pendaki();
                 $pendaki->booking_id = $booking->id;
             }
+
+            // usia
+            // hitung usia
+            $tanggalLahir = new DateTime($formulir['tanggal_lahir']);
+            $tanggalSekarang = new DateTime();
+            $usia = $tanggalSekarang->diff($tanggalLahir);
+            $pendaki->usia = $usia->y;
+
+
             $pendaki->first_name = $formulir['first_name'] ?? '';
             $pendaki->last_name = $formulir['last_name'] ?? '';
             $pendaki->kategori_pendaki = $formulir['kewarganegaraan'] ?? '';
