@@ -16,6 +16,7 @@ use App\Http\Controllers\etiket\admin\destinasi\bookingController;
 
 // admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
+use App\Http\Controllers\etiket\admin\master\PengunjungController;
 
 // admin master
 
@@ -63,6 +64,10 @@ Route::middleware(['check.role:admin'])->group(function () {
    Route::get('admin/master/destinasi/add', [destinasisController::class, 'add'])->name('admin.master.destinasi.add');
    Route::post('admin/master/destinasi/add', [destinasisController::class, 'addAction'])->name('admin.master.destinasi.addAction');
    Route::post('admin/master/destinasi/delete', [destinasisController::class, 'deleteAction'])->name('admin.master.destinasi.deleteAction');
+
+   // Master - Pengunjung
+   Route::get('admin/master/pengunung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung');
+   Route::post('admin/master/pengunung/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.verified');
 
 
 

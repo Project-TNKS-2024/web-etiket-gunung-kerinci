@@ -41,13 +41,14 @@ class profile extends Controller
 
     public function action(Request $request)
     {
-        $user = Auth::user();
+        $auth = Auth::user();
+        $user = User::with('biodata')->find($auth->id);
 
         // return $user;
         $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'string|max:255|nullable',
-            'lampiran_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'lampiran_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:548',
             'kewarganegaraan' => 'required|in:wni,wna',
             'nik' => 'required|numeric|digits:16',
             'nomor_telepon' => 'required|numeric',
@@ -75,32 +76,46 @@ class profile extends Controller
         }
 
         // cek apakah sudah ada bio atau belum
+        $bio = null;
         if ($user->id_bio) {
             $bio = bio_pendaki::find($user->id_bio);
+            $bio->update([
+                'nik' => $request->nik,
+                'kenegaraan' => $request->kewarganegaraan,
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
+                'lampiran_identitas' => $filename,
+                'no_hp' => $request->nomor_telepon,
+                'no_hp_darurat' => "0000000000000000",
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'provinsi' => $request->provinsi,
+                'kabupaten' => $request->kabupaten_kota,
+                'kec' => $request->kecamatan,
+                'desa' => $request->desa_kelurahan,
+                'verified' => 'pending',
+            ]);
         } else {
-            $bio = new bio_pendaki();
+            $bio = bio_pendaki::create([
+                'nik' => $request->nik,
+                'kenegaraan' => $request->kewarganegaraan,
+                'first_name' => $request->firstName,
+                'last_name' => $request->lastName,
+                'lampiran_identitas' => $filename,
+                'no_hp' => $request->nomor_telepon,
+                'no_hp_darurat' => "0000000000000000",
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'provinsi' => $request->provinsi,
+                'kabupaten' => $request->kabupaten_kota,
+                'kec' => $request->kecamatan,
+                'desa' => $request->desa_kelurahan,
+                'verified' => 'pending',
+            ]);
         }
 
-
-        $bio->update([
-            'nik' => $request->nik,
-            'kenegaraan' => $request->kewarganegaraan,
-            'first_name' => $request->firstName,
-            'last_name' => $request->lastName,
-            'lampiran_identitas' => $filename,
-
-            'no_hp' => $request->nomor_telepon,
-            'no_hp_darurat' => "0000000000000000",
-
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'tanggal_lahir' => $request->tanggal_lahir,
-
-            'provinsi' => $request->provinsi,
-            'kabupaten' => $request->kabupaten_kota,
-            'kec' => $request->kecamatan,
-            'desa' => $request->desa_kelurahan,
-            'verified' => 'pending',
-        ]);
+        $user->id_bio = $bio->id;
+        $user->save();
 
         // return $bio;
 

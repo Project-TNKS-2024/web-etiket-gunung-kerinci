@@ -9,6 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="shortcut icon" type="image/png" href="{{asset('assets/img/logo/logo bulat.png')}}" />
+
     <link rel="stylesheet" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
     <!-- style -->
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.min.css') }}">

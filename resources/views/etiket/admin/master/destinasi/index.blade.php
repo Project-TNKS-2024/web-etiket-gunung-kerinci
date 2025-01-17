@@ -17,7 +17,7 @@
          <a class="btn btn-primary text-black gk-bg-base-white"
             href="{{route('admin.master.destinasi.add')}}">
             <img src="{{asset('assets/icon/tnks-plus.svg')}}" width="20" style="margin-right: 5px;" />
-            Tambah Tiket
+            Tambah Destinasi
          </a>
       </div>
 

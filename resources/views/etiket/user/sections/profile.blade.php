@@ -6,6 +6,14 @@
     .form-group {
         margin-bottom: 10px;
     }
+
+    .input-none input,
+    .input-none select,
+    .input-none .dropdown-notelp {
+        pointer-events: none;
+        background-color: #e9ecef;
+        opacity: 1;
+    }
 </style>
 @endsection
 
@@ -16,8 +24,22 @@
     <div class="card-body">
         <div class="container-fluid">
             <h4 class="font-semibold">Profile</h4>
-            <form action="{{ route('user.dashboard.action') }}" method="post" enctype="multipart/form-data">
+            <!-- biodata->verified = unverified, peding, verified -->
+            <form action="{{ route('user.dashboard.action') }}" method="post" id="form-profile" enctype="multipart/form-data" class="{{ $user->biodata->verified !== 'unverified' ? 'input-none' : '' }}">
+
+                @if (isset($user->biodata)and $user->biodata->verified == 'pending')
+                <div class="alert alert-warning" role="alert">
+                    Profil anda sedang dalam verifikasi admin. Silakan hubungi admin untuk melakukan verifikasi.
+                </div>
+                @endif
+                @if (isset($user->biodata)and $user->biodata->verified == 'unverified')
+                <div class="alert alert-danger" role="alert">
+                    Anda belum melengkapi data diri. Silakan lengkapi data diri anda.
+                </div>
+                @else
+
                 @csrf
+                @endif
                 <div class="row">
                     <!-- First Name -->
                     <div class="form-group col-12 col-md-6">
@@ -36,7 +58,7 @@
                         <div class="input-group flex-nowrap">
                             <input class="form-control border-secondary" type="file" name="lampiran_identitas" id="lampiran_identitas" accept="image/*,.pdf">
                             @if (isset($user->biodata) && isset($user->biodata->lampiran_identitas) && file_exists(public_path($user->biodata->lampiran_identitas)))
-                            <input type="hidden" value="lampiran_identitas" id="lampiran_identitas_existing">
+                            <input type="hidden" value="{{asset( $user->biodata->lampiran_identitas)}}" id="lampiran_identitas_existing">
                             @endif
                             <button class="input-group-text d-none border-secondary" type="button" data-id-target="lampiran_identitas">
                                 <i class=" fa-regular fa-eye"></i>
@@ -76,7 +98,7 @@
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold">Nomor Telepon</label>
                         <div class="d-flex gap-2">
-                            <div class="dropdown custom-dropdown-item">
+                            <div class="dropdown custom-dropdown-item dropdown-notelp">
                                 <button class="h-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center" id="dropdown-country" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     {{ old('telp_country', isset($user->biodata->telp_country) ? $user->biodata->telp_country : null) }}
                                 </button>
@@ -155,10 +177,14 @@
                 <!-- Submit Button -->
                 <div class="row mb-2">
                     <div class="col d-flex justify-content-end">
-                        @if (isset($user->biodata) and ($user->biodata->verified == 'unverified'))
+                        @if ((!isset($user->biodata))or (isset($user->biodata) and ($user->biodata->verified == 'unverified')) )
                         <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="verifikasi">Verifikasi Profile</button>
                         @elseif(isset($user->biodata) and $user->biodata->verified == 'verified')
-                        <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="update">Update Profile</button>
+                        <button type="button" class="btn border-0 bg-linear-gradient-primary" name="action" onclick="updateProfile(this)">Update Profile</button>
+                        <div id="button-update" class="d-none">
+                            <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="update">Verifikasi Profile</button>
+                            <button type="button" id="button-cancel" class="btn border-0 bg-linear-gradient-danger" name="action">Batal</button>
+                        </div>
                         @endif
                     </div>
                 </div>
@@ -273,6 +299,25 @@
         }
 
     });
+</script>
+
+<!-- script tombol update profile -->
+<script>
+    function updateProfile(btn) {
+        const form = document.getElementById('form-profile');
+        const bupdate = document.getElementById('button-update');
+        const bcancel = document.getElementById('button-cancel');
+
+        form.classList.remove('input-none');
+        bupdate.classList.remove('d-none');
+        btn.classList.add('d-none');
+
+        bcancel.addEventListener('click', function() {
+            form.classList.add('input-none');
+            bupdate.classList.add('d-none');
+            btn.classList.remove('d-none');
+        });
+    }
 </script>
 
 <!-- scipt refresh option select domisili -->
