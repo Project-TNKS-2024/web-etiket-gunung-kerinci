@@ -113,6 +113,8 @@ class profile extends Controller
                 'verified' => 'pending',
             ]);
         }
+        // $bio->refresh();
+        // return $bio;
 
         $user->id_bio = $bio->id;
         $user->save();

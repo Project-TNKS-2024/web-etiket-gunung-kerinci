@@ -25,7 +25,7 @@
         <div class="container-fluid">
             <h4 class="font-semibold">Profile</h4>
             <!-- biodata->verified = unverified, peding, verified -->
-            <form action="{{ route('user.dashboard.action') }}" method="post" id="form-profile" enctype="multipart/form-data" class="{{ $user->biodata->verified !== 'unverified' ? 'input-none' : '' }}">
+            <form action="{{ route('user.dashboard.action') }}" method="post" id="form-profile" enctype="multipart/form-data" class="{{ isset($user->biodata) && $user->biodata->verified !== 'unverified' ? 'input-none' : '' }}">
 
                 @if (isset($user->biodata)and $user->biodata->verified == 'pending')
                 <div class="alert alert-warning" role="alert">
@@ -36,6 +36,7 @@
                 <div class="alert alert-danger" role="alert">
                     Anda belum melengkapi data diri. Silakan lengkapi data diri anda.
                 </div>
+                @csrf
                 @else
 
                 @csrf

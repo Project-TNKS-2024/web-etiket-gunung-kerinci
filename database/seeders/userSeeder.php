@@ -36,58 +36,23 @@ class userSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Create two Users
-        $data = bio_pendaki::create([
-            'nik' => "5228432867528394",
-            'kenegaraan' => 'wni',
-            'first_name' => 'Bilhuda',
-            'last_name' => '',
-            'lampiran_identitas' => 'lampiran_identitas.jpg',
-            'no_hp' => '+62 1234567890',
-            'no_hp_darurat' => '0987654321',
-            'jenis_kelamin' => 'l',
-            'tanggal_lahir' => '2000-01-01',
-            'provinsi' => '',
-            'kabupaten' => '',
-            'kec' => '',
-            'desa' => '',
-            'verified' => 'unverified',
-        ]);
 
         User::create([
             'email' => 'user1@example.com',
             'password' => Hash::make('password'),
             'role' => 'user',
-            'id_bio' => $data->id,
+            'id_bio' => null,
 
             'token' => 'user_token',
             'nik_verified_at' => null,
             'email_verified_at' => now(),
         ]);
 
-
-        $data = bio_pendaki::create([
-            'nik' => "1118433857827394",
-            'kenegaraan' => 'wni',
-            'first_name' => 'Muhammmad',
-            'last_name' => 'Elfatih',
-            'lampiran_identitas' => 'lampiran_identitas.jpg',
-            'no_hp' => '+62 1234567890',
-            'no_hp_darurat' => '0987654321',
-            'jenis_kelamin' => 'l',
-            'tanggal_lahir' => '2000-01-01',
-            'provinsi' => '',
-            'kabupaten' => '',
-            'kec' => '',
-            'desa' => '',
-            'verified' => 'unverified',
-        ]);
-
         User::create([
             'email' => 'user2@example.com',
             'password' => Hash::make('password'),
             'role' => 'user',
-            'id_bio' => $data->id,
+            'id_bio' => null,
 
             'token' => 'user_token',
             'nik_verified_at' => null,

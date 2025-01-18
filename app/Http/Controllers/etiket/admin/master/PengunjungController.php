@@ -32,6 +32,7 @@ class PengunjungController extends Controller
             'verified' => 'required',
         ]);
 
+        // return $request;
         $user = User::find($request->id_user);
         $biodata = bio_pendaki::where('id', $user->id_bio)->first();
 

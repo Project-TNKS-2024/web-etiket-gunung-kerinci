@@ -129,7 +129,7 @@
                @csrf
                <input type="hidden" name="id_user" id="id_user" value="">
                <button type="submit" name="verified" class="btn btn-success" value="verified">Verifikasi</button>
-               <button type="submit" name="verified" class="btn btn-danger" value="enverified">Unverifikasi</button>
+               <button type="submit" name="verified" class="btn btn-danger" value="unverified">Unverifikasi</button>
             </form>
 
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

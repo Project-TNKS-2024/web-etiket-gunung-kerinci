@@ -18,13 +18,15 @@ return new class extends Migration
             $table->string('password');
             $table->string('role')->default('user');
 
-            $table->unsignedBigInteger('id_bio')->unique()->nullable();
+            $table->uuid('id_bio')->unique()->nullable();
             $table->timestamp('nik_verified_at')->nullable();
 
             $table->string('token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('id_bio')->references('id')->on('biodatas');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

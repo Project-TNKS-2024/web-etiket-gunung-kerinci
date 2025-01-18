@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class gk_pendaki extends Model
 {
@@ -16,20 +17,8 @@ class gk_pendaki extends Model
         'booking_id',
         'tagihan',
 
-        'nik',
-        //  ====== identitas
-        // 'kategori_pendaki',
-        // 'first_name',
-        // 'last_name',
-        // 'jenis_kelamin',
-        // 'tanggal_lahir',
-        // 'no_hp',
-        // 'no_hp_darurat',
-        // 'provinsi',
-        // 'kabupaten',
-        // 'kec',
-        // 'desa',
-        // 'lampiran_identitas',
+        'id_bio',
+
 
 
         'usia',
@@ -48,7 +37,7 @@ class gk_pendaki extends Model
 
     public function biodata()
     {
-        return $this->hasOne(bio_pendaki::class, 'nik', 'nik');
+        return $this->belongsTo(bio_pendaki::class, 'id_bio');
     }
 
     public function getFirstNameAttribute()
@@ -64,5 +53,18 @@ class gk_pendaki extends Model
     public function getFullNameAttribute()
     {
         return trim($this->first_name . ' ' . $this->last_name);
+    }
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
+            }
+        });
     }
 }

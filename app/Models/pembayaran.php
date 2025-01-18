@@ -15,6 +15,7 @@ class pembayaran extends Model
         'status',
         'spesial',
         'payment_method',
+        'bukti_pembayaran',
         'deadline',
     ];
 

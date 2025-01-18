@@ -11,11 +11,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('gk_pendakis', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->uuid('booking_id');
             $table->integer('tagihan')->nullable();
 
-            $table->string('nik');
+            // $table->string('nik');
+            $table->uuid('id_bio');
 
             $table->integer('usia');
             $table->integer('tinggi');
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('booking_id')->references('id')->on('gk_bookings')->onDelete('cascade');
+            $table->foreign('id_bio')->references('id')->on('biodatas')->onDelete('cascade');
         });
     }
 
