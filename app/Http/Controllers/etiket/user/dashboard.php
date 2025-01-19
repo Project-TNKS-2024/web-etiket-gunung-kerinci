@@ -9,38 +9,29 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\gk_booking;
 
+use function PHPUnit\Framework\isEmpty;
 
 class dashboard extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar'])->where('id_user', Auth::user()->id)->get();
+        $booking = gk_booking::where('id_user', $user->id)->with('pendakis')->get();
+        // return $booking;
+        // return $booking[0]->pendakis;
+        // return isEmpty($booking[0]->pendakis) ? '' : $booking->pendakis[0]->nama;
         return view('etiket.user.sections.dashboard', [
             'user' => $user,
-            'booking' => $booking,
+            'bookings' => $booking,
         ]);
     }
 
-    public function action(Request $request, $id) {
-        $request->validate([
-            // 'kewarganegaraan' => 'required',
-            'nama_lengkap' => 'required',
-            // 'jenis_identitas' => 'required',
-            'id_pendaftar' => 'required',
-            'nomor_telepon' => 'required',
-            // 'nomor_telepon_darurat' => 'required',
-            // 'tgl_lahir' => 'required',
-            // 'usia' => 'required',
+    public function riwayat()
+    {
+        $user = Auth::user();
+        $booking = gk_booking::where('id_user', $user->id)->get();
+        return view('etiket.user.sections.riwayat', [
+            'bookings' => $booking,
         ]);
-
-        User::where('id', $id)->update([
-            "nik" => $request->id_pendaftar,
-            "no_hp" => $request->nomor_telepon,
-            "fullname" => $request->nama_lengkap,
-        ]);
-
-        return back()->with('success', 'Berhasil mengubah data');
     }
-
 }

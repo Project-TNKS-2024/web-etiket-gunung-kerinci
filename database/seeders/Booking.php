@@ -68,9 +68,9 @@ class Booking extends Seeder
             for ($i = 1; $i <= 2; $i++) {
                 gk_pendaki::create([
                     'booking_id' => $booking->id,
-                    'tiket_id' => $booking->id_tiket,
                     'kategori_pendaki' => 'wni', // or 'wna' based on your logic
-                    'nama' => 'Pendaki ' . $i,
+                    'first_name' => 'Pendaki ',
+                    'last_name' => 'gunung ' . $i,
                     'nik' => Str::random(16),
                     'lampiran_identitas' => 'path/to/identitas' . $i . '.pdf',
                     'no_hp' => '08123456789' . $i,

@@ -11,25 +11,39 @@ class gk_pendaki extends Model
     protected $table = 'gk_pendakis';
 
     protected $fillable = [
+        // data booking
         'booking_id',
-        'tiket_id',
+        'tagihan',
+
+        // input identias
         'kategori_pendaki',
-        'nama',
+        'first_name',
+        'last_name',
         'nik',
-        'lampiran_identitas',
-        'no_hp',
-        'no_hp_darurat',
+        'jenis_kelamin',
+
+        // kesehatan
         'tanggal_lahir',
         'usia',
+        // berat badan
+        // tinggi badan
+
+        // input hp
+        'no_hp',
+        'no_hp_darurat',
+
+        // input domisili
         'provinsi',
         'kabupaten',
         'kec',
         'desa',
-        'jenis_kelamin',
 
+        // input lampiran
+        'lampiran_identitas',
         'lampiran_surat_kesehatan',
         'lampiran_surat_izin_ortu',
-        'tagihan',
+
+
     ];
 
     protected $casts = [
@@ -40,4 +54,7 @@ class gk_pendaki extends Model
     {
         return $this->belongsTo(gk_booking::class, 'booking_id');
     }
+
+    // hubungkan kolom provinsi, kabupaten, kecamatan, kelurahan dengan tabel d_provinsi, d_kabupaten, d_kecamatan, d_kelurahan
+
 }

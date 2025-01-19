@@ -10,18 +10,19 @@
     <meta name="author" content="">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="stylesheet" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
-
+    <!-- style -->
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.min.css') }}">
+    <!-- icon -->
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/font/bootstrap-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('fontawesome-free-6.5.2-web/css/all.css') }}">
+    <!-- color -->
     <link rel="stylesheet" href="{{ asset('componen/colorplate.css') }}">
-    <link rel="stylesheet" href="{{ asset('componen/tailwind-classes.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <style>
         .pdf-container {
             max-width: 700px;
@@ -36,6 +37,11 @@
             color: white;
         }
 
+        @media (max-width: 425px) {
+            #navbarSupportedContent .navbar-nav .nav-item {
+                width: -webkit-fill-available;
+            }
+        }
 
         .header-bg::before {
             content: '';
@@ -59,9 +65,7 @@
             width: 50px;
             margin: 20px 0;
         }
-    </style>
 
-    <style>
         .border-between {
             border-top: 2px solid white;
             width: 50px;
@@ -102,6 +106,21 @@
         .index-nav-toggle {
             border: none;
             box-shadow: none !important;
+        }
+
+        .index-text-cardDestinasi {
+            display: -webkit-box;
+            /* Gunakan layout box untuk mendukung clamp */
+            -webkit-box-orient: vertical;
+            /* Orientasi vertikal */
+            overflow: hidden;
+            /* Sembunyikan teks yang melebihi batas */
+            text-overflow: ellipsis;
+            /* Tambahkan "..." di akhir teks */
+            line-clamp: 2;
+            /* Batasi teks ke 2 baris */
+            -webkit-line-clamp: 2;
+            /* Batasi teks ke 2 baris (untuk browser berbasis WebKit) */
         }
 
         .index-footer {
@@ -146,27 +165,6 @@
             color: white;
         }
 
-        .bg-linear-gradient-primary {
-            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .bg-linear-gradient-danger {
-            background: linear-gradient(263deg, #da260e 12.63%, #FF6363 80.63%);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-
         .dashboard-sidebar-btn {
             background: none;
             color: #000;
@@ -204,7 +202,10 @@
         }
 
         .dashboard-sidebar-btn.active:hover {
-            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+            background: linear-gradient(263deg, #63B8FF 12.63%, #0169BF 80.63%);
+            background-size: 500%;
+            color: white;
+            border: none;
         }
 
         .toast-container {
@@ -212,6 +213,21 @@
             top: 1rem;
             right: 1rem;
             z-index: 1050;
+        }
+
+        .btn-gl-primary {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+            color: #fff;
+            border: none;
+            background-size: 100%;
+
+        }
+
+        .btn-gl-primary:hover {
+            background: linear-gradient(263deg, #63B8FF 12.63%, #0169BF 80.63%);
+            background-size: 500%;
+            color: white;
+            border: none;
         }
     </style>
 
@@ -230,12 +246,34 @@
 
     @yield('modal')
 
-    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script> -->
+    <script src="{{ asset('bootstrap-5.3.3-dist/js/bootstrap.bundle.js') }}"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script> -->
 
     @include('homepage.template.modal-notif')
+
+    <!-- script navigasi navbar homepage -->
+    <script>
+        const navItems = document.querySelectorAll(".nav-link");
+        for (let i = 0; i < navItems.length; i++) {
+            if (window.location.href !== navItems[i].href) {
+                navItems[i].classList.remove('gk-bg-base-white');
+                navItems[i].classList.remove('gk-text-primary700');
+                navItems[i].classList.remove('font-semibold');
+                navItems[i].classList.add('text-white');
+            } else {
+                navItems[i].classList.add('gk-bg-base-white');
+                navItems[i].classList.add('gk-text-primary700');
+                navItems[i].classList.add('font-semibold');
+                navItems[i].classList.remove('text-white');
+            }
+        }
+    </script>
+
+    <!-- script untuk generate input -->
+    <script src="{{asset('componen/generateInput.js')}}"></script>
 
     @yield('js')
 

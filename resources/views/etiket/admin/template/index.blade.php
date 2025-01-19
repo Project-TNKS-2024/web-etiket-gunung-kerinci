@@ -34,15 +34,6 @@
             font-family: "Poppins", sans-serif;
         }
 
-
-        .tiket-row:nth-child(odd) {
-            background-color: rgb(233, 233, 233);
-        }
-
-        .tiket-row:nth-child(even) {
-            background-color: rgb(250, 250, 250);
-        }
-
         .gradient-top {
             position: absolute;
             bottom: 0;
@@ -55,11 +46,28 @@
             /* Ensure it doesn't block interactions with the img */
         }
 
+        .lis-collapse-destinasi {
+            background-color: #d4e3f6;
+            border-radius: 0 0 10px 10px;
+        }
+
         .body-wrapper {
             display: flex;
             flex-direction: column;
         }
+
+        .borderx {
+            border-color: var(--neutrals500);
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1050;
+        }
     </style>
+
     @yield('css')
 </head>
 
@@ -67,7 +75,7 @@
 
 
 
-    <div id="modal" class="gap-5 d-none align-items-center justify-content-start position-fixed top-0 left-0 w-full h-full" style="overflow-x: auto; padding: 0 25%;z-index: 999; background-color: rgba(0,0,0,.2)">
+    <div id="modal" class="d-none align-items-center justify-content-start position-fixed top-0 left-0 w-full h-full" style="overflow-x: auto; padding: 0 10%;z-index: 999; background-color: rgba(0,0,0,.2)">
         <img class="position-fixed cursor-pointer" onclick="closeModal()" src="{{asset('assets/icon/tnks/x-light.svg')}}" width="50" style="top: 20px; right: 20px;filter: drop-shadow(0px 0px 10px black)" />
     </div>
 
@@ -99,12 +107,13 @@
     <script src="{{asset('modernize/js/sidebarmenu.js')}}"></script>
     <script src="{{asset('modernize/js/app.min.js')}}"></script>
 
-    <script src="{{asset('modernize/libs/simplebar/dist/simplebar.js')}}"></script>
-    <script src="{{asset('modernize/js/dashboard.js')}}"></script>
+    <!-- <script src="{{asset('modernize/libs/simplebar/dist/simplebar.js')}}"></script> -->
+    <!-- <script src="{{asset('modernize/js/dashboard.js')}}"></script> -->
 
     @yield('js')
 
-    @include('etiket.admin.components.modal')
+    @include('etiket.admin.template.modal')
+    @include('etiket.admin.template.modal-notif')
 
 
     <script>
@@ -117,8 +126,16 @@
         }
     </script>
 
+    <!-- script untuk popper bostrap -->
+    <script>
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
+    </script>
 
     <script>
+        // script modal foto desrtinasi
         function closeModal() {
             const modal = document.getElementById('modal');
             modal.classList.add("d-none");
@@ -136,18 +153,16 @@
             modal.classList.remove("d-none");
             console.log(src);
             src.forEach((image, index) => {
-                // <img id="modal-img" width="1000" class="rounded shadow"/>
                 const div = document.createElement('div');
                 div.style.position = "relative";
-                div.classList.add("image-container-in-modal");
-                div.classList.add("d-flex", "flex-column", "justify-content-end", "rounded", "shadow", );
+                div.classList.add("image-container-in-modal", "w-100", "shadow");
                 div.innerHTML = `
                     <div class="gradient-top rounded w-100 h-100"></div>
                     <div class="p-3 rounded text-white position-absolute w-100 h-100 d-flex flex-column justify-content-end" style="left: 0; bottom: 0;" >
                         <header class="text-xl font-semibold">${image.nama}</header>
                         <div class="text-lg">${image.detail}</div>
                     </div>
-                    <img id="modal-img" style="height: 500px;" class="rounded  " src='{{url('')}}/${image.src}' />
+                    <img id="modal-img" style="width:100%;" class="rounded  " src='{{url('')}}/${image.src}' />
                 `;
                 modal.appendChild(div);
 

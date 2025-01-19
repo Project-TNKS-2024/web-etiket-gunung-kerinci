@@ -19,9 +19,6 @@ class gk_paket_tiket extends Model
     protected $primaryKey = 'id';
 
     // Specify the attributes that should be cast to native types
-    protected $casts = [
-        'penugasan' => 'boolean',
-    ];
 
     public function tiket_pendaki()
     {

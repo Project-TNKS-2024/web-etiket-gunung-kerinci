@@ -6,14 +6,6 @@
                 <div>Taman Nasional Kelinci Seblat</div>
             </a>
             <div class="d-none d-sm-flex align-items-center ">
-
-                <div class="d-flex gap-2" style="font-size:12px; width: 100%;">
-                    <div>Status Gunung:</div>
-                    <div class="d-flex fw-bold gap-1 align-items-center ">
-                        <div style="width:10px;height: 10px;" class="rounded-pill gk-bg-success200"></div>
-                        <div>Normal</div>
-                    </div>
-                </div>
                 <select class="form-select border-0 form-select-sm w-100" style="background-color: transparent" aria-label="Small select example">
                     <option value="id" selected>Pilih Bahasa : Indonesia</option>
                     <option value="en">Select Language: English</option>
@@ -26,54 +18,61 @@
         <button class="navbar-toggler index-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse py-1" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse py-2" id="navbarSupportedContent">
 
             <ul class="navbar-nav me-auto mb-2 mb-sm-0 d-flex align-items-center align-items-md-center">
-                @include('homepage.template.navbar-list', [
-                'navlist' => [
-                [
-                'name' => 'Beranda',
-                'link' => route('homepage.beranda'),
-                ],
-                [
-                'name' => 'SOP Pendakian',
-                'link' => route('homepage.sop'),
-                ],
-                [
-                'name' => 'Panduan Booking',
-                'link' => route('homepage.panduan'),
-                ],
-                [
-                'name' => 'Booking Online',
-                'link' => route('homepage.booking',['id' => 1]),
-                ],
-                ],
-                ])
+
+                <li class="nav-item ">
+                    <a href="{{ route('homepage.beranda') }}" id="navigasi0" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        style="cursor: pointer; font-size: 14px;" aria-current="page">
+                        Beranda
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="{{ route('homepage.sop') }}" id="navigasi1" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        style="cursor: pointer; font-size: 14px;" aria-current="page">
+                        SOP Pendakian
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="{{ route('homepage.panduan') }}" id="navigasi2" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        style="cursor: pointer; font-size: 14px;" aria-current="page">
+                        Panduan Booking
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="{{ route('homepage.booking.destinasi.list') }}" id="navigasi3" class="nav-link text-center text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-0 mx-md-2"
+                        style="cursor: pointer; font-size: 14px;" aria-current="page">
+                        Booking Online
+                    </a>
+                </li>
+
+
             </ul>
-            <ul class="navbar-nav mb-2 mb-sm-0 d-flex gap-2">
+
+            <ul class="navbar-nav mb-2 mb-sm-0 d-flex align-items-center ">
                 @guest
                 <!-- If the user is not logged in -->
                 <li class="nav-item" style="height: fit-content">
-                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-lg px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('etiket.in.register') }}" style="height: fit-content;">Register</a>
+                    <a class="nav-link text-white py-2 py-md-0 gk-bg-primary600 rounded-4 px-3 my-1 my-md-0" style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('register') }}" style="height: fit-content;">Register</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white py-1 gk-bg-primary600 rounded-lg px-3 " style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('etiket.in.login') }}">Login</a>
+                <li class="nav-item ">
+                    <a class="nav-link text-white py-2 py-md-0 gk-bg-primary600 rounded-4 px-3 ms-0 ms-md-3 my-1 my-md-0" style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page" href="{{ route('login') }}">Login</a>
                 </li>
-
-
                 @endguest
 
                 @auth
                 <!-- If the user is logged in with the role 'user' -->
                 @if (Auth::user()->role == 'user')
-                <li class="nav-item">
-                    <a class="nav-link text-white" aria-current="page" href="{{ route('user.dashboard') }}">Dashboard</a>
+                <li class="nav-item ">
+                    <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2" aria-current="page" href="{{ route('user.dashboard') }}">Dashboard</a>
                 </li>
                 @endif
                 @if (Auth::user()->role == 'admin')
-                <li class="nav-item">
-                    <a class="nav-link text-white" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                <li class="nav-item ">
+                    <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
                 </li>
+
                 @endif
                 @endauth
             </ul>
