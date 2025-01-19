@@ -104,6 +104,14 @@
                </a>
             </li>
             <li class="sidebar-item">
+               <a class="sidebar-link" href="{{ route('admin.master.validasi.daftar') }}" aria-expanded="false">
+                  <span>
+                     <img src="{{ asset('assets/icon/tnks/validate.svg') }}"></img>
+                  </span>
+                  <span class="hide-menu">Validasi Pembayaran</span>
+               </a>
+            </li>
+            <li class="sidebar-item">
                <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
                      <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>

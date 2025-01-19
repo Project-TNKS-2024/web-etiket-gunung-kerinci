@@ -74,6 +74,9 @@
                     <header class="text-start">QR Pembayaran</header>
                     <div class="text-start text-muted small">**Masukkan nominal yang sesuai</div>
                     <img src="{{ asset('assets/img/qris-dummy.png') }}" class="img-fluid" alt="bukti pembayaran" />
+                    <div class="mt-3">
+                        <a href="{{ asset('assets/img/qris-dummy.png') }}" download class="btn btn-primary">Unduh Kode QR</a>
+                    </div>
                     <h3 class="h-2 mt-3">Rp {{ number_format($booking->total_pembayaran, 0, ',', '.') }}</h3>
                 </div>
             </div>
@@ -186,7 +189,7 @@
                                             <span class="badge bg-danger">Ditolak</span>
                                         @endif
                                     </td>
-                                    <td class="text-center">{{ $item->status == "pending" ? "Menunggu Validasi" : $item->keterangan }}</td>
+                                    <td class="text-center">{{ ($item->status == "pending") ? "Menunggu Validasi" : ($item->status == "approved" && $item->keterangan == null ? "Disetujui" : $item->keterangan) }}</td>
                                     <td class="text-center">
                                         <a href="{{ asset($item->bukti) }}" class="btn btn-sm btn-primary" target="_blank">
                                             <i class="bi bi-eye"></i> Lihat Bukti

@@ -15,6 +15,21 @@ use PhpParser\Node\Expr\FuncCall;
 class BookingHelperController extends Controller
 {
     // function generateUniqueCode(idpendaki)
+
+    function generateCode($length) {
+        // Define the character pool
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $charactersLength = strlen($characters);
+        $uniqueCode = '';
+
+        // Randomly pick characters from the pool
+        for ($i = 0; $i < $length; $i++) {
+            $uniqueCode .= $characters[random_int(0, $charactersLength - 1)];
+        }
+
+        return $uniqueCode;
+    }
+
     public function generateUniqueCode($idbooking)
     {
         $timestap = time();

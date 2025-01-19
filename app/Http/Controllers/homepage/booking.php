@@ -155,7 +155,7 @@ class booking extends Controller
                 'total_pembayaran' => 0,
                 'status_pembayaran' => false,
                 'lampiran_stugas' => null,
-                'unique_code' => null,
+                'unique_code' => $this->helper->generateCode(10),
                 'keterangan' => null,
                 'id_booking_master' => null,
             ]);

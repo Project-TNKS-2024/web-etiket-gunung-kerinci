@@ -10,6 +10,7 @@ use App\Http\Controllers\etiket\admin\destinasi\destinasiController;
 use App\Http\Controllers\etiket\admin\destinasi\tiketController;
 use App\Http\Controllers\etiket\admin\master\destinasisController;
 use App\Http\Controllers\etiket\admin\destinasi\bookingController;
+use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
 
 
 
@@ -38,6 +39,7 @@ Route::middleware(['check.role:admin'])->group(function () {
    Route::post('admin/destinasi/gates/update', [destinasiController::class, 'gatesUpdateAction'])->name('admin.destinasi.gates.updateAction');
    Route::post('admin/destinasi/gates/delete', [destinasiController::class, 'gatesDeleteAction'])->name('admin.destinasi.gates.deleteAction');
 
+
    // Destinasi - tiket
    Route::get('admin/destinasi/{id}/tiket', [tiketController::class, 'tiket'])->name('admin.destinasi.tiket');
    Route::get('admin/destinasi/{id}/tiket/add', [tiketController::class, 'add'])->name('admin.destinasi.tiket.add');
@@ -63,6 +65,11 @@ Route::middleware(['check.role:admin'])->group(function () {
    Route::get('admin/master/destinasi/add', [destinasisController::class, 'add'])->name('admin.master.destinasi.add');
    Route::post('admin/master/destinasi/add', [destinasisController::class, 'addAction'])->name('admin.master.destinasi.addAction');
    Route::post('admin/master/destinasi/delete', [destinasisController::class, 'deleteAction'])->name('admin.master.destinasi.deleteAction');
+
+   // Master - Validasi Pembayaran
+   Route::get('admin/master/validasi-pembayaran', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar');
+   Route::post('admin/master/validasi-pembayaran/update/', [ValidasiPembayaran::class, 'updateAction'])->name('admin.master.validasi.updateAction');
+
 
 
 

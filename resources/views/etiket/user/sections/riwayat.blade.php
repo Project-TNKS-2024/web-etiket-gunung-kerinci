@@ -43,16 +43,13 @@
                                                 <span class="btn gk-bg-secondary600">
                                                     Belum Bayar
                                                 </span>
-                                                <a href="{{route('homepage.booking.payment', ['id' => $booking->id])}}" class="btn gk-bg-primary600 text-white">
-                                                    Bayar
-                                                </a>
                                             @endif
                                     </div>
                                     <div class="row tiket-detail mt-3">
                                         <div class="col-6">
                                             <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
                                             <input type="text" name="ipt_namaketua"
-                                                value="{{ isset($booking->pendakis[0]->nama) ? $booking->pendakis[0]->nama : '' }}"
+                                                value="{{ isset($booking->pendakis[0]->first_name) ? $booking->pendakis[0]->first_name." ".$booking->pendakis[0]->last_name : '' }}"
                                                 id="ipt_namaketua" class="form-control" readonly>
 
                                             <label for="ipt_gerbangmasuk" class="fw-bold">Gerbang Masuk</label>
@@ -109,6 +106,11 @@
                                             data-qr="{{ $booking->unique_code ?? '___ ___' }}"></div>
                                         <p class="mb-0 mt-1">Kode Boooking</p>
                                         <h4>{{ $booking->unique_code ?? '___ ___' }}</h4>
+                                        @if ($booking->status_pembayaran == false)
+                                            <a href="{{route('homepage.booking.payment', ['id' => $booking->id])}}" class="btn w-100 btn-gl-primary text-white">
+                                                Bayar
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
