@@ -68,6 +68,7 @@ Route::middleware(['check.role:admin'])->group(function () {
 
    // Master - Validasi Pembayaran
    Route::get('admin/master/validasi-pembayaran', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar');
+   Route::get('admin/master/validasi-pembayaran?start_date={start_date?}&end_date={end_date?}&status={status?}', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar.filtered');
    Route::post('admin/master/validasi-pembayaran/update/', [ValidasiPembayaran::class, 'updateAction'])->name('admin.master.validasi.updateAction');
 
 

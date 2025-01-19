@@ -21,35 +21,46 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <label class="text-2xl font-bold gk-text-base-black mb-2">Validasi Pembayaran</label>
             </div>
-            <div class="d-flex mb-3 align-items-end justify-content-start gap-3" style="">
-                <div class="">
-                    <button class="btn btn-primary" id="btnToday">
-                        <i class="ti ti-calendar"></i>
-                        Hari Ini
-                    </button>
-                </div>
+            <div class="d-flex mb-3 align-items-end justify-content-start gap-3">
+                <!-- Dropdown for Status -->
                 <div class="dropdown">
                     <button class="btn border border-2 dropdown-toggle" type="button" id="dropdownStatus"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="ti ti-filter"></i>
-                        Filter Status
+                        @if ($status == 'all')
+                            Semua Status
+                        @elseif($status == 'approved')
+                            Disetujui
+                        @elseif($status == 'rejected')
+                            Ditolak
+                        @elseif($status == 'pending')
+                            Belum Divalidasi
+                        @endif
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownStatus">
-                        <li><a class="dropdown-item" href="#" data-status="all">Semua Status</a></li>
-                        <li><a class="dropdown-item" href="#" data-status="approved">Disetujui</a></li>
-                        <li><a class="dropdown-item" href="#" data-status="rejected">Ditolak</a></li>
-                        <li><a class="dropdown-item" href="#" data-status="pending">Belum Divalidasi</a></li>
+                        <li><a href="{{ route('admin.master.validasi.daftar.filtered', ['start_date' => $start_date ?? 'all', 'end_date' => $end_date ?? 'all', 'status' => 'all']) }}"
+                                class="dropdown-item" data-status="all">Semua Status</a></li>
+                        <li><a href="{{ route('admin.master.validasi.daftar.filtered', ['start_date' => $start_date ?? 'all', 'end_date' => $end_date ?? 'all', 'status' => 'approved']) }}"
+                                class="dropdown-item" data-status="approved">Disetujui</a></li>
+                        <li><a href="{{ route('admin.master.validasi.daftar.filtered', ['start_date' => $start_date ?? 'all', 'end_date' => $end_date ?? 'all', 'status' => 'rejected']) }}"
+                                class="dropdown-item" data-status="rejected">Ditolak</a></li>
+                        <li><a href="{{ route('admin.master.validasi.daftar.filtered', ['start_date' => $start_date ?? 'all', 'end_date' => $end_date ?? 'all', 'status' => 'pending']) }}"
+                                class="dropdown-item" data-status="pending">Belum Divalidasi</a></li>
                     </ul>
                 </div>
-                <div class="">
-                    <div class="d-flex gap-2">
+
+                <!-- Date Range Filter Form -->
+                <div>
+                    <form class="d-flex gap-2" action="{{ route('admin.master.validasi.daftar.filtered') }}" method="get">
                         <div class="form-group">
                             <label for="startDate">Dari Tanggal</label>
-                            <input type="date" class="form-control" id="startDate" name="startDate">
+                            <input type="datetime-local" class="form-control" id="startDate" name="start_date"
+                                value="{{ $start_date != 'all' && $end_date != null ? Carbon\Carbon::parse($start_date)->format('Y-m-d\TH:i') : Carbon\Carbon::parse(now())->format('Y-m-d 00:00:00') }}">
                         </div>
                         <div class="form-group">
                             <label for="endDate">Sampai Tanggal</label>
-                            <input type="date" class="form-control" id="endDate" name="endDate">
+                            <input type="datetime-local" class="form-control" id="endDate" name="end_date"
+                                value="{{ $end_date != 'all' && $end_date != null ? Carbon\Carbon::parse($end_date)->format('Y-m-d\TH:i') : Carbon\Carbon::parse(now())->format('Y-m-d 23:59') }}">
                         </div>
                         <div class="form-group d-flex align-items-end">
                             <button class="btn btn-primary" id="btnFilter">
@@ -57,9 +68,10 @@
                                 Filter
                             </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
+
             @if (count($pengajuan) > 0)
                 <div class="table-responsive my-4">
                     <table class="table table-bordered table-hover align-middle table-no-side-border">
@@ -99,7 +111,8 @@
                                             data-id="{{ $item->id }}" data-bs-toggle="modal"
                                             data-bs-target="#modalValidasi"
                                             onclick="document.getElementById('pengajuanId').value = {{ $item->id }}; document.getElementById('modal-img').src = '{{ asset($item->bukti) }}';">
-                                            <img src="{{ asset('assets/icon/tnks/edit_fill-light.svg') }}" width="20" />
+                                            <img src="{{ asset('assets/icon/tnks/edit_fill-light.svg') }}"
+                                                width="20" />
                                             Validasi
                                         </button>
                                     </td>
@@ -118,12 +131,13 @@
     <div class="modal fade" id="modalValidasi" tabindex="-1" aria-labelledby="modalValidasiLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="width: fit-content;">
-                    <div class="modal-header">
+                <div class="modal-header">
                     <h5 class="modal-title" id="modalValidasiLabel">Validasi Pengajuan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body row" >
-                    <form id="formValidasi" class="col-12" method="post"  action='{{route("admin.master.validasi.updateAction")}}'>
+                <div class="modal-body row">
+                    <form id="formValidasi" class="col-12" method="post"
+                        action='{{ route('admin.master.validasi.updateAction') }}'>
                         @csrf
                         <input type="hidden" id="pengajuanId" name="pengajuanId">
                         <div class="form-group mb-3">
