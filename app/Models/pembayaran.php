@@ -13,9 +13,9 @@ class pembayaran extends Model
         'id_booking',
         'amount',
         'status',
-        'spesial',
-        'payment_method',
-        'bukti_pembayaran',
+        'spesial', //jgn dihapus
+        'payment_method',//jgn dihapus
+        'bukti_pembayaran',//
         'deadline',
     ];
 

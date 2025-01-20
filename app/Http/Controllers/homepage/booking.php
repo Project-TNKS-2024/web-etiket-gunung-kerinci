@@ -281,7 +281,7 @@ class booking extends Controller
             'id' => 'string|nullable',
         ]);
 
-        // return $request; 
+        // return $request;
 
         // cek apakah id bio ada
         $bioPendaki = bio_pendaki::where('id', $request->code)
@@ -392,7 +392,7 @@ class booking extends Controller
 
             return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking Berhasil disimpan');
 
-            // pindah laman 
+            // pindah laman
         } else if ($request->action == 'save') {
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         }
