@@ -366,11 +366,11 @@ class booking extends Controller
             }
 
             // return $pendaki;
-            $pendaki->tagihan = $this->helper->getTagihanPendaki($pendaki);
             $pendaki->save();
         }
 
         if ($request->action == 'next') {
+
             $request->validate([
                 'barangWajib' => 'required|array',
                 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean',
@@ -379,13 +379,15 @@ class booking extends Controller
                 'barangWajib.survival_kit_standart' => 'required|boolean',
             ]);
 
-            // update status booking
-            $booking->status_booking = 3;
-            $booking->save();
+            // // validasi falid daya booking
+            // $BookingValidator = new BookingValidator($booking->id);
+            // $validasi =  $BookingValidator->validate();
 
+            // if (!$validasi['success']) {
+            //     return redirect()->back()->withErrors($validasi['message']);
+            // }
 
             return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking Berhasil disimpan');
-
 
             // pindah laman 
         } else if ($request->action == 'save') {
@@ -427,7 +429,6 @@ class booking extends Controller
             ->where('id', $id)
             ->where('id_user', Auth::id())
             ->first();
-        $booking->total_pembayaran = gk_pendaki::where('booking_id', $booking->id)->sum('tagihan');
 
         // cek status booking
         if (!$booking) {
@@ -477,7 +478,8 @@ class booking extends Controller
 
                 $data = $midtrans->generateSnapToken($params);
                 $snapToken = $data['data'];
-                $traksaksi->spesial = $snapToken ?? "";
+
+                $traksaksi->spesial = $snapToken;
                 $traksaksi->save();
             } else if ($statusTranskasi == 407) {
                 // return "transaksi belum di bayar";
@@ -541,12 +543,12 @@ class booking extends Controller
             $traksaksi->save();
         }
 
-        $pendakis = gk_pendaki::where('booking_id', $booking->id)->get();
-        // return view('homepage.booking.bookingPayment', [
-        return view('homepage.booking.bookingDetail', [
+        // return $booking;
+
+        return view('homepage.booking.bookingPayment', [
             'snaptoken' => $snapToken,
             'booking' => $booking,
-            'pendakis' => $pendakis,
+            'pendakis' => $booking->pendakis
         ]);
     }
 
@@ -554,24 +556,15 @@ class booking extends Controller
 
     public function tiket($id)
     {
-
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        // cek status booking
+
+        // return $booking;
+
+
         if (!$booking) {
             abort(404);
-        }
-
-        $booking->total_pembayaran = gk_pendaki::where('booking_id', $id)->sum('tagihan');
-        $pengajuan = pengajuan::where('booking_id', $id)->get();
-        return view('homepage.booking.booking-payment', [
-            'booking' => $booking,
-            'pengajuan' => $pengajuan,
-            'pendakis' => $booking->pendakis,
-        ]);
-    }
-    public function tiketBooking($id)
-    {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
-        if ($booking->status_pembayaran > 4) {
+        } else if ($booking->status_booking < 3) {
             abort(404);
         }
 

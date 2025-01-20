@@ -41,11 +41,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');
-    Route::get('tiket/{id}', [booking::class, 'tiket'])->name('dashboard.tiket');
     Route::get('booking/{id}/tiket', [booking::class, 'tiketBooking'])->name('homepage.booking.tiket');
-
-    Route::post('booking/add-payment/{id}', [booking::class, 'addBuktiPembayaran'])->name('homepage.booking.addBuktiPembayaran');
-    Route::delete('booking/payment/delete/{id}/{pengajuan_id}', [booking::class, 'deleteBuktiPembayaran'])->name('homepage.booking.payment.delete');
+    Route::get('tiket/{id}', [booking::class, 'tiket'])->name('dashboard.tiket');
 });
 
 include __DIR__ . '/web/routeAuth.php';

@@ -104,19 +104,15 @@
                </a>
             </li>
             <li class="sidebar-item">
-
-               <a class="sidebar-link" href="{{ route('admin.master.pengunjung')}}" aria-expanded="false">
-
-                  <a class="sidebar-link" href="{{ route('admin.master.validasi.daftar.filtered', ['start_date' => now()->subDays(30)->format('Y-m-d H:i:s'), 'end_date' => now()->format('Y-m-d H:i:s'), 'status' => 'all']) }}" aria-expanded="false">
-                     <span>
-                        <img src="{{ asset('assets/icon/tnks/validate.svg') }}"></img>
-                     </span>
-                     <span class="hide-menu">Validasi Pembayaran</span>
-                  </a>
+               <a class="sidebar-link" href="{{ route('admin.master.validasi.daftar.filtered', ['start_date' => now()->subDays(30)->format('Y-m-d H:i:s'), 'end_date' => now()->format('Y-m-d H:i:s'), 'status' => 'all']) }}" aria-expanded="false">
+                  <span>
+                     <img src="{{ asset('assets/icon/tnks/validate.svg') }}"></img>
+                  </span>
+                  <span class="hide-menu">Validasi Pembayaran</span>
+               </a>
             </li>
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{ route('admin.master.pengunjung')}}" aria-expanded="false">
-                  >>>>>>> tada
                   <span>
                      <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
                   </span>
