@@ -94,22 +94,22 @@
                      <tr>
                         <td>No KTP/Pasport</td>
                         <td> : </td>
-                        <td>{{$pendaki->nik}}</td>
+                        <td>{{$pendaki->biodata->nik}}</td>
                      </tr>
                      <tr>
                         <td>No Telepon</td>
                         <td> : </td>
-                        <td>{{$pendaki->no_hp}}</td>
+                        <td>{{$pendaki->biodata->no_hp}}</td>
                      </tr>
                      <tr>
                         <td>No Telepon Darurat</td>
                         <td> : </td>
-                        <td>{{$pendaki->no_hp_darurat}}</td>
+                        <td>{{$pendaki->biodata->no_hp_darurat}}</td>
                      </tr>
                      <tr>
                         <td>Tanggal Lahir</td>
                         <td> : </td>
-                        <td>{{ \Carbon\Carbon::parse($pendaki->tanggal_lahir)->isoFormat('D MMMM Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('D MMMM Y') }}</td>
                      </tr>
                      <tr>
                         <td>Usia</td>
@@ -119,17 +119,19 @@
                   </table>
                </div>
                <div class="col-12 col-lg-6">
+                  @if ($pendaki->lampiran_surat_izin_ortu)
                   <div class="border rounded p-2" style="max-height: 300px; overflow: hidden;">
                      @php
-                     $extension = pathinfo($pendaki->lampiran_identitas, PATHINFO_EXTENSION);
+                     $extension = pathinfo($pendaki->lampiran_surat_izin_ortu, PATHINFO_EXTENSION);
                      @endphp
 
                      @if(in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
-                     <img src="{{asset($pendaki->lampiran_identitas)}}" alt="Lampiran Identitas" class="img-fluid" style="max-height: 280px; width: auto; display: block; margin: 0 auto;">
+                     <img src="{{asset($pendaki->lampiran_surat_izin_ortu)}}" alt="Lampiran Identitas" class="img-fluid" style="max-height: 280px; width: auto; display: block; margin: 0 auto;">
                      @else
-                     <embed src="{{asset($pendaki->lampiran_identitas)}}" type="application/pdf" width="100%" height="280px">
+                     <embed src="{{asset($pendaki->lampiran_surat_izin_ortu)}}" type="application/pdf" width="100%" height="280px">
                      @endif
                   </div>
+                  @endif
                </div>
             </div>
          </div>

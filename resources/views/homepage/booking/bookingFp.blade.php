@@ -47,26 +47,16 @@
       <div class="card border-0 shadow">
          <div class="card-body px-4 px-md-5">
             <!-- anggota -->
-            @for ($i = 0; $i <= ($booking->total_pendaki_wni+$booking->total_pendaki_wna-1); $i++)
+            <h1 class="fs-6 fw-bold mt-3">Anggota Pendakian</h1>
 
-               @if(isset($pendaki[$i]))
-               @include('homepage.booking.fp.formulir', [
-               'index' => $i,
-               'pendaki' => $pendaki[$i]
-               ])
-               @else
-               @include('homepage.booking.fp.formulir', [
-               'index' => $i,
-               'pendaki' => null
-               ])
-               @endif
+            @include('homepage.booking.fp.formulir', [
+            'pendaki' => $pendaki
+            ])
 
-               <hr style="border-width: 5px;">
-               @endfor
 
-               <!-- barang -->
+            <!-- barang -->
 
-               @include('homepage.booking.fp.barang')
+            @include('homepage.booking.fp.barang')
 
          </div>
       </div>
@@ -268,6 +258,7 @@
          // Jika tanggal lahir tidak valid, kosongkan input usia
          usiaInput.value = 0;
       }
+      console.log(age);
    }
 
    const inputsTanggalLahir = document.querySelectorAll('input.ipt-tanggal-lahir');
@@ -282,85 +273,23 @@
    });
 </script>
 
-<!-- script show upload file -->
+<!-- script modal show file -->
+@include('homepage.template.modal-prefiewFile')
+
+<!-- script menambah anggota -->
+<form id="formAddKodePendaki" action="{{ route('homepage.booking.formulir.pebdaki.add') }}" method="POST">
+   @csrf
+   <input type="hidden" name="id" value="" id="idAddKodePendaki">
+   <input type="hidden" name="code" value="" id="codeAddKodePendaki">
+   <input type="hidden" name="booking" value="{{$booking->id}}">
+</form>
 <script>
-   // Pilih modal berdasarkan ID
-   const modalElement = document.getElementById('ModalShowFile');
-   // Buat instance modal Bootstrap
-   const modalInstance = new bootstrap.Modal(modalElement);
-
-   // Pilih semua input file
-   const inputFiles = document.querySelectorAll('input[type="file"]');
-
-   document.addEventListener('DOMContentLoaded', function() {
-      inputFiles.forEach(function(input) {
-         // ambil id
-         const idInput = input.getAttribute('id');
-         const buttonShow = document.querySelector(`button[data-id-target="${idInput}"]`);
-         const fileExist = document.querySelector(`input[id="${idInput}_existing"]`);
-         const filePreview = document.getElementById('filePreview');
-
-         // cek file ada atau tidak
-         if (fileExist && fileExist.value) {
-            buttonShow.classList.remove('d-none');
-         }
-
-         // beri event change
-         input.addEventListener('change', function() {
-            const file = input.files[0];
-            const maxSize = 1 * 1024 * 1024; // 1MB
-
-            if (file) {
-               // Cek tipe file
-               const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
-               if (!validTypes.includes(file.type)) {
-                  // error = 'Hanya file gambar (JPEG, PNG, GIF) dan PDF yang diizinkan.';
-                  // panggil  notif error
-                  console.log('Hanya file gambar (JPEG, PNG, GIF) dan PDF yang diizinkan.');
-                  input.value = ''; // Reset input file
-                  return;
-               } else if (file.size > maxSize) {
-                  // error = 'Ukuran file tidak boleh lebih dari 1MB.';
-                  // panggil  notif error
-                  console.log('Ukuran file tidak boleh lebih dari 1MB.');
-                  input.value = ''; // Reset input file
-                  return;
-               } else {
-                  console.log('File valid.');
-                  buttonShow.classList.remove('d-none');
-                  fileExist.value = null;
-               }
-            }
-         });
-
-         buttonShow.addEventListener('click', function() {
-            // tampilkan modal
-            let fileURL = '';
-
-            if (input.files.length > 0) {
-               // Preview file yang baru diunggah
-               const file = input.files[0];
-               if (file.type === 'application/pdf' || file.type.startsWith('image/')) {
-                  fileURL = URL.createObjectURL(file);
-               } else {
-                  alert('Jenis file tidak didukung untuk pratinjau.');
-                  return;
-               }
-            } else if (fileExist.value) {
-               // Preview file yang ada di server
-               fileURL = fileExist.value; // Pastikan ini adalah URL file yang valid
-            }
-
-            if (fileURL) {
-               filePreview.src = fileURL;
-               modalInstance.show();
-            }
-
-         });
-      });
-
-
-   })
+   function addKodePendaki(nameipt) {
+      const id = document.querySelector(`input[name="${nameipt}[id_pendaki]"]`).value;
+      const code = document.querySelector(`input[name="${nameipt}[kode_bio]"]`).value;
+      document.getElementById('idAddKodePendaki').value = id;
+      document.getElementById('codeAddKodePendaki').value = code;
+      document.getElementById('formAddKodePendaki').submit();
+   }
 </script>
-
 @endsection

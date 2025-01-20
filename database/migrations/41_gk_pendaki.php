@@ -19,8 +19,7 @@ return new class extends Migration
             $table->uuid('id_bio');
 
             $table->integer('usia');
-            $table->integer('tinggi');
-            $table->integer('berat');
+
 
             $table->string('lampiran_surat_izin_ortu')->nullable();
             $table->timestamps();

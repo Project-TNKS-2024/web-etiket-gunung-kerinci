@@ -22,8 +22,7 @@ class gk_pendaki extends Model
 
 
         'usia',
-        'tinggi',
-        'berat',
+
 
         // input lampiran
         'lampiran_surat_izin_ortu',

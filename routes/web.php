@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::post('booking/snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking.snk.action');
 
     Route::get('booking/{id}/formulir', [booking::class, 'bookingFP'])->name('homepage.booking.formulir');
+    Route::post('booking/formulir/pendaki/add', [booking::class, 'bookingPendakiAdd'])->name('homepage.booking.formulir.pebdaki.add');
     Route::post('booking/formulir', [booking::class, 'bookingFPStore'])->name('homepage.booking.formulir.action');
 
     Route::get('booking/{id}/detail', [booking::class, 'bookingDetail'])->name('homepage.booking.detail');
