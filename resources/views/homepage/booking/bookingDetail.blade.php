@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col">
                             <h4>Nama Ketua</h4>
-                            <p>{{ $pendakis[0]->first_name }} {{ $pendakis[0]->last_name }}</p>
+                            <p>{{ $formulirPendakis[0]->first_name }} {{ $formulirPendakis[0]->last_name }}</p>
                             <h4>Gerbang Masuk</h4>
                             <p>{{ $booking->gateMasuk->nama }}</p>
                             <h4>Check In</h4>
