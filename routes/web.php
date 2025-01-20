@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');
+    Route::get('booking/{id}/tiket', [booking::class, 'tiketBooking'])->name('homepage.booking.tiket');
     Route::get('tiket/{id}', [booking::class, 'tiket'])->name('dashboard.tiket');
 });
 

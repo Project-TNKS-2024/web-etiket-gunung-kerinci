@@ -3,12 +3,112 @@
 
 @section('css')
 <style>
-   /* style untuk form detail booking */
-   .table tbody tr td {
-      padding: 3px 5px;
+   .header-bg {
+      position: relative;
+      background: url("{{ asset('assets/img/bg/title-header-bg.png') }}") no-repeat;
+      background-size: cover;
+      background-position: 50% 50%;
+      color: white;
    }
-</style>
 
+
+   .header-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      /* Adjust the alpha value for the desired opacity */
+      z-index: 1;
+   }
+
+   .header-content {
+      position: relative;
+      z-index: 2;
+   }
+
+   .border-between {
+      border-top: 2px solid white;
+      width: 50px;
+      margin: 20px 0;
+   }
+
+   /* booking detail */
+   #booking-detail h1 {
+      font-size: 20px;
+      text-align: center;
+      font-weight: bold;
+   }
+
+   #booking-detail #formulir h4 {
+      font-size: 16px;
+      font-weight: bold;
+   }
+
+   #booking-detail h4,
+   #booking-detail p {
+      color: rgba(52, 64, 84, 1);
+   }
+
+   .c-blue {
+      color: blue;
+   }
+
+   .c-red {
+      color: red;
+   }
+
+   .c-green {
+      color: #00e221;
+   }
+
+   #booking-detail #pembayaran {
+      background-color: lightcyan;
+   }
+
+   #booking-detail #pembayaran h4 {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+   }
+
+   #booking-detail #pembayaran p {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+   }
+
+   #booking-detail p {
+      margin-bottom: 8px;
+   }
+
+   #booking-detail #pembayaran .span {
+      font-size: 11px;
+   }
+
+   .centered {
+      display: flex;
+      justify-content: center;
+   }
+
+   .pilihmetodepembayaran {
+      /* margin-top: 5px; */
+      /* background-color: #e0ffff; */
+      padding: 5px;
+      border-radius: 10px;
+      /* border: 1px solid #9adbdb; */
+   }
+
+   .pilihmetodepembayaran input {
+      margin-left: 5px !important;
+      margin-right: 10px;
+      border: 1px solid #9adbdb;
+   }
+
+   /* bukin css gradian */
+</style>
 @endsection
 
 
@@ -109,7 +209,7 @@
                      <tr>
                         <td>Tanggal Lahir</td>
                         <td> : </td>
-                        <td>{{ \Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('D MMMM Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($pendaki->tanggal_lahir)->isoFormat('D MMMM Y') }}</td>
                      </tr>
                      <tr>
                         <td>Usia</td>
@@ -132,6 +232,7 @@
                      @endif
                   </div>
                   @endif
+
                </div>
             </div>
          </div>
@@ -166,7 +267,6 @@
                   Survival Kit Standart
                </label>
             </div>
-
          </div>
       </div>
    </div>
@@ -178,9 +278,9 @@
       </div>
    </div>
 </div>
-
 @endsection
 @section('js')
+
 
 
 @endsection
