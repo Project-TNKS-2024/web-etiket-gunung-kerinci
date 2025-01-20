@@ -15,6 +15,21 @@ use PhpParser\Node\Expr\FuncCall;
 class BookingHelperController extends Controller
 {
     // function generateUniqueCode(idpendaki)
+
+    function generateCode($length) {
+        // Define the character pool
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $charactersLength = strlen($characters);
+        $uniqueCode = '';
+
+        // Randomly pick characters from the pool
+        for ($i = 0; $i < $length; $i++) {
+            $uniqueCode .= $characters[random_int(0, $charactersLength - 1)];
+        }
+
+        return $uniqueCode;
+    }
+
     public function generateUniqueCode($idbooking)
     {
         $timestap = time();
@@ -82,7 +97,7 @@ class BookingHelperController extends Controller
             // get umur pendaki
             $pendaki->usia = $this->getUmurPendaki($pendaki->tanggal_lahir);
 
-            // get tagihan 
+            // get tagihan
             $pendaki->tagihan = $this->getTagihanPendaki($pendaki);
 
             // update pendaki
@@ -119,8 +134,11 @@ class BookingHelperController extends Controller
     public function getTagihanPendaki($pendaki)
     {
         // tiket
-        $idtiket = $pendaki->tiket_id;
+        $booking = gk_booking::find($pendaki->booking_id);
+        $idtiket = $booking->id_tiket;
         $tiket = gk_tiket_pendaki::find($idtiket);
+
+        // dd($tiket);
 
         // booking
         $booking = gk_booking::find($pendaki->booking_id);
@@ -136,7 +154,7 @@ class BookingHelperController extends Controller
 
     public function getDomisili($idprovinsi, $idkabupaten, $idkecamatan, $idkelurahan)
     {
-        //   
+        //
         // return [
         //     'provinsi' => $provinsi->name,
         //     'kabupaten' => $kabupaten->name,
