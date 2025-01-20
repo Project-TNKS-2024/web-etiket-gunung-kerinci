@@ -128,7 +128,7 @@
 @endsection
 @section('js')
 
-<script type="text/javascript"
+{{-- <script type="text/javascript"
    src="https://app.sandbox.midtrans.com/snap/snap.js"
    data-client-key="SB-Mid-client-VueHxJqGrsjdNuZd"></script>
 <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
@@ -161,5 +161,5 @@
       });
       // customer will be redirected after completing payment pop-up
    });
-</script>
+</script> --}}
 @endsection
