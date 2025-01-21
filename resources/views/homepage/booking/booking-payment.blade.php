@@ -75,7 +75,8 @@
                     <div class="text-start text-muted small">**Masukkan nominal yang sesuai</div>
                     <img src="{{ asset('assets/img/qris-dummy.png') }}" class="img-fluid" alt="bukti pembayaran" />
                     <div class="mt-3">
-                        <a href="{{ asset('assets/img/qris-dummy.png') }}" download class="btn btn-primary">Unduh Kode QR</a>
+                        <a href="{{ asset('assets/img/qris-dummy.png') }}" download class="btn btn-primary">Unduh Kode
+                            QR</a>
                     </div>
                     <h3 class="h-2 mt-3">Rp {{ number_format($booking->total_pembayaran, 0, ',', '.') }}</h3>
                 </div>
@@ -176,7 +177,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pengajuan as $key => $item)
+                            @foreach ($pembayaran as $key => $item)
                                 <tr>
                                     <td class="text-center">{{ $key + 1 }}</td>
                                     <td class="">{{ $item->created_at->format('d M Y H:i') }}</td>
@@ -189,17 +190,23 @@
                                             <span class="badge bg-danger">Ditolak</span>
                                         @endif
                                     </td>
-                                    <td class="text-center">{{ ($item->status == "pending") ? "Menunggu Validasi" : ($item->status == "approved" && $item->keterangan == null ? "Disetujui" : $item->keterangan) }}</td>
                                     <td class="text-center">
-                                        <a href="{{ asset($item->bukti_pembayaran) }}" class="btn btn-sm btn-primary" target="_blank">
+                                        {{ $item->status == 'pending' ? 'Menunggu Validasi' : ($item->status == 'approved' && $item->keterangan == null ? 'Disetujui' : $item->keterangan) }}
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ asset($item->bukti_pembayaran) }}" class="btn btn-sm btn-primary"
+                                            target="_blank">
                                             <i class="bi bi-eye"></i> Lihat Bukti
                                         </a>
                                     </td>
                                     <td class="text-center">
-                                        <form action="{{ route('homepage.booking.payment.delete', ['id' => $booking->id, 'pengajuan_id' => $item->id]) }}" method="POST" class="d-inline">
+                                        <form
+                                            action="{{ route('homepage.booking.payment.delete', ['id' => $booking->id, 'pengajuan_id' => $item->id]) }}"
+                                            method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus bukti pembayaran ini?')">
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Apakah anda yakin ingin menghapus bukti pembayaran ini?')">
                                                 <i class="bi bi-trash"></i> Hapus
                                             </button>
                                         </form>
@@ -216,7 +223,4 @@
     </div>
 @endsection
 @section('js')
-    <script>
-        console.log(@json($pendakis));
-    </script>
 @endsection

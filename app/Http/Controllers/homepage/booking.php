@@ -166,7 +166,7 @@ class booking extends Controller
                 'total_pembayaran' => 0,
                 'status_pembayaran' => false,
                 'lampiran_stugas' => null,
-                'unique_code' => null,
+                'unique_code' =>  $this->helper->generateCode(10),
                 'keterangan' => null,
                 'id_booking_master' => null,
             ]);
@@ -324,6 +324,7 @@ class booking extends Controller
     public function bookingFPStore(Request $request)
     {
         // return $request;
+        // dd($this->helper->generateCode(10));
         $request->validate([
             'id_booking' => 'required|string',
             'action' => 'required|string',
@@ -691,4 +692,35 @@ class booking extends Controller
             'pendakis' => $booking->pendakis
         ]);
     }
+
+
+public function addBuktiPembayaran(Request $request, $id)
+{
+    $request->validate([
+        'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
+    ]);
+
+    $pembayaran = new pembayaran();
+    $pembayaran->id_booking = $id;
+    $path = $this->upload->create($id, 'booking', $request->bukti_pembayaran);
+    $pembayaran->bukti_pembayaran = $path;
+    $pembayaran->status = 'pending';
+    $pembayaran->keterangan = '';
+    $pembayaran->spesial = "null";
+    $pembayaran->spesial = "null";
+    $pembayaran->deadline = \Carbon\Carbon::parse(now());
+    $pembayaran->payment_method = "transfer bank/QRIS";
+    $pembayaran->amount = 0;
+    $pembayaran->save();
+
+    return redirect()->back()->with('success', 'Bukti pembayaran berhasil dikirim');
+}
+
+public function deleteBuktiPembayaran($id, $pengajuan_id)
+{
+    $pembayaran = pembayaran::find($pengajuan_id);
+    $pembayaran->delete();
+    return redirect()->back()->with('success', 'Bukti pembayaran berhasil dihapus');
+}
+
 }
