@@ -70,8 +70,12 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/master/pengunung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung');
     Route::post('admin/master/pengunung/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.verified');
 
-    // booking
-    // Route::get('admin/kelola/booking', [AdminBooking::class, 'readNow'])->name('admin.booking.now.read');
+    // Master - Validasi Pembayaran
+    Route::get('admin/master/validasi-pembayaran', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar');
+    Route::get('admin/master/validasi-pembayaran?start_date={start_date?}&end_date={end_date?}&status={status?}', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar.filtered');
+    Route::post('admin/master/validasi-pembayaran/update/', [ValidasiPembayaran::class, 'updateAction'])->name('admin.master.validasi.updateAction');
+
+
 
     // fitur - scan tiket
     Route::get('admin/fitur/scanTiket', [Scan::class, 'index'])->name('admin.fitur.scanTiket');

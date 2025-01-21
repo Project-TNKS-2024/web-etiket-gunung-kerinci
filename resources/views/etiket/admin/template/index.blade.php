@@ -8,13 +8,20 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="shortcut icon" type="image/png" href="{{asset('assets/img/logo/logo bulat.png')}}" />
-    <link rel="stylesheet" href="{{asset('modernize/css/styles.css')}}" />
-    <link rel="stylesheet" href="{{asset('componen/tailwind-classes.css')}}" />
-    <link rel="stylesheet" href="{{asset('componen/colorplate.css')}}" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
+    <link rel="stylesheet" href="{{ asset('modernize/css/styles.css') }}" />
+    <link rel="stylesheet" href="{{ asset('componen/tailwind-classes.css') }}" />
+    <link rel="stylesheet" href="{{ asset('componen/colorplate.css') }}" />
     <link rel="stylesheet" href="{{ asset('fontawesome-free-6.5.2-web/css/all.css') }}">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+
+    <!-- Bootstrap JS -->
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 
     <style>
         .logo-img {
@@ -75,13 +82,18 @@
 
 
 
-    <div id="modal" class="d-none align-items-center justify-content-start position-fixed top-0 left-0 w-full h-full" style="overflow-x: auto; padding: 0 10%;z-index: 999; background-color: rgba(0,0,0,.2)">
-        <img class="position-fixed cursor-pointer" onclick="closeModal()" src="{{asset('assets/icon/tnks/x-light.svg')}}" width="50" style="top: 20px; right: 20px;filter: drop-shadow(0px 0px 10px black)" />
+    <div id="modal"
+        class="d-none align-items-center justify-content-start position-fixed top-0 left-0 w-full h-full"
+        style="overflow-x: auto; padding: 0 10%;z-index: 999; background-color: rgba(0,0,0,.2)">
+        <img class="position-fixed cursor-pointer" onclick="closeModal()"
+            src="{{ asset('assets/icon/tnks/x-light.svg') }}" width="50"
+            style="top: 20px; right: 20px;filter: drop-shadow(0px 0px 10px black)" />
     </div>
 
 
     <!--  Body Wrapper -->
-    <div class="page-wrapper w-100" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="page-wrapper w-100" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6"
+        data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <!-- ========================================= -->
         @include('etiket.admin.template.sidebar')
         <!--  Main wrapper -->
@@ -101,14 +113,14 @@
             @include('etiket.admin.template.footer')
         </div>
     </div>
-    <script src="{{asset('modernize/libs/jquery/dist/jquery.min.js')}}"></script>
-    <script src="{{asset('modernize/libs/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{ asset('modernize/libs/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('modernize/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
-    <script src="{{asset('modernize/js/sidebarmenu.js')}}"></script>
-    <script src="{{asset('modernize/js/app.min.js')}}"></script>
+    <script src="{{ asset('modernize/js/sidebarmenu.js') }}"></script>
+    <script src="{{ asset('modernize/js/app.min.js') }}"></script>
 
-    <!-- <script src="{{asset('modernize/libs/simplebar/dist/simplebar.js')}}"></script> -->
-    <!-- <script src="{{asset('modernize/js/dashboard.js')}}"></script> -->
+    <!-- <script src="{{ asset('modernize/libs/simplebar/dist/simplebar.js') }}"></script> -->
+    <!-- <script src="{{ asset('modernize/js/dashboard.js') }}"></script> -->
 
     @yield('js')
 
@@ -162,7 +174,7 @@
                         <header class="text-xl font-semibold">${image.nama}</header>
                         <div class="text-lg">${image.detail}</div>
                     </div>
-                    <img id="modal-img" style="width:100%;" class="rounded  " src='{{url('')}}/${image.src}' />
+                    <img id="modal-img" style="width:100%;" class="rounded  " src='{{ url('') }}/${image.src}' />
                 `;
                 modal.appendChild(div);
 

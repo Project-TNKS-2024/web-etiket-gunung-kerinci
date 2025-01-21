@@ -102,7 +102,7 @@
                                     <td class="text-center">
                                         {{ $item->status == 'pending' ? 'Menunggu Validasi' : $item->keterangan }}</td>
                                     <td class="text-center">
-                                        <a href="{{ asset($item->bukti_pembayaran) }}" class="btn btn-sm btn-primary" target="_blank">
+                                        <a href="{{ asset($item->bukti) }}" class="btn btn-sm btn-primary" target="_blank">
                                             <i class="bi bi-eye"></i> Lihat Bukti
                                         </a>
                                     </td>

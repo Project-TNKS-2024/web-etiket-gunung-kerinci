@@ -21,6 +21,7 @@ class uploadFileControlller extends HelperController
         }
         return null;
     }
+
     public function upadate(string $url, UploadedFile $file)
     {
         if ($file && file_exists(public_path($url))) {

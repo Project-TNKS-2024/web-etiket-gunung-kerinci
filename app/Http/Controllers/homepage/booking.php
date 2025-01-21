@@ -8,16 +8,15 @@ use App\Http\Controllers\helper\BookingValidator;
 use App\Http\Controllers\helper\MidtransController;
 use App\Http\Controllers\helper\uploadFileControlller;
 use App\Models\bio_pendaki;
-use App\Models\pengajuan;
 use App\Models\destinasi;
 use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
-use App\Models\gk_gates;
 use App\Models\gk_pendaki;
 use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
 use App\Models\pembayaran;
+use App\Models\pengajuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -30,7 +29,11 @@ use function PHPUnit\Framework\isNull;
 class booking extends Controller
 {
 
-    public function __construct(BookingHelperController $helper, UploadFileControlller $upload) {
+    private $helper;
+    private $upload;
+
+    public function __construct(BookingHelperController $helper, UploadFileControlller $upload)
+    {
         $this->helper = $helper;
         $this->upload = $upload;
     }
@@ -373,12 +376,12 @@ class booking extends Controller
                 $pendaki->lampiran_surat_izin_ortu = $path;
             }
 
-            // return $pendaki;
             $pendaki->tagihan = $this->helper->getTagihanPendaki($pendaki);
             $pendaki->save();
         }
 
         if ($request->action == 'next') {
+
             $request->validate([
                 'barangWajib' => 'required|array',
                 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean',
@@ -387,13 +390,6 @@ class booking extends Controller
                 'barangWajib.survival_kit_standart' => 'required|boolean',
             ]);
 
-            // // validasi falid daya booking
-            // $BookingValidator = new BookingValidator($booking->id);
-            // $validasi =  $BookingValidator->validate();
-
-            // if (!$validasi['success']) {
-            //     return redirect()->back()->withErrors($validasi['message']);
-            // }
 
             return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking Berhasil disimpan');
 
@@ -413,246 +409,20 @@ class booking extends Controller
             ->first();
         $booking->total_pembayaran = gk_pendaki::where('booking_id', $booking->id)->sum('tagihan');
 
-
-        // cek status booking
         if (!$booking) {
             abort(404);
         }
-        // } else if ($booking->status_booking !== 3) {
-        //     return redirect()->route("homepage.booking", ["id" => $id]);
-        // }
-
-        // validasi formulir pendaki'
-
-        // cek id transaksi booking
-        // $midtrans = new MidtransController;
-        // $snapToken = '';
-        // $traksaksi = pembayaran::where('id_booking', $booking->id)->latest()->first();
-
-        // if ($traksaksi) {
-        //     $status = $midtrans->checkPaymentStatus($traksaksi->id);
-        //     $statusTranskasi = $status['data']['status_code'];
-
-        //     // return $status;
-        //     if ($statusTranskasi == 200) {
-        //         return "transaksi berhasil";
-        //         // ubah status booking jadi 4
-        //         //    arah kan ke halaman selanjutnya
-        //     } else if ($statusTranskasi == 404) {
-        //         $params = array(
-        //             'transaction_details' => array(
-        //                 'order_id' => $traksaksi->id,
-        //                 'gross_amount' => $booking->total_pembayaran,
-        //             ),
-        //             'customer_details' => array(
-        //                 'first_name' => $booking->pendakis[0]->first_name,
-        //                 'last_name' =>  $booking->pendakis[0]->last_name,
-        //                 'email' => Auth::user()->email,
-        //                 'phone' => Auth::user()->no_hp
-        //             ),
-        //         );
-        //         $data = $midtrans->generateSnapToken($params);
-        //         $snapToken = $data['data'];
-        //         $traksaksi->spesial = $snapToken ?? "";
-        //         $traksaksi->save();
-        //     } else if ($statusTranskasi == 407) {
-        //         // return "transaksi belum di bayar";
-        //         $traksaksi->status = 'failed';
-        //         $traksaksi->save();
-        //         $traksaksi = pembayaran::create([
-        //             'id_booking' => $booking->id,
-        //             'spesial' => '',
-        //             'amount' => $booking->total_pembayaran,
-        //             'status' => 'pending',
-        //             'payment_method' => 'midtrans',
-        //             'deadline' => date('Y-m-d H:i:s', strtotime('+1 day'))
-        //         ]);
-
-        //         $params = array(
-        //             'transaction_details' => array(
-        //                 'order_id' => $traksaksi->id,
-        //                 'gross_amount' => $booking->total_pembayaran,
-        //             ),
-        //             'customer_details' => array(
-        //                 'first_name' => $booking->pendakis[0]->first_name,
-        //                 'last_name' =>  $booking->pendakis[0]->last_name,
-        //                 'email' => Auth::user()->email,
-        //                 'phone' => Auth::user()->no_hp
-        //             ),
-        //         );
-        //         $data = $midtrans->generateSnapToken($params);
-        //         $snapToken = $data['data'];
-        //         $traksaksi->spesial = $snapToken;
-        //         $traksaksi->save();
-        //     } else if ($statusTranskasi == 201) {
-        //         // return "transaksi pennding";
-        //         $snapToken = $traksaksi->spesial;
-        //     }
-        // } else {
-        //     $traksaksi = pembayaran::create([
-        //         'id_booking' => $booking->id,
-        //         'spesial' => '',
-        //         'amount' => $booking->total_pembayaran,
-        //         'status' => 'pending',
-        //         'payment_method' => 'midtrans',
-        //         'deadline' => date('Y-m-d H:i:s', strtotime('+1 day'))
-        //     ]);
-
-        //     $params = array(
-        //         'transaction_details' => array(
-        //             'order_id' => $traksaksi->id,
-        //             'gross_amount' => $booking->total_pembayaran,
-        //         ),
-        //         'customer_details' => array(
-        //             'first_name' => $booking->pendakis[0]->first_name,
-        //             'last_name' =>  $booking->pendakis[0]->last_name,
-        //             'email' => Auth::user()->email,
-        //             'phone' => Auth::user()->no_hp
-        //         ),
-        //     );
-        //     // bikin snaop token
-        //     $data = $midtrans->generateSnapToken($params);
-        //     $snapToken = $data['data'];
-        //     $traksaksi->spesial = $snapToken;
-        //     $traksaksi->save();
-        // }
-
-        $pendakis = gk_pendaki::where('booking_id', $booking->id)->get();
-        // dd($pendakis);
 
         return view('homepage.booking.bookingDetail', [
             // 'snaptoken' => $snapToken,
             'booking' => $booking,
-            'pendakis' => $pendakis,
+            'formulirPendakis' => $booking->pendakis,
+            // 'pendakis' => $booking->pendakis,
         ]);
     }
 
     public function bookingPayment($id)
     {
-        // cek booking
-        // $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-        //     ->where('id', $id)
-        //     ->where('id_user', Auth::id())
-        //     ->first();
-
-        // // cek status booking
-        // if (!$booking) {
-        //     abort(404);
-        // }
-        // } else if ($booking->status_booking == 2) {
-        //     // validasi formulir pendaki'
-        //     $BookingValidator = new BookingValidator($booking->id);
-        //     $validasi = $BookingValidator->validate();
-
-        //     // return $validasi;
-
-        //     if ($validasi['success']) {
-        //         $booking->status_booking = 3;
-        //         $booking->save();
-        //     } else {
-        //         return redirect()->route('homepage.booking.formulir', ['id' => $id])->withErrors($validasi['message']);
-        //     }
-        // } else if ($booking->status_booking !== 3) {
-        //     return redirect()->route("homepage.booking", ["id" => $id]);
-        // }
-
-        // cek id transaksi booking
-        // $midtrans = new MidtransController;
-        // $snapToken = '';
-        // $traksaksi = pembayaran::where('id_booking', $booking->id)->latest()->first();
-
-        // if ($traksaksi) {
-        //     $status = $midtrans->checkPaymentStatus($traksaksi->id);
-        //     $statusTranskasi = $status['data']['status_code'];
-
-        //     // return $status;
-        //     if ($statusTranskasi == 200) {
-        //         return redirect()->route('dashboard.tiket', ['id' => $id])->with('success', 'Pembayaran Berhasil');
-        //     } else if ($statusTranskasi == 404) {
-        //         $params = array(
-        //             'transaction_details' => array(
-        //                 'order_id' => $traksaksi->id,
-        //                 'gross_amount' => $booking->total_pembayaran,
-        //             ),
-        //             'customer_details' => array(
-        //                 'first_name' => $booking->pendakis[0]->first_name,
-        //                 'last_name' =>  $booking->pendakis[0]->last_name,
-        //                 'email' => Auth::user()->email,
-        //                 'phone' => Auth::user()->no_hp
-        //             ),
-        //         );
-
-        //         $data = $midtrans->generateSnapToken($params);
-        //         $snapToken = $data['data'];
-        //         $traksaksi->spesial = 'null'
-        //         // $traksaksi->save();
-        //     } else if ($statusTranskasi == 407) {
-        //         // return "transaksi belum di bayar";
-        //         $traksaksi->status = 'failed';
-        //         $traksaksi->save();
-        //         $traksaksi = pembayaran::create([
-        //             'id_booking' => $booking->id,
-        //             'spesial' => 'null',
-        //             'amount' => $booking->total_pembayaran,
-        //             'status' => 'pending',
-        //             'payment_method' => 'midtrans',
-        //             'deadline' => date('Y-m-d H:i:s', strtotime('+1 day'))
-        //         ]);
-
-        //         $params = array(
-        //             'transaction_details' => array(
-        //                 'order_id' => $traksaksi->id,
-        //                 'gross_amount' => $booking->total_pembayaran,
-        //             ),
-        //             'customer_details' => array(
-        //                 'first_name' => $booking->pendakis[0]->first_name,
-        //                 'last_name' =>  $booking->pendakis[0]->last_name,
-        //                 'email' => Auth::user()->email,
-        //                 'phone' => Auth::user()->no_hp
-        //             ),
-        //         );
-        //         $data = $midtrans->generateSnapToken($params);
-        //         $snapToken = $data['data'];
-        //         $traksaksi->spesial = $snapToken;
-        //         $traksaksi->save();
-        //     } else if ($statusTranskasi == 201) {
-        //         // return "transaksi pennding";
-        //         $snapToken = $traksaksi->spesial;
-        //     }
-        // } else {
-        //     $traksaksi = pembayaran::create([
-        //         'id_booking' => $booking->id,
-        //         'spesial' => '',
-        //         'amount' => $booking->total_pembayaran,
-        //         'status' => 'pending',
-        //         'payment_method' => 'midtrans',
-        //         'deadline' => date('Y-m-d H:i:s', strtotime('+1 day'))
-        //     ]);
-
-        //     $params = array(
-        //         'transaction_details' => array(
-        //             'order_id' => $traksaksi->id,
-        //             'gross_amount' => $booking->total_pembayaran,
-        //         ),
-        //         'customer_details' => array(
-        //             'first_name' => $booking->pendakis[0]->first_name,
-        //             'last_name' =>  $booking->pendakis[0]->last_name,
-        //             'email' => Auth::user()->email,
-        //             'phone' => Auth::user()->no_hp
-        //         ),
-        //     );
-        //     // bikin snaop token
-        //     $data = $midtrans->generateSnapToken($params);
-        //     $snapToken = $data['data'];
-        //     $traksaksi->spesial = $snapToken;
-        //     $traksaksi->save();
-        // }
-
-        // return $booking;
-
-
-        // dd($booking->pendakis);
-
         $booking = gk_booking::find($id);
 
         if (!$booking) {
@@ -661,6 +431,8 @@ class booking extends Controller
 
         $booking->total_pembayaran = gk_pendaki::where('booking_id', $id)->sum('tagihan');
         $pembayaran = pembayaran::where('id_booking', $id)->get();
+
+
         // dd();
         return view('homepage.booking.booking-payment', [
             // 'snaptoken' => $snapToken,
@@ -699,6 +471,12 @@ public function addBuktiPembayaran(Request $request, $id)
     $request->validate([
         'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
     ]);
+
+    $booking = gk_booking::find($id);
+        if (!$booking) {
+            abort(404);
+        }
+
 
     $pembayaran = new pembayaran();
     $pembayaran->id_booking = $id;
