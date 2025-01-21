@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\etiket\user;
 
 use App\Http\Controllers\Controller;
-use App\Models\gk_booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\gk_booking;
 
 use function PHPUnit\Framework\isEmpty;
 

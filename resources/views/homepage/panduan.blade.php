@@ -155,33 +155,27 @@
     'panduan' => [
     [
     'title' => 'Login atau Daftar',
-    'caption' =>
-    "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
+    'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
     'title' => 'Pilih Jalur Pendakian',
-    'caption' =>
-    "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
+    'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
     'title' => 'Isi Formulir Pendakian',
-    'caption' =>
-    "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
+    'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
     'title' => 'Baca SOP Pendakian',
-    'caption' =>
-    "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
+    'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
     'title' => 'Cek Kuota Pendakian',
-    'caption' =>
-    "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
+    'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
     'title' => 'Bayar Tiket',
-    'caption' =>
-    "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
+    'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     ],
     ])
