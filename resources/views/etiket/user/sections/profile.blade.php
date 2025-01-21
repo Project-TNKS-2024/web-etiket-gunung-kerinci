@@ -243,11 +243,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('cariTelepon').addEventListener('input', cariTelepon);
-        fetch('https://restcountries.com/v3.1/all', {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
+        fetch('/assets/js/telepon.json')
             .then(response => response.json())
             .then(countriesData => {
                 // ambil nilai asli dari input dropdown
@@ -271,8 +267,6 @@
                         }
                     }
                 });
-
-
 
             })
             .catch(error => console.error('Error fetching countries:', error));

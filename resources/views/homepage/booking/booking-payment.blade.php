@@ -162,7 +162,7 @@
             </form>
 
 
-            @if (count($pengajuan) > 0)
+            @if (count($pembayaran) > 0)
                 <div class="table-responsive my-4">
                     <table class="table table-bordered table-hover align-middle table-no-side-border">
                         <thead class="text-center ">
@@ -191,7 +191,7 @@
                                     </td>
                                     <td class="text-center">{{ ($item->status == "pending") ? "Menunggu Validasi" : ($item->status == "approved" && $item->keterangan == null ? "Disetujui" : $item->keterangan) }}</td>
                                     <td class="text-center">
-                                        <a href="{{ asset($item->bukti) }}" class="btn btn-sm btn-primary" target="_blank">
+                                        <a href="{{ asset($item->bukti_pembayaran) }}" class="btn btn-sm btn-primary" target="_blank">
                                             <i class="bi bi-eye"></i> Lihat Bukti
                                         </a>
                                     </td>

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('status'); // Status pembayarans (contoh: pending, success, failed)
             $table->string('payment_method'); // Metode pembayarans (contoh: transfer bank, kartu kredit, dll.)
             $table->string('bukti_pembayaran')->nullable(); // Bukti pembayarans (contoh: gambar atau file)
+            $table->string('keterangan')->nullable();
             $table->date('deadline'); // Batas waktu pembayarans
             $table->timestamps();
         });

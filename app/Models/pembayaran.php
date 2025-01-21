@@ -17,6 +17,7 @@ class pembayaran extends Model
         'payment_method',//jgn dihapus
         'bukti_pembayaran',//
         'deadline',
+        'keterangan',
     ];
 
     /**
