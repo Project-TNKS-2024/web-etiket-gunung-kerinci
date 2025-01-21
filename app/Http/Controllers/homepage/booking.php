@@ -15,6 +15,7 @@ use App\Models\gk_pendaki;
 use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
+use App\Models\pembayaran;
 use App\Models\pengajuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -401,21 +402,18 @@ class booking extends Controller
     public function bookingDetail($id)
     {
         // cek booking
-        $booking = gk_booking::with(['gateMasuk', 'gateMasuk.destinasi', 'gateKeluar', 'pendakis', 'pendakis.biodata'])
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
             ->where('id', $id)
             ->where('id_user', Auth::id())
             ->first();
+        $booking->total_pembayaran = gk_pendaki::where('booking_id', $booking->id)->sum('tagihan');
 
-
-        // return $booking;
-        // cek status booking
         if (!$booking) {
             abort(404);
         }
 
-        // return $booking->pendakis;
-        // return $booking;
         return view('homepage.booking.bookingDetail', [
+            // 'snaptoken' => $snapToken,
             'booking' => $booking,
             'formulirPendakis' => $booking->pendakis,
             // 'pendakis' => $booking->pendakis,
@@ -424,27 +422,6 @@ class booking extends Controller
 
     public function bookingPayment($id)
     {
-        // cek booking
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $id)
-            ->where('id_user', Auth::id())
-            ->first();
-
-        $booking->total_pembayaran = gk_pendaki::where('booking_id', $id)->sum('tagihan');
-        $pengajuan = pengajuan::where('booking_id', $id)->get();
-        return view('homepage.booking.booking-payment', [
-            'booking' => $booking,
-            'pengajuan' => $pengajuan,
-            'pendakis' => $booking->pendakis,
-        ]);
-
-
-
-        // return $booking;
-
-
-        // dd($booking->pendakis);
-
         $booking = gk_booking::find($id);
 
         if (!$booking) {
@@ -452,12 +429,15 @@ class booking extends Controller
         }
 
         $booking->total_pembayaran = gk_pendaki::where('booking_id', $id)->sum('tagihan');
-        $pengajuan = pengajuan::where('booking_id', $id)->get();
+        $pembayaran = pembayaran::where('id_booking', $id)->get();
 
+
+        // dd();
         return view('homepage.booking.booking-payment', [
             // 'snaptoken' => $snapToken,
             'booking' => $booking,
-            'pendakis' => $booking->pendakis
+            'pendakis' => $booking->pendakis,
+            'pembayaran' => $pembayaran
         ]);
     }
 
@@ -490,13 +470,22 @@ class booking extends Controller
             'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
 
-        $pengajuan = new pengajuan();
-        $pengajuan->booking_id = $id;
+        $booking = gk_booking::find($id);
+        if (!$booking) {
+            abort(404);
+        }
+
         $path = $this->upload->create($id, 'booking', $request->bukti_pembayaran);
-        $pengajuan->bukti = $path;
-        $pengajuan->status = 'pending';
-        $pengajuan->keterangan = '';
-        $pengajuan->save();
+        $pembayaran = pembayaran::create([
+            'id_booking' => $id,
+            'spesial' => null,
+            'amount' => $booking->total_pembayaran,
+            'status' => 'pending',
+            'payment_method' => 'manual',
+            'bukti_pembayaran' => $path,
+            'keterangan' => '',
+            'deadline' => Carbon::now()->addDays(1),
+        ]);
 
         return redirect()->back()->with('success', 'Bukti pembayaran berhasil dikirim');
     }
