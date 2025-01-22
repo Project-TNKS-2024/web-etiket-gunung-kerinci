@@ -65,7 +65,7 @@
 <div class="card collapse" id="CollapseTambahGates">
    <div class="card-body">
       <h5 class="text-2x1 font-bold gk-text-base-black mb-3">Tambah Gates</h5>
-      <form action="{{ route('admin.destinasi.gates.addAction') }}" method="POST">
+      <form action="{{ route('admin.destinasi.gates.addAction') }}" method="POST" enctype="multipart/form-data">
          @csrf
          <div class="row">
             <!-- Nama -->
@@ -114,6 +114,11 @@
          <div class="mb-3">
             <label for="detail" class="form-label">Detail</label>
             <textarea class="form-control" id="detail" name="detail" rows="3"></textarea>
+         </div>
+
+         <div class="mb-3">
+            <label for="detail" class="form-label">Tampilan QRIS</label>
+            <input type="file" class="form-control" id="qris" name="qris">
          </div>
 
          <!-- Submit Button -->

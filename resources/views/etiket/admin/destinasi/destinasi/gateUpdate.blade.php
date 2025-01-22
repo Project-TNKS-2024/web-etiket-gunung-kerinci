@@ -18,7 +18,7 @@
 <div class="card">
    <div class="card-body">
       <label class="text-2xl font-bold gk-text-base-black mb-2">Update Gates</label>
-      <form action="{{ route('admin.destinasi.gates.updateAction') }}" method="post">
+      <form action="{{ route('admin.destinasi.gates.updateAction') }}" method="post" enctype="multipart/form-data">
          @csrf
          <div class="row">
             <!-- Nama -->
@@ -68,6 +68,18 @@
             <label for="detail" class="form-label">Detail</label>
             <textarea class="form-control" id="detail" name="detail" rows="3">{{ old('detail', $gate->detail) }}</textarea>
          </div>
+
+         <div class="mb-3">
+            <label for="detail" class="form-label">Tampilan QRIS</label>
+            <div class="input-group flex-nowrap">
+               <input class="form-control" type="file" name="qris" id="qris" accept="image/*,.pdf">
+               <button class="input-group-text d-none" type="button" data-id-target="lampiran_identitas">
+                   <i class=" fa-regular fa-eye"></i>
+               </button>
+               <a href="{{asset($qris->path)}}" target="_blank"><img class="input-group-text btn-info btn" src="{{asset('assets/icon/tnks/view_alt-dark.svg')}}"/></a>
+           </div>
+         </div>
+
 
          <!-- Submit Button -->
          <button type="submit" class="btn btn-primary d-block ms-auto">Simpan</button>

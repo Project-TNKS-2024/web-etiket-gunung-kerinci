@@ -180,25 +180,29 @@
                                     <h4>Total Pembayaran</h4>
                                     @foreach ($pendakis as $pen)
                                         @php
-                                            $tagihan = $hitung($pen)
+                                            $tagihan = $hitung($pen);
                                         @endphp
                                         <div class="mb-2">
                                             <div class="">{{ $pen->first_name }} {{ $pen->last_name }}</div>
                                             <div class="d-flex justify-content-between">
                                                 <div class="small text-muted" style="">Biaya Masuk</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['masuk']) }}</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['masuk']) }}
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <div class="small text-muted" style="">Berkemah</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['berkemah']) }}</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['berkemah']) }}
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <div class="small text-muted" style="">Pendakian</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['tracking']) }}</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['tracking']) }}
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <div class="small text-muted" style="">Asuransi</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['asuransi']) }}</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['asuransi']) }}
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between fw-bold">
                                                 <div class="small text-muted" style="">Total</div>
@@ -225,7 +229,7 @@
 
         <div class="card border-0 shadow">
             <div class="card-body px-4 px-md-5 pb-4q">
-                <div class="mt-3">
+                {{-- <div class="mt-3">
                     <h1 class="fs-5 fw-bold">Booking {{ $booking->gateMasuk->destinasi->nama }}</h1>
                     <div class="row">
                         <div class="col-12 col-md-6">
@@ -264,8 +268,8 @@
                             </table>
                         </div>
                     </div>
-                </div>
-                <hr>
+                </div> --}}
+                {{-- <hr> --}}
                 @foreach ($pendakis as $key => $pendaki)
                     <div class="mt-4">
                         <h1 class="fs-5 fw-bold">
@@ -294,11 +298,11 @@
                                             @endif
                                         </td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td>No KTP/Pasport</td>
                                         <td> : </td>
                                         <td>{{ $pendaki->biodata->nik }}</td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr>
                                         <td>No Telepon</td>
                                         <td> : </td>
@@ -309,18 +313,18 @@
                                         <td> : </td>
                                         <td>{{ $pendaki->biodata->no_hp_darurat }}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td>Tanggal Lahir</td>
                                         <td> : </td>
                                         <td>{{ \Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('D MMMM Y') }}
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr>
                                         <td>Usia</td>
                                         <td> : </td>
                                         <td>{{ intval(\Carbon\Carbon::parse(now())->isoFormat('Y')) - intval(\Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('Y')) }}
                                         </td>
-                                    </tr>
+                                    </tr> 
                                 </table>
                             </div>
                             <div class="col-12 col-lg-6">
@@ -333,9 +337,9 @@
                                         );
                                     @endphp
 
-                                    {{-- extension: {{$extension}} --}}
+                            {{-- extension: {{$extension}} --}}
 
-                                    @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
+                            @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
                                         <img src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
                                             alt="Lampiran Identitas" class="img-fluid"
                                             style="max-height: 280px; width: auto; display: block; margin: 0 auto;">

@@ -158,11 +158,11 @@
     'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
-    'title' => 'Pilih Jalur Pendakian',
+    'title' => 'Verifikasi Akun',
     'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
-    'title' => 'Isi Formulir Pendakian',
+    'title' => 'Pilih Destinasi',
     'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
@@ -170,11 +170,11 @@
     'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
-    'title' => 'Cek Kuota Pendakian',
+    'title' => 'Lakukan Booking',
     'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     [
-    'title' => 'Bayar Tiket',
+    'title' => 'Lakukan Pembayaran',
     'caption' => "We handle all aspects of vetting and choosing the right team that you don't have the time, expertise, or desire to do.",
     ],
     ],

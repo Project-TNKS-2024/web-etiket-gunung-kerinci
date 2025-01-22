@@ -73,9 +73,9 @@
                 <div class="p-3 text-center">
                     <header class="text-start">QR Pembayaran</header>
                     <div class="text-start text-muted small">**Masukkan nominal yang sesuai</div>
-                    <img src="{{ asset('assets/img/qris-dummy.png') }}" class="img-fluid" alt="bukti pembayaran" />
+                    <img src="{{ asset($qris->path) }}" class="img-fluid" alt="bukti pembayaran" />
                     <div class="mt-3">
-                        <a href="{{ asset('assets/img/qris-dummy.png') }}" download class="btn btn-primary">Unduh Kode
+                        <a href="{{ asset($qris->path) }}" download class="btn btn-primary">Unduh Kode
                             QR</a>
                     </div>
                     <h3 class="h-2 mt-3">Rp {{ number_format($booking->total_pembayaran, 0, ',', '.') }}</h3>
