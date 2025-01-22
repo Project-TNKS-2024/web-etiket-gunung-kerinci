@@ -11,7 +11,7 @@ class MidtransController extends HelperController
     public function __construct()
     {
         // Set your Merchant Server Key
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-EOmb5LvKeLEnP_vWZPGKWFEt';
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-dvS9mWzaI5eiN_nH4sbYe18W';
         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
         \Midtrans\Config::$isProduction = false;
         // Set sanitization on (default)

@@ -15,22 +15,18 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string('firstName');
-            $table->string('lastName');
-            // full namae ganti user name 
             $table->string('password');
-            $table->string('no_hp')->nullable();
-            $table->string('token')->nullable();
-            $table->enum('kewarganegaraan', ['wna', 'wni']);
-            $table->string('nik')->unique()->nullable();
-            // fullname
-            // vrifikasi admingitv v
-
             $table->string('role')->default('user');
-            $table->string('path_foto')->nullable();
+
+            $table->uuid('id_bio')->unique()->nullable();
+            $table->timestamp('nik_verified_at')->nullable();
+
+            $table->string('token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('id_bio')->references('id')->on('biodatas');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

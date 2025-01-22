@@ -17,6 +17,7 @@ Route::middleware(['check.role:user'])->group(function () {
    // riwayat booking
    Route::get('dashboard/riwayat', [dasUser::class, 'riwayat'])->name('user.dashboard.reiwayat');
 
+
    //reset password
    Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
    Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');

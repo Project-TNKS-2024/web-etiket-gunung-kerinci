@@ -14,7 +14,7 @@ class gk_booking extends Model
         'id_tiket',
         'tanggal_masuk',
         'tanggal_keluar',
-        'kategori_hari',
+        'kategori_hari', //tidak perlu lagi
         'total_hari',
         'total_pendaki_wni',
         'total_pendaki_wna',
@@ -55,6 +55,7 @@ class gk_booking extends Model
     /**
      * Get the ticket associated with the booking.
      */
+
     public function gktiket()
     {
         return $this->belongsTo(gk_paket_tiket::class, 'id_tiket');
@@ -80,5 +81,10 @@ class gk_booking extends Model
     public function pendakis()
     {
         return $this->hasMany(gk_pendaki::class, 'booking_id');
+    }
+
+    public function pembayaran() 
+    {
+        return $this->hasMany(pembayaran::class, 'id_booking');
     }
 }

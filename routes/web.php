@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 //homepage
 use App\Http\Controllers\homepage\HomepageController;
 use App\Http\Controllers\homepage\booking;
+use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
+
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
@@ -35,12 +37,16 @@ Route::middleware('auth')->group(function () {
     Route::post('booking/snk', [booking::class, 'bookingSnkStore'])->name('homepage.booking.snk.action');
 
     Route::get('booking/{id}/formulir', [booking::class, 'bookingFP'])->name('homepage.booking.formulir');
+    Route::post('booking/formulir/pendaki/add', [booking::class, 'bookingPendakiAdd'])->name('homepage.booking.formulir.pebdaki.add');
     Route::post('booking/formulir', [booking::class, 'bookingFPStore'])->name('homepage.booking.formulir.action');
 
     Route::get('booking/{id}/detail', [booking::class, 'bookingDetail'])->name('homepage.booking.detail');
 
+
     Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');
     Route::get('booking/{id}/tiket', [booking::class, 'tiketBooking'])->name('homepage.booking.tiket');
+    Route::get('tiket/{id}', [booking::class, 'tiket'])->name('dashboard.tiket');
+
 
     Route::post('booking/add-payment/{id}', [booking::class, 'addBuktiPembayaran'])->name('homepage.booking.addBuktiPembayaran');
     Route::delete('booking/payment/delete/{id}/{pengajuan_id}', [booking::class, 'deleteBuktiPembayaran'])->name('homepage.booking.payment.delete');

@@ -20,15 +20,13 @@ class User extends Authenticatable
     protected $table = 'users';
     protected $fillable = [
         'email',
-        'nik',
-        // 'kewarganegaraan',
-        'token',
-        'no_hp',
-        'role',
         'password',
-        'firstName',
-        'lastName',
-        'path_foto',
+        'role',
+        'id_bio',
+
+
+        'token',
+        'nik_verified_at',
         'email_verified_at',
     ];
 
@@ -51,7 +49,13 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'nik_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function biodata()
+    {
+        return $this->hasOne(bio_pendaki::class, 'id', 'id_bio',);
     }
 }

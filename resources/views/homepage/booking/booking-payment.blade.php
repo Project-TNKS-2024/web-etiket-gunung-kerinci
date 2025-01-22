@@ -75,7 +75,8 @@
                     <div class="text-start text-muted small">**Masukkan nominal yang sesuai</div>
                     <img src="{{ asset('assets/img/qris-dummy.png') }}" class="img-fluid" alt="bukti pembayaran" />
                     <div class="mt-3">
-                        <a href="{{ asset('assets/img/qris-dummy.png') }}" download class="btn btn-primary">Unduh Kode QR</a>
+                        <a href="{{ asset('assets/img/qris-dummy.png') }}" download class="btn btn-primary">Unduh Kode
+                            QR</a>
                     </div>
                     <h3 class="h-2 mt-3">Rp {{ number_format($booking->total_pembayaran, 0, ',', '.') }}</h3>
                 </div>
@@ -149,20 +150,21 @@
             <div class="d-block d-md-flex justify-content-between align-items-center mb-1">
                 <h4>Riwayat Pengajuan Bukti Pembayaran</h4>
             </div>
+            @if (!$verified)
+                <form class="mb-3 d-block d-sm-flex gap-2"
+                    action="{{ route('homepage.booking.addBuktiPembayaran', $booking->id) }}" method="post"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" class="form-control h-100 w-100" id="bukti_pembayaran" name="bukti_pembayaran" />
+                    <button class="btn btn-gl-primary my-2 my-md-0" style="width: 100%" data-bs-toggle="modal"
+                        data-bs-target="#addBuktiModal">
+                        Tambah Bukti Pembayaran
+                    </button>
+                </form>
+            @endif
 
-            <form class="mb-3 d-block d-sm-flex gap-2"
-                action="{{ route('homepage.booking.addBuktiPembayaran', $booking->id) }}" method="post"
-                enctype="multipart/form-data">
-                @csrf
-                <input type="file" class="form-control h-100 w-100" id="bukti_pembayaran" name="bukti_pembayaran" />
-                <button class="btn btn-gl-primary my-2 my-md-0" style="width: 100%" data-bs-toggle="modal"
-                    data-bs-target="#addBuktiModal">
-                    Tambah Bukti Pembayaran
-                </button>
-            </form>
 
-
-            @if (count($pengajuan) > 0)
+            @if (count($pembayaran) > 0)
                 <div class="table-responsive my-4">
                     <table class="table table-bordered table-hover align-middle table-no-side-border">
                         <thead class="text-center ">
@@ -176,7 +178,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pengajuan as $key => $item)
+                            @foreach ($pembayaran as $key => $item)
                                 <tr>
                                     <td class="text-center">{{ $key + 1 }}</td>
                                     <td class="">{{ $item->created_at->format('d M Y H:i') }}</td>
@@ -189,20 +191,28 @@
                                             <span class="badge bg-danger">Ditolak</span>
                                         @endif
                                     </td>
-                                    <td class="text-center">{{ ($item->status == "pending") ? "Menunggu Validasi" : ($item->status == "approved" && $item->keterangan == null ? "Disetujui" : $item->keterangan) }}</td>
                                     <td class="text-center">
-                                        <a href="{{ asset($item->bukti) }}" class="btn btn-sm btn-primary" target="_blank">
+                                        {{ $item->status == 'pending' ? 'Menunggu Validasi' : ($item->status == 'approved' && $item->keterangan == null ? 'Disetujui' : $item->keterangan) }}
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ asset($item->bukti_pembayaran) }}" class="btn btn-sm btn-primary"
+                                            target="_blank">
                                             <i class="bi bi-eye"></i> Lihat Bukti
                                         </a>
                                     </td>
                                     <td class="text-center">
-                                        <form action="{{ route('homepage.booking.payment.delete', ['id' => $booking->id, 'pengajuan_id' => $item->id]) }}" method="POST" class="d-inline">
+                                        @if(!$verified) 
+                                        <form
+                                            action="{{ route('homepage.booking.payment.delete', ['id' => $booking->id, 'pengajuan_id' => $item->id]) }}"
+                                            method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus bukti pembayaran ini?')">
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Apakah anda yakin ingin menghapus bukti pembayaran ini?')">
                                                 <i class="bi bi-trash"></i> Hapus
                                             </button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

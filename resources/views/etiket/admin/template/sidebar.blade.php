@@ -112,7 +112,7 @@
                </a>
             </li>
             <li class="sidebar-item">
-               <a class="sidebar-link" href="#" aria-expanded="false">
+               <a class="sidebar-link" href="{{ route('admin.master.pengunjung')}}" aria-expanded="false">
                   <span>
                      <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
                   </span>

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class gk_pendaki extends Model
 {
@@ -15,39 +17,16 @@ class gk_pendaki extends Model
         'booking_id',
         'tagihan',
 
-        // input identias
-        'kategori_pendaki',
-        'first_name',
-        'last_name',
-        'nik',
-        'jenis_kelamin',
+        'id_bio',
 
-        // kesehatan
-        'tanggal_lahir',
+
+
         'usia',
-        // berat badan
-        // tinggi badan
 
-        // input hp
-        'no_hp',
-        'no_hp_darurat',
-
-        // input domisili
-        'provinsi',
-        'kabupaten',
-        'kec',
-        'desa',
 
         // input lampiran
-        'lampiran_identitas',
-        'lampiran_surat_kesehatan',
         'lampiran_surat_izin_ortu',
 
-
-    ];
-
-    protected $casts = [
-        'tanggal_lahir' => 'date',
     ];
 
     public function booking()
@@ -55,6 +34,36 @@ class gk_pendaki extends Model
         return $this->belongsTo(gk_booking::class, 'booking_id');
     }
 
-    // hubungkan kolom provinsi, kabupaten, kecamatan, kelurahan dengan tabel d_provinsi, d_kabupaten, d_kecamatan, d_kelurahan
+    public function biodata()
+    {
+        return $this->belongsTo(bio_pendaki::class, 'id_bio');
+    }
 
+    public function getFirstNameAttribute()
+    {
+        return $this->biodata ? $this->biodata->first_name : null;
+    }
+
+    public function getLastNameAttribute()
+    {
+        return $this->biodata ? $this->biodata->last_name : null;
+    }
+
+    public function getFullNameAttribute()
+    {
+        return trim($this->first_name . ' ' . $this->last_name);
+    }
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
+            }
+        });
+    }
 }

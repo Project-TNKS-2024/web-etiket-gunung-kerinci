@@ -9,6 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="shortcut icon" type="image/png" href="{{asset('assets/img/logo/logo bulat.png')}}" />
+
     <link rel="stylesheet" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
     <!-- style -->
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.min.css') }}">
@@ -229,6 +231,18 @@
             color: white;
             border: none;
         }
+
+
+        body {
+            background-color: rgba(245, 246, 250, 1);
+            min-height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        footer {
+            background-color: white;
+        }
     </style>
 
     @yield('css')
@@ -240,7 +254,9 @@
 
     @include('homepage.template.navbar')
 
-    @yield('main')
+    <main>
+        @yield('main')
+    </main>
 
     @include('homepage.template.footer')
 

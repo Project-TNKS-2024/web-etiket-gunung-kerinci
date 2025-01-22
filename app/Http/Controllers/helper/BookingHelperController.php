@@ -136,7 +136,12 @@ class BookingHelperController extends Controller
         // tiket
         $booking = gk_booking::find($pendaki->booking_id);
         $idtiket = $booking->id_tiket;
-        $tiket = gk_tiket_pendaki::find($idtiket);
+        $tiket = gk_tiket_pendaki::where([
+            'id_paket_tiket' => $idtiket, 
+            'kategori_pendaki' => $pendaki->biodata->kenegaraan
+        ])->first();
+
+        // dd($pendaki->biodata, $tiket);
 
         // dd($tiket);
 

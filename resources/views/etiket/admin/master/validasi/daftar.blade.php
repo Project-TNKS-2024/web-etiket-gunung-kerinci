@@ -21,9 +21,9 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <label class="text-2xl font-bold gk-text-base-black mb-2">Validasi Pembayaran</label>
             </div>
-            <div class="d-flex mb-3 align-items-end justify-content-start gap-3">
+            <div class="d-flex mb-3 align-items-end align-items-start gap-3 row">
                 <!-- Dropdown for Status -->
-                <div class="dropdown">
+                <div class="dropdown col-12 col-md-4">
                     <button class="btn border border-2 dropdown-toggle" type="button" id="dropdownStatus"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="ti ti-filter"></i>
@@ -50,29 +50,29 @@
                 </div>
 
                 <!-- Date Range Filter Form -->
-                <div>
-                    <form class="d-flex gap-2" action="{{ route('admin.master.validasi.daftar.filtered') }}" method="get">
-                        <div class="form-group">
+                <div class="col-12 col-md-7 justify-content-start">
+                    <form class="d-flex gap-2 row" action="{{ route('admin.master.validasi.daftar.filtered') }}" method="get">
+                        <div class="form-group col">
                             <label for="startDate">Dari Tanggal</label>
                             <input type="datetime-local" class="form-control" id="startDate" name="start_date"
                                 value="{{ $start_date != 'all' && $end_date != null ? Carbon\Carbon::parse($start_date)->format('Y-m-d\TH:i') : Carbon\Carbon::parse(now())->format('Y-m-d 00:00:00') }}">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col">
                             <label for="endDate">Sampai Tanggal</label>
                             <input type="datetime-local" class="form-control" id="endDate" name="end_date"
                                 value="{{ $end_date != 'all' && $end_date != null ? Carbon\Carbon::parse($end_date)->format('Y-m-d\TH:i') : Carbon\Carbon::parse(now())->format('Y-m-d 23:59') }}">
                         </div>
-                        <div class="form-group d-flex align-items-end">
-                            <button class="btn btn-primary" id="btnFilter">
-                                <i class="ti ti-filter"></i>
-                                Filter
+                        <div class="form-group d-flex align-items-end col">
+                            <button class="btn btn-primary " id="btnFilter">
+                                <i class="ti ti-filter "></i>
+                                <span class="" style="">Filter</span>
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            @if (count($pengajuan) > 0)
+            @if (count($pembayaran) > 0)
                 <div class="table-responsive my-4">
                     <table class="table table-bordered table-hover align-middle table-no-side-border">
                         <thead class="text-center ">
@@ -86,7 +86,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pengajuan as $key => $item)
+                            @foreach ($pembayaran as $key => $item)
                                 <tr class="{{ $loop->odd ? 'gk-bg-base-white' : '' }}">
                                     <td class="text-center">{{ $key + 1 }}</td>
                                     <td class="">{{ $item->created_at->format('d M Y H:i') }}</td>
@@ -109,7 +109,7 @@
                                     <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-primary btnValidasi"
                                             data-id="{{ $item->id }}" data-bs-toggle="modal"
-                                            data-bs-target="#modalValidasi"
+                                            data-img="{{ $item->bukti_pembayaran }}" data-bs-target="#modalValidasi"
                                             onclick="document.getElementById('pengajuanId').value = {{ $item->id }}; document.getElementById('modal-img').src = '{{ asset($item->bukti) }}';">
                                             <img src="{{ asset('assets/icon/tnks/edit_fill-light.svg') }}"
                                                 width="20" />
@@ -129,14 +129,15 @@
 
     <!-- Modal -->
     <div class="modal fade" id="modalValidasi" tabindex="-1" aria-labelledby="modalValidasiLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: fit-content;">
+        <div class="modal-dialog w-100 align-items-center justify-content-center m-auto p-5"
+            style="display: flex; position: static; ">
+            <div class="modal-content " style="width: fit-content;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalValidasiLabel">Validasi Pengajuan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body row">
-                    <form id="formValidasi" class="col-12" method="post"
+                <div class="modal-body d-block d-md-flex" style="width: fit-content;">
+                    <form id="formValidasi" class="" method="post" style="width: 1500px; max-width: 300px;"
                         action='{{ route('admin.master.validasi.updateAction') }}'>
                         @csrf
                         <input type="hidden" id="pengajuanId" name="pengajuanId">
@@ -172,8 +173,9 @@
                                 placeholder="Masukkan keterangan..."></textarea>
                         </div>
                     </form>
-                    <div class="d-flex justify-content-center col-12">
-                        <img id="modal-img" class="img-fluid" />
+                    <div class="d-flex justify-content-center " style="width: fit-content;">
+                        <img id="modal-img w-100" class="" style="max-width:400px"
+                            src="{{ asset('assets/img/qris-dummy.png') }}" />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -183,9 +185,6 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modalValidasi = new bootstrap.Modal(document.getElementById('modalValidasi'));
@@ -194,10 +193,16 @@
             btnValidasiElements.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const pengajuanId = this.getAttribute('data-id');
+                    const pengajuanImg = this.getAttribute('data-img');
                     document.getElementById('pengajuanId').value = pengajuanId;
+                    document.getElementById('modal-img').src = "{{ url('/') }}/" +
+                        pengajuanImg;
                     modalValidasi.show();
                 });
             });
         });
     </script>
+@endsection
+
+@section('js')
 @endsection

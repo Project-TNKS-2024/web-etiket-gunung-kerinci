@@ -63,36 +63,7 @@
                     <form method="POST" action="{{ route('register.action') }}" class="index-t2 mt-4">
                         @csrf
                         <div class="row mb-3">
-                            <div class="form-group col-6">
-                                <label for="firstName" class="form-label">Nama Depan</label>
-                                <input type="text" class="form-control @error('firstName') is-invalid @enderror" id="firstName" name="firstName" value="{{ old('firstName') }}" required>
-                                @error('firstName')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="lastName" class="form-label">Nama Belakang</label>
-                                <input type="text" class="form-control @error('lastName') is-invalid @enderror" id="lastName" name="lastName" value="{{ old('lastName') }}" required>
-                                @error('lastName')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="form-group col-6">
-                                <label for="phone" class="form-label">Nomor Handphone</label>
-                                <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
-                                @error('phone')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="form-group col-6 ">
+                            <div class="form-group col-12 ">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
                                 @error('email')

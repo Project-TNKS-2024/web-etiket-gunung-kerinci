@@ -4,7 +4,7 @@ namespace App\Http\Controllers\etiket\admin\master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\pengajuan;
+use App\Models\pembayaran;
 use Carbon\Carbon;
 
 class ValidasiPembayaran extends Controller
@@ -33,7 +33,7 @@ class ValidasiPembayaran extends Controller
         }
 
         // Start query
-        $query = Pengajuan::query();
+        $query = pembayaran::query();
 
         // Apply date filters if both start_date and end_date are provided
         if ($start_date != "all" && $end_date != "all") {
@@ -46,7 +46,7 @@ class ValidasiPembayaran extends Controller
         }
 
         // Order by creation date
-        $pengajuan = $query->orderBy('created_at', 'desc')->get();
+        $pembayaran = $query->orderBy('created_at', 'desc')->get();
         // dd($pengajuan);
 
         if ($start_date == "all" && $end_date == "all") {
@@ -55,7 +55,7 @@ class ValidasiPembayaran extends Controller
         }
 
         // Pass parameters to the view for form population
-        return view('etiket.admin.master.validasi.daftar', compact('pengajuan', 'start_date', 'end_date', 'status'));
+        return view('etiket.admin.master.validasi.daftar', compact('pembayaran', 'start_date', 'end_date', 'status'));
     }
 
     public function updateAction(Request $request)
@@ -63,16 +63,16 @@ class ValidasiPembayaran extends Controller
         $request->validate([
             'status' => 'required|in:approved,rejected',
             'keterangan' => 'string|nullable|max:255',
-            'pengajuanId' => 'required|integer',
+            'pengajuanId' => 'required|string',
         ]);
 
-        $pengajuan = pengajuan::findOrFail($request->pengajuanId);
-        $pengajuan->status = $request->status;
-        $pengajuan->keterangan = $request->keterangan ?? '';
+        $pembayaran = pembayaran::findOrFail($request->pengajuanId);
+        $pembayaran->status = $request->status;
+        $pembayaran->keterangan = $request->keterangan ?? '';
 
         // dd($request->all());
-        $pengajuan->save();
+        $pembayaran->save();
 
-        return redirect()->route('admin.master.validasi.daftar')->with('success', 'Pengajuan berhasil diperbarui');
+        return redirect()->route('admin.master.validasi.daftar')->with('success', 'Pembayaran berhasil diperbarui');
     }
 }

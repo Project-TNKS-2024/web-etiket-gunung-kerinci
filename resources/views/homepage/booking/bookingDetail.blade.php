@@ -23,12 +23,32 @@
             /* Adjust the alpha value for the desired opacity */
             z-index: 1;
         }
+        .header-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Adjust the alpha value for the desired opacity */
+            z-index: 1;
+        }
 
         .header-content {
             position: relative;
             z-index: 2;
         }
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
 
+        .border-between {
+            border-top: 2px solid white;
+            width: 50px;
+            margin: 20px 0;
+        }
         .border-between {
             border-top: 2px solid white;
             width: 50px;
@@ -41,7 +61,17 @@
             text-align: center;
             font-weight: bold;
         }
+        /* booking detail */
+        #booking-detail h1 {
+            font-size: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
 
+        #booking-detail #formulir h4 {
+            font-size: 16px;
+            font-weight: bold;
+        }
         #booking-detail #formulir h4 {
             font-size: 16px;
             font-weight: bold;
@@ -51,7 +81,14 @@
         #booking-detail p {
             color: rgba(52, 64, 84, 1);
         }
+        #booking-detail h4,
+        #booking-detail p {
+            color: rgba(52, 64, 84, 1);
+        }
 
+        .c-blue {
+            color: blue;
+        }
         .c-blue {
             color: blue;
         }
@@ -59,7 +96,13 @@
         .c-red {
             color: red;
         }
+        .c-red {
+            color: red;
+        }
 
+        .c-green {
+            color: #00e221;
+        }
         .c-green {
             color: #00e221;
         }
@@ -73,7 +116,17 @@
             font-weight: bold;
             text-align: center;
         }
+        #booking-detail #pembayaran h4 {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
 
+        #booking-detail #pembayaran p {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         #booking-detail #pembayaran p {
             display: flex;
             justify-content: space-between;
@@ -83,7 +136,13 @@
         #booking-detail p {
             margin-bottom: 8px;
         }
+        #booking-detail p {
+            margin-bottom: 8px;
+        }
 
+        #booking-detail #pembayaran .span {
+            font-size: 11px;
+        }
         #booking-detail #pembayaran .span {
             font-size: 11px;
         }
@@ -92,7 +151,18 @@
             display: flex;
             justify-content: center;
         }
+        .centered {
+            display: flex;
+            justify-content: center;
+        }
 
+        .pilihmetodepembayaran {
+            /* margin-top: 5px; */
+            /* background-color: #e0ffff; */
+            padding: 5px;
+            border-radius: 10px;
+            /* border: 1px solid #9adbdb; */
+        }
         .pilihmetodepembayaran {
             /* margin-top: 5px; */
             /* background-color: #e0ffff; */
@@ -107,10 +177,22 @@
             border: 1px solid #9adbdb;
         }
     </style>
+        .pilihmetodepembayaran input {
+            margin-left: 5px !important;
+            margin-right: 10px;
+            border: 1px solid #9adbdb;
+        }
+    </style>
 @endsection
 
 
 @section('main')
+    @include('homepage.template.header', [
+        'title' => 'Pendakian Gunung Kerinci',
+        'caption' => 'Detail Booking',
+    ])
+    <div class="container my-5">
+        @include('homepage.booking.booking-nav', ['step' => 2])
     @include('homepage.template.header', [
         'title' => 'Pendakian Gunung Kerinci',
         'caption' => 'Detail Booking',
@@ -191,6 +273,10 @@
         data-client-key="SB-Mid-client-8mWWkdmzeR1xRVmL"></script>
     <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
     </head>
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="SB-Mid-client-8mWWkdmzeR1xRVmL"></script>
+    <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
+    </head>
 
     <script>
         console.log("The Pendakis");
@@ -227,4 +313,40 @@
             // customer will be redirected after completing payment pop-up
         });
     </script> --}}
+    <script>
+        console.log("The Pendakis");
+        console.log(@json($pendakis[0]));
+        // console.log({{ $pendakis }});
+    </script>
+
+
+    {{-- <script type="text/javascript">
+        // For example trigger on button clicked, or any time you need
+        var payButton = document.getElementById('pay-button');
+        payButton.addEventListener('click', function() {
+            // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
+            window.snap.pay('{{ $snaptoken }}', {
+                onSuccess: function(result) {
+                    window.location.href =
+                        "{{ route('homepage.booking.payment', ['id' => $booking->id]) }}";
+                },
+                onPending: function(result) {
+                    /* You may add your own implementation here */
+                    alert("wating your payment!");
+                    console.log(result);
+                },
+                onError: function(result) {
+                    /* You may add your own implementation here */
+                    alert("payment failed!");
+                    console.log(result);
+                },
+                onClose: function() {
+                    /* You may add your own implementation here */
+                    alert('you closed the popup without finishing the payment');
+                }
+            });
+            // customer will be redirected after completing payment pop-up
+        });
+    </script> --}}
 @endsection
+
