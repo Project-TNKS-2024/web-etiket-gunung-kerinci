@@ -21,14 +21,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-
-
-
 use function PHPUnit\Framework\isNull;
 
 class booking extends Controller
 {
-
     private $helper;
     private $upload;
 
@@ -44,7 +40,7 @@ class booking extends Controller
         $destinasi = destinasi::where('status', 1)->with('gambar_destinasi')->get();
         // return $destinasi;
         return view('homepage.booking.bookingDestinasiList', [
-            "destinasi" => $destinasi
+            'destinasi' => $destinasi,
         ]);
     }
     // booking : destinasi - paket - tiket - snk - fp -
@@ -57,16 +53,16 @@ class booking extends Controller
         $paket = gk_paket_tiket::where('id_destinasi', $id)->get();
 
         return view('homepage.booking.bookingDestinasiPaket', [
-            "gunung" => $gunung,
-            "paket" => $paket,
-            "gambar" => $gambar_destinasi,
+            'gunung' => $gunung,
+            'paket' => $paket,
+            'gambar' => $gambar_destinasi,
         ]);
     }
 
     public function destinasiTiket($id)
     {
         // id = id paket
-        $paket = gk_paket_tiket::where("id", $id)->first();
+        $paket = gk_paket_tiket::where('id', $id)->first();
 
         // ambil data destinasi
         $id_destinasi = $paket->id_destinasi;
@@ -74,13 +70,15 @@ class booking extends Controller
         $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id_destinasi)->get();
 
         // ambil data tiket
-        $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)->with(['paket_tiket'])->get();
+        $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)
+            ->with(['paket_tiket'])
+            ->get();
 
-        return view("homepage.booking.bookingDestinasiTiket", [
-            "paket" => $paket,
-            "destinasi" => $destinasi,
-            "gambar" => $gambar_destinasi,
-            "tiket" => $tiket,
+        return view('homepage.booking.bookingDestinasiTiket', [
+            'paket' => $paket,
+            'destinasi' => $destinasi,
+            'gambar' => $gambar_destinasi,
+            'tiket' => $tiket,
         ]);
     }
 
@@ -91,8 +89,8 @@ class booking extends Controller
             return redirect()->route('login');
         }
 
-        if (Auth::user()->role != "user") {
-            return redirect()->route("homepage.beranda");
+        if (Auth::user()->role != 'user') {
+            return redirect()->route('homepage.beranda');
         }
 
         // Validasi request
@@ -150,7 +148,8 @@ class booking extends Controller
                 });
             }
 
-            return redirect()->route('homepage.booking.snk', ['id' => $booking->id])
+            return redirect()
+                ->route('homepage.booking.snk', ['id' => $booking->id])
                 ->with('success', 'Update Booking');
         } else {
             // Buat booking baru
@@ -169,12 +168,13 @@ class booking extends Controller
                 'total_pembayaran' => 0,
                 'status_pembayaran' => false,
                 'lampiran_stugas' => null,
-                'unique_code' =>  $this->helper->generateCode(10),
+                'unique_code' => $this->helper->generateCode(10),
                 'keterangan' => null,
                 'id_booking_master' => null,
             ]);
 
-            return redirect()->route('homepage.booking.snk', ['id' => $newBooking->id])
+            return redirect()
+                ->route('homepage.booking.snk', ['id' => $newBooking->id])
                 ->with('success', 'Create Booking');
         }
     }
@@ -185,7 +185,6 @@ class booking extends Controller
         if (!$booking) {
             abort(404);
         }
-
 
         switch ($booking->status_booking) {
             case '1':
@@ -200,7 +199,7 @@ class booking extends Controller
                 return redirect()->route('homepage.booking.payment', ['id' => $id]);
                 break;
 
-                // 4, 5, 6, 7
+            // 4, 5, 6, 7
 
             default:
                 return $booking;
@@ -211,7 +210,9 @@ class booking extends Controller
 
     public function bookingSnk($id)
     {
-        $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $id)->first();
+        $booking = gk_booking::where('id_user', Auth::user()->id)
+            ->where('id', $id)
+            ->first();
         // ================================ cek booking sattus ============================================
         // return $booking;
         if (!$booking) {
@@ -240,7 +241,7 @@ class booking extends Controller
             abort(403);
         }
         // ================================ cek booking sattus ============================================
-        $booking = gk_booking::with('gktiket')->where("id", $id)->first();
+        $booking = gk_booking::with('gktiket')->where('id', $id)->first();
 
         if (!$booking) {
             abort(404);
@@ -248,7 +249,9 @@ class booking extends Controller
             return redirect()->route('user.dashboard.reiwayat')->with('error', 'Booking telah dibayar');
         }
         // ================================ cek ketua pendaki ============================================
-        $pendaki = gk_pendaki::where('booking_id', $booking->id)->with('biodata')->get();
+        $pendaki = gk_pendaki::where('booking_id', $booking->id)
+            ->with('biodata')
+            ->get();
         $userBio = bio_pendaki::find(Auth::user()->id_bio);
         $userUsia = Carbon::parse($userBio->tanggal_lahir)->age;
         if ($pendaki->count() == 0) {
@@ -260,7 +263,9 @@ class booking extends Controller
                 'lampiran_surat_izin_ortu' => null,
             ]);
 
-            $pendaki = gk_pendaki::where('booking_id', $booking->id)->with('biodata')->get();
+            $pendaki = gk_pendaki::where('booking_id', $booking->id)
+                ->with('biodata')
+                ->get();
         }
 
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
@@ -296,7 +301,8 @@ class booking extends Controller
             ->where('id_bio', $bioPendaki->id)
             ->whereHas('booking', function ($query) {
                 $query->where('status_booking', '<', 7);
-            })->first();
+            })
+            ->first();
 
         if ($pendaki) {
             return back()->withErrors(['code' => 'Kode sudah terdaftar']);
@@ -366,7 +372,7 @@ class booking extends Controller
             }
 
             if (isset($formulir['surat_izin_ortu'])) {
-                $path = "";
+                $path = '';
                 if (strlen($pendaki->lampiran_surat_izin_ortu) > 0) {
                     $upload->delete($pendaki->lampiran_surat_izin_ortu);
                     $path = $upload->create($booking->id, 'booking', $formulir['surat_izin_ortu']);
@@ -381,7 +387,6 @@ class booking extends Controller
         }
 
         if ($request->action == 'next') {
-
             $request->validate([
                 'barangWajib' => 'required|array',
                 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean',
@@ -390,11 +395,12 @@ class booking extends Controller
                 'barangWajib.survival_kit_standart' => 'required|boolean',
             ]);
 
-
-            return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking Berhasil disimpan');
+            return redirect()
+                ->route('homepage.booking.detail', ['id' => $booking->id])
+                ->with('Data Booking Berhasil disimpan');
 
             // pindah laman
-        } else if ($request->action == 'save') {
+        } elseif ($request->action == 'save') {
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         }
 
@@ -416,7 +422,7 @@ class booking extends Controller
         return view('homepage.booking.bookingDetail', [
             // 'snaptoken' => $snapToken,
             'booking' => $booking,
-            'formulirPendakis' => $booking->pendakis,
+            'pendakis' => $booking->pendakis,
             // 'pendakis' => $booking->pendakis,
         ]);
     }
@@ -429,16 +435,22 @@ class booking extends Controller
             abort(404);
         }
 
+        if ($booking->pembayaran->contains('status', 'approved')) {
+            return redirect()->back()->with('success', 'Sudah Bayar Tiket');
+        }
+
         $booking->total_pembayaran = gk_pendaki::where('booking_id', $id)->sum('tagihan');
         $pembayaran = pembayaran::where('id_booking', $id)->get();
 
+        // Check if any 'status' in pembayaran is 'approved'
+        $verified = $pembayaran->contains('status', 'approved'); // true if at least one 'status' is 'approved'
 
-        // dd();
+        // dd($verified);
         return view('homepage.booking.booking-payment', [
-            // 'snaptoken' => $snapToken,
             'booking' => $booking,
             'pendakis' => $booking->pendakis,
-            'pembayaran' => $pembayaran
+            'pembayaran' => $pembayaran,
+            'verified' => $verified, // Pass the verified value to the view
         ]);
     }
 
@@ -446,59 +458,56 @@ class booking extends Controller
 
     public function tiket($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $id)
+            ->first();
         // cek status booking
 
         // return $booking;
 
-
         if (!$booking) {
             abort(404);
-        } else if ($booking->status_booking < 3) {
+        } elseif ($booking->status_booking < 3) {
             abort(404);
         }
-
 
         return view('homepage.booking.bookingTiket', [
             'booking' => $booking,
-            'pendakis' => $booking->pendakis
+            'pendakis' => $booking->pendakis,
         ]);
     }
 
+    public function addBuktiPembayaran(Request $request, $id)
+    {
+        $request->validate([
+            'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
 
-public function addBuktiPembayaran(Request $request, $id)
-{
-    $request->validate([
-        'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
-    ]);
-
-    $booking = gk_booking::find($id);
+        $booking = gk_booking::find($id);
         if (!$booking) {
             abort(404);
         }
 
+        $pembayaran = new pembayaran();
+        $pembayaran->id_booking = $id;
+        $path = $this->upload->create($id, 'booking', $request->bukti_pembayaran);
+        $pembayaran->bukti_pembayaran = $path;
+        $pembayaran->status = 'pending';
+        $pembayaran->keterangan = '';
+        $pembayaran->spesial = 'null';
+        $pembayaran->spesial = 'null';
+        $pembayaran->deadline = \Carbon\Carbon::parse(now());
+        $pembayaran->payment_method = 'transfer bank/QRIS';
+        $pembayaran->amount = 0;
+        $pembayaran->save();
 
-    $pembayaran = new pembayaran();
-    $pembayaran->id_booking = $id;
-    $path = $this->upload->create($id, 'booking', $request->bukti_pembayaran);
-    $pembayaran->bukti_pembayaran = $path;
-    $pembayaran->status = 'pending';
-    $pembayaran->keterangan = '';
-    $pembayaran->spesial = "null";
-    $pembayaran->spesial = "null";
-    $pembayaran->deadline = \Carbon\Carbon::parse(now());
-    $pembayaran->payment_method = "transfer bank/QRIS";
-    $pembayaran->amount = 0;
-    $pembayaran->save();
+        return redirect()->back()->with('success', 'Bukti pembayaran berhasil dikirim');
+    }
 
-    return redirect()->back()->with('success', 'Bukti pembayaran berhasil dikirim');
-}
-
-public function deleteBuktiPembayaran($id, $pengajuan_id)
-{
-    $pembayaran = pembayaran::find($pengajuan_id);
-    $pembayaran->delete();
-    return redirect()->back()->with('success', 'Bukti pembayaran berhasil dihapus');
-}
-
+    public function deleteBuktiPembayaran($id, $pengajuan_id)
+    {
+        $pembayaran = pembayaran::find($pengajuan_id);
+        $pembayaran->delete();
+        return redirect()->back()->with('success', 'Bukti pembayaran berhasil dihapus');
+    }
 }

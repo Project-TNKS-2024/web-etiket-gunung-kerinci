@@ -63,7 +63,7 @@ class ValidasiPembayaran extends Controller
         $request->validate([
             'status' => 'required|in:approved,rejected',
             'keterangan' => 'string|nullable|max:255',
-            'pengajuanId' => 'required|integer',
+            'pengajuanId' => 'required|string',
         ]);
 
         $pembayaran = pembayaran::findOrFail($request->pengajuanId);
