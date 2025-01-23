@@ -3,108 +3,13 @@
 
 @section('css')
 <style>
-   .header-bg {
-      position: relative;
-      background: url("{{ asset('assets/img/bg/title-header-bg.png') }}") no-repeat;
-      background-size: cover;
-      background-position: 50% 50%;
-      color: white;
-   }
-
-
-   .header-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      /* Adjust the alpha value for the desired opacity */
-      z-index: 1;
-   }
-
-   .header-content {
-      position: relative;
-      z-index: 2;
-   }
-
-   .border-between {
-      border-top: 2px solid white;
-      width: 50px;
-      margin: 20px 0;
-   }
-
-   /* booking detail */
-   #booking-detail h1 {
-      font-size: 20px;
-      text-align: center;
-      font-weight: bold;
-   }
-
-   #booking-detail #formulir h4 {
-      font-size: 16px;
-      font-weight: bold;
-   }
-
-   #booking-detail h4,
-   #booking-detail p {
-      color: rgba(52, 64, 84, 1);
-   }
-
-   .c-blue {
-      color: blue;
-   }
-
-   .c-red {
-      color: red;
-   }
-
-   .c-green {
-      color: #00e221;
-   }
-
-   #booking-detail #pembayaran {
-      background-color: lightcyan;
-   }
-
-   #booking-detail #pembayaran h4 {
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-   }
-
-   #booking-detail #pembayaran p {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-   }
-
-   #booking-detail p {
-      margin-bottom: 8px;
-   }
-
-   #booking-detail #pembayaran .span {
-      font-size: 11px;
+   .table tbody tr td {
+      padding: 3px 5px;
    }
 
    .centered {
       display: flex;
       justify-content: center;
-   }
-
-   .pilihmetodepembayaran {
-      /* margin-top: 5px; */
-      /* background-color: #e0ffff; */
-      padding: 5px;
-      border-radius: 10px;
-      /* border: 1px solid #9adbdb; */
-   }
-
-   .pilihmetodepembayaran input {
-      margin-left: 5px !important;
-      margin-right: 10px;
-      border: 1px solid #9adbdb;
    }
 </style>
 @endsection
@@ -125,7 +30,7 @@
             <h1 class="fs-5 fw-bold">Booking {{$booking->gateMasuk->destinasi->nama}}</h1>
             <div class="row">
                <div class="col-12 col-md-6">
-                  <table class="table table-borderless">
+                  <table class="table table-borderless ">
                      <tr>
                         <td>Nama Ketua</td>
                         <td> : </td>
@@ -162,7 +67,7 @@
          </div>
          <hr>
          @foreach ($formulirPendakis as $key => $pendaki)
-         <div class="mt-4">
+         <div class=" mt-4">
             <h1 class="fs-5 fw-bold">
                @if ($key === 0)
                Biodata Ketua
@@ -270,8 +175,11 @@
    </div>
 
    <div class="row">
-      <div class="col-12 col-md-4"></div>
       <div class="col-12 col-md-4">
+         <a type="submit" class="btn btn-primary w-100 fw-bold mt-3" href="{{route('homepage.booking.cancel', ['id' => $booking->id])}}">Kembali</a>
+      </div>
+      <div class="col-12 col-md-4"></div>
+      <div class="col-12 col-md-4 text-end">
          <a type="submit" class="btn btn-primary w-100 fw-bold mt-3" href="{{route('homepage.booking.payment', ['id' => $booking->id])}}">Selanjutnya</a>
       </div>
    </div>

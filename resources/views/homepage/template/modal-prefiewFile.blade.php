@@ -25,21 +25,6 @@
    }
 </style>
 
-<!-- 
-
-<div class="form-group ">
-   <label for="lampiran_identitas" class="w-100 fw-bold mandatory">Lampiran </label>
-   <div class="input-group flex-nowrap">
-      <input class="form-control border-secondary" type="file" name="lampiran_identitas" id="lampiran_identitas">
-      </input>
-      <input type="hidden" value="lampiran_identitas" id="lampiran_identitas_existing">
-      <button class="input-group-text d-none border-secondary" type="button" data-id-target="lampiran_identitas">
-         <i class=" fa-regular fa-eye"></i>
-      </button>
-   </div>
-</div>
-
- -->
 
 <!-- Modal -->
 <div class="modal fade" id="ModalShowFile" tabindex="-1">
@@ -72,7 +57,7 @@
 
    document.addEventListener('DOMContentLoaded', function() {
       inputFiles.forEach(function(input) {
-         // ambil id
+         // ambil id 
          const idInput = input.getAttribute('id');
          const buttonShow = document.querySelector(`button[data-id-target="${idInput}"]`);
          const fileExist = document.querySelector(`input[id="${idInput}_existing"]`);

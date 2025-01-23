@@ -81,4 +81,8 @@ class gk_booking extends Model
     {
         return $this->hasMany(gk_pendaki::class, 'booking_id');
     }
+    public function pembayaran()
+    {
+        return $this->hasMany(pembayaran::class, 'id_booking');
+    }
 }

@@ -14,6 +14,7 @@ class BookingValidator extends HelperController
 {
     public $booking;
 
+    // blm dipake
     public function __construct($id)
     {
         $this->booking = ModelsBooking::with('gktiket', 'gktiket.tiket_pendaki', 'gateMasuk', 'gateKeluar', 'pendakis')->where('id', $id)->first();

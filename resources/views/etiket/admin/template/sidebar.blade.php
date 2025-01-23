@@ -68,22 +68,22 @@
                            <span class="hide-menu">Data Pendaki</span>
                         </a>
                      </li>
-                     <li class="sidebar-item">
+                     <!-- <li class="sidebar-item">
                         <a class="sidebar-link" href="#" aria-expanded="false">
                            <span>
                               <img src="{{ asset('assets/icon/tnks/navigate-dark.svg') }}"></img>
                            </span>
                            <span class="hide-menu">Monitoring Gunung</span>
                         </a>
-                     </li>
-                     <li class="sidebar-item">
+                     </li> -->
+                     <!-- <li class="sidebar-item">
                         <a class="sidebar-link" href="#" aria-expanded="false">
                            <span>
                               <img src="{{asset('assets/icon/tnks/file_dock-dark.svg')}}"></img>
                            </span>
                            <span class="hide-menu">Cetak Laporan</span>
                         </a>
-                     </li>
+                     </li> -->
                   </ul>
                </div>
             </li>
@@ -104,7 +104,7 @@
                </a>
             </li>
             <li class="sidebar-item">
-               <a class="sidebar-link" href="{{ route('admin.master.validasi.daftar.filtered', ['start_date' => now()->subDays(30)->format('Y-m-d H:i:s'), 'end_date' => now()->format('Y-m-d H:i:s'), 'status' => 'all']) }}" aria-expanded="false">
+               <a class="sidebar-link" href="{{ route('admin.master.validasiPembayaran') }}" aria-expanded="false">
                   <span>
                      <img src="{{ asset('assets/icon/tnks/validate.svg') }}"></img>
                   </span>
@@ -127,14 +127,14 @@
                   <span class="hide-menu">Account Admin</span>
                </a>
             </li>
-            <li class="sidebar-item">
+            <!-- <li class="sidebar-item">
                <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
                      <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
                   </span>
                   <span class="hide-menu">Role Permision</span>
                </a>
-            </li>
+            </li> -->
 
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>

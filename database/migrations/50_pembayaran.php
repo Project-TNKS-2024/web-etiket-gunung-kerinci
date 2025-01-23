@@ -13,7 +13,7 @@ return new class extends Migration
             $table->uuid('id_booking');
             $table->string('spesial')->nullable(); //snap_code
             $table->decimal('amount', 10, 2); // Jumlah pembayarans
-            $table->string('status'); // Status pembayarans (contoh: pending, success, failed)
+            $table->enum('status', ['pending', 'success', 'failed'])->default('pending'); // Status pembayarans (contoh: pending, success, failed)
             $table->string('payment_method'); // Metode pembayarans (contoh: transfer bank, kartu kredit, dll.)
             $table->string('bukti_pembayaran')->nullable(); // Bukti pembayarans (contoh: gambar atau file)
             $table->text('keterangan')->nullable();

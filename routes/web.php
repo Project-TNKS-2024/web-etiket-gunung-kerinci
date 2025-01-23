@@ -25,10 +25,11 @@ Route::get('booking/destinasi/list', [booking::class, 'destinasiList'])->name('h
 Route::get('booking/destinasi/{id}/paket', [booking::class, 'destinasiPaket'])->name('homepage.booking.destinasi.paket');
 // destinasi tiket
 Route::get('booking/destinasi/paket/{id}/tiket', [booking::class, 'destinasiTiket'])->name('homepage.booking.destinasi.paket.tiket');
-Route::post('booking/destinasi/paket/tiket', [booking::class, 'destinasiTiketStore'])->name('homepage.booking.destinasi.paket.tiket.action');
 
 // booking
 Route::middleware('auth')->group(function () {
+    Route::post('booking/destinasi/paket/tiket', [booking::class, 'destinasiTiketStore'])->name('homepage.booking.destinasi.paket.tiket.action');
+
     Route::get('booking/{id}', [booking::class, 'bookingId'])->name('homepage.booking');
 
     Route::get('booking/{id}/snk', [booking::class, 'bookingSnk'])->name('homepage.booking.snk');
@@ -39,15 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::post('booking/formulir', [booking::class, 'bookingFPStore'])->name('homepage.booking.formulir.action');
 
     Route::get('booking/{id}/detail', [booking::class, 'bookingDetail'])->name('homepage.booking.detail');
-
+    Route::get('booking/{id}/cancel', [booking::class, 'bookingCancel'])->name('homepage.booking.cancel');
 
     Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');
-    Route::get('booking/{id}/tiket', [booking::class, 'tiketBooking'])->name('homepage.booking.tiket');
+    Route::post('booking/add-payment', [booking::class, 'addBuktiPembayaran'])->name('homepage.booking.addBuktiPembayaran');
+    Route::delete('booking/payment/delete', [booking::class, 'deleteBuktiPembayaran'])->name('homepage.booking.payment.delete');
+
     Route::get('tiket/{id}', [booking::class, 'tiket'])->name('dashboard.tiket');
-
-
-    Route::post('booking/add-payment/{id}', [booking::class, 'addBuktiPembayaran'])->name('homepage.booking.addBuktiPembayaran');
-    Route::delete('booking/payment/delete/{id}/{pengajuan_id}', [booking::class, 'deleteBuktiPembayaran'])->name('homepage.booking.payment.delete');
+    Route::get('booking/{id}/tiket', [booking::class, 'tiketBooking'])->name('homepage.booking.tiket');
 });
 
 include __DIR__ . '/web/routeAuth.php';

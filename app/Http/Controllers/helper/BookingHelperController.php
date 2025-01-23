@@ -154,19 +154,11 @@ class BookingHelperController extends Controller
         $tagihanMasuk =  ($tiket->harga_masuk_wk * $hari->getData()->weekends) + ($tiket->harga_masuk_wd * $hari->getData()->weekdays);
         $tagihanKemah = ($hari->getData()->weekends + $hari->getData()->weekdays - 1) * $tiket->harga_kemah;
         $tagihanTraking = $tiket->harga_traking;
-        return ($tagihanMasuk + $tagihanKemah + $tagihanTraking);
+        $tagihanAnsuransi = $tiket->harga_ansuransi;
+        return ($tagihanMasuk + $tagihanKemah + $tagihanTraking+ $tagihanAnsuransi);
     }
 
-    public function getDomisili($idprovinsi, $idkabupaten, $idkecamatan, $idkelurahan)
-    {
-        //
-        // return [
-        //     'provinsi' => $provinsi->name,
-        //     'kabupaten' => $kabupaten->name,
-        //     'kecamatan' => $kecamatan->name,
-        //     'kelurahan' => $kelurahan->name,
-        // ];
-    }
+ \
 
     public function validasiBooking($idbooking)
     {
