@@ -124,6 +124,10 @@
         @include('homepage.booking.booking-nav', ['step' => 2])
 
 
+        <script>
+            console.log("Di bawah");
+            console.log(@json($hitung($pendakis[0])))
+        </script>
 
         <div class="card border-0 shadow my-4">
             <div class="card-body px-4 px-md-5 pb-4">
@@ -132,9 +136,11 @@
                     <div class="row mt-3">
                         <div class="col-12 col-md-6" id="formulir">
                             <div class="row">
+                                <h4 class="col">Nama Ketua</h4>
+                                <p class="col">{{ $pendakis[0]->first_name }} {{ $pendakis[0]->last_name }}</p>
+                            </div>
+                            <div class="row">
                                 <div class="col">
-                                    <h4>Nama Ketua</h4>
-                                    <p>{{ $pendakis[0]->first_name }} {{ $pendakis[0]->last_name }}</p>
                                     <h4>Gerbang Masuk</h4>
                                     <p>{{ $booking->gateMasuk->nama }}</p>
                                     <h4>Check In</h4>
@@ -143,14 +149,15 @@
                                     <p>{{ count($pendakis) }} orang</p>
                                 </div>
                                 <div class="col">
-                                    <h4>SIMAKSI</h4>
-                                    <p>
+
+                                    {{-- <h4>SIMAKSI</h4> --}}
+                                    {{-- <p>
                                         @if ($booking->lampiran_simaksi == null)
                                             <span class="c-red">Tidak</span>
                                         @else
                                             <span class="c-green">Ya</span>
                                         @endif
-                                    </p>
+                                    </p> --}}
                                     <h4>Gerbang Keluar</h4>
                                     <p>{{ $booking->gateKeluar->nama }}</p>
                                     <h4>Check out</h4>
@@ -172,8 +179,32 @@
                                 <div class="card-body">
                                     <h4>Total Pembayaran</h4>
                                     @foreach ($pendakis as $pen)
-                                        <p>{{ $pen->first_name }} {{ $pen->last_name }}<span class="float-right">Rp.
-                                                {{ number_format($pen->tagihan) }}</span></p>
+                                        @php
+                                            $tagihan = $hitung($pen)
+                                        @endphp
+                                        <div class="mb-2">
+                                            <div class="">{{ $pen->first_name }} {{ $pen->last_name }}</div>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="small text-muted" style="">Biaya Masuk</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['masuk']) }}</div>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="small text-muted" style="">Berkemah</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['berkemah']) }}</div>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="small text-muted" style="">Pendakian</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['tracking']) }}</div>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="small text-muted" style="">Asuransi</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['asuransi']) }}</div>
+                                            </div>
+                                            <div class="d-flex justify-content-between fw-bold">
+                                                <div class="small text-muted" style="">Total</div>
+                                                <div class="small text-muted">Rp. {{ number_format($pen->tagihan) }}</div>
+                                            </div>
+                                        </div>
                                     @endforeach
                                     <p class="fw-bold c-blue">Total <span class="float-right">Rp.
                                             {{ number_format($booking->total_pembayaran) }}</span></p>
@@ -287,7 +318,8 @@
                                     <tr>
                                         <td>Usia</td>
                                         <td> : </td>
-                                        <td>{{ intval(\Carbon\Carbon::parse(now())->isoFormat('Y')) - intval(\Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('Y')) }}</td>
+                                        <td>{{ intval(\Carbon\Carbon::parse(now())->isoFormat('Y')) - intval(\Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('Y')) }}
+                                        </td>
                                     </tr>
                                 </table>
                             </div>

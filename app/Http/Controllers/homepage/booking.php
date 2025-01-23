@@ -418,11 +418,17 @@ class booking extends Controller
         if (!$booking) {
             abort(404);
         }
+    
+        $hitung = function($param) {
+            return $this->helper->getDetailTagihan($param);
+        };
+    
 
         return view('homepage.booking.bookingDetail', [
             // 'snaptoken' => $snapToken,
             'booking' => $booking,
             'pendakis' => $booking->pendakis,
+            'hitung' => $hitung
             // 'pendakis' => $booking->pendakis,
         ]);
     }

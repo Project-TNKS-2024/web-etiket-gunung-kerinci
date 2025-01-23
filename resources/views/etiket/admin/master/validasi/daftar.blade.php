@@ -110,6 +110,8 @@
                                         <button type="button" class="btn btn-sm btn-primary btnValidasi"
                                             data-id="{{ $item->id }}" data-bs-toggle="modal"
                                             data-img="{{ $item->bukti_pembayaran }}" data-bs-target="#modalValidasi"
+                                            data-keterangan="{{$item->keterangan}}"
+                                            data-status="{{$item->status}}"
                                             onclick="document.getElementById('pengajuanId').value = {{ $item->id }}; document.getElementById('modal-img').src = '{{ asset($item->bukti) }}';">
                                             <img src="{{ asset('assets/icon/tnks/edit_fill-light.svg') }}"
                                                 width="20" />
@@ -194,6 +196,11 @@
                 btn.addEventListener('click', function() {
                     const pengajuanId = this.getAttribute('data-id');
                     const pengajuanImg = this.getAttribute('data-img');
+                    const pengajuanKeterangan = this.getAttribute('data-keterangan');
+                    const pengajuanStatus = this.getAttribute('data-status');
+                    document.getElementById('status').value = pengajuanStatus;
+                    document.getElementById('keterangan').value = pengajuanKeterangan;
+                    document.getElementById('statusDropdown').textContent = (pengajuanStatus == "approved") ? "Disetujui" : (pengajuanStatus == "rejected" ? "Ditolak" : "Pending") ;
                     document.getElementById('pengajuanId').value = pengajuanId;
                     document.getElementById('modal-img').src = "{{ url('/') }}/" +
                         pengajuanImg;
