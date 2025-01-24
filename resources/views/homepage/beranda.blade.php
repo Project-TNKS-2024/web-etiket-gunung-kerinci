@@ -223,27 +223,24 @@
         </div>
     </div>
 
-    <div class="w-100 row" style="overflow-x:hidden">
+    <div class="w-100 row px-3" style="overflow-x:hidden">
+        <div class="col-12 col-lg-6 position-relative" id="">
+            <div class="" id="image-container" style="overflow: hidden;">
+                <div class="d-flex align-items justify-content-start "
+                    style="gap: 0px; padding: 50px 0; padding-left: 0px; user-select: none;">
 
-        <div class="col-12 col-lg-6 position-relative" id="image-container" style="overflow: hidden;">
-
-            <div class="d-flex align-items justify-content-start"
-                style="gap: 30px; padding: 50px 0; padding-left: 0px; user-select: none;">
-                @foreach ($destinasi as $item)
-                    <img data-id="{{ $item['id'] }}" draggable="false" id="gambar-destinasi-{{ $loop->index }}"
-                        src="{{ $item->gambar_destinasi[0]->src }}" class="shadow card-img-top"
-                        style="@if ($loop->index == 0) margin-left: 150px; transform: scale(1.1); @endif border-radius: 20px; max-width: 300px; height: 400px; object-fit: cover; user-select: none">
-                @endforeach
+                    @foreach ($destinasi as $item)
+                        <img data-id="{{ $item['id'] }}" draggable="false" id="gambar-destinasi-{{ $loop->index }}"
+                            src="{{ $item->gambar_destinasi[0]->src }}" class="shadow card-img-top"
+                            style="@if ($loop->index == 0) margin-left: 150px; transform: scale(1.1); @elseif ($loop->last) @endif border-radius: 20px; max-width: 300px; height: 400px; object-fit: cover; user-select: none; margin: 0 15px;">
+                    @endforeach
+                    <div style="width: 300px;"></div>
+                </div>
             </div>
-            <div class="fade-overlay fade-left"
-                style="background: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));"></div>
-
-            <div class="fade-overlay fade-right"
-                style="background: linear-gradient(to left, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));"></div>
         </div>
         <div class="col-12 col-lg-6" style="overflow-y:hidden;">
             <div class="" style="padding: 50px 20px;">
-                <div class="" style="max-height: 100px; height: 100px; overflow-y: hidden; position: relative;">
+                <div class="" style="max-height: 100px; height: 50px; overflow-y: hidden; position: relative;">
                     @foreach ($destinasi as $item)
                         <h1 data-id="{{ $item['id'] }}" id="judul-destinasi-{{ $loop->index }}"
                             class="judul fw-bold @if ($loop->index != 0)  @endif"
@@ -253,14 +250,13 @@
                 </div>
                 @foreach ($destinasi as $item)
                     <article data-id="{{ $item['id'] }}" id="detail-destinasi-{{ $loop->index }}"
-                        class="mt-3 @if ($loop->index != 0) d-none @endif">
+                        class="mt-0 @if ($loop->index != 0) d-none @endif">
                         <section>
                             {{ $item['detail'] }}
-
                         </section>
-
-                        <section class="mt-4">
-                            <button class="btn btn-primary gk-bg-primary600 border-0 text-white rounded-pill">Explore Sekarang</button>
+                        <section class="mt-3">
+                            <button class="btn btn-primary gk-bg-primary600 border-0 text-white rounded-pill">Explore
+                                Sekarang</button>
                         </section>
                     </article>
                 @endforeach
@@ -269,8 +265,45 @@
         </div>
     </div>
 
+    <div class="container my-5">
+        <header class="">
+            <h4 class="text-center font-semibold">Jelajah TNKS Dalam Angka</h4>
+        </header>
 
+        <div class="card w-100 rounded-3 border-0 shadow p-5" style=";">
+            <div class="row h-100">
+                <div class="col-12 col-md-6 h-100">
+                    <div class="d-flex align-items-start justify-content-center h-100" style="flex-direction: column;">
+                        <h3 class="fw-semibold">Kondisi Pendakian Gunung Kerinci</h3>
+                        <div class="small text-mute">Informasi Realtime Data Pengunjung Gunung Kerinci</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 mt-2 mt-sm-0">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="my-0 py-0">5,245</h4>
+                            <div class="my-0 py-0" class="">Total Pendaki</div>
+                        </div>
+                        <div class="col">
+                            <h4 class="my-0 py-0">5,245</h4>
+                            <div class="my-0 py-0" class="">Sedang Mendaki</div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h4 class="my-0 py-0">5,245</h4>
+                            <div class="my-0 py-0" class="">Pendaki WNI</div>
+                        </div>
+                        <div class="col">
+                            <h4 class="my-0 py-0">5,245</h4>
+                            <div class="my-0 py-0" class="">Pendaki WNA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+        </div>
+    </div>
 
     <div class="container my-5">
         <header class="">
@@ -297,8 +330,9 @@
                         // }
                         ?>
 
-                        <img src="{{$item->gambar_destinasi[0]->src ?? asset('assets/img/cover/kerinci.png')}} " class="card-img-top" alt="Jalur Pendakian Kersik Tuo"
-                            style="object-fit: cover; height: 300px;">
+                        <img src="{{ $item->gambar_destinasi[0]->src ?? asset('assets/img/cover/kerinci.png') }} "
+                            class="card-img-top" alt="Jalur Pendakian Kersik Tuo"
+                            style="object-fit: cover    ; height: 300px;">
                         <div class="card-body">
                             <h5 class="card-title">{{ $item['nama'] }}
                                 @if ($item['status'] == 1)
@@ -315,7 +349,7 @@
                                 ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl.
                             </p>
                             <!-- <a href="{{ $item['id'] }}" class="btn btn-primary w-100 gk-text-base-white">Pilih Jalur
-                                                                                                                                            Pendakian</a> -->
+                                                                                                                                                                            Pendakian</a> -->
                         </div>
                     </div>
                 </div>

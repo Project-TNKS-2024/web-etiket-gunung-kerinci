@@ -53,7 +53,7 @@
             </div>
       </div>
    </div>
-   <button type="submit" class="btn btn-primary w-100 mt-3">Selanjutnya</button>
+   <button type="submit" class="btn btn-primary gk-bg-primary700 border-0 w-100 mt-3">Selanjutnya</button>
    </form>
 </div>
 

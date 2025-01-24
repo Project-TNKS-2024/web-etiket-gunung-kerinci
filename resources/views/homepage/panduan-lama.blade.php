@@ -147,7 +147,7 @@
 
 @section('main')
 @include('homepage.template.header', [
-'title' => 'Panduan Booking Online',
+'title' => 'Alur Booking Online Tiket Wisata Pendakian Gunung Kerinci',
 'caption' => 'Pendakian Gunung Kerinci Di Taman Nasional Kerinci Seblat',
 ])
 <div class="container my-5">

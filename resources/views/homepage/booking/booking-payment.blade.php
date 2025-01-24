@@ -75,7 +75,7 @@
                     <div class="text-start text-muted small">**Masukkan nominal yang sesuai</div>
                     <img src="{{ asset($qris->path) }}" class="img-fluid" alt="bukti pembayaran" />
                     <div class="mt-3">
-                        <a href="{{ asset($qris->path) }}" download class="btn btn-primary">Unduh Kode
+                        <a href="{{ asset($qris->path) }}" download class="btn btn-primary gk-bg-primary700 border-0 rounded-3">Unduh Kode
                             QR</a>
                     </div>
                     <h3 class="h-2 mt-3">Rp {{ number_format($booking->total_pembayaran, 0, ',', '.') }}</h3>
