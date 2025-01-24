@@ -243,17 +243,17 @@
         </div>
         <div class="col-12 col-lg-6" style="overflow-y:hidden;">
             <div class="" style="padding: 50px 20px;">
-                <div class="" style="max-height: 40px; height: 50px; overflow-y: hidden; position: relative;">
+                <div class="" style="max-height: 100px; height: 100px; overflow-y: hidden; position: relative;">
                     @foreach ($destinasi as $item)
-                        <h2 data-id="{{ $item['id'] }}" id="judul-destinasi-{{ $loop->index }}"
+                        <h1 data-id="{{ $item['id'] }}" id="judul-destinasi-{{ $loop->index }}"
                             class="judul fw-bold @if ($loop->index != 0)  @endif"
-                            style="color: rgba(43, 43, 43, 1); position: absolute; top: {{ $loop->index * 50 }}px;">
-                            {{ $item['nama'] }}</h2>
+                            style="color: rgba(43, 43, 43, 1); position: absolute; top: {{ $loop->index * 120 }}px;">
+                            {{ $item['nama'] }}</h1>
                     @endforeach
                 </div>
                 @foreach ($destinasi as $item)
                     <article data-id="{{ $item['id'] }}" id="detail-destinasi-{{ $loop->index }}"
-                        class="mt-5 @if ($loop->index != 0) d-none @endif">
+                        class="mt-3 @if ($loop->index != 0) d-none @endif">
                         <section>
                             {{ $item['detail'] }}
 
@@ -297,8 +297,8 @@
                         // }
                         ?>
 
-                        <img src="{{$item->gambar_destinasi[0]->src ?? asset('assets/img/cover/kerinci.png')}}" class="card-img-top" alt="Jalur Pendakian Kersik Tuo"
-                            style="object-fit: cover; max-height: fit-content; height: 100%;">
+                        <img src="{{$item->gambar_destinasi[0]->src ?? asset('assets/img/cover/kerinci.png')}} " class="card-img-top" alt="Jalur Pendakian Kersik Tuo"
+                            style="object-fit: cover; height: 300px;">
                         <div class="card-body">
                             <h5 class="card-title">{{ $item['nama'] }}
                                 @if ($item['status'] == 1)
@@ -355,12 +355,12 @@
                 idDestinasi = parseInt(element.getAttribute('data-id')) - 1;
 
                 judul.forEach(j => {
-                    j.style.transform = `translateY(-${idDestinasi*50}px)`
+                    j.style.transform = `translateY(-${idDestinasi*120}px)`
                     judulDestinasi = parseInt(j.getAttribute('data-id')) - 1;
                     detailDestinasi = document.getElementById('detail-destinasi-' + judulDestinasi);
                     if (judulDestinasi == idDestinasi) {
                         detailDestinasi.classList.remove('d-none');
-                        j.style.position = `${idDestinasi*50}`
+                        j.style.position = `${idDestinasi*120}`
                         j.style.transition = "height 0.3s ease, transform 0.3s ease";
                     } else {
                         ;
