@@ -16,6 +16,10 @@ class dashboard extends Controller
     public function index()
     {
         $user = Auth::user();
+
+        if ($user->biodata->verified == "unverified") {
+            return redirect()->route('user.dashboard.profile');
+        }
         $booking = gk_booking::where('id_user', $user->id)->with('pendakis')->get();
         return view('etiket.user.sections.dashboard', [
             'user' => $user,

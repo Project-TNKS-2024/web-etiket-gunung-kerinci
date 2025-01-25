@@ -16,13 +16,12 @@
 
 
 @section('main')
-@include('homepage.template.header', [
-'title' => 'Pendakian Gunung Kerinci',
-'caption' => 'Detail Booking',
-])
-
-<div class="container my-5">
-   @include('homepage.booking.booking-nav', ['step' => 2])
+    @include('homepage.template.header', [
+        'title' => 'Pendakian Gunung Kerinci',
+        'caption' => 'Detail Booking',
+    ])
+    <div class="container my-5">
+        @include('homepage.booking.booking-nav', ['step' => 2])
 
    <div class="card border-0 shadow">
       <div class="card-body px-4 px-md-5 pb-4">
@@ -128,51 +127,59 @@
                      $extension = pathinfo($pendaki->lampiran_surat_izin_ortu, PATHINFO_EXTENSION);
                      @endphp
 
-                     @if(in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
-                     <img src="{{asset($pendaki->lampiran_surat_izin_ortu)}}" alt="Lampiran Identitas" class="img-fluid" style="max-height: 280px; width: auto; display: block; margin: 0 auto;">
-                     @else
-                     <embed src="{{asset($pendaki->lampiran_surat_izin_ortu)}}" type="application/pdf" width="100%" height="280px">
-                     @endif
-                  </div>
-                  @endif
+                                    {{-- extension: {{$extension}} --}}
 
-               </div>
-            </div>
-         </div>
-         @endforeach
-         <hr>
-         <div class="mt-3">
-            <h1 class="fs-5 fw-bold">Barang Bawaan Wajib</h1>
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" name="barangWajib[perlengkapan_gunung_standar]" value="1" checked readonly>
-               <label class="form-check-label" for="perle_gunung">
-                  Perlengkapan Standar Pendaki Gunung
-               </label>
-            </div>
+                                    @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
+                                        <img src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
+                                            alt="Lampiran Identitas" class="img-fluid"
+                                            style="max-height: 280px; width: auto; display: block; margin: 0 auto;">
+                                    @else
+                                        <embed src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
+                                            type="application/pdf" width="100%" height="280px">
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+                <hr>
+                <div class="mt-3">
+                    <h1 class="fs-5 fw-bold">Barang Bawaan Wajib</h1>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="barangWajib[perlengkapan_gunung_standar]"
+                            value="1" checked readonly>
+                        <label class="form-check-label" for="perle_gunung">
+                            Perlengkapan Standar Pendaki Gunung
+                        </label>
+                    </div>
 
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" name="barangWajib[trash_bag]" value="1" id="trash_bag" checked readonly>
-               <label class="form-check-label" for="trash_bag">
-                  Trash Bag
-               </label>
-            </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="barangWajib[trash_bag]" value="1"
+                            id="trash_bag" checked readonly>
+                        <label class="form-check-label" for="trash_bag">
+                            Trash Bag
+                        </label>
+                    </div>
 
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" name="barangWajib[p3k_standart]" value="1" id="p3k_standart" checked readonly>
-               <label class="form-check-label" for="p3k_standart">
-                  P3K Standart
-               </label>
-            </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="barangWajib[p3k_standart]" value="1"
+                            id="p3k_standart" checked readonly>
+                        <label class="form-check-label" for="p3k_standart">
+                            P3K Standart
+                        </label>
+                    </div>
 
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" name="barangWajib[survival_kit_standart]" value="1" id="survival_kit_standart" checked readonly>
-               <label class="form-check-label" for="survival_kit_standart">
-                  Survival Kit Standart
-               </label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="barangWajib[survival_kit_standart]"
+                            value="1" id="survival_kit_standart" checked readonly>
+                        <label class="form-check-label" for="survival_kit_standart">
+                            Survival Kit Standart
+                        </label>
+                    </div>
+
+                </div>
             </div>
-         </div>
-      </div>
-   </div>
+        </div>
 
    <div class="row">
       <div class="col-12 col-md-4">
@@ -186,7 +193,44 @@
 </div>
 @endsection
 @section('js')
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="SB-Mid-client-8mWWkdmzeR1xRVmL"></script>
+    <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
+    </head>
+
+    <script>
+        console.log("The Pendakis");
+        console.log(@json($pendakis[0]));
+        // console.log({{ $pendakis }});
+    </script>
 
 
-
+    {{-- <script type="text/javascript">
+        // For example trigger on button clicked, or any time you need
+        var payButton = document.getElementById('pay-button');
+        payButton.addEventListener('click', function() {
+            // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
+            window.snap.pay('{{ $snaptoken }}', {
+                onSuccess: function(result) {
+                    window.location.href =
+                        "{{ route('homepage.booking.payment', ['id' => $booking->id]) }}";
+                },
+                onPending: function(result) {
+                    /* You may add your own implementation here */
+                    alert("wating your payment!");
+                    console.log(result);
+                },
+                onError: function(result) {
+                    /* You may add your own implementation here */
+                    alert("payment failed!");
+                    console.log(result);
+                },
+                onClose: function() {
+                    /* You may add your own implementation here */
+                    alert('you closed the popup without finishing the payment');
+                }
+            });
+            // customer will be redirected after completing payment pop-up
+        });
+    </script> --}}
 @endsection

@@ -16,19 +16,15 @@ use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
 use App\Models\pembayaran;
-use App\Models\pengajuan;
+use App\Models\QRIS as qris;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-
-
-
 
 use function PHPUnit\Framework\isNull;
 
 class booking extends Controller
 {
-
     private $helper;
     private $upload;
 
@@ -44,7 +40,7 @@ class booking extends Controller
         $destinasi = destinasi::where('status', 1)->with('gambar_destinasi')->get();
         // return $destinasi;
         return view('homepage.booking.bookingDestinasiList', [
-            "destinasi" => $destinasi
+            'destinasi' => $destinasi,
         ]);
     }
     // booking : destinasi - paket - tiket - snk - fp -
@@ -57,16 +53,16 @@ class booking extends Controller
         $paket = gk_paket_tiket::where('id_destinasi', $id)->get();
 
         return view('homepage.booking.bookingDestinasiPaket', [
-            "gunung" => $gunung,
-            "paket" => $paket,
-            "gambar" => $gambar_destinasi,
+            'gunung' => $gunung,
+            'paket' => $paket,
+            'gambar' => $gambar_destinasi,
         ]);
     }
 
     public function destinasiTiket($id)
     {
         // id = id paket
-        $paket = gk_paket_tiket::where("id", $id)->first();
+        $paket = gk_paket_tiket::where('id', $id)->first();
 
         // ambil data destinasi
         $id_destinasi = $paket->id_destinasi;
@@ -74,13 +70,15 @@ class booking extends Controller
         $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id_destinasi)->get();
 
         // ambil data tiket
-        $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)->with(['paket_tiket'])->get();
+        $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)
+            ->with(['paket_tiket'])
+            ->get();
 
-        return view("homepage.booking.bookingDestinasiTiket", [
-            "paket" => $paket,
-            "destinasi" => $destinasi,
-            "gambar" => $gambar_destinasi,
-            "tiket" => $tiket,
+        return view('homepage.booking.bookingDestinasiTiket', [
+            'paket' => $paket,
+            'destinasi' => $destinasi,
+            'gambar' => $gambar_destinasi,
+            'tiket' => $tiket,
         ]);
     }
 
@@ -134,7 +132,8 @@ class booking extends Controller
                 });
             }
 
-            return redirect()->route('homepage.booking.snk', ['id' => $booking->id])
+            return redirect()
+                ->route('homepage.booking.snk', ['id' => $booking->id])
                 ->with('success', 'Update Booking');
         } else {
             $newBooking = gk_booking::create([
@@ -157,7 +156,8 @@ class booking extends Controller
                 'id_booking_master' => null,
             ]);
 
-            return redirect()->route('homepage.booking.snk', ['id' => $newBooking->id])
+            return redirect()
+                ->route('homepage.booking.snk', ['id' => $newBooking->id])
                 ->with('success', 'Create Booking');
         }
     }
@@ -239,7 +239,9 @@ class booking extends Controller
         }
 
         // ================================ cek ketua pendaki ============================================
-        $pendaki = gk_pendaki::where('booking_id', $booking->id)->with('biodata')->get();
+        $pendaki = gk_pendaki::where('booking_id', $booking->id)
+            ->with('biodata')
+            ->get();
         $userBio = bio_pendaki::find(Auth::user()->id_bio);
         $userUsia = Carbon::parse($userBio->tanggal_lahir)->age;
         if ($pendaki->count() == 0) {
@@ -251,7 +253,9 @@ class booking extends Controller
                 'lampiran_surat_izin_ortu' => null,
             ]);
 
-            $pendaki = gk_pendaki::where('booking_id', $booking->id)->with('biodata')->get();
+            $pendaki = gk_pendaki::where('booking_id', $booking->id)
+                ->with('biodata')
+                ->get();
         }
 
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
@@ -293,7 +297,8 @@ class booking extends Controller
             ->where('id_bio', $bioPendaki->id)
             ->whereHas('booking', function ($query) {
                 $query->where('status_booking', '<', 7);
-            })->first();
+            })
+            ->first();
 
         if ($pendaki) {
             return back()->withErrors(['code' => 'Kode sudah terdaftar dalam pendakian lain dan belum menyelesaikannya']);
@@ -324,6 +329,7 @@ class booking extends Controller
     public function bookingFPStore(Request $request)
     {
         // return $request;
+        // dd($this->helper->generateCode(10));
         $request->validate([
             'id_booking' => 'required|string',
             'action' => 'required|string',
@@ -368,7 +374,7 @@ class booking extends Controller
             }
 
             if (isset($formulir['surat_izin_ortu'])) {
-                $path = "";
+                $path = '';
                 if (strlen($pendaki->lampiran_surat_izin_ortu) > 0) {
                     $upload->delete($pendaki->lampiran_surat_izin_ortu);
                     $path = $upload->create($booking->id, 'booking', $formulir['surat_izin_ortu']);
@@ -383,7 +389,6 @@ class booking extends Controller
         }
 
         if ($request->action == 'next') {
-
             $request->validate([
                 'barangWajib' => 'required|array',
                 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean',
@@ -398,7 +403,7 @@ class booking extends Controller
             return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking Berhasil disimpan');
 
             // pindah laman
-        } else if ($request->action == 'save') {
+        } elseif ($request->action == 'save') {
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         }
 
@@ -423,7 +428,8 @@ class booking extends Controller
         return view('homepage.booking.bookingDetail', [
             // 'snaptoken' => $snapToken,
             'booking' => $booking,
-            'formulirPendakis' => $booking->pendakis,
+            'pendakis' => $booking->pendakis,
+            'hitung' => $hitung
             // 'pendakis' => $booking->pendakis,
         ]);
     }

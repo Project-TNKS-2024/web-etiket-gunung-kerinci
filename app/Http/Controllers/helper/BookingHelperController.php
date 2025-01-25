@@ -18,6 +18,8 @@ class BookingHelperController extends Controller
 
     function generateCode($length)
     {
+    function generateCode($length)
+    {
         // Define the character pool
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         $charactersLength = strlen($characters);
@@ -73,7 +75,7 @@ class BookingHelperController extends Controller
             return response()->json([
                 'status' => 400,
                 'message' => 'Validasi formulir pendaki gagal.',
-                'errors' => $errors
+                'errors' => $errors,
             ]);
         }
 
@@ -86,9 +88,7 @@ class BookingHelperController extends Controller
     // function validatePendaki(idpendaki)
     public function validatDataPendaki($idpendaki)
     {
-        $pendaki = gk_pendaki::where('id', $idpendaki)
-            ->with('booking')->first();
-
+        $pendaki = gk_pendaki::where('id', $idpendaki)->with('booking')->first();
 
         if ($pendaki) {
             // validasi tiket pendaki
@@ -107,13 +107,13 @@ class BookingHelperController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'berhasil mengambil data pendaki dengan id ' . $idpendaki,
-                'data' => $pendaki
+                'data' => $pendaki,
             ]);
         } else {
             return response()->json([
                 'status' => 400,
                 'message' => 'gagal mengambil data pendaki dengan id ' . $idpendaki,
-                'data' => $pendaki
+                'data' => $pendaki,
             ]);
         }
     }
@@ -121,9 +121,7 @@ class BookingHelperController extends Controller
     {
         $kategori_pendaki = $pendaki->kategori_pendaki;
         $idPaketBooking = $pendaki->booking->id_tiket;
-        $tiket = gk_tiket_pendaki::where('id_paket_tiket', $idPaketBooking)
-            ->where('kategori_pendaki', $kategori_pendaki)
-            ->first();
+        $tiket = gk_tiket_pendaki::where('id_paket_tiket', $idPaketBooking)->where('kategori_pendaki', $kategori_pendaki)->first();
         return $tiket;
     }
     public function getUmurPendaki($tanggalLahir)
@@ -132,9 +130,16 @@ class BookingHelperController extends Controller
         $umur = $tanggalLahir->diffInYears(Carbon::now());
         return $umur;
     }
+
     public function getTagihanPendaki($pendaki)
     {
-        // tiket
+        $tagihan = $this->getDetailTagihan($pendaki);
+
+        return $tagihan['masuk']+$tagihan['berkemah']+$tagihan['tracking']+$tagihan['asuransi'];
+    }
+
+    public function getDetailTagihan($pendaki)
+    {
         $booking = gk_booking::find($pendaki->booking_id);
         $idtiket = $booking->id_tiket;
         $tiket = gk_tiket_pendaki::where([
@@ -142,17 +147,11 @@ class BookingHelperController extends Controller
             'kategori_pendaki' => $pendaki->biodata->kenegaraan
         ])->first();
 
-        // dd($pendaki->biodata, $tiket);
-
         // dd($tiket);
 
-        // booking
-        $booking = gk_booking::find($pendaki->booking_id);
-
-        // total hari
         $hari = $this->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
 
-        $tagihanMasuk =  ($tiket->harga_masuk_wk * $hari->getData()->weekends) + ($tiket->harga_masuk_wd * $hari->getData()->weekdays);
+        $tagihanMasuk = $tiket->harga_masuk_wk * $hari->getData()->weekends + $tiket->harga_masuk_wd * $hari->getData()->weekdays;
         $tagihanKemah = ($hari->getData()->weekends + $hari->getData()->weekdays - 1) * $tiket->harga_kemah;
         $tagihanTraking = $tiket->harga_traking;
         $tagihanAnsuransi = $tiket->harga_ansuransi;
@@ -162,7 +161,9 @@ class BookingHelperController extends Controller
 
     public function validasiBooking($idbooking)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $idbooking)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $idbooking)
+            ->first();
 
         // validasi total hari
         $booking->total_hari = $this->getTotalHari($booking->tanggal_masuk, $booking->tanggal_keluar);
@@ -199,7 +200,7 @@ class BookingHelperController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'berhasil mengambil data booking dengan id ' . $idbooking,
-            'data' => $booking
+            'data' => $booking,
         ]);
     }
 
@@ -211,17 +212,13 @@ class BookingHelperController extends Controller
         return $totalHari + 1;
     }
 
-
-    function countWeekdaysAndWeekends(
-        $dateStart,
-        $dateEnd
-    ) {
-
+    function countWeekdaysAndWeekends($dateStart, $dateEnd)
+    {
         // Convert string dates to Carbon instances
         $start = Carbon::createFromFormat(
             // 'd-m-Y',
             'Y-m-d',
-            $dateStart
+            $dateStart,
         );
         // return $dateStart;
         $end = Carbon::createFromFormat('Y-m-d', $dateEnd);
@@ -244,7 +241,7 @@ class BookingHelperController extends Controller
 
         return response()->json([
             'weekdays' => $weekdays,
-            'weekends' => $weekends
+            'weekends' => $weekends,
         ]);
     }
 }

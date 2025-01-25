@@ -9,7 +9,6 @@ use App\Http\Controllers\homepage\booking;
 use App\Models\gk_booking;
 use App\Models\pembayaran;
 use Illuminate\Http\Request;
-use App\Models\pengajuan;
 use Carbon\Carbon;
 
 class ValidasiPembayaran extends Controller

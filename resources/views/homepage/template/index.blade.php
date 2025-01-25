@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="shortcut icon" type="image/png" href="{{asset('assets/img/logo/logo bulat.png')}}" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
 
     <link rel="stylesheet" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
     <!-- style -->
@@ -243,6 +243,10 @@
         footer {
             background-color: white;
         }
+
+        .profile-container:hover {
+            background-color: var(--primary600);
+        }
     </style>
 
     @yield('css')
@@ -272,9 +276,22 @@
 
     <!-- script navigasi navbar homepage -->
     <script>
+
+        const extractUrls = (str) => {
+            const match = str.match(/\[(.*?)\]/);
+            if (match) {
+                const urlString = match[1];
+                return urlString.split(", ").map(url => url.trim());
+            }
+            return [];
+        };
+
         const navItems = document.querySelectorAll(".nav-link");
         for (let i = 0; i < navItems.length; i++) {
-            if (window.location.href !== navItems[i].href) {
+            const routes = navItems[i].getAttribute('data-route');
+            const tr = routes != null ? extractUrls(routes) : '[]';
+            // console.log(tr);
+            if (!tr.includes(window.location.href)) {
                 navItems[i].classList.remove('gk-bg-base-white');
                 navItems[i].classList.remove('gk-text-primary700');
                 navItems[i].classList.remove('font-semibold');
@@ -289,7 +306,7 @@
     </script>
 
     <!-- script untuk generate input -->
-    <script src="{{asset('componen/generateInput.js')}}"></script>
+    <script src="{{ asset('componen/generateInput.js') }}"></script>
 
     @yield('js')
 

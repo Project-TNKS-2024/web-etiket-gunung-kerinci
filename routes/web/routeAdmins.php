@@ -9,7 +9,6 @@ use App\Http\Controllers\etiket\admin\destinasi\destinasiController;
 use App\Http\Controllers\etiket\admin\destinasi\tiketController;
 use App\Http\Controllers\etiket\admin\master\destinasisController;
 use App\Http\Controllers\etiket\admin\destinasi\bookingController;
-use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
 
 // admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
@@ -17,6 +16,8 @@ use App\Http\Controllers\etiket\admin\master\PengunjungController;
 use App\Http\Controllers\etiket\admin\master\ValidasiPembayaranOld;
 
 // admin master
+use App\Http\Controllers\homepage\booking;
+use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
 
 // Admin routes
 Route::middleware(['check.role:admin'])->group(function () {
