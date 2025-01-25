@@ -87,7 +87,7 @@
         style="overflow-x: auto; padding: 0 10%;z-index: 999; background-color: rgba(0,0,0,.2)">
         <img class="position-fixed cursor-pointer" onclick="closeModal()"
             src="{{ asset('assets/icon/tnks/x-light.svg') }}" width="50"
-            style="top: 20px; right: 20px;filter: drop-shadow(0px 0px 10px black)" />
+            style="top: 20px; right: 20px;filter: drop-shadow(0px 0px 10px black) max-height: 500px;" />
     </div>
 
 
@@ -167,14 +167,15 @@
             src.forEach((image, index) => {
                 const div = document.createElement('div');
                 div.style.position = "relative";
-                div.classList.add("image-container-in-modal", "w-100", "shadow");
+                div.classList.add("image-container-in-modal", "shadow");
+                div.style.width = "fit-content";
                 div.innerHTML = `
-                    <div class="gradient-top rounded w-100 h-100"></div>
+                    <div class="gradient-top rounded w-100 h-100" style="max-height: 500px; height: 500px; width: fit-content"></div>
                     <div class="p-3 rounded text-white position-absolute w-100 h-100 d-flex flex-column justify-content-end" style="left: 0; bottom: 0;" >
                         <header class="text-xl font-semibold">${image.nama}</header>
                         <div class="text-lg">${image.detail}</div>
                     </div>
-                    <img id="modal-img" style="width:100%;" class="rounded  " src='{{ url('') }}/${image.src}' />
+                    <img id="modal-img" style="max-height: 500px; height: 500px;" class="rounded  " src='{{ url('') }}/${image.src}' />
                 `;
                 modal.appendChild(div);
 

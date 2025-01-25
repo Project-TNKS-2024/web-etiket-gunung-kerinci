@@ -180,25 +180,29 @@
                                     <h4>Total Pembayaran</h4>
                                     @foreach ($pendakis as $pen)
                                         @php
-                                            $tagihan = $hitung($pen)
+                                            $tagihan = $hitung($pen);
                                         @endphp
                                         <div class="mb-2">
                                             <div class="">{{ $pen->first_name }} {{ $pen->last_name }}</div>
                                             <div class="d-flex justify-content-between">
                                                 <div class="small text-muted" style="">Biaya Masuk</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['masuk']) }}</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['masuk']) }}
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <div class="small text-muted" style="">Berkemah</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['berkemah']) }}</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['berkemah']) }}
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <div class="small text-muted" style="">Pendakian</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['tracking']) }}</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['tracking']) }}
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <div class="small text-muted" style="">Asuransi</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['asuransi']) }}</div>
+                                                <div class="small text-muted">Rp. {{ number_format($tagihan['asuransi']) }}
+                                                </div>
                                             </div>
                                             <div class="d-flex justify-content-between fw-bold">
                                                 <div class="small text-muted" style="">Total</div>
@@ -225,7 +229,7 @@
 
         <div class="card border-0 shadow">
             <div class="card-body px-4 px-md-5 pb-4q">
-                <div class="mt-3">
+                {{-- <div class="mt-3">
                     <h1 class="fs-5 fw-bold">Booking {{ $booking->gateMasuk->destinasi->nama }}</h1>
                     <div class="row">
                         <div class="col-12 col-md-6">
@@ -264,8 +268,8 @@
                             </table>
                         </div>
                     </div>
-                </div>
-                <hr>
+                </div> --}}
+                {{-- <hr> --}}
                 @foreach ($pendakis as $key => $pendaki)
                     <div class="mt-4">
                         <h1 class="fs-5 fw-bold">
@@ -277,52 +281,40 @@
                         </h1>
                         <div class="row">
                             <div class="col-12 col-lg-6">
-                                <table class="table table-borderless">
-                                    <tr>
-                                        <td>Nama</td>
-                                        <td> : </td>
-                                        <td>{{ $pendaki->first_name . ' ' . $pendaki->last_name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Kewarganegaraan</td>
-                                        <td> : </td>
-                                        <td>
-                                            @if ($pendaki->kategori_pendaki == 'wni')
-                                                Warga Negara Indonesia (WNI)
-                                            @else
-                                                Warga Negara Asing (WNA)
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>No KTP/Pasport</td>
-                                        <td> : </td>
-                                        <td>{{ $pendaki->biodata->nik }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>No Telepon</td>
-                                        <td> : </td>
-                                        <td>{{ $pendaki->biodata->no_hp }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>No Telepon Darurat</td>
-                                        <td> : </td>
-                                        <td>{{ $pendaki->biodata->no_hp_darurat }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tanggal Lahir</td>
-                                        <td> : </td>
-                                        <td>{{ \Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('D MMMM Y') }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Usia</td>
-                                        <td> : </td>
-                                        <td>{{ intval(\Carbon\Carbon::parse(now())->isoFormat('Y')) - intval(\Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('Y')) }}
-                                        </td>
-                                    </tr>
-                                </table>
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label my-0">Nama</label>
+                                    <input readonly disabled type="text" class="form-control" id="first_name" name="first_name"
+                                        value="{{ $pendaki->first_name.' '.$pendaki->last_name }}" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label my-0">Nama</label>
+                                    <input readonly disabled type="text" class="form-control" id="first_name" name="first_name"
+                                        value="{{ $pendaki->kategori_pendaki == 'wni' ? 'Warga Negara Asing' : 'Warga Negara Indonesia' }}" required>
+                                </div>
+
+                                <div class="row">
+                                    <div class="mb-3 col-12 col-sm-6">
+                                        <label for="no_hp" class="form-label my-0">No Telepon</label>
+                                        <input readonly disabled type="text" class="form-control" id="no_hp" name="no_hp"
+                                            value="{{ $pendaki->biodata->no_hp }}" required>
+                                    </div>
+    
+                                    <div class="mb-3 col-12 col-sm-6">
+                                        <label for="no_hp_darurat" class="form-label my-0">No Telepon Darurat</label>
+                                        <input readonly disabled type="text" class="form-control" id="no_hp_darurat" name="no_hp_darurat"
+                                            value="{{ $pendaki->biodata->no_hp_darurat }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="usia" class="form-label my-0">Usia</label>
+                                    <input readonly disabled type="number" class="form-control" id="usia" name="usia"
+                                        value="{{ intval(\Carbon\Carbon::parse(now())->isoFormat('Y')) - intval(\Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('Y')) }}"
+                                        readonly>
+                                </div>
                             </div>
+
                             <div class="col-12 col-lg-6">
                                 <div class="border rounded p-2" style="max-height: 300px; overflow: hidden;">
                                     @php
@@ -387,11 +379,18 @@
             </div>
         </div>
 
-        <div class="">
-            <a class="btn btn-primary mt-4 me-3"
-                href="{{ route('homepage.booking.formulir', ['id' => $booking->id]) }}">Formulir</a>
-            <a href="{{ route('homepage.booking.payment', ['id' => $booking->id]) }}" class="btn btn-primary mt-4"
-                href="#" id="pay-button">Selanjutnya</a>
+        <div class="row justify-content-center">
+            {{-- <div class="col-12 col-md-4"></div> --}}
+            <div class="col-12 col-md-4">
+                <a href="{{ route('homepage.booking.formulir', ['id' => $booking->id]) }}"
+                    class="btn btn-primary gk-bg-primary700 fw-thin border-0 w-100 mt-3" name="action"
+                    value="save">Formulir</a>
+            </div>
+            <div class="col-12 col-md-4">
+                <a href="{{ route('homepage.booking.payment', ['id' => $booking->id]) }}"
+                    class="btn btn-primary gk-bg-primary700 fw-thin border-0 w-100 mt-3" name="action"
+                    value="next">Selanjutnya</a>
+            </div>
         </div>
     </div>
 

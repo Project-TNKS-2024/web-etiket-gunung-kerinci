@@ -16,7 +16,7 @@ use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
 use App\Models\pembayaran;
-use App\Models\pengajuan;
+use App\Models\QRIS as qris;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -448,11 +448,14 @@ class booking extends Controller
         $booking->total_pembayaran = gk_pendaki::where('booking_id', $id)->sum('tagihan');
         $pembayaran = pembayaran::where('id_booking', $id)->get();
 
+
         // Check if any 'status' in pembayaran is 'approved'
         $verified = $pembayaran->contains('status', 'approved'); // true if at least one 'status' is 'approved'
+        $qris = qris::where('id_gate', $booking->gate_masuk)->first();
 
         // dd($verified);
         return view('homepage.booking.booking-payment', [
+            'qris' => $qris,
             'booking' => $booking,
             'pendakis' => $booking->pendakis,
             'pembayaran' => $pembayaran,

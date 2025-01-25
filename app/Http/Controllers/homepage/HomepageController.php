@@ -21,6 +21,6 @@ class HomepageController extends Controller
 
     public function panduan()
     {
-        return view('homepage.panduan');
+        return view('homepage.panduan-baru');
     }
 }

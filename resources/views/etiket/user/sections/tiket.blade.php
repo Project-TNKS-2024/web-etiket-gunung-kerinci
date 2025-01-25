@@ -13,12 +13,13 @@
                         </span>
                     @endif
             </div>
+            
+            <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
+            <input type="text" name="ipt_namaketua"
+                value="{{ isset($booking->pendakis[0]->first_name) ? $booking->pendakis[0]->first_name." ".$booking->pendakis[0]->last_name : '' }}"
+                id="ipt_namaketua" class="form-control" readonly>
             <div class="row tiket-detail mt-3">
                 <div class="col-6">
-                    <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
-                    <input type="text" name="ipt_namaketua"
-                        value="{{ isset($booking->pendakis[0]->first_name) ? $booking->pendakis[0]->first_name." ".$booking->pendakis[0]->last_name : '' }}"
-                        id="ipt_namaketua" class="form-control" readonly>
 
 
                     <label for="ipt_gerbangmasuk" class="fw-bold">Gerbang Masuk</label>
@@ -36,15 +37,7 @@
                         id="ipt_jumlahanggota" class="form-control" readonly>
                 </div>
                 <div class="col-6">
-                    <label for="ipt_simaksi" class="fw-bold">Simaksi</label>
-                    @if ($booking->simaksi)
-                        <input type="text" name="ipt_simaksi" value="Ada"
-                            style="color: green;" id="ipt_simaksi" class="form-control" readonly>
-                    @else
-                        <input type="text" name="ipt_simaksi" value="Tidak" style="color: red;"
-                            id="ipt_simaksi" class="form-control" readonly>
-                    @endif
-
+                  
                     <label for="ipt_gerbangkeluar" class="fw-bold">Gerbang Keluar</label>
                     <input type="text" name="ipt_gerbangkeluar"
                         value="{{ $booking->gateKeluar->nama }}" id="ipt_gerbangkeluar"

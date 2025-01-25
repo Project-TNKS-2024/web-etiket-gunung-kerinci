@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Exception;
 
 use App\Models\destinasi as ModelsDestinasi;
+use App\Models\QRIS as qris;
 use App\Models\gambar_destinasi as ModelGambar;
 use App\Models\gk_gates as ModelGates;
 use App\Models\gk_tiket_pendaki as ModelPendaki;
@@ -20,8 +21,12 @@ class destinasiController extends Controller
     public function detail($id)
     {
         $destinasi = ModelsDestinasi::where('id', $id)->first();
-        $gambar = ModelGambar::with(['destinasi'])->where('id_destinasi', $id)->get();
-        $gates = ModelGates::with(['destinasi'])->where('gk_gates.id_destinasi', $id)->get();
+        $gambar = ModelGambar::with(['destinasi'])
+            ->where('id_destinasi', $id)
+            ->get();
+        $gates = ModelGates::with(['destinasi'])
+            ->where('gk_gates.id_destinasi', $id)
+            ->get();
 
         // return $gates;
 
@@ -29,7 +34,6 @@ class destinasiController extends Controller
             'destinasi' => $destinasi,
             'gates' => $gates,
             'gambar' => $gambar,
-
         ]);
     }
     public function detailUpdate(Request $request, $id)
@@ -45,13 +49,15 @@ class destinasiController extends Controller
 
         // return $request;
 
-        if (!ModelsDestinasi::where('id', $id)->update([
-            'nama' => $request->nama,
-            'status' => $request->status,
-            'kategori' => $request->kategori,
-            'lokasi' => $request->lokasi,
-            'detail' => $request->detail,
-        ])) {
+        if (
+            !ModelsDestinasi::where('id', $id)->update([
+                'nama' => $request->nama,
+                'status' => $request->status,
+                'kategori' => $request->kategori,
+                'lokasi' => $request->lokasi,
+                'detail' => $request->detail,
+            ])
+        ) {
             return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);
         }
 
@@ -71,15 +77,14 @@ class destinasiController extends Controller
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
 
-
                 $uploadController = new uploadFileControlller();
                 $fileUrl = $uploadController->create('img', 'destinasi', $file);
 
                 ModelGambar::create([
-                    "src" => $fileUrl,
-                    "nama" => $request->input('foto_nama'),
-                    "detail" => $request->input('foto_detail'),
-                    "id_destinasi" => $request->id_destinasi,
+                    'src' => $fileUrl,
+                    'nama' => $request->input('foto_nama'),
+                    'detail' => $request->input('foto_detail'),
+                    'id_destinasi' => $request->id_destinasi,
                 ]);
 
                 return back()->with('success', 'Berhasil mengupload gambar.');
@@ -98,7 +103,9 @@ class destinasiController extends Controller
             'id_gambar' => 'required',
         ]);
         // cek gambar dalm database
-        $foto = ModelGambar::where('id', $request->id_gambar)->where('id_destinasi', $request->id_destinasi)->first();
+        $foto = ModelGambar::where('id', $request->id_gambar)
+            ->where('id_destinasi', $request->id_destinasi)
+            ->first();
         // hapus gambar dalam asset
         $uploadController = new uploadFileControlller();
         $del = $uploadController->delete($foto->src);
@@ -116,31 +123,48 @@ class destinasiController extends Controller
             'min_pendaki_booking' => 'required|integer|min:1',
             'lokasi' => 'required|string|max:255',
             'lokasi_maps' => 'nullable|string|max:500',
-            'detail' => 'nullable|string|max:1000'
+            'detail' => 'nullable|string|max:1000',
+            'qris' => 'required|image|mimes:jpg,png,jpeg|max:2048',
         ]);
-        ModelGates::create([
-            'id_destinasi' => $request->id_destinasi,
-            'nama' => $request->nama,
-            'status' => $request->status,
-            'max_pendaki_hari' => $request->max_pendaki_hari,
-            'min_pendaki_booking' => $request->min_pendaki_booking,
-            'lokasi' => $request->lokasi,
-            'lokasi_maps' => $request->lokasi_maps,
-            'detail' => $request->detail,
+
+        $new_gate = new ModelGates();
+        $new_gate->id_destinasi = $request->id_destinasi;
+        $new_gate->nama = $request->nama;
+        $new_gate->status = $request->status;
+        $new_gate->max_pendaki_hari = $request->max_pendaki_hari;
+        $new_gate->min_pendaki_booking = $request->min_pendaki_booking;
+        $new_gate->lokasi = $request->lokasi;
+        $new_gate->lokasi_maps = $request->lokasi_maps;
+        $new_gate->detail = $request->detail;
+        $new_gate->save();
+
+        $uploadController = new uploadFileControlller();
+        $qris_path = $uploadController->create('foto', 'qris', $request->file('qris'));
+
+        qris::create([
+            'id' => now(),
+            'id_gate' => $new_gate->id,
+            'path' => $qris_path,
         ]);
+
         return back()->with('success', 'Berhasil menambah gate');
     }
+
     public function gatesUpdate($id)
     {
         $gate = ModelGates::find($id);
         $destinasi = ModelsDestinasi::find($gate->id_destinasi);
+        $qris = qris::where('id_gate', $gate->id)->first();
+        // dd($qris);
         return view('etiket.admin.destinasi.destinasi.gateUpdate', [
             'gate' => $gate,
+            'qris' => $qris,
             'destinasi' => $destinasi,
         ]);
     }
     public function gatesUpdateAction(Request $request)
     {
+        // Validation
         $request->validate([
             'id_gate' => 'required|exists:gk_gates,id',
             'nama' => 'required|string|max:255',
@@ -149,10 +173,14 @@ class destinasiController extends Controller
             'min_pendaki_booking' => 'required|integer|min:1',
             'lokasi' => 'required|string|max:255',
             'lokasi_maps' => 'nullable|string|max:500',
-            'detail' => 'nullable|string|max:1000'
+            'detail' => 'nullable|string|max:1000',
+            'qris' => 'nullable|image|mimes:jpg,png,jpeg|max:2048', // Make QRIS optional
         ]);
 
+        // Find the gate
         $gate = ModelGates::find($request->id_gate);
+
+        // Update gate details
         $gate->update([
             'nama' => $request->nama,
             'status' => $request->status,
@@ -163,6 +191,33 @@ class destinasiController extends Controller
             'detail' => $request->detail,
         ]);
 
+        // Check if a QRIS record exists
+        $existingQRIS = qris::where('id_gate', $request->id_gate)->first();
+
+        if ($request->hasFile('qris')) {
+            $uploadController = new uploadFileControlller();
+
+            if ($existingQRIS) {
+                // dd($gate);
+                // Update the existing QRIS file
+                $path = $uploadController->upadate($existingQRIS->path, $request->file('qris'));
+
+                // Update QRIS entry in the database
+                $existingQRIS->update(['path' => $path]);
+            } else {
+                // Upload the new QRIS file
+                $qrisPath = $uploadController->create($type = 'foto', $folder = 'qris', $request->file('qris'));
+
+                // Create a new QRIS record
+                qris::create([
+                    'id' => now(),
+                    'id_gate' => $request->id_gate,
+                    'path' => $qrisPath,
+                ]);
+            }
+        }
+
+        // Redirect with success message
         return back()->with('success', 'Berhasil update gate');
     }
 
@@ -172,7 +227,9 @@ class destinasiController extends Controller
             'id_destinasi' => 'required',
             'id_gate' => 'required',
         ]);
-        $gate = ModelGates::where('id', $request->id_gate)->where('id_destinasi', $request->id_destinasi)->first();
+        $gate = ModelGates::where('id', $request->id_gate)
+            ->where('id_destinasi', $request->id_destinasi)
+            ->first();
         $gate->delete();
         return back()->with('success', 'Berhasil Menghapus Gambar');
     }
