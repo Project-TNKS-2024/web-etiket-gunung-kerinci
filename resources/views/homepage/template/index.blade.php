@@ -259,6 +259,7 @@
     @include('homepage.template.navbar')
 
     <main>
+        @include('etiket.auth.template.script-password')
         @yield('main')
     </main>
 
