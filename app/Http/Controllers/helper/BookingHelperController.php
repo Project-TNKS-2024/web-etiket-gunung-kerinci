@@ -14,10 +14,7 @@ use PhpParser\Node\Expr\FuncCall;
 
 class BookingHelperController extends Controller
 {
-    // function generateUniqueCode(idpendaki)
 
-    function generateCode($length)
-    {
     function generateCode($length)
     {
         // Define the character pool
@@ -42,6 +39,7 @@ class BookingHelperController extends Controller
             'data' => $timestap + $idbooking,
         ]);
     }
+
     public function validasiFormulirPendaki($pendaki)
     {
         // Validasi kolom wajib
@@ -135,7 +133,7 @@ class BookingHelperController extends Controller
     {
         $tagihan = $this->getDetailTagihan($pendaki);
 
-        return $tagihan['masuk']+$tagihan['berkemah']+$tagihan['tracking']+$tagihan['asuransi'];
+        return $tagihan['masuk'] + $tagihan['berkemah'] + $tagihan['tracking'] + $tagihan['asuransi'];
     }
 
     public function getDetailTagihan($pendaki)

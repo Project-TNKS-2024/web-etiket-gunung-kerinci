@@ -65,7 +65,7 @@
             <tbody class="table-group-divider">
                @foreach($data as $item)
                <tr>
-                  <td class="p-1 text-center">{{ $item->pendakis[0]->nama }}</td>
+                  <td class="p-1 text-center">{{ $item->pendakis->count() > 0 ? $item->pendakis[0]->nama : '-' }}</td>
                   <td class="p-1 text-center">{{ $item->tanggal_masuk }}</td>
                   <td class="p-1 text-center">{{ $item->tanggal_keluar }}</td>
                   <td class="p-1 text-center">{{ $item->gateMasuk['nama'] }}</td>
