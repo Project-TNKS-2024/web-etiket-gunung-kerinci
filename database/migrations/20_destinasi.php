@@ -11,6 +11,8 @@ return new class extends Migration
         Schema::create('destinasis', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            // $table->boolean('statusOpen');
+            // $table->boolean('statusPmbelian');
             $table->boolean('status');
             $table->enum('kategori', ['taman', 'gunung']);
             $table->string('lokasi');

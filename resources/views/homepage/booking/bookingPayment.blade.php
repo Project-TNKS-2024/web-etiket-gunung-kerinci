@@ -272,7 +272,7 @@
 
    <div class="row">
       <div class="col-12 col-md-4">
-         <a type="submit" class="btn btn-primary w-100 fw-bold mt-3" href="{{route('homepage.booking.cancel', ['id' => $booking->id])}}">Formulir</a>
+         <a type="submit" class="btn btn-warning w-100 fw-bold mt-3" href="{{route('homepage.booking.cancel', ['id' => $booking->id])}}">Batalkan Pembayaran</a>
       </div>
       <div class="col-12 col-md-4"></div>
       <div class="col-12 col-md-4 text-end"></div>

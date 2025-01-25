@@ -16,7 +16,8 @@ class BookingHelperController extends Controller
 {
     // function generateUniqueCode(idpendaki)
 
-    function generateCode($length) {
+    function generateCode($length)
+    {
         // Define the character pool
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         $charactersLength = strlen($characters);
@@ -137,7 +138,7 @@ class BookingHelperController extends Controller
         $booking = gk_booking::find($pendaki->booking_id);
         $idtiket = $booking->id_tiket;
         $tiket = gk_tiket_pendaki::where([
-            'id_paket_tiket' => $idtiket, 
+            'id_paket_tiket' => $idtiket,
             'kategori_pendaki' => $pendaki->biodata->kenegaraan
         ])->first();
 
@@ -155,10 +156,9 @@ class BookingHelperController extends Controller
         $tagihanKemah = ($hari->getData()->weekends + $hari->getData()->weekdays - 1) * $tiket->harga_kemah;
         $tagihanTraking = $tiket->harga_traking;
         $tagihanAnsuransi = $tiket->harga_ansuransi;
-        return ($tagihanMasuk + $tagihanKemah + $tagihanTraking+ $tagihanAnsuransi);
+        return ($tagihanMasuk + $tagihanKemah + $tagihanTraking + $tagihanAnsuransi);
     }
 
- \
 
     public function validasiBooking($idbooking)
     {

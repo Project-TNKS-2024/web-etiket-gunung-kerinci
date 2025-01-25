@@ -3,7 +3,7 @@
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ route('homepage.beranda') }}" class="d-flex align-items-center" style="gap: 10px;">
                 <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="">
-                <div>Taman Nasional Kelinci Seblat</div>
+                <div>Taman Nasional Kerinci Seblat</div>
             </a>
             <div class="d-none d-sm-flex align-items-center ">
                 <select class="form-select border-0 form-select-sm w-100" style="background-color: transparent" aria-label="Small select example">

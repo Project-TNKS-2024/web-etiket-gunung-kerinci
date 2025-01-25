@@ -266,13 +266,16 @@ class booking extends Controller
 
     public function bookingPendakiAdd(Request $request)
     {
+
+        // return $request;
         $request->validate([
             'code' => 'required|string',
             'booking' => 'required|string',
             'id' => 'string|nullable',
         ]);
 
-        $booking = gk_booking::with('gktiket')->where("id", $request->id)->first();
+        $booking = gk_booking::with('gktiket')->where("id", $request->booking)->first();
+        // return $booking;
         if (!$booking) {
             abort(404);
         } elseif ($booking->status_booking != 2) {

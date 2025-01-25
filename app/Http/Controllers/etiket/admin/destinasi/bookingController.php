@@ -14,7 +14,12 @@ class bookingController extends Controller
         $search = $request->search_ipt;
 
         // Menggunakan query builder untuk memulai query
-        $query = ModelBooking::with('pendakis', 'gateMasuk', 'gateKeluar');
+        // $query = ModelBooking::with('pendakis', 'gateMasuk', 'gateKeluar', 'gkTiket')->where('id_destinasi', $id);
+        $query = ModelBooking::with('pendakis', 'gateMasuk', 'gateKeluar', 'gkTiket')
+            ->whereHas('gkTiket', function ($q) use ($id) {
+                $q->where('id_destinasi', $id);
+            });
+
 
         // Jika ada pencarian, terapkan pencarian
         if ($search) {
@@ -53,9 +58,11 @@ class bookingController extends Controller
             }
         }
 
+
         // Ambil data dengan paginasi
         $data = $query->paginate(10);
 
+        // return $data;
         // return $data[1];
 
         return view('etiket.admin.destinasi.booking.index', [
