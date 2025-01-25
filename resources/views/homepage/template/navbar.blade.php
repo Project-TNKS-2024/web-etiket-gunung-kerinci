@@ -1,21 +1,21 @@
 @php
-    $destinasi = App\Models\destinasi::all();
-    $bookingRoute = '';
+$destinasi = App\Models\destinasi::all();
+$bookingRoute = '';
 
-    foreach ($destinasi as $d) {
-        $bookingRoute .= route('homepage.booking.destinasi.paket', ['id' => $d->id]).", ";
-        $bookingRoute .= route('homepage.booking.destinasi.paket.tiket', ['id' => $d->id]).", ";
-    }
+foreach ($destinasi as $d) {
+$bookingRoute .= route('homepage.booking.destinasi.paket', ['id' => $d->id]).", ";
+$bookingRoute .= route('homepage.booking.destinasi.paket.tiket', ['id' => $d->id]).", ";
+}
 @endphp
 
-{{-- <script> console.log(@json($bookingRoute))</script> --}}
+
 
 <nav class="navbar navbar-expand-sm gk-bg-primary700 index-navbar py-0" style="font-size: 14px">
     <div class="w-100 index-nav-ats gk-bg-neutrals-base-white py-2">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ route('homepage.beranda') }}" class="d-flex align-items-center" style="gap: 10px;">
                 <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="">
-                <div>Taman Nasional Kelinci Seblat</div>
+                <div>Taman Nasional Kerinci Seblat</div>
             </a>
             <div class="d-none d-sm-flex align-items-center ">
                 <select class="form-select border-0 form-select-sm w-100" style="background-color: transparent"
@@ -71,38 +71,38 @@
 
             <ul class="navbar-nav mb-2 mb-sm-0 d-flex align-items-center ">
                 @guest
-                    <!-- If the user is not logged in -->
-                    <li class="nav-item" style="height: fit-content">
-                        <a class="nav-link text-white py-2 py-md-0 gk-bg-primary600 rounded-4 px-3 my-1 my-md-0"
-                            style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page"
-                            href="{{ route('register') }}" style="height: fit-content;">Register</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link text-white py-2 py-md-0 gk-bg-primary600 rounded-4 px-3 ms-0 ms-md-3 my-1 my-md-0"
-                            style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page"
-                            href="{{ route('login') }}">Login</a>
-                    </li>
+                <!-- If the user is not logged in -->
+                <li class="nav-item" style="height: fit-content">
+                    <a class="nav-link text-white py-2 py-md-0 gk-bg-primary600 rounded-4 px-3 my-1 my-md-0"
+                        style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page"
+                        href="{{ route('register') }}" style="height: fit-content;">Register</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link text-white py-2 py-md-0 gk-bg-primary600 rounded-4 px-3 ms-0 ms-md-3 my-1 my-md-0"
+                        style="background: rgba(255, 255, 255, 0.16); font-size: 14px;" aria-current="page"
+                        href="{{ route('login') }}">Login</a>
+                </li>
                 @endguest
 
                 @auth
-                    <!-- If the user is logged in with the role 'user' -->
-                    @if (Auth::user()->role == 'user')
-                        <li class="nav-item ">
-                            <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
-                                aria-current="page" href="{{ route('user.dashboard') }}">Dashboard</a>
-                        </li>
-                    @endif
-                    @if (Auth::user()->role == 'admin')
-                        <li class="nav-item ">
-                            <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
-                                aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
-                        </li>
-                    @endif
+                <!-- If the user is logged in with the role 'user' -->
+                @if (Auth::user()->role == 'user')
+                <li class="nav-item ">
+                    <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        aria-current="page" href="{{ route('user.dashboard') }}">Dashboard</a>
+                </li>
+                @endif
+                @if (Auth::user()->role == 'admin')
+                <li class="nav-item ">
+                    <a class="nav-link text-white rounded-4 py-2 py-md-0 px-2 px-md-2 px-sm-1 mx-2"
+                        aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
+                </li>
+                @endif
 
-                    <span class="profile-container px-2 py-1 rounded-pill" style="user-select: none; cursor: pointer;">
-                        <img src="{{asset('assets/img/dashboard/Ellipse 143.png')}}" class="" style="height: 30px;" />
-                        <img src="{{asset('assets/icon/tnks/chevron.svg')}}" />
-                    </span>
+                <span class="profile-container px-2 py-1 rounded-pill" style="user-select: none; cursor: pointer;">
+                    <img src="{{asset('assets/img/dashboard/Ellipse 143.png')}}" class="" style="height: 30px;" />
+                    <img src="{{asset('assets/icon/tnks/chevron.svg')}}" />
+                </span>
                 @endauth
             </ul>
 

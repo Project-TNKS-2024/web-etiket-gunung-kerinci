@@ -13,6 +13,7 @@ use App\Http\Controllers\etiket\admin\destinasi\bookingController;
 // admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
 use App\Http\Controllers\etiket\admin\master\PengunjungController;
+use App\Http\Controllers\etiket\admin\master\ValidasiPembayaranOld;
 
 // admin master
 use App\Http\Controllers\homepage\booking;
@@ -61,19 +62,14 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/master/destinasi/add', [destinasisController::class, 'addAction'])->name('admin.master.destinasi.addAction');
     Route::post('admin/master/destinasi/delete', [destinasisController::class, 'deleteAction'])->name('admin.master.destinasi.deleteAction');
 
-    // Master - Validasi Pembayaran
-    Route::get('admin/master/validasi-pembayaran', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar');
-    Route::get('admin/master/validasi-pembayaran?start_date={start_date?}&end_date={end_date?}&status={status?}', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar.filtered');
-    Route::post('admin/master/validasi-pembayaran/update/', [ValidasiPembayaran::class, 'updateAction'])->name('admin.master.validasi.updateAction');
-
     // Master - Pengunjung
     Route::get('admin/master/pengunung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung');
     Route::post('admin/master/pengunung/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.verified');
 
     // Master - Validasi Pembayaran
-    Route::get('admin/master/validasi-pembayaran', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar');
-    Route::get('admin/master/validasi-pembayaran?start_date={start_date?}&end_date={end_date?}&status={status?}', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasi.daftar.filtered');
-    Route::post('admin/master/validasi-pembayaran/update/', [ValidasiPembayaran::class, 'updateAction'])->name('admin.master.validasi.updateAction');
+    Route::get('admin/master/validasiPembayaran', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasiPembayaran');
+    // Route::get('admin/master/validasiPembayaran', [ValidasiPembayaranOld::class, 'index'])->name('admin.master.validasiPembayaran');
+    Route::post('admin/master/validasiPembayaran/update/', [ValidasiPembayaran::class, 'updateAction'])->name('admin.master.validasi.updateAction');
 
 
 

@@ -39,8 +39,17 @@ class bio_pendaki extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            // if (empty($model->id)) {
+            //     $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
+            // }
+
             if (empty($model->id)) {
-                $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
+                // Generate a unique 8-character ID
+                do {
+                    $uuid = substr((string) Str::uuid(), 0, 8);
+                } while (static::where('id', $uuid)->exists()); // Ensure uniqueness
+
+                $model->id = $uuid;
             }
         });
     }

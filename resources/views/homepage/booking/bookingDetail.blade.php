@@ -3,7 +3,6 @@
 
 @section('css')
     <style>
-        /* style untuk form detail booking */
         .table tbody tr td {
             padding: 3px 5px;
         }
@@ -123,121 +122,17 @@
     <div class="container my-5">
         @include('homepage.booking.booking-nav', ['step' => 2])
 
-
-        <script>
-            console.log("Di bawah");
-            console.log(@json($hitung($pendakis[0])))
-        </script>
-
-        <div class="card border-0 shadow my-4">
-            <div class="card-body px-4 px-md-5 pb-4">
-                <div id="booking-detail">
-                    <h1>Detail Pemesanan</h1>
-                    <div class="row mt-3">
-                        <div class="col-12 col-md-6" id="formulir">
-                            <div class="row">
-                                <h4 class="col">Nama Ketua</h4>
-                                <p class="col">{{ $pendakis[0]->first_name }} {{ $pendakis[0]->last_name }}</p>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <h4>Gerbang Masuk</h4>
-                                    <p>{{ $booking->gateMasuk->nama }}</p>
-                                    <h4>Check In</h4>
-                                    <p>{{ $booking->tanggal_masuk }}</p>
-                                    <h4>Jumlah Anggota</h4>
-                                    <p>{{ count($pendakis) }} orang</p>
-                                </div>
-                                <div class="col">
-
-                                    {{-- <h4>SIMAKSI</h4> --}}
-                                    {{-- <p>
-                                        @if ($booking->lampiran_simaksi == null)
-                                            <span class="c-red">Tidak</span>
-                                        @else
-                                            <span class="c-green">Ya</span>
-                                        @endif
-                                    </p> --}}
-                                    <h4>Gerbang Keluar</h4>
-                                    <p>{{ $booking->gateKeluar->nama }}</p>
-                                    <h4>Check out</h4>
-                                    <p>{{ $booking->tanggal_keluar }}</p>
-                                    <h4>Kewarganegaraan</h4>
-                                    <div class="row">
-                                        <div class="col">
-                                            <p>{{ $booking->total_pendaki_wni }} WNI</p>
-                                        </div>
-                                        <div class="col">
-                                            <p>{{ $booking->total_pendaki_wna }} WNA</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="card" id="pembayaran">
-                                <div class="card-body">
-                                    <h4>Total Pembayaran</h4>
-                                    @foreach ($pendakis as $pen)
-                                        @php
-                                            $tagihan = $hitung($pen);
-                                        @endphp
-                                        <div class="mb-2">
-                                            <div class="">{{ $pen->first_name }} {{ $pen->last_name }}</div>
-                                            <div class="d-flex justify-content-between">
-                                                <div class="small text-muted" style="">Biaya Masuk</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['masuk']) }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-between">
-                                                <div class="small text-muted" style="">Berkemah</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['berkemah']) }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-between">
-                                                <div class="small text-muted" style="">Pendakian</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['tracking']) }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-between">
-                                                <div class="small text-muted" style="">Asuransi</div>
-                                                <div class="small text-muted">Rp. {{ number_format($tagihan['asuransi']) }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-between fw-bold">
-                                                <div class="small text-muted" style="">Total</div>
-                                                <div class="small text-muted">Rp. {{ number_format($pen->tagihan) }}</div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                    <p class="fw-bold c-blue">Total <span class="float-right">Rp.
-                                            {{ number_format($booking->total_pembayaran) }}</span></p>
-                                    <p class="span">*{{ $booking->total_hari }} hari {{ $booking->total_hari - 1 }}
-                                        malam
-                                        ({{ $booking->total_hari }}D{{ $booking->total_hari - 1 }}M)</p>
-                                </div>
-                            </div>
-                            <div class="text-start form-group my-2">
-                                <a href="{{ route('homepage.booking.payment', ['id' => $booking->id]) }}"
-                                    class="btn btn-gl-primary ">Lakukan Pembayaran</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="card border-0 shadow">
-            <div class="card-body px-4 px-md-5 pb-4q">
-                {{-- <div class="mt-3">
+            <div class="card-body px-4 px-md-5 pb-4">
+                <div class="mt-3">
                     <h1 class="fs-5 fw-bold">Booking {{ $booking->gateMasuk->destinasi->nama }}</h1>
                     <div class="row">
                         <div class="col-12 col-md-6">
-                            <table class="table table-borderless">
+                            <table class="table table-borderless ">
                                 <tr>
                                     <td>Nama Ketua</td>
                                     <td> : </td>
-                                    <td>{{ $pendakis[0]->first_name . ' ' . $pendakis[0]->last_name }}</td>
+                                    <td>{{ $formulirPendakis[0]->first_name . ' ' . $formulirPendakis[0]->last_name }}</td>
                                 </tr>
                                 <tr>
                                     <td>Gerbang Masuk</td>
@@ -262,16 +157,15 @@
                                 <tr>
                                     <td>Jumlah Pendaki</td>
                                     <td> : </td>
-                                    <td>{{ $booking->total_pendaki_wni }} WNI dan {{ $booking->total_pendaki_wna }} WNA
-                                    </td>
+                                    <td>{{ $booking->total_pendaki_wni }} WNI dan {{ $booking->total_pendaki_wna }} WNA</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
-                </div> --}}
-                {{-- <hr> --}}
-                @foreach ($pendakis as $key => $pendaki)
-                    <div class="mt-4">
+                </div>
+                <hr>
+                @foreach ($formulirPendakis as $key => $pendaki)
+                    <div class=" mt-4">
                         <h1 class="fs-5 fw-bold">
                             @if ($key === 0)
                                 Biodata Ketua
@@ -281,61 +175,68 @@
                         </h1>
                         <div class="row">
                             <div class="col-12 col-lg-6">
-                                <div class="mb-3">
-                                    <label for="first_name" class="form-label my-0">Nama</label>
-                                    <input readonly disabled type="text" class="form-control" id="first_name" name="first_name"
-                                        value="{{ $pendaki->first_name.' '.$pendaki->last_name }}" required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="first_name" class="form-label my-0">Nama</label>
-                                    <input readonly disabled type="text" class="form-control" id="first_name" name="first_name"
-                                        value="{{ $pendaki->kategori_pendaki == 'wni' ? 'Warga Negara Asing' : 'Warga Negara Indonesia' }}" required>
-                                </div>
-
-                                <div class="row">
-                                    <div class="mb-3 col-12 col-sm-6">
-                                        <label for="no_hp" class="form-label my-0">No Telepon</label>
-                                        <input readonly disabled type="text" class="form-control" id="no_hp" name="no_hp"
-                                            value="{{ $pendaki->biodata->no_hp }}" required>
-                                    </div>
-    
-                                    <div class="mb-3 col-12 col-sm-6">
-                                        <label for="no_hp_darurat" class="form-label my-0">No Telepon Darurat</label>
-                                        <input readonly disabled type="text" class="form-control" id="no_hp_darurat" name="no_hp_darurat"
-                                            value="{{ $pendaki->biodata->no_hp_darurat }}" required>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="usia" class="form-label my-0">Usia</label>
-                                    <input readonly disabled type="number" class="form-control" id="usia" name="usia"
-                                        value="{{ intval(\Carbon\Carbon::parse(now())->isoFormat('Y')) - intval(\Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('Y')) }}"
-                                        readonly>
-                                </div>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td>Nama</td>
+                                        <td> : </td>
+                                        <td>{{ $pendaki->first_name . ' ' . $pendaki->last_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kewarganegaraan</td>
+                                        <td> : </td>
+                                        <td>
+                                            @if ($pendaki->kategori_pendaki == 'wni')
+                                                Warga Negara Indonesia (WNI)
+                                            @else
+                                                Warga Negara Asing (WNA)
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>No Telepon</td>
+                                        <td> : </td>
+                                        <td>{{ $pendaki->biodata->no_hp }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No Telepon Darurat</td>
+                                        <td> : </td>
+                                        <td>{{ $pendaki->biodata->no_hp_darurat }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tanggal Lahir</td>
+                                        <td> : </td>
+                                        <td>{{ \Carbon\Carbon::parse($pendaki->tanggal_lahir)->isoFormat('D MMMM Y') }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Usia</td>
+                                        <td> : </td>
+                                        <td>{{ $pendaki->usia }}</td>
+                                    </tr>
+                                </table>
                             </div>
-
                             <div class="col-12 col-lg-6">
-                                <div class="border rounded p-2" style="max-height: 300px; overflow: hidden;">
-                                    @php
-                                        // $extension = pathinfo($pendaki->lampiran_identitas, PATHINFO_EXTENSION);
-                                        $extension = substr(
-                                            $pendaki->biodata->lampiran_identitas,
-                                            strrpos($pendaki->biodata->lampiran_identitas, '.') + 1,
-                                        );
-                                    @endphp
+                                @if ($pendaki->lampiran_surat_izin_ortu)
+                                    <div class="border rounded p-2" style="max-height: 300px; overflow: hidden;">
+                                        @php
+                                            $extension = pathinfo(
+                                                $pendaki->lampiran_surat_izin_ortu,
+                                                PATHINFO_EXTENSION,
+                                            );
+                                        @endphp
 
-                                    {{-- extension: {{$extension}} --}}
+                                        {{-- extension: {{$extension}} --}}
 
-                                    @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
-                                        <img src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
-                                            alt="Lampiran Identitas" class="img-fluid"
-                                            style="max-height: 280px; width: auto; display: block; margin: 0 auto;">
-                                    @else
-                                        <embed src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
-                                            type="application/pdf" width="100%" height="280px">
-                                    @endif
-                                </div>
+                                        @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
+                                            <img src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
+                                                alt="Lampiran Identitas" class="img-fluid"
+                                                style="max-height: 280px; width: auto; display: block; margin: 0 auto;">
+                                        @else
+                                            <embed src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
+                                                type="application/pdf" width="100%" height="280px">
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -379,21 +280,17 @@
             </div>
         </div>
 
-        <div class="row justify-content-center">
-            {{-- <div class="col-12 col-md-4"></div> --}}
+        <div class="row">
             <div class="col-12 col-md-4">
-                <a href="{{ route('homepage.booking.formulir', ['id' => $booking->id]) }}"
-                    class="btn btn-primary gk-bg-primary700 fw-thin border-0 w-100 mt-3" name="action"
-                    value="save">Formulir</a>
+                <a type="submit" class="btn btn-primary w-100 fw-bold mt-3"
+                    href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}">Kembali</a>
             </div>
-            <div class="col-12 col-md-4">
-                <a href="{{ route('homepage.booking.payment', ['id' => $booking->id]) }}"
-                    class="btn btn-primary gk-bg-primary700 fw-thin border-0 w-100 mt-3" name="action"
-                    value="next">Selanjutnya</a>
+            <div class="col-12 col-md-4"></div>
+            <div class="col-12 col-md-4 text-end">
+                <a type="submit" class="btn btn-primary w-100 fw-bold mt-3"
+                    href="{{ route('homepage.booking.payment', ['id' => $booking->id]) }}">Selanjutnya</a>
             </div>
         </div>
-    </div>
-
     </div>
 @endsection
 @section('js')
@@ -404,8 +301,8 @@
 
     <script>
         console.log("The Pendakis");
-        console.log(@json($pendakis[0]));
-        // console.log({{ $pendakis }});
+        console.log(@json($formulirPendakis[0]));
+        // console.log({{ $formulirPendakis }});
     </script>
 
 

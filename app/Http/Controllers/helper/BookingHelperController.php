@@ -14,7 +14,6 @@ use PhpParser\Node\Expr\FuncCall;
 
 class BookingHelperController extends Controller
 {
-    // function generateUniqueCode(idpendaki)
 
     function generateCode($length)
     {
@@ -40,6 +39,7 @@ class BookingHelperController extends Controller
             'data' => $timestap + $idbooking,
         ]);
     }
+
     public function validasiFormulirPendaki($pendaki)
     {
         // Validasi kolom wajib
@@ -133,7 +133,7 @@ class BookingHelperController extends Controller
     {
         $tagihan = $this->getDetailTagihan($pendaki);
 
-        return $tagihan['masuk']+$tagihan['berkemah']+$tagihan['tracking']+$tagihan['asuransi'];
+        return $tagihan['masuk'] + $tagihan['berkemah'] + $tagihan['tracking'] + $tagihan['asuransi'];
     }
 
     public function getDetailTagihan($pendaki)
@@ -166,16 +166,6 @@ class BookingHelperController extends Controller
         ];
     }
 
-    public function getDomisili($idprovinsi, $idkabupaten, $idkecamatan, $idkelurahan)
-    {
-        //
-        // return [
-        //     'provinsi' => $provinsi->name,
-        //     'kabupaten' => $kabupaten->name,
-        //     'kecamatan' => $kecamatan->name,
-        //     'kelurahan' => $kelurahan->name,
-        // ];
-    }
 
     public function validasiBooking($idbooking)
     {

@@ -51,9 +51,9 @@
    function onScanSuccess(decodedText, decodedResult) {
       console.log(decodedText);
       // cek decodedText ada atau tidak di dalam listcodetiket
-      if (!listcodetiket.authcludes(decodedText)) {
+      if (!listcodetiket.includes(decodedText)) {
          listcodetiket.push(decodedText);
-
+         console.log('Kode berhasil ditambahkan');
          // Buat elemen anchor baru
          const ticketLink = document.createElement('a');
          ticketLink.href = `{{route('admin.fitur.detailTiket', ['uq' => ':id'])}}`.replace(':id', decodedText);
