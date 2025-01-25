@@ -66,162 +66,176 @@
     ])
 
     <script></script>
+
+
     <div class="container my-5">
-        <div class="flex-wrap d-flex row">
-            <!-- First Column -->
-            <div class="col-12 col-md-4 mb-3">
-                <div class="p-3 text-center">
-                    <header class="text-start">QR Pembayaran</header>
-                    <div class="text-start text-muted small">**Masukkan nominal yang sesuai</div>
-                    <img src="{{ asset($qris->path) }}" class="img-fluid" alt="bukti pembayaran" />
-                    <div class="mt-3">
-                        <a href="{{ asset($qris->path) }}" download class="btn btn-primary gk-bg-primary700 border-0 rounded-3">Unduh Kode
-                            QR</a>
-                    </div>
-                    <h3 class="h-2 mt-3">Rp {{ number_format($booking->total_pembayaran, 0, ',', '.') }}</h3>
-                </div>
-            </div>
-            <!-- Second Column -->
-            <div class="col-12 col-md-8 mb-3">
-                <div class="p-3" id="">
-                    <h4>Informasi Booking</h4>
-                    <div class="row">
-                        <div class="col">
-                            <h6 class="fw-bold my-0">Nama Ketua</h6>
-                            <p>{{ $pendakis[0]->first_name }} {{ $pendakis[0]->last_name }}</p>
-                            <h6 class="fw-bold my-0">Gerbang Masuk</h6>
-                            <p>{{ $booking->gateMasuk->nama }}</p>
-                            <h6 class="fw-bold my-0">Check In</h6>
-                            <p>{{ $booking->tanggal_masuk }}</p>
-                            <h6 class="fw-bold my-0">Jumlah Anggota</h6>
-                            <p>5 orang</p>
-                        </div>
-                        <div class="col">
-                            <h6 class="fw-bold my-0">SIMAKSI</h6>
-                            <p>
-                                @if ($booking->lampiran_simaksi == null)
-                                    <span class="c-red">Tidak</span>
-                                @else
-                                    <span class="c-green">Ya</span>
-                                @endif
-                            </p>
-                            <h6 class="fw-bold my-0">Gerbang Keluar</h6>
-                            <p>{{ $booking->gateKeluar->nama }}</p>
-                            <h6 class="fw-bold my-0">Check out</h6>
-                            <p>{{ $booking->tanggal_keluar }}</p>
-                            <h6 class="fw-bold my-0">Kewarganegaraan</h6>
-                            <div class="d-flex gap-3">
-                                <div class="">
-                                    <p>{{ $booking->total_pendaki_wni }} WNI</p>
-                                </div>
-                                <div class="">
-                                    <p>{{ $booking->total_pendaki_wna }} WNA</p>
+        <div class="card border-0 shadow my-4">
+            <div class="card-body px-4 px-md-5 pb-4">
+                <div class="flex-wrap d-flex row">
+                    <!-- First Column -->
+
+                    <div class="card border-0 shadow my-4">
+                        <div class="card-body px-4 px-md-5 pb-4">
+                            <div class="col mb-3">
+                                <div class="p-3" id="">
+                                    <h4>Informasi Booking</h4>
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="fw-bold my-0">Nama Ketua</h6>
+                                            <p>{{ $pendakis[0]->first_name }} {{ $pendakis[0]->last_name }}</p>
+                                            <h6 class="fw-bold my-0">Gerbang Masuk</h6>
+                                            <p>{{ $booking->gateMasuk->nama }}</p>
+                                            <h6 class="fw-bold my-0">Check In</h6>
+                                            <p>{{ $booking->tanggal_masuk }}</p>
+                                            <h6 class="fw-bold my-0">Jumlah Anggota</h6>
+                                            <p>5 orang</p>
+                                        </div>
+                                        <div class="col">
+                                            <h6 class="fw-bold my-0">SIMAKSI</h6>
+                                            <p>
+                                                @if ($booking->lampiran_simaksi == null)
+                                                    <span class="c-red">Tidak</span>
+                                                @else
+                                                    <span class="c-green">Ya</span>
+                                                @endif
+                                            </p>
+                                            <h6 class="fw-bold my-0">Gerbang Keluar</h6>
+                                            <p>{{ $booking->gateKeluar->nama }}</p>
+                                            <h6 class="fw-bold my-0">Check out</h6>
+                                            <p>{{ $booking->tanggal_keluar }}</p>
+                                            <h6 class="fw-bold my-0">Kewarganegaraan</h6>
+                                            <div class="d-flex gap-3">
+                                                <div class="">
+                                                    <p>{{ $booking->total_pendaki_wni }} WNI</p>
+                                                </div>
+                                                <div class="">
+                                                    <p>{{ $booking->total_pendaki_wna }} WNA</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                    <div class="col-12 col-md-4 mb-3 justify-content-center align-items-center w-100">
+                        <div class="p-3 text-center" style="">
+                            <header class="text-start">QR Pembayaran</header>
+                            <div class="text-start text-muted small">**Masukkan nominal yang sesuai</div>
+                            <img src="{{ asset($qris->path) }}" class="img-fluid" style="max-width: 500px;" alt="bukti pembayaran" />
+                            <div class="mt-3">
+                                <a href="{{ asset($qris->path) }}" download
+                                    class="btn btn-primary gk-bg-primary700 border-0 rounded-3">Unduh Kode
+                                    QR</a>
+                            </div>
+                            <h3 class="h-2 mt-3">Rp {{ number_format($booking->total_pembayaran, 0, ',', '.') }}</h3>
+                        </div>
+                    </div>
+                    <!-- Second Column -->
 
-        <div class="mb-5">
-            <h4>Transfer antar Bank</h4>
-            <div class="d-flex flex-column gap-3">
-                <div class="d-flex gap-3">
-                    <div class="fw-bold bg-primary text-white px-3 py-1 text-center rounded fs-5 d-flex align-items-center justify-content-center"
-                        style="width: fit-content">BRI</div>
-                    <div class="d-flex flex-wrap d-flex align-items-center justify-content-start gap-2">
-                        <span class="fs-3">7338 0102 6542 535</span>
-                        <span class="fs-5">a.n PT. Gunung Kerinci</span>
+                </div>
+
+                <div class="mb-5">
+                    <h4>Transfer antar Bank</h4>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex gap-3">
+                            <div class="fw-bold bg-primary text-white px-3 py-1 text-center rounded fs-5 d-flex align-items-center justify-content-center"
+                                style="width: fit-content">BRI</div>
+                            <div class="d-flex flex-wrap d-flex align-items-center justify-content-start gap-2">
+                                <span class="fs-3">7338 0102 6542 535</span>
+                                <span class="fs-5">a.n PT. Gunung Kerinci</span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <div class="fw-bold bg-primary text-white px-3 py-1 text-center rounded fs-5 d-flex align-items-center justify-content-center"
+                                style="width: fit-content">BRI</div>
+                            <div class="d-flex flex-wrap d-flex align-items-center justify-content-start gap-2">
+                                <span class="fs-3">7338 0102 6542 535</span>
+                                <span class="fs-5">a.n PT. Gunung Kerinci</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="d-flex gap-3">
-                    <div class="fw-bold bg-primary text-white px-3 py-1 text-center rounded fs-5 d-flex align-items-center justify-content-center"
-                        style="width: fit-content">BRI</div>
-                    <div class="d-flex flex-wrap d-flex align-items-center justify-content-start gap-2">
-                        <span class="fs-3">7338 0102 6542 535</span>
-                        <span class="fs-5">a.n PT. Gunung Kerinci</span>
+
+                <div class="mb-5">
+                    <div class="d-block d-md-flex justify-content-between align-items-center mb-1">
+                        <h4>Riwayat Pengajuan Bukti Pembayaran</h4>
                     </div>
+                    @if (!$verified)
+                        <form class="mb-3 d-block d-sm-flex gap-2"
+                            action="{{ route('homepage.booking.addBuktiPembayaran', $booking->id) }}" method="post"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" class="form-control h-100 w-100" id="bukti_pembayaran"
+                                name="bukti_pembayaran" />
+                            <button class="btn btn-gl-primary my-2 my-md-0" style="width: 100%" data-bs-toggle="modal"
+                                data-bs-target="#addBuktiModal">
+                                Tambah Bukti Pembayaran
+                            </button>
+                        </form>
+                    @endif
+
+
+                    @if (count($pembayaran) > 0)
+                        <div class="table-responsive my-4">
+                            <table class="table table-bordered table-hover align-middle table-no-side-border">
+                                <thead class="text-center ">
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Tanggal</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Keterangan</th>
+                                        <th scope="col">Bukti</th>
+                                        <th scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($pembayaran as $key => $item)
+                                        <tr>
+                                            <td class="text-center">{{ $key + 1 }}</td>
+                                            <td class="">{{ $item->created_at->format('d M Y H:i') }}</td>
+                                            <td class="text-center ">
+                                                @if ($item->status == 'pending')
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                @elseif($item->status == 'approved')
+                                                    <span class="badge bg-success">Disetujui</span>
+                                                @else
+                                                    <span class="badge bg-danger">Ditolak</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                {{ $item->status == 'pending' ? 'Menunggu Validasi' : ($item->status == 'approved' && $item->keterangan == null ? 'Disetujui' : $item->keterangan) }}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{{ asset($item->bukti_pembayaran) }}"
+                                                    class="btn btn-sm btn-primary" target="_blank">
+                                                    <i class="bi bi-eye"></i> Lihat Bukti
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                @if (!$verified)
+                                                    <form
+                                                        action="{{ route('homepage.booking.payment.delete', ['id' => $booking->id, 'pengajuan_id' => $item->id]) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                            onclick="return confirm('Apakah anda yakin ingin menghapus bukti pembayaran ini?')">
+                                                            <i class="bi bi-trash"></i> Hapus
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <p class="text-muted">Belum ada riwayat pengajuan</p>
+                    @endif
                 </div>
             </div>
-        </div>
-
-        <div class="mb-5">
-            <div class="d-block d-md-flex justify-content-between align-items-center mb-1">
-                <h4>Riwayat Pengajuan Bukti Pembayaran</h4>
-            </div>
-            @if (!$verified)
-                <form class="mb-3 d-block d-sm-flex gap-2"
-                    action="{{ route('homepage.booking.addBuktiPembayaran', $booking->id) }}" method="post"
-                    enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" class="form-control h-100 w-100" id="bukti_pembayaran" name="bukti_pembayaran" />
-                    <button class="btn btn-gl-primary my-2 my-md-0" style="width: 100%" data-bs-toggle="modal"
-                        data-bs-target="#addBuktiModal">
-                        Tambah Bukti Pembayaran
-                    </button>
-                </form>
-            @endif
-
-
-            @if (count($pembayaran) > 0)
-                <div class="table-responsive my-4">
-                    <table class="table table-bordered table-hover align-middle table-no-side-border">
-                        <thead class="text-center ">
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Tanggal</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Keterangan</th>
-                                <th scope="col">Bukti</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($pembayaran as $key => $item)
-                                <tr>
-                                    <td class="text-center">{{ $key + 1 }}</td>
-                                    <td class="">{{ $item->created_at->format('d M Y H:i') }}</td>
-                                    <td class="text-center ">
-                                        @if ($item->status == 'pending')
-                                            <span class="badge bg-warning text-dark">Pending</span>
-                                        @elseif($item->status == 'approved')
-                                            <span class="badge bg-success">Disetujui</span>
-                                        @else
-                                            <span class="badge bg-danger">Ditolak</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center">
-                                        {{ $item->status == 'pending' ? 'Menunggu Validasi' : ($item->status == 'approved' && $item->keterangan == null ? 'Disetujui' : $item->keterangan) }}
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{{ asset($item->bukti_pembayaran) }}" class="btn btn-sm btn-primary"
-                                            target="_blank">
-                                            <i class="bi bi-eye"></i> Lihat Bukti
-                                        </a>
-                                    </td>
-                                    <td class="text-center">
-                                        @if(!$verified) 
-                                        <form
-                                            action="{{ route('homepage.booking.payment.delete', ['id' => $booking->id, 'pengajuan_id' => $item->id]) }}"
-                                            method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Apakah anda yakin ingin menghapus bukti pembayaran ini?')">
-                                                <i class="bi bi-trash"></i> Hapus
-                                            </button>
-                                        </form>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <p class="text-muted">Belum ada riwayat pengajuan</p>
-            @endif
         </div>
     </div>
 @endsection

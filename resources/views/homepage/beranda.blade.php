@@ -232,9 +232,9 @@
                     @foreach ($destinasi as $item)
                         <img data-id="{{ $item['id'] }}" draggable="false" id="gambar-destinasi-{{ $loop->index }}"
                             src="{{ $item->gambar_destinasi[0]->src }}" class="shadow card-img-top"
-                            style="@if ($loop->index == 0) margin-left: 150px; transform: scale(1.1); @elseif ($loop->last) @endif border-radius: 20px; max-width: 300px; height: 400px; object-fit: cover; user-select: none; margin: 0 15px;">
+                            style="@if ($loop->index == 0) margin-left: 150px; transform: scale(1.1); @elseif ($loop->last) @endif border-radius: 20px; width: 100%; max-width: 300px; height: 400px; object-fit: cover; user-select: none; margin: 0 15px;">
                     @endforeach
-                    <div style="width: 300px;"></div>
+                    {{-- <div style="width: 300px;"></div> --}}
                 </div>
             </div>
         </div>
