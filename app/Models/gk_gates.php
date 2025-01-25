@@ -17,6 +17,7 @@ class gk_gates extends Model
         'lokasi',
         'lokasi_maps',
         'detail',
+        'qris'
     ];
 
     /**
