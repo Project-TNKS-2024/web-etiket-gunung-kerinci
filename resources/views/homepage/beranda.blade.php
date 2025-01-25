@@ -281,21 +281,21 @@
                 <div class="col-12 col-md-6 mt-2 mt-sm-0">
                     <div class="row">
                         <div class="col">
-                            <h4 class="my-0 py-0">5,245</h4>
+                            <h4 class="my-0 py-0" id="total-pendaki">0</h4>
                             <div class="my-0 py-0" class="">Total Pendaki</div>
                         </div>
                         <div class="col">
-                            <h4 class="my-0 py-0">5,245</h4>
+                            <h4 class="my-0 py-0" id="sedang-mendaki">0</h4>
                             <div class="my-0 py-0" class="">Sedang Mendaki</div>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col">
-                            <h4 class="my-0 py-0">5,245</h4>
+                            <h4 class="my-0 py-0" id="pendaki-wni">0</h4>
                             <div class="my-0 py-0" class="">Pendaki WNI</div>
                         </div>
                         <div class="col">
-                            <h4 class="my-0 py-0">5,245</h4>
+                            <h4 class="my-0 py-0" id="pendaki-wna">0</h4>
                             <div class="my-0 py-0" class="">Pendaki WNA</div>
                         </div>
                     </div>
@@ -349,7 +349,7 @@
                                 ultricies, nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl.
                             </p>
                             <!-- <a href="{{ $item['id'] }}" class="btn btn-primary w-100 gk-text-base-white">Pilih Jalur
-                                                                                                                                                                            Pendakian</a> -->
+                                                                                                                                                                                Pendakian</a> -->
                         </div>
                     </div>
                 </div>
@@ -474,5 +474,34 @@
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
+    </script>
+
+    <script>
+        function animateNumber(id, targetNumber, duration) {
+            const element = document.getElementById(id);
+            // const targetNumber = parseInt(element.textContent);
+            const startTime = performance.now();
+            const startNumber = 0;
+
+            function updateNumber(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1); // Ensure it doesn't exceed 1
+                const currentNumber = Math.floor(progress * targetNumber); // Calculate current value
+                element.textContent = currentNumber.toLocaleString('en-US'); // Update the element's text
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber); // Continue animation
+                } else {
+                    element.textContent = targetNumber.toLocaleString('en-US'); // Ensure the final value is accurate
+                }
+            }
+
+            requestAnimationFrame(updateNumber);
+        }
+
+        animateNumber("total-pendaki",5245, 1000);
+        animateNumber("sedang-mendaki",245, 1000);
+        animateNumber("pendaki-wni",4683, 1000);
+        animateNumber("pendaki-wna",562, 1000);
     </script>
 @endsection

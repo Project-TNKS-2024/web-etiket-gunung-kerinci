@@ -48,27 +48,22 @@
         }
 
         /* .guide-container {
-                display: flex;
-                flex-direction: column;
-                max-height: 450px;
-                height: 100%;
-                flex-wrap: wrap;
-                gap: 0;
-                padding: 0;
-                margin: 0;
-                row-gap: 0;
-                grid-gap: 0;
-                column-gap: 0;
-            } */
+                                display: flex;
+                                flex-direction: column;
+                                max-height: 450px;
+                                height: 100%;
+                                flex-wrap: wrap;
+                                gap: 0;
+                                padding: 0;
+                                margin: 0;
+                                row-gap: 0;
+                                grid-gap: 0;
+                                column-gap: 0;
+                            } */
 
         .guide-card {
             margin: 0;
             padding: 20px;
-            min-width: 150px;
-            max-width: 300px;
-            min-height: 150px;
-            max-height: 300px;
-            height: 100%;
             font-size: 1rem;
             display: flex;
             flex-direction: column;
@@ -88,7 +83,7 @@
 
         .guide-card-tail {
             width: 1px;
-            height: 25px;
+            height: 100%;
             border-right: 2px solid var(--primary700);
         }
 
@@ -180,10 +175,10 @@
                 const content = [document.getElementById('booking-content'), document.getElementById('akun-content')];
                 const button = [document.getElementById('alur-booking'), document.getElementById('alur-akun')]
                 content[index].classList.remove('d-none');
-                content[Math.abs(index-1)].classList.add('d-none')
+                content[Math.abs(index - 1)].classList.add('d-none')
                 button[index].classList.add('selected-nav');
-                button[Math.abs(index-1)].classList.remove('selected-nav')
-                
+                button[Math.abs(index - 1)].classList.remove('selected-nav')
+
             }
         </script>
         <section class="my-4" id="booking-content">
@@ -222,7 +217,7 @@
                 </dl>
                 <dl>
                     <dt>
-                        <li>Lakukan pembayaran dan unggah bukti pembayaran, kemudian tunggu validasi pembayaran oleh admin.
+                        <li>Lakukan pembayaran dan unggah bukti pembayaran, kemudian tunggu validasi pembayaran oleh admin
                         </li>
                     </dt>
                     <dd>Lakukan pembayaran dan unggah bukti pembayaran, kemudian tunggu validasi pembayaran oleh admin.</dd>
@@ -235,6 +230,53 @@
                         di pintu masuk untuk memulai pendakian.</dd>
                 </dl>
             </ol>
+
+            <div class="container my-5">
+                @include('homepage.panduan.stepper', [
+                    'panduan' => [
+                        [
+                            'title' => 'Registrasi Akun',
+                            'caption' => "Akses laman website e-tiket TNKS melaui etikettnks.gov.id, lalu lakukan pendaftaran akun dan isi
+                                                                                        biodata lengkap Anda. Selanjutnya Admin akan melakukan pengecekan terhadap biodata akun yang baru
+                                                                                        terdaftar untuk memastikan data lengkap dan sesuai dengan kartu identitas yang diunggah.",
+                            'details' => [],
+                        ],
+                        [
+                            'title' => 'Booking Online',
+                            'caption' => "Login pada website e-tiket TNKS, lalu lakukan pemesanan tiket dengan memilih menu Booking Online,
+                                                                                        selanjutnya pilih Destinasi Wisata Pendakian Gunung Kerinci. Masukan tanggal, jumlah pendaki, dan
+                                                                                        jalur pendakian yang ingin anda tuju, serta cek kuota yang tersedia untuk memastikan kuota pendakian
+                                                                                        masih ada pada tanggal yang Anda pilih.",
+                            'details' => [],
+                        ],
+                        [
+                            'title' => 'Isi Formulir Pendaftaran',
+                            'caption' => "Lengkapi formulir pendaftaran dengan memasukan kode pendaki yang akan melakukan pendakian. Pastikan
+                                                                                        pendaki yang akan melakukan pendakian telah memiliki akun yang tervalidasi sebelumnya.",
+                            'details' => [],
+                        ],
+                        [
+                            'title' => 'Setujui Syarat dan Ketentuan',
+                            'caption' =>
+                                'Baca dan setujui syarat serta ketentuan yang berlaku sesuai SOP pendakian Gunung Kerinci.',
+                            'details' => [],
+                        ],
+                        [
+                            'title' =>
+                                'Lakukan pembayaran dan unggah bukti pembayaran, kemudian tunggu validasi pembayaran oleh admin',
+                            'caption' =>
+                                'Lakukan pembayaran dan unggah bukti pembayaran, kemudian tunggu validasi pembayaran oleh admin.',
+                            'details' => [],
+                        ],
+                        [
+                            'title' => 'Gunakan QR Tiket',
+                            'caption' => "Setelah pembayaran berhasil divalidasi, anda akan mendapatkan kode QR tiket. Scan kode QR tersebut
+                                                                                        di pintu masuk untuk memulai pendakian.",
+                            'details' => [],
+                        ],
+                    ],
+                ])
+            </div>
         </section>
         <section class="my-4 d-none" id="akun-content">
             <ol class="px-3">
@@ -275,7 +317,8 @@
                             <li>Tanggal lahir.</li>
                             <li>Alamat lengkap.</li>
                             <li>Surat keterangan sehat yang diunggah dalam format digital.</li>
-                            <li>Suratizin orang tua, khusus bagi pendaki di bawah usia 18 tahun, yang juga harus diunggah.</li>
+                            <li>Suratizin orang tua, khusus bagi pendaki di bawah usia 18 tahun, yang juga harus diunggah.
+                            </li>
                         </ul>
                     </dd>
                 </dl>
@@ -295,7 +338,57 @@
                     <dd></dd>
                 </dl>
             </ol>
+
+            <div class="container my-5">
+                @include('homepage.panduan.stepper', [
+                    'panduan' => [
+                        [
+                            'title' => 'Klik Tombol Daftar',
+                            'caption' =>
+                                'Langkah pertama adalah membuka situs etikettnks.gov.id dan memilih menu Registrasi Akun atau tombol Daftar untuk memulai proses pendaftaran.',
+                            'details' => [],
+                        ],
+                        [
+                            'title' => 'Masukkan Email dan Password',
+                            'caption' =>
+                                'Isi alamat email yang aktif dan buat kata sandi untuk akun Anda. Pastikan menggunakan email yang valid karena proses verifikasi akan dilakukan melalui email tersebut.',
+                            'details' => [],
+                        ],
+                        [
+                            'title' => 'Verifikasi Email',
+                            'caption' =>
+                                'Setelah mengisi email dan password, Anda akan menerima email konfirmasi berisi tautan khusus (one-link). Klik tautan tersebut untuk memverifikasi akun Anda dan melanjutkan ke langkah berikutnya.',
+                            'details' => [],
+                        ],
+                        [
+                            'title' => 'Isi Biodata Lengkap',
+                            'caption' =>
+                                'Setelah verifikasi email berhasil, lengkapi biodata Anda di formulir pendaftaran. Informasi yang perlu diisi meliputi:',
+                            'details' => [
+                                'Nama lengkap sesuai identitas.',
+                                'Nomor KTP.',
+                                'Tanggal lahir.',
+                                'Alamat lengkap.',
+                                'Surat keterangan sehat yang diunggah dalam format digital.',
+                                'Surat izin orang tua, khusus bagi pendaki di bawah usia 18 tahun, yang juga harus diunggah.',
+                            ],
+                        ],
+                        [
+                            'title' => 'Kirim dan Tunggu Verifikasi',
+                            'caption' =>
+                                'Setelah semua biodata dan dokumen diisi serta diunggah, kirim formulir dengan mengklik tombol Submit. Admin akan memeriksa data Anda untuk memastikan kelengkapan dan keabsahan dokumen sebelum akun Anda dapat digunakan.',
+                            'details' => [],
+                        ],
+                        [
+                            'title' =>
+                                'Setelah biodata terverifikasi, akun Anda akan aktif dan siap digunakan untuk proses pemesanan tiket.',
+                            'caption' => '',
+                            'details' => [],
+                        ],
+                    ],
+                ])
+            </div>
         </section>
-        
+
     </div>
 @endsection

@@ -290,7 +290,7 @@
         for (let i = 0; i < navItems.length; i++) {
             const routes = navItems[i].getAttribute('data-route');
             const tr = routes != null ? extractUrls(routes) : '[]';
-            console.log(tr);
+            // console.log(tr);
             if (!tr.includes(window.location.href)) {
                 navItems[i].classList.remove('gk-bg-base-white');
                 navItems[i].classList.remove('gk-text-primary700');
