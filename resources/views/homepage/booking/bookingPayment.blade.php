@@ -223,17 +223,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Jalur Simaksi </td>
-                                    <td> : </td>
-                                    <td>
-                                        @if ($booking->lampiran_simaksi == null)
-                                            <span class="text-danger">Tidak</span>
-                                        @else
-                                            <span class="text-success">Ya</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
                                     <td>Gate Masuk</td>
                                     <td> : </td>
                                     <td>{{ $booking->gateMasuk->nama }} </td>
