@@ -4,8 +4,6 @@ namespace App\Http\Controllers\homepage;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\BookingHelperController;
-use App\Http\Controllers\helper\BookingValidator;
-use App\Http\Controllers\helper\MidtransController;
 use App\Http\Controllers\helper\uploadFileControlller;
 use App\Models\bio_pendaki;
 use App\Models\destinasi;
@@ -16,7 +14,7 @@ use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
 use App\Models\pembayaran;
-use App\Models\QRIS as qris;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -94,6 +92,13 @@ class booking extends Controller
             'gerbang_masuk' => 'required',
             'gerbang_keluar' => 'required',
         ]);
+
+        // cek user verified
+        $user = User::find(Auth::user()->id)->with('biodata')->first();
+        if (!$user->biodata or $user->biodata->verified != 'verified') {
+            return redirect()->route('user.dashboard.profile')->with('error', 'Biodata anda belum terverifikasi');
+        }
+
 
         $dateStart = Carbon::createFromFormat('Y-m-d', $request->date_start);
         $dateEnd = Carbon::createFromFormat('Y-m-d', $request->date_end);

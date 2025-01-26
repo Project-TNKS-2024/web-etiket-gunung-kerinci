@@ -26,6 +26,13 @@
 
 
 <!-- notif jika belum verif biodata -->
+<div>
+    @if ($user->biodata == null or $user->biodata->verified != 'verified')
+    <div class="alert alert-warning" role="alert">
+        Anda belum menyelesaikan verifikasi biodata anda. Silahkan lengkapi biodata anda. Silahkan klik <a href="{{ route('user.dashboard.profile') }}">disini</a> untuk melengkapi biodata anda.
+    </div>
+    @endif
+</div>
 
 <!-- 
 <div class="row">
@@ -55,7 +62,7 @@
             <div class="card-container mb-3" style="overflow-x: auto; white-space: nowrap;">
 
                 @foreach ($bookings as $booking)
-                    @include('etiket.user.sections.tiket', ['booking'=>$booking])
+                @include('etiket.user.sections.tiket', ['booking'=>$booking])
                 @endforeach
 
                 @if (count($bookings) == 0)
