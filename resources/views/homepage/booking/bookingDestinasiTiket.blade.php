@@ -129,7 +129,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <button type="submit" class="btn btn-primary w-100">Lanjut Booking</button>
+                    <button type="submit" class="btn btn-primary gk-bg-primary700 w-100">Lanjut Booking</button>
                 </div>
 
             </form>

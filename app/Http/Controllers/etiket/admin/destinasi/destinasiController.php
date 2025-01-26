@@ -127,6 +127,8 @@ class destinasiController extends Controller
             'qris' => 'required|image|mimes:jpg,png,jpeg|max:2048',
         ]);
 
+        $uploadController = new uploadFileControlller();
+
         $new_gate = new ModelGates();
         $new_gate->id_destinasi = $request->id_destinasi;
         $new_gate->nama = $request->nama;
@@ -136,16 +138,9 @@ class destinasiController extends Controller
         $new_gate->lokasi = $request->lokasi;
         $new_gate->lokasi_maps = $request->lokasi_maps;
         $new_gate->detail = $request->detail;
-        $new_gate->save();
-
-        $uploadController = new uploadFileControlller();
         $qris_path = $uploadController->create('foto', 'qris', $request->file('qris'));
-
-        qris::create([
-            'id' => now(),
-            'id_gate' => $new_gate->id,
-            'path' => $qris_path,
-        ]);
+        $new_gate->qris = $qris_path;
+        $new_gate->save();
 
         return back()->with('success', 'Berhasil menambah gate');
     }
@@ -181,18 +176,8 @@ class destinasiController extends Controller
         $gate = ModelGates::find($request->id_gate);
 
         // Update gate details
-        $gate->update([
-            'nama' => $request->nama,
-            'status' => $request->status,
-            'max_pendaki_hari' => $request->max_pendaki_hari,
-            'min_pendaki_booking' => $request->min_pendaki_booking,
-            'lokasi' => $request->lokasi,
-            'lokasi_maps' => $request->lokasi_maps,
-            'detail' => $request->detail,
-        ]);
 
-        // Check if a QRIS record exists
-        $existingQRIS = qris::where('id_gate', $request->id_gate)->first();
+        $existingQRIS = $gate->qris;
 
         if ($request->hasFile('qris')) {
             $uploadController = new uploadFileControlller();
@@ -203,19 +188,35 @@ class destinasiController extends Controller
                 $path = $uploadController->upadate($existingQRIS->path, $request->file('qris'));
 
                 // Update QRIS entry in the database
-                $existingQRIS->update(['path' => $path]);
+                $gate->update([
+                    'nama' => $request->nama,
+                    'status' => $request->status,
+                    'max_pendaki_hari' => $request->max_pendaki_hari,
+                    'min_pendaki_booking' => $request->min_pendaki_booking,
+                    'lokasi' => $request->lokasi,
+                    'lokasi_maps' => $request->lokasi_maps,
+                    'detail' => $request->detail,
+                    'qris' => $path,
+                ]);
             } else {
                 // Upload the new QRIS file
-                $qrisPath = $uploadController->create($type = 'foto', $folder = 'qris', $request->file('qris'));
+                $path = $uploadController->create($type = 'foto', $folder = 'qris', $request->file('qris'));
 
                 // Create a new QRIS record
-                qris::create([
-                    'id' => now(),
-                    'id_gate' => $request->id_gate,
-                    'path' => $qrisPath,
+                $gate->update([
+                    'nama' => $request->nama,
+                    'status' => $request->status,
+                    'max_pendaki_hari' => $request->max_pendaki_hari,
+                    'min_pendaki_booking' => $request->min_pendaki_booking,
+                    'lokasi' => $request->lokasi,
+                    'lokasi_maps' => $request->lokasi_maps,
+                    'detail' => $request->detail,
+                    'qris' => $path,
                 ]);
             }
         }
+
+        // Check if a QRIS record exists
 
         // Redirect with success message
         return back()->with('success', 'Berhasil update gate');

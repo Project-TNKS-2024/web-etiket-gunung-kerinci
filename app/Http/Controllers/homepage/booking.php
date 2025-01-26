@@ -9,6 +9,7 @@ use App\Models\bio_pendaki;
 use App\Models\destinasi;
 use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
+use App\Models\gk_gates;
 use App\Models\gk_pendaki;
 use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
@@ -430,10 +431,13 @@ class booking extends Controller
 
         $booking->total_pembayaran = gk_pendaki::where('booking_id', $booking->id)->sum('tagihan');
 
+        $hitung = function($param) {
+            return $this->helper->getDetailTagihan($param);
+        };
         return view('homepage.booking.bookingDetail', [
             // 'snaptoken' => $snapToken,
             'booking' => $booking,
-            'pendakis' => $booking->pendakis,
+            'formulirPendakis' => $booking->pendakis,
             'hitung' => $hitung
             // 'pendakis' => $booking->pendakis,
         ]);
@@ -453,7 +457,10 @@ class booking extends Controller
 
         // return $pembayaran;
         if ($pembayaran->isEmpty()) {
-            return redirect()->back()->withErrors(['error' => 'Pembayaran tidak ditemukan']);
+            // return redirect()->back()->withErrors(['error' => 'Pembayaran tidak ditemukan']);
+            
+            $booking->status_booking = 2;
+            // return redirect()->route('homepage.booking.formulir', ['id' => $id]);
         }
 
         foreach ($pembayaran as $payment) {
@@ -480,14 +487,24 @@ class booking extends Controller
         }
 
         $booking->total_pembayaran = gk_pendaki::where('booking_id', $id)->sum('tagihan');
-        $booking->save();
         $pembayaran = pembayaran::where('id_booking', $id)->get();
 
 
-        // dd();
+        // Check if any 'status' in pembayaran is 'approved'
+        $verified = $pembayaran->contains('status', 'approved'); // true if at least one 'status' is 'approved'
+        $qris = gk_gates::where('id', $booking->gate_masuk)->first()->qris;
+        $hitung = function($param) {
+            return $this->helper->getDetailTagihan($param);
+        };
+
+        // dd($verified);
         return view('homepage.booking.bookingPayment', [
+            'qris' => $qris,
             'booking' => $booking,
-            'pembayaran' => $pembayaran
+            'pendakis' => $booking->pendakis,
+            'pembayaran' => $pembayaran,
+            'verified' => $verified, // Pass the verified value to the view
+            'hitung' => $hitung
         ]);
     }
 
@@ -514,6 +531,7 @@ class booking extends Controller
             'payment_method' => 'manual',
             'bukti_pembayaran' => $path,
             'keterangan' => '',
+            'spesial' => '',
             'deadline' => Carbon::now()->addDays(1),
         ]);
 

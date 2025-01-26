@@ -142,7 +142,7 @@ class BookingHelperController extends Controller
         $idtiket = $booking->id_tiket;
         $tiket = gk_tiket_pendaki::where([
             'id_paket_tiket' => $idtiket,
-            'kategori_pendaki' => $pendaki->biodata->kenegaraan
+            'kategori_pendaki' => $pendaki->biodata->kenegaraan,
         ])->first();
 
         // dd($tiket);
@@ -152,8 +152,18 @@ class BookingHelperController extends Controller
         $tagihanMasuk = $tiket->harga_masuk_wk * $hari->getData()->weekends + $tiket->harga_masuk_wd * $hari->getData()->weekdays;
         $tagihanKemah = ($hari->getData()->weekends + $hari->getData()->weekdays - 1) * $tiket->harga_kemah;
         $tagihanTraking = $tiket->harga_traking;
-        $tagihanAnsuransi = $tiket->harga_ansuransi;
-        return ($tagihanMasuk + $tagihanKemah + $tagihanTraking + $tagihanAnsuransi);
+
+        $totalDays = $hari->getData()->weekends + $hari->getData()->weekdays;
+        $insuranceCostPerPeriod = $tiket->harga_ansuransi; // Misalnya, Rp 50,000 per tiga hari
+        $insurancePeriods = ceil($totalDays / 3); // Pembulatan ke atas
+        $tagihanAsuransi = $insurancePeriods * $insuranceCostPerPeriod;
+
+        return [
+            'masuk' => $tagihanMasuk,
+            'berkemah' => $tagihanKemah,
+            'tracking' => $tagihanTraking,
+            'asuransi' => $tagihanAsuransi
+        ];
     }
 
 
