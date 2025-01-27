@@ -20,7 +20,7 @@
                     @forelse ($gambar as $g)
                     <div class="carousel-item {{ $loop->index == 0 ? 'active' : '' }}">
                         <img src="{{ url('/') . '/' . $g->src }}" class="d-block w-100 shadow-3 rounded border"
-                            style="object-fit: cover;height: 500px; object-position: 0% 0%" alt="...">
+                            style="object-fit: inherit;height: 500px; object-position: 0% 0%" alt="...">
                     </div>
                     @empty
                     <div class="carousel-item active">

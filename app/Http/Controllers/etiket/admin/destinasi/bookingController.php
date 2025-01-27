@@ -15,7 +15,7 @@ class bookingController extends Controller
 
         // Menggunakan query builder untuk memulai query
         // $query = ModelBooking::with('pendakis', 'gateMasuk', 'gateKeluar', 'gkTiket')->where('id_destinasi', $id);
-        $query = ModelBooking::with('pendakis', 'gateMasuk', 'gateKeluar', 'gkTiket')
+        $query = ModelBooking::with('pendakis', 'gateMasuk', 'gateKeluar', 'gkTiket', 'pendakis.biodata')
             ->whereHas('gkTiket', function ($q) use ($id) {
                 $q->where('id_destinasi', $id);
             });
@@ -63,7 +63,7 @@ class bookingController extends Controller
         $data = $query->paginate(10);
 
         // return $data;
-        // return $data[1];
+        // return $data[0];
 
         return view('etiket.admin.destinasi.booking.index', [
             'id' => $id,

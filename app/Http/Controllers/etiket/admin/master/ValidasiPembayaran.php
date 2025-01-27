@@ -77,36 +77,41 @@ class ValidasiPembayaran extends Controller
     {
         $request->validate([
             'id_booking' => 'required|string',
-            // 'keterangan' => 'string|nullable|max:255',
+            'keterangan' => 'required|string|nullable|max:255',
             'verified' => 'required|in:yes,no',
         ]);
 
-        $booking = gk_booking::with('pembayaran')->find($request->id_booking);
+        $booking = gk_booking::with('pembayaran')->findOrFail($request->id_booking);
         if (!$booking) {
             abort(404);
         }
 
         // return $booking;
+        $booking->update([
+            'unique_code' => $request->verified === 'yes' ? $this->helper->generateCode(10) : null,
+            'status_booking' => $request->verified === 'yes' ? 4 : 3,
+            'status_pembayaran' => $request->verified === 'yes' ? 1 : 0,
 
-        if ($request->verified == 'yes') {
-            $booking->update([
-                'unique_code' => $this->helper->generateCode(10),
-                'status_booking' => 4,
-                'status_pembayaran' => 1,
-            ]);
-        }
+        ]);
 
-        foreach ($booking->pembayaran as $pembayaran) {
-            if ($request->verified == 'yes') {
-                pembayaran::where('id', $pembayaran->id)->update([
-                    'status' => 'success',
-                ]);
-            } else {
-                pembayaran::where('id', $pembayaran->id)->update([
-                    'status' => 'failed',
+
+        if ($booking->pembayaran->isNotEmpty()) {
+            foreach ($booking->pembayaran as $pembayaran) {
+                $pembayaran->update([
+                    'status' => $request->verified === 'yes' ? 'success' : 'failed',
                 ]);
             }
+
+            // Perbarui keterangan pembayaran terakhir
+            $lastPembayaran = $booking->pembayaran->last();
+            $lastPembayaran->update([
+                'keterangan' => $request->keterangan,
+            ]);
+        } else {
+            return redirect()->back()->with('error', 'Pembayaran tidak ditemukan');
         }
+
+
 
         return redirect()->route('admin.master.validasiPembayaran')->with('success', 'Pengajuan berhasil diperbarui');
     }

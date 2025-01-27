@@ -60,7 +60,7 @@
                     <td>{{ optional($booking->pembayaran->first())->status }}</td>
                     <td>{{ optional($booking->pembayaran->first())->keterangan }}</td>
                     <td>
-                        @if (optional($booking->pembayaran->first())->status == 'pending')
+                        @if (optional($booking->pembayaran->last())->status == 'pending')
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Verifikasi</button>
                         @else
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Detail</button>
@@ -106,13 +106,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <form method="post" id="btnVerify" action="{{ route('admin.master.validasi.updateAction') }}">
+
+                <form method="post" id="btnVerify" class="d-flex align-items-center w-100" action="{{ route('admin.master.validasi.updateAction') }}">
                     @csrf
+                    <input type="text" name="keterangan" class="form-control me-3" placeholder="Masukkan keterangan">
                     <input type="hidden" name="id_booking" id="updateIdBooking" value="">
                     <button type="submit" name="verified" class="btn btn-primary" value="yes">Setujui</button>
-                    <button type="submit" name="verified" class="btn btn-warning" value="no">Tolak</button>
+                    <button type="submit" name="verified" class="btn btn-warning ms-1" value="no">Tolak</button>
                 </form>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
             </div>
 
         </div>
