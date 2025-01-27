@@ -124,16 +124,19 @@
             </div>
          </div>
          <div class="modal-footer">
-
-            <form method="post" id="btnVerify" class="d-none" action="{{ route('admin.master.pengunjung.verified')}}">
+            <form method="post" id="btnVerify" class="d-flex align-items-center w-100" action="{{ route('admin.master.pengunjung.verified') }}">
                @csrf
+               <!-- Input keterangan dengan fleksibilitas penuh -->
+               <input type="text" name="keterangan" class="form-control me-3" placeholder="Masukkan keterangan">
                <input type="hidden" name="id_user" id="id_user" value="">
-               <button type="submit" name="verified" class="btn btn-success" value="verified">Verifikasi</button>
-               <button type="submit" name="verified" class="btn btn-danger" value="unverified">Unverifikasi</button>
-            </form>
 
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+               <!-- Tombol aksi -->
+               <button type="submit" name="verified" class="btn btn-success me-2" value="verified">Verifikasi</button>
+               <button type="submit" name="verified" class="btn btn-danger me-2" value="unverified">Unverifikasi</button>
+            </form>
+            <!-- Tombol close di luar form -->
          </div>
+
 
       </div>
    </div>

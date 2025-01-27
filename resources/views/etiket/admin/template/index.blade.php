@@ -125,6 +125,7 @@
     @yield('js')
 
     @include('etiket.admin.template.modal')
+
     @include('etiket.admin.template.modal-notif')
 
 

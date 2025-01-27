@@ -29,6 +29,8 @@ class bio_pendaki extends Model
         'kabupaten',
         'kec',
         'desa',
+
+        'keterangan',
         'verified'
 
     ];

@@ -30,6 +30,7 @@ class PengunjungController extends Controller
         $request->validate([
             'id_user' => 'required',
             'verified' => 'required',
+            'keterangan' => 'string|nullable|max:255',
         ]);
 
         // return $request;
@@ -44,6 +45,7 @@ class PengunjungController extends Controller
             } elseif ($request->verified == 'unverified') {
                 $biodata->verified = 'unverified';
             }
+            $biodata->keterangan = $request->keterangan;
             $biodata->save();
         } else {
             return redirect()->back()->with('error', 'Data tidak valid');

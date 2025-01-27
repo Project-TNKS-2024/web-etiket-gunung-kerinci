@@ -8,8 +8,12 @@
             <img src="{{ asset('assets/img/dashboard/Ellipse 143.png') }}" width="100" />
         </div>
         <div class="py-0 my-0 px-4 w-100 text-center">
+            @if (isset($user->biodata) and $user->biodata->verified =='verified')
             <h5 class="fw-semibold ">{{ auth()->user()->biodata->first_name }}</h5>
+            <h6 class="fw-light ">Id : {{ auth()->user()->biodata->id }}</h6>
+            @else
             <h6 class="fw-light ">{{ auth()->user()->email }}</h6>
+            @endif
         </div>
     </div>
 

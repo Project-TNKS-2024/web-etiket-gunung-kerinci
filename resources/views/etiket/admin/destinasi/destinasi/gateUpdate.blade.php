@@ -63,22 +63,26 @@
             </div>
          </div>
 
+         <div class="mb-3">
+            <label for="qris" class="form-label">Tampilan QRIS</label>
+            <div class="input-group flex-nowrap">
+               <input class="form-control" type="file" name="qris" id="qris" accept="image/*,.pdf">
+               @if (isset($gate->qris) && file_exists(public_path($gate->qris)))
+               <input type="hidden" value="{{asset( $gate->qris)}}" id="qris_existing">
+               @endif
+               <button class="input-group-text d-none" type="button" data-id-target="qris">
+                  <i class=" fa-regular fa-eye"></i>
+               </button>
+            </div>
+            <span class="keterangan" style="font-size: 12px;">Gambar Qris, Max 1Mb</span>
+         </div>
+
          <!-- Detail -->
          <div class="mb-3">
             <label for="detail" class="form-label">Detail</label>
             <textarea class="form-control" id="detail" name="detail" rows="3">{{ old('detail', $gate->detail) }}</textarea>
          </div>
 
-         <div class="mb-3">
-            <label for="detail" class="form-label">Tampilan QRIS</label>
-            <div class="input-group flex-nowrap">
-               <input class="form-control" type="file" name="qris" id="qris" accept="image/*,.pdf">
-               <button class="input-group-text d-none" type="button" data-id-target="lampiran_identitas">
-                   <i class=" fa-regular fa-eye"></i>
-               </button>
-               <a href="{{asset($qris->path)}}" target="_blank"><img class="input-group-text btn-info btn" src="{{asset('assets/icon/tnks/view_alt-dark.svg')}}"/></a>
-           </div>
-         </div>
 
 
          <!-- Submit Button -->
@@ -87,4 +91,9 @@
    </div>
 </div>
 
+@endsection
+
+@section('js')
+<!-- script modal show file -->
+@include('homepage.template.modal-prefiewFile')
 @endsection

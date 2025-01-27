@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('lokasi')->nullable();
             $table->string('lokasi_maps')->nullable();
             $table->text('detail')->nullable();
-            $table->string('qris');
+            $table->string('qris')->nullable();
             $table->timestamps();
         });
     }

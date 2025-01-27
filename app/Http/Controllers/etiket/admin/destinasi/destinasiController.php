@@ -149,11 +149,10 @@ class destinasiController extends Controller
     {
         $gate = ModelGates::find($id);
         $destinasi = ModelsDestinasi::find($gate->id_destinasi);
-        $qris = qris::where('id_gate', $gate->id)->first();
-        // dd($qris);
+
+        // return $gate;
         return view('etiket.admin.destinasi.destinasi.gateUpdate', [
             'gate' => $gate,
-            'qris' => $qris,
             'destinasi' => $destinasi,
         ]);
     }
@@ -169,7 +168,7 @@ class destinasiController extends Controller
             'lokasi' => 'required|string|max:255',
             'lokasi_maps' => 'nullable|string|max:500',
             'detail' => 'nullable|string|max:1000',
-            'qris' => 'nullable|image|mimes:jpg,png,jpeg|max:2048', // Make QRIS optional
+            'qris' => 'nullable|image|mimes:jpg,png,jpeg|max:1048', // Make QRIS optional
         ]);
 
         // Find the gate
@@ -177,15 +176,12 @@ class destinasiController extends Controller
 
         // Update gate details
 
-        $existingQRIS = $gate->qris;
-
         if ($request->hasFile('qris')) {
             $uploadController = new uploadFileControlller();
 
-            if ($existingQRIS) {
-                // dd($gate);
+            if ($gate->qris) {
                 // Update the existing QRIS file
-                $path = $uploadController->upadate($existingQRIS->path, $request->file('qris'));
+                $path = $uploadController->upadate($gate->qris->path, $request->file('qris'));
 
                 // Update QRIS entry in the database
                 $gate->update([

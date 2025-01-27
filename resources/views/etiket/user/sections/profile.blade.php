@@ -34,7 +34,7 @@
                 @endif
                 @if (isset($user->biodata)and $user->biodata->verified == 'unverified')
                 <div class="alert alert-danger" role="alert">
-                    Anda belum melengkapi data diri. Silakan lengkapi data diri anda.
+                    Admin : {{$user->biodata->keterangan}}
                 </div>
                 @csrf
                 @else

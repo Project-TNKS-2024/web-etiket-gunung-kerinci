@@ -17,13 +17,13 @@ $bookingRoute .= route('homepage.booking.destinasi.paket.tiket', ['id' => $d->id
                 <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="">
                 <div>Taman Nasional Kerinci Seblat</div>
             </a>
-            <div class="d-none d-sm-flex align-items-center ">
+            <!-- <div class="d-none d-sm-flex align-items-center ">
                 <select class="form-select border-0 form-select-sm w-100" style="background-color: transparent"
                     aria-label="Small select example">
                     <option value="id" selected>Pilih Bahasa : Indonesia</option>
                     <option value="en">Select Language: English</option>
                 </select>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="container">
@@ -98,21 +98,35 @@ $bookingRoute .= route('homepage.booking.destinasi.paket.tiket', ['id' => $d->id
                         aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
                 </li>
                 @endif
+                <div class="dropdown">
+                    <span class="profile-container rounded-pill d-flex align-items-center" style="user-select: none; cursor: pointer;" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ asset('assets/img/dashboard/Ellipse 143.png') }}" style="height: 30px;" />
+                    </span>
 
-                <span class="profile-container px-2 py-1 rounded-pill" style="user-select: none; cursor: pointer;">
-                    <img src="{{asset('assets/img/dashboard/Ellipse 143.png')}}" class="" style="height: 30px;" />
-                    <img src="{{asset('assets/icon/tnks/chevron.svg')}}" />
-                </span>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <!-- Dashboard -->
+                        <li>
+                            <form action="{{ route('etiket.auth.logout') }}" method="post" class="m-0">
+                                @csrf
+                                <button class="dropdown-item d-flex align-items-center text-danger" type="submit">
+                                    <i class="me-2 bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
+
                 @endauth
             </ul>
 
 
-            <div class="d-block d-sm-none my-2">
+            <!-- <div class="d-block d-sm-none my-2">
                 <select class="form-select form-select-sm" aria-label="Small select example">
                     <option value="id" selected>Pilih Bahasa : Indonesia</option>
                     <option value="en">Select Language: English</option>
                 </select>
-            </div>
+            </div> -->
         </div>
     </div>
 </nav>

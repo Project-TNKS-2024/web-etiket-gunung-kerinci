@@ -1,15 +1,5 @@
 <!-- ========================================= Modal Delete =========================================  -->
-<!-- <a href="#" class="cursor-pointer shadow-sm"
-    data-bs-toggle="modal"
-    data-bs-target="#ModalDelete"
-    data-bs-action="google.com"
-    data-bs-input-hidden-input_hiddem="1"
-    data-bs-input-text-input_text="isian text"
-    data-bs-input-number-input_number="245"
-    data-bs-input-date-input_date="2023-01-01"
-    data-bs-title="title modal"
-    data-bs-body="pesan modal">
-</a> -->
+
 
 <div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="ModalDeleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

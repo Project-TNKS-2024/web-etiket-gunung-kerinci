@@ -95,7 +95,10 @@ class booking extends Controller
         ]);
 
         // cek user verified
-        $user = User::find(Auth::user()->id)->with('biodata')->first();
+        $user = User::where('id', Auth::user()->id)
+            ->with('biodata')->first();
+
+        // return $user;
         if (!$user->biodata or $user->biodata->verified != 'verified') {
             return redirect()->route('user.dashboard.profile')->with('error', 'Biodata anda belum terverifikasi');
         }
@@ -431,9 +434,10 @@ class booking extends Controller
 
         $booking->total_pembayaran = gk_pendaki::where('booking_id', $booking->id)->sum('tagihan');
 
-        $hitung = function($param) {
+        $hitung = function ($param) {
             return $this->helper->getDetailTagihan($param);
         };
+
         return view('homepage.booking.bookingDetail', [
             // 'snaptoken' => $snapToken,
             'booking' => $booking,
@@ -458,7 +462,7 @@ class booking extends Controller
         // return $pembayaran;
         if ($pembayaran->isEmpty()) {
             // return redirect()->back()->withErrors(['error' => 'Pembayaran tidak ditemukan']);
-            
+
             $booking->status_booking = 2;
             // return redirect()->route('homepage.booking.formulir', ['id' => $id]);
         }
@@ -493,7 +497,7 @@ class booking extends Controller
         // Check if any 'status' in pembayaran is 'approved'
         $verified = $pembayaran->contains('status', 'approved'); // true if at least one 'status' is 'approved'
         $qris = gk_gates::where('id', $booking->gate_masuk)->first()->qris;
-        $hitung = function($param) {
+        $hitung = function ($param) {
             return $this->helper->getDetailTagihan($param);
         };
 

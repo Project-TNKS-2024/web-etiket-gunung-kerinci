@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('kec');
             $table->string('desa');
 
+            $table->string('keterangan')->nullable();
             $table->enum('verified', ['unverified', 'pending', 'verified'])->default("unverified");
             $table->timestamp('verified_at')->nullable();
 
