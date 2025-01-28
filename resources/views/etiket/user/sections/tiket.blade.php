@@ -3,17 +3,17 @@
         <div class="container">
             <div class="status-tiket d-flex gap-2 justify-content-between align-items-center">
                 Status Tiket
-                    @if ($booking->pembayaran->contains('status', 'approved'))
-                        <span class="btn gk-bg-success200">
-                            Sudah Bayar
-                        </span>
-                    @else
-                        <span class="btn gk-bg-secondary600">
-                            Belum Bayar
-                        </span>
-                    @endif
+                @if ($booking->pembayaran->contains('status', 'approved'))
+                <span class="btn gk-bg-success200">
+                    Sudah Bayar
+                </span>
+                @else
+                <span class="btn gk-bg-secondary600">
+                    Belum Bayar
+                </span>
+                @endif
             </div>
-            
+
             <label for="ipt_namaketua" class="fw-bold">Nama Ketua</label>
             <input type="text" name="ipt_namaketua"
                 value="{{ isset($booking->pendakis[0]->first_name) ? $booking->pendakis[0]->first_name." ".$booking->pendakis[0]->last_name : '' }}"
@@ -37,7 +37,7 @@
                         id="ipt_jumlahanggota" class="form-control" readonly>
                 </div>
                 <div class="col-6">
-                  
+
                     <label for="ipt_gerbangkeluar" class="fw-bold">Gerbang Keluar</label>
                     <input type="text" name="ipt_gerbangkeluar"
                         value="{{ $booking->gateKeluar->nama }}" id="ipt_gerbangkeluar"
@@ -73,9 +73,9 @@
                     Lihat Tiket
                 </a>
                 @else
-                    <a href="{{route('homepage.booking.payment', ['id' => $booking->id])}}" class="btn w-100 btn-gl-primary text-white">
-                        Bayar
-                    </a>
+                <a href="{{route('homepage.booking.payment', ['id' => $booking->id])}}" class="btn w-100 btn-gl-primary text-white">
+                    Bayar
+                </a>
                 @endif
             </div>
         </div>

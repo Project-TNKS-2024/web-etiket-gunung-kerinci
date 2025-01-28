@@ -61,7 +61,17 @@
     @include('homepage.booking.booking-nav', ['step' => 2])
 
     <div id="booking-detail">
-        <h1 class="fs-4 fw-bold text-center">Pembayaran Pemesanan {{ $booking->status_booking }}</h1>
+        <p class=" text-center">
+            <span class="fs-4 fw-bold">
+                Pembayaran Pemesanan
+            </span>
+            @if ($booking->status_pembayaran == 1)
+            <span class="badge text-bg-success ">Sukses</span>
+            @else
+            <span class="badge text-bg-warning ">Belum Bayar</span>
+            @endif
+        </p>
+
 
         <div class="row mt-3">
             <div class="col-12 col-md-6">
@@ -119,6 +129,7 @@
                     </div>
                 </div>
 
+                @if ($booking->status_booking ==3)
                 <h1 class="fs-5 fw-bold">Upload Bukti Pembayaran</h1>
                 <form class="mb-3 d-block d-sm-flex gap-2" action="{{ route('homepage.booking.addBuktiPembayaran') }}"
                     method="post" enctype="multipart/form-data">
@@ -138,6 +149,7 @@
                         Upload
                     </button>
                 </form>
+                @endif
 
                 <h1 class="fs-5 fw-bold">Riwayat Pembayaran</h1>
                 @if (count($pembayaran) > 0)
@@ -161,7 +173,7 @@
                                 <td class="text-center">
                                     @if ($item->status == 'pending')
                                     <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
-                                    @elseif($item->status == 'approved')
+                                    @elseif($item->status == 'success')
                                     <span class="badge bg-success px-3 py-2">Disetujui</span>
                                     @else
                                     <span class="badge bg-danger px-3 py-2">Ditolak</span>
@@ -181,7 +193,8 @@
                                     </button>
 
                                 </td>
-                                <td class="text-center">
+                                @if ($booking->status_booking <=3)
+                                    <td class="text-center">
                                     <form action="{{ route('homepage.booking.payment.delete') }}" method="POST"
                                         class="d-inline">
                                         @csrf
@@ -194,7 +207,8 @@
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
-                                </td>
+                                    </td>
+                                    @endif
                             </tr>
                             @endforeach
                         </tbody>
@@ -327,11 +341,16 @@
 
     <div class="row">
         <div class="col-12 col-md-4">
-            <a type="submit" class="btn btn-warning w-100 fw-bold mt-3"
-                href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}">Batalkan Pembayaran</a>
+            @if ($booking->status_booking <=3)
+                <a type="submit" class="btn btn-warning w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}">Batalkan Pembayaran</a>
+                @endif
         </div>
         <div class="col-12 col-md-4"></div>
-        <div class="col-12 col-md-4 text-end"></div>
+        <div class="col-12 col-md-4 text-end">
+            @if ($booking->status_booking >= 4)
+            <a type="submit" class="btn btn-success w-100 fw-bold mt-3" href="{{ route('dashboard.tiket', ['id' => $booking->id]) }}">Lihat Tiket</a>
+            @endif
+        </div>
     </div>
 </div>
 

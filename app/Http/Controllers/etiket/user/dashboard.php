@@ -26,7 +26,8 @@ class dashboard extends Controller
 
     public function riwayat()
     {
-        $user = Auth::user();
+        $user = User::with('biodata')->find(Auth::user()->id);
+        // return $user;
         $booking = gk_booking::where('id_user', $user->id)->get();
         return view('etiket.user.sections.riwayat', [
             'bookings' => $booking,

@@ -486,7 +486,7 @@ class booking extends Controller
         if (!$booking) {
             abort(404);
         }
-        if ($booking->status_booking != 3) {
+        if ($booking->status_booking < 3) {
             return redirect()->route('homepage.booking', ['id' => $id]);
         }
 
@@ -569,13 +569,15 @@ class booking extends Controller
 
     public function tiket($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('id', $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis', 'gateMasuk.destinasi'])->where('id', $id)->first();
 
         if (!$booking) {
             abort(404);
         } else if ($booking->status_booking < 4) {
             abort(404);
         }
+
+        // return $booking;
 
         return view('homepage.booking.bookingTiket', [
             'booking' => $booking,

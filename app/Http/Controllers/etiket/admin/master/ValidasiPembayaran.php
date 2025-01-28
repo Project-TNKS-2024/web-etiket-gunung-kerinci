@@ -96,15 +96,10 @@ class ValidasiPembayaran extends Controller
 
 
         if ($booking->pembayaran->isNotEmpty()) {
-            foreach ($booking->pembayaran as $pembayaran) {
-                $pembayaran->update([
-                    'status' => $request->verified === 'yes' ? 'success' : 'failed',
-                ]);
-            }
-
             // Perbarui keterangan pembayaran terakhir
             $lastPembayaran = $booking->pembayaran->last();
             $lastPembayaran->update([
+                'status' => $request->verified === 'yes' ? 'success' : 'failed',
                 'keterangan' => $request->keterangan,
             ]);
         } else {

@@ -8,7 +8,7 @@
             <img src="{{ asset('assets/img/dashboard/Ellipse 143.png') }}" width="100" />
         </div>
         <div class="py-0 my-0 px-4 w-100 text-center">
-            @if (isset($user->biodata) and $user->biodata->verified =='verified')
+            @if (isset(auth()->user()->biodata) and auth()->user()->biodata->verified =='verified')
             <h5 class="fw-semibold ">{{ auth()->user()->biodata->first_name }}</h5>
             <h6 class="fw-light ">Id : {{ auth()->user()->biodata->id }}</h6>
             @else
@@ -16,6 +16,10 @@
             @endif
         </div>
     </div>
+
+
+
+
 
     <!-- Bagian Link Navigasi -->
     <div class="d-flex flex-column gap-2 px-4 w-100 h-100 pb-4 mt-3">

@@ -79,8 +79,12 @@ class profile extends Controller
         $bio = null;
         if ($user->id_bio) {
             $bio = bio_pendaki::find($user->id_bio);
+            if (!$bio->verified_at) {
+                $bio->update([
+                    'nik' => $request->nik,
+                ]);
+            }
             $bio->update([
-                'nik' => $request->nik,
                 'kenegaraan' => $request->kewarganegaraan,
                 'first_name' => $request->firstName,
                 'last_name' => $request->lastName,
