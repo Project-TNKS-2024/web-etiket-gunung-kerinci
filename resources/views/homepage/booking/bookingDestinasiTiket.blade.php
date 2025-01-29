@@ -174,7 +174,7 @@
                     <ul>
                         <li><strong>Harga tiket masuk:</strong> Dikalikan dengan jumlah hari pendakian</li>
                         <li><strong>Harga kemah:</strong> Dikalikan dengan jumlah malam pendakian</li>
-                        <li><strong>Harga tracking</strong></li>
+                        <li><strong>Harga pendakian</strong></li>
                         <li><strong>Harga asuransi</strong></li>
                     </ul>
                     <p><i>Catatan: Pastikan untuk menghitung dengan benar sesuai dengan durasi dan fasilitas yang dipilih.</i></p>
@@ -223,7 +223,7 @@
 
 <script>
     // Data harga tiket
-    const harga = @json($tiket);
+    const harga = JSON.parse('@json($tiket)');
 
     function btnIptInc(id) {
         let input = document.getElementById(id);

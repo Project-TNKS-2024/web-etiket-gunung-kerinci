@@ -278,19 +278,19 @@
                                 <td>
                                     <div>{{ $pendaki->first_name . ' ' . $pendaki->last_name }}</div>
                                     <div class="d-flex justify-content-between">
-                                        <div class="small text-muted" style="">Biaya Masuk</div>
+                                        <div class="small text-muted">Biaya Masuk</div>
                                     </div>
                                     <div class="d-flex justify-content-between">
-                                        <div class="small text-muted" style="">Berkemah</div>
+                                        <div class="small text-muted">Berkemah</div>
                                     </div>
                                     <div class="d-flex justify-content-between">
-                                        <div class="small text-muted" style="">Pendakian</div>
+                                        <div class="small text-muted">Pendakian</div>
                                     </div>
                                     <div class="d-flex justify-content-between">
-                                        <div class="small text-muted" style="">Asuransi</div>
+                                        <div class="small text-muted">Asuransi</div>
                                     </div>
                                     <div class="d-flex justify-content-between fw-bold">
-                                        <div class="small text-muted" style="">Total</div>
+                                        <div class="small text-muted">Total</div>
                                     </div>
                                 </td>
                                 <td class="text-end">
