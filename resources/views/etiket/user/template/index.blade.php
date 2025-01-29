@@ -66,7 +66,20 @@
         });
     });
 </script>
-@section('js')
 
+
+@section('js')
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+    const qrcodes = document.querySelectorAll('.qrcode_kodebooking');
+    qrcodes.forEach(e => {
+        qr = e.dataset['qr'];
+        new QRCode(e, {
+            text: qr,
+            width: 200,
+            height: 200
+        });
+    });
+</script>
 
 @endsection

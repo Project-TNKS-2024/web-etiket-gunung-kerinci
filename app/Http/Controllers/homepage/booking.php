@@ -224,7 +224,8 @@ class booking extends Controller
         if (!$request->snk) {
             return back()->withErrors(['snk' => 'Silahkan ceklis data diri anda']);
         }
-        $booking = gk_booking::find($request->id);
+
+        $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $request->id)->first();
         if (!$booking) {
             abort(404);
         }
@@ -238,8 +239,10 @@ class booking extends Controller
 
     public function bookingFP($id)
     {
-
-        $booking = gk_booking::with('gktiket')->where("id", $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis', 'gktiket'])
+            ->where('id', $id)
+            ->where('id_user', Auth::id())
+            ->first();
 
         if (!$booking) {
             abort(404);
@@ -251,6 +254,7 @@ class booking extends Controller
         $pendaki = gk_pendaki::where('booking_id', $booking->id)
             ->with('biodata')
             ->get();
+
         $userBio = bio_pendaki::find(Auth::user()->id_bio);
         $userUsia = Carbon::parse($userBio->tanggal_lahir)->age;
         if ($pendaki->count() == 0) {
@@ -269,6 +273,7 @@ class booking extends Controller
 
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
 
+        // return $pendaki;
         return view('homepage.booking.bookingFp', [
             'id' => $id,
             'booking' => $booking,
@@ -287,7 +292,11 @@ class booking extends Controller
             'id' => 'string|nullable',
         ]);
 
-        $booking = gk_booking::with('gktiket')->where("id", $request->booking)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $request->id_booking)
+            ->where('id_user', Auth::id())
+            ->first();
+
         // return $booking;
         if (!$booking) {
             abort(404);
@@ -357,7 +366,10 @@ class booking extends Controller
             'barangWajib.survival_kit_standart' => 'nullable|boolean',
         ]);
 
-        $booking = gk_booking::with('gktiket')->find($request->id_booking);
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $request->id_booking)
+            ->where('id_user', Auth::id())
+            ->first();
 
         if (!$booking) {
             abort(404);
@@ -426,6 +438,7 @@ class booking extends Controller
             ->where('id', $id)
             ->where('id_user', Auth::id())
             ->first();
+
         if (!$booking) {
             abort(404);
         } else if ($booking->status_booking != 3) {
@@ -449,7 +462,11 @@ class booking extends Controller
 
     public function bookingCancel($id)
     {
-        $booking = gk_booking::with('gktiket')->where("id", $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $id)
+            ->where('id_user', Auth::id())
+            ->first();
+
         if (!$booking) {
             abort(404);
         } elseif ($booking->status_booking != 3) {
@@ -481,7 +498,11 @@ class booking extends Controller
 
     public function bookingPayment($id)
     {
-        $booking = gk_booking::with('user')->find($id);
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $id)
+            ->where('id_user', Auth::id())
+            ->first();
+
 
         if (!$booking) {
             abort(404);
@@ -519,7 +540,11 @@ class booking extends Controller
             'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
 
-        $booking = gk_booking::find($request->id);
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $request->id)
+            ->where('id_user', Auth::id())
+            ->first();
+
         if (!$booking) {
             abort(404);
         } elseif ($booking->status_booking != 3) {
@@ -549,7 +574,11 @@ class booking extends Controller
             'id_pembayaran' => 'required|string',
         ]);
 
-        $booking = gk_booking::find($request->id);
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $request->id)
+            ->where('id_user', Auth::id())
+            ->first();
+
         if (!$booking) {
             abort(404);
         } elseif ($booking->status_booking != 3) {

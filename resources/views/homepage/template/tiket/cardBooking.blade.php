@@ -76,7 +76,7 @@
    <div class="card-body">
       <div class="row">
          <div class="col-4 text-center">
-            <div class="qrcode_kodebooking" data-code='{{$booking->unique_code}}'></div>
+            <div class="qrcode_kodebooking" data-qr='{{$booking->unique_code}}'></div>
             <label for="ipt_kodebooking" class="w-100">Kode Booking</label>
             <input type="text" name="ipt_kodebooking" value="{{ $booking->unique_code }}" id="ipt_kodebooking"
                class="form-control text-center fw-bold border-0" readonly>
@@ -176,7 +176,7 @@
       </div> <!-- Kolom Kanan -->
       <div class="col-3 p-3 d-flex align-items-center justify-content-center" style="background-color: rgba(255, 209, 51, 1);">
          <div class="text-center bg-white p-3 rounded">
-            <div class="qrcode_kodebooking" data-code="{{$booking->unique_code}}" style="width: 150px;"></div>
+            <div class="qrcode_kodebooking" data-qr="{{$booking->unique_code}}" style="width: 150px;"></div>
             <p class="text-center fw-bold mb-0 mt-2">Scan Disini</p>
          </div>
       </div>
@@ -184,22 +184,3 @@
 </div>
 
 @endforeach
-
-
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-
-<script>
-   const div_qr = document.querySelectorAll('.qrcode_kodebooking');
-
-   div_qr.forEach(div => {
-      new QRCode(div, {
-         text: div.dataset.code,
-         width: 200,
-         height: 200
-      });
-   });
-
-   function printTicket() {
-
-   }
-</script>

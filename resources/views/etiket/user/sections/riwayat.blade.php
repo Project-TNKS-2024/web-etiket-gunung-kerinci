@@ -29,35 +29,10 @@
             <h4 class="font-semibold">Riwayat Booking</h4>
             <div class="card-container mb-3" style="overflow-x: auto; white-space: nowrap;">
 
-                @foreach ($bookings as $booking)
-                @include('etiket.user.sections.tiket', ['booking'=>$booking])
-                @endforeach
-                @if (count($bookings) == 0)
-                <div>
-                    <p class="gk-text-neutrals700 text-center">Tidak ada tiket yang aktif</p>
-                </div>
-                @endif
+                @include('homepage.template.tiket.ListCardTiket', ['bookings' => $bookings])
 
             </div>
         </div>
     </div>
 </div>
-@endsection
-
-
-
-
-@section('js')
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-<script>
-    const qrcodes = document.querySelectorAll('.qrcode_kodebooking');
-    qrcodes.forEach(e => {
-        qr = e.dataset['qr'];
-        new QRCode(e, {
-            text: qr,
-            width: 200,
-            height: 200
-        });
-    });
-</script>
 @endsection

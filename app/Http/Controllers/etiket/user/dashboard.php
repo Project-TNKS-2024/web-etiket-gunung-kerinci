@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\gk_booking;
+use App\Models\gk_pendaki;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -16,8 +17,11 @@ class dashboard extends Controller
     public function index()
     {
         $user = User::with('biodata')->find(Auth::user()->id);
-        // return $user;
-        $booking = gk_booking::where('id_user', $user->id)->with('pendakis')->get();
+
+        $booking = gk_booking::whereHas('pendakis', function ($query) use ($user) {
+            $query->where('id_bio', $user->id_bio); // Pastikan relasi 'biodata' ada
+        })->with('pendakis')->get();
+
         return view('etiket.user.sections.dashboard', [
             'user' => $user,
             'bookings' => $booking,
@@ -28,7 +32,10 @@ class dashboard extends Controller
     {
         $user = User::with('biodata')->find(Auth::user()->id);
         // return $user;
-        $booking = gk_booking::where('id_user', $user->id)->get();
+        $booking = gk_booking::whereHas('pendakis', function ($query) use ($user) {
+            $query->where('id_bio', $user->id_bio); // Pastikan relasi 'biodata' ada
+        })->with('pendakis')->get();
+
         return view('etiket.user.sections.riwayat', [
             'bookings' => $booking,
         ]);

@@ -6,7 +6,7 @@
 
 @section('main')
 @include('homepage.template.header', [
-'title' => 'Pendakian Gunung Kerinci',
+'title' => 'Pendakian '.$destinasi->nama,
 'caption' => "Paket ".$paket->nama,
 ])
 

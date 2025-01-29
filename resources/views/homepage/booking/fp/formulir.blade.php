@@ -35,9 +35,13 @@
                   <label class="w-100 fw-bold">Kewarganegaraan</label>
                   <input type="text" class="form-control" name="formulir[{{$i}}][kewarganegaraan]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->kenegaraan : '' }}" readonly disabled>
                </div>
-               <div class="col-6">
+               <!-- <div class="col-6">
                   <label class="w-100 fw-bold">No Induk</label>
                   <input type="number" class="form-control" name="formulir[{{$i}}][identitas]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->nik : '' }}" readonly disabled>
+               </div> -->
+               <div class="col-6">
+                  <label class="w-100 fw-bold">Jenis Kelamin</label>
+                  <input type="text" class="form-control" name="formulir[{{$i}}][jenis_kelamin]" value="{{ isset($pendaki[$i]) ? ($pendaki[$i]->biodata->jenis_kelamin == 'l' ? 'Laki-laki' : 'Perempuan') : '' }}" readonly disabled>
                </div>
             </div>
 
@@ -60,7 +64,7 @@
             </div>
          </div>
          <div class="col-12 col-md-6">
-            <div class="row">
+            <!-- <div class="row">
                <div class="col-8">
                   <label class="w-100 fw-bold">Tanggal Lahir</label>
                   <input type="date" class="form-control ipt-tanggal-lahir" data-index="{{$i}}" id="tanggal_lahir-{{$i}}" name="formulir[{{$i}}][tanggal_lahir]" value="{{ isset($pendaki[$i]) ? Carbon\Carbon::parse($pendaki[$i]->biodata->tanggal_lahir)->format('Y-m-d')  : '' }}" readonly disabled>
@@ -69,8 +73,8 @@
                   <label class="w-100 fw-bold">Usia</label>
                   <input type="number" class="form-control" id="usia-{{$i}}" readonly disabled>
                </div>
-            </div>
-            <div class=" mt-3" id="div-surat_izin_ortu-{{$i}}">
+            </div> -->
+            <div class="" id="div-surat_izin_ortu-{{$i}}">
                <label for="surat_izin_ortu-{{$i}}" class="w-100 fw-bold mandatory">Surat Izin Orang Tua</label>
                <div class="input-group flex-nowrap">
                   <input class="form-control" type="file" name="formulir[{{$i}}][surat_izin_ortu]" id="surat_izin_ortu-{{$i}}">
@@ -87,7 +91,7 @@
          </div>
       </div>
 
-      <div class="row">
+      <!-- <div class="row">
          <label class="w-100 fw-bold mandatory">Alamat Domisili</label>
       </div>
       <div class="row mb-3">
@@ -104,7 +108,6 @@
                   <label for="kabupaten_kota-{{$i}}" class="w-100">Kabupaten/Kota</label>
                   <select class="form-control ipt-kabupaten-kota" name="formulir[{{$i}}][kabupaten_kota]" id="kabupaten_kota-{{$i}}" data-index="{{$i}}" disabled>
                      <option value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->kabupaten : 0 }}" selected>Pilih Kabupaten/Kota</option>
-                     <!-- Tambahkan opsi sesuai kebutuhan -->
                   </select>
 
                </div>
@@ -116,7 +119,6 @@
                   <label for="kecamatan-{{$i}}" class="w-100">Kecamatan</label>
                   <select class="form-control ipt-kecamatan" name="formulir[{{$i}}][kecamatan]" id="kecamatan-{{$i}}" data-index="{{$i}}" disabled>
                      <option value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->kec : 0 }}" selected disabled>Pilih Kecamatan</option>
-                     <!-- Tambahkan opsi sesuai kebutuhan -->
                   </select>
 
                </div>
@@ -124,13 +126,12 @@
                   <label for="desa_kelurahan-{{$i }}" class="w-100">Desa/Kelurahan</label>
                   <select class="form-control ipt-desa-kelurahan" name="formulir[{{$i}}][desa_kelurahan]" id="desa_kelurahan-{{$i }}" data-index="{{$i}}" disabled>
                      <option value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->desa : 0 }}" selected>Pilih Desa/Kelurahan"</option>
-                     <!-- Tambahkan opsi sesuai kebutuhan -->
                   </select>
 
                </div>
             </div>
          </div>
-      </div>
+      </div> -->
 
    </div>
 
