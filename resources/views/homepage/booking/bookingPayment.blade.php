@@ -91,8 +91,7 @@
                         <div id="bankTransferCollapse" class="accordion-collapse collapse show"
                             aria-labelledby="bankTransferHeading" data-bs-parent="#paymentMethod">
                             <div class="accordion-body">
-                                <div
-                                    class="bank-info mb-4 d-flex align-items-center justify-content-between bg-light p-3 rounded-3 shadow-sm">
+                                <div class="bank-info mb-4 d-flex align-items-center justify-content-between bg-light p-3 rounded-3 shadow-sm">
                                     <!-- Informasi Rekening -->
                                     <div class="d-flex flex-column">
                                         <span class="fs-5 fw-semibold text-dark">7338 0102 6542 535</span>
@@ -104,6 +103,20 @@
                                         <i class="bi bi-bank me-2"></i>BRI
                                     </div>
                                 </div>
+                                <p class="mb-0">Cara Pembayaran</p>
+                                <ul>
+                                    <li>Datangi ATM terdekat</li>
+                                    <li>Masukkan kartu ATM BRI</li>
+                                    <li>Pilih bahasa selama transaksi</li>
+                                    <li>Masukkan pin kartu ATM</li>
+                                    <li>Pilih menu Transfer Lainnya dan klik Tranfer</li>
+                                    <li>Masukkan kode bank BRI 002 diikuti nomor rekening BRI yang dituju, misal: 002(4455XXXXXXXX)</li>
+                                    <li>Masukkan nominal yang ingin ditransfer lalu klik Benar atau Ya</li>
+                                    <li>Lanjut pilih jenis rekening Tabungan atau Giro</li>
+                                    <li>Transaksi segera diproses</li>
+                                    <li>Keluar struk atau info di layar jika transfer berhasil.</li>
+                                    <li>Foto bukti pembayaran dan upload bukti pembayaran di bawah.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -120,10 +133,14 @@
                         <div id="qrScanCollapse" class="accordion-collapse collapse" aria-labelledby="qrScanHeading"
                             data-bs-parent="#paymentMethod">
                             <div class="accordion-body">
-                                <div class="qr-container bg-light p-4 rounded-3 text-center">
+                                <div class="qr-container bg-light p-4 rounded-3 text-center mb-2">
                                     <img src="{{ asset($qris) }}" class="img-fluid shadow-sm rounded-3"
                                         alt="bukti pembayaran" style="max-width: 100%" />
                                 </div>
+                                <p class="mb-0">Cara Pembayaran</p>
+                                <ul>
+                                    <li>lorem</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -226,7 +243,14 @@
                         <h1 class="fs-5 fw-bold text-center">Tagihan</h1>
 
                         <h1 class="fs-6 fw-bold ">Tagian Ke:</h1>
-                        <p>Email : {{ $booking->user->email }}</p>
+                        <p class="mb-0">Email : {{ $booking->user->email }}</p>
+                        <p>Status :
+                            @if ($booking->status_pembayaran == 1)
+                            <span class="badge text-bg-success ">Sukses</span>
+                            @else
+                            <span class="badge text-bg-warning ">Belum Bayar</span>
+                            @endif
+                        </p>
 
                         <h1 class="fs-6 fw-bold ">Deskripsi Pendakian</h1>
                         <table class="table table-borderless table-des">
