@@ -72,7 +72,7 @@
                   <td class="p-1 text-center">{{ $item->pendakis->count() }}</td>
                   <td class="p-1 text-center">{{ $item->status_booking}}</td>
                   <td class="p-1 text-center">
-                     <a href="" class="btn btn-sm btn-info">Detail</a>
+                     <a href="{{route('admin.destinasi.booking.show', ['id' => $item->id])}}" class="btn btn-sm btn-info">Detail</a>
                   </td>
                </tr>
                @endforeach
@@ -101,10 +101,6 @@
    </div>
 </div>
 
-<div class="card">
-   <div class="card-body">
-   </div>
-</div>
 
 @endsection
 

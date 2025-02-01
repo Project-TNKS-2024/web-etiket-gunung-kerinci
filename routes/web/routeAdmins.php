@@ -47,6 +47,7 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // Destinasi - booking
     Route::get('admin/destinasi/{id}/booking', [bookingController::class, 'index'])->name('admin.destinasi.booking');
+    Route::get('admin/destinasi/booking/{id}', [bookingController::class, 'showBooking'])->name('admin.destinasi.booking.show');
 
     // Destinasi - pendaki
 

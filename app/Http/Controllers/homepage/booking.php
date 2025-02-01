@@ -293,7 +293,7 @@ class booking extends Controller
         ]);
 
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $request->id_booking)
+            ->where('id', $request->booking)
             ->where('id_user', Auth::id())
             ->first();
 
@@ -307,6 +307,7 @@ class booking extends Controller
         $bioPendaki = bio_pendaki::where('id', $request->code)
             ->where('verified', 'verified')
             ->first();
+
         if ($bioPendaki == null) {
             return back()->withErrors(['code' => 'Kode tidak ditemukan']);
         }

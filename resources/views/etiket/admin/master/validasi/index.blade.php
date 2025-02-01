@@ -60,7 +60,7 @@
                     <td>{{ optional($booking->pembayaran->first())->status }}</td>
                     <td>{{ optional($booking->pembayaran->first())->keterangan }}</td>
                     <td>
-                        @if (optional($booking->pembayaran->last())->status == 'pending')
+                        @if (optional($booking->pembayaran->first())->status == 'pending')
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Verifikasi</button>
                         @else
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Detail</button>

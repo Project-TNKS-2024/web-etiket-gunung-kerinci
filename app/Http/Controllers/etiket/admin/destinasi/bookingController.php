@@ -4,6 +4,7 @@ namespace App\Http\Controllers\etiket\admin\destinasi;
 
 use App\Http\Controllers\Controller;
 use App\Models\gk_booking as ModelBooking;
+use App\Models\gk_booking;
 use Illuminate\Http\Request;
 
 class bookingController extends Controller
@@ -62,14 +63,22 @@ class bookingController extends Controller
         // Ambil data dengan paginasi
         $data = $query->paginate(10);
 
-        // return $data;
-        // return $data[0];
 
         return view('etiket.admin.destinasi.booking.index', [
             'id' => $id,
             'filter' => $filter,
             'search' => $search,
             'data' => $data
+        ]);
+    }
+
+    public function showBooking($id_booking)
+    {
+        $booking = gk_booking::with('pendakis', 'gateMasuk', 'gateKeluar', 'gkTiket')->find($id_booking);
+
+        // return $booking;
+        return view('etiket.admin.destinasi.booking.showBooking', [
+            'booking' => $booking
         ]);
     }
 }

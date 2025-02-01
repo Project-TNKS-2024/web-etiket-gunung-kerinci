@@ -50,7 +50,7 @@ class profile extends Controller
             'lastName' => 'string|max:255|nullable',
             'lampiran_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:548',
             'kewarganegaraan' => 'required|in:wni,wna',
-            'nik' => 'required|numeric|digits:16',
+            'nik' => 'required|numeric|digits:16|unique:biodatas,nik',
             'nomor_telepon' => 'required|numeric',
             'telp_country' => 'required|string|max:5',
             'jenis_kelamin' => 'required|in:l,p',
@@ -60,7 +60,6 @@ class profile extends Controller
             'kecamatan' => 'required|numeric',
             'desa_kelurahan' => 'required|numeric',
         ]);
-
         // Format nomor telepon
         if ($request->nomor_telepon[0] == 0) {
             $request['nomor_telepon'] = substr($request->nomor_telepon, 1);

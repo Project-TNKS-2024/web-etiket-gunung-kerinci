@@ -21,6 +21,7 @@
             <tr>
                <th scope="col">#</th>
                <th scope="col">Email</th>
+               <th scope="col">ID</th>
                <th scope="col">Nama Depan</th>
                <th scope="col">Nama Belakang</th>
                <th scope="col">Jenis Kelamin</th>
@@ -33,6 +34,7 @@
             <tr>
                <th scope="row">{{ $dataUser->firstItem() + $index }}</th> <!-- Nomor urut sesuai halaman -->
                <td>{{ $user->email }}</td>
+               <td>{{ $user->biodata->id }}</td>
                <td>{{ optional($user->biodata)->first_name }}</td>
                <td>{{ optional($user->biodata)->last_name }}</td>
                <td>{{ optional($user->biodata)->jenis_kelamin == 'l' ? 'Laki-laki' : 'Perempuan' }}</td>
