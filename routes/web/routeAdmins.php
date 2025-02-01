@@ -9,7 +9,7 @@ use App\Http\Controllers\etiket\admin\destinasi\destinasiController;
 use App\Http\Controllers\etiket\admin\destinasi\tiketController;
 use App\Http\Controllers\etiket\admin\master\destinasisController;
 use App\Http\Controllers\etiket\admin\destinasi\bookingController;
-
+use App\Http\Controllers\etiket\admin\destinasi\pembayaranController;
 // admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
 use App\Http\Controllers\etiket\admin\master\PengunjungController;
@@ -49,6 +49,10 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/destinasi/{id}/booking', [bookingController::class, 'index'])->name('admin.destinasi.booking');
     Route::get('admin/destinasi/booking/{id}', [bookingController::class, 'showBooking'])->name('admin.destinasi.booking.show');
 
+    // Destinasi - pembayaran
+    Route::get('admin/destinasi/{id}/pembayaran', [pembayaranController::class, 'index'])->name('admin.destinasi.pembayaran');
+    Route::post('admin/destinasi/pembayaran/update', [pembayaranController::class, 'updateAction'])->name('admin.destinasi.pembayaran.updateAction');
+
     // Destinasi - pendaki
 
     // Destinasi - monitoring
@@ -66,11 +70,6 @@ Route::middleware(['check.role:admin'])->group(function () {
     // Master - Pengunjung
     Route::get('admin/master/pengunung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung');
     Route::post('admin/master/pengunung/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.verified');
-
-    // Master - Validasi Pembayaran
-    Route::get('admin/master/validasiPembayaran', [ValidasiPembayaran::class, 'index'])->name('admin.master.validasiPembayaran');
-    // Route::get('admin/master/validasiPembayaran', [ValidasiPembayaranOld::class, 'index'])->name('admin.master.validasiPembayaran');
-    Route::post('admin/master/validasiPembayaran/update/', [ValidasiPembayaran::class, 'updateAction'])->name('admin.master.validasi.updateAction');
 
 
 

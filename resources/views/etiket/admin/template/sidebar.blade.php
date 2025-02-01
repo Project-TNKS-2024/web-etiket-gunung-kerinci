@@ -76,14 +76,14 @@
                            <span class="hide-menu">Monitoring Gunung</span>
                         </a>
                      </li> -->
-                     <!-- <li class="sidebar-item">
-                        <a class="sidebar-link" href="#" aria-expanded="false">
+                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="{{ route('admin.destinasi.pembayaran',['id' => $itemDestinasi->id] ) }}" aria-expanded="false">
                            <span>
-                              <img src="{{asset('assets/icon/tnks/file_dock-dark.svg')}}"></img>
+                              <i class="fa-solid fa-money-bill" style="font-size: 24;"></i>
                            </span>
-                           <span class="hide-menu">Cetak Laporan</span>
+                           <span class="hide-menu">Pembayaran</span>
                         </a>
-                     </li> -->
+                     </li>
                   </ul>
                </div>
             </li>
@@ -101,14 +101,6 @@
                      <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
                   </span>
                   <span class="hide-menu">Data Destinasi</span>
-               </a>
-            </li>
-            <li class="sidebar-item">
-               <a class="sidebar-link" href="{{ route('admin.master.validasiPembayaran') }}" aria-expanded="false">
-                  <span>
-                     <img src="{{ asset('assets/icon/tnks/validate.svg') }}"></img>
-                  </span>
-                  <span class="hide-menu">Validasi Pembayaran</span>
                </a>
             </li>
             <li class="sidebar-item">

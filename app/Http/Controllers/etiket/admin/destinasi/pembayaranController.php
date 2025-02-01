@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\etiket\admin\master;
+namespace App\Http\Controllers\etiket\admin\destinasi;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\BookingHelperController;
 use App\Http\Controllers\helper\uploadFileControlller;
-use App\Http\Controllers\homepage\booking;
+use App\Models\destinasi;
 use App\Models\gk_booking;
-use App\Models\pembayaran;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
-class ValidasiPembayaran extends Controller
+class pembayaranController extends Controller
 {
     private $helper;
     private $upload;
@@ -23,9 +21,12 @@ class ValidasiPembayaran extends Controller
     }
 
     //
-    public function index(Request $request)
+    public function index(Request $request, $id)
     {
+        $destinasi = destinasi::find($id);
+
         $query = gk_booking::with('pembayaran', 'pendakis', 'pendakis.biodata', 'user');
+        // filter booking bedasarkan id_destinasi
 
         // Filter berdasarkan status
         if ($request->filled('filter')) {
@@ -70,7 +71,10 @@ class ValidasiPembayaran extends Controller
 
         // return $dataBooking;
 
-        return view('etiket.admin.master.validasi.index', compact('dataBooking'));
+        return view('etiket.admin.destinasi.pembayaran.index', [
+            'dataBooking' => $dataBooking,
+            'destinasi' => $destinasi,
+        ]);
     }
 
     public function updateAction(Request $request)
@@ -106,8 +110,6 @@ class ValidasiPembayaran extends Controller
             return redirect()->back()->with('error', 'Pembayaran tidak ditemukan');
         }
 
-
-
-        return redirect()->route('admin.master.validasiPembayaran')->with('success', 'Pengajuan berhasil diperbarui');
+        return redirect()->back()->with('success', 'Pengajuan berhasil diperbarui');
     }
 }

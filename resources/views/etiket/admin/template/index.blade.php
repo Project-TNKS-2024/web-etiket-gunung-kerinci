@@ -73,6 +73,11 @@
             right: 1rem;
             z-index: 1050;
         }
+
+        .sidebar-nav ul .sidebar-item .sidebar-link span {
+            width: 24px;
+            justify-content: center;
+        }
     </style>
 
     @yield('css')
