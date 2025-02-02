@@ -4,6 +4,7 @@ namespace App\Http\Controllers\etiket\auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use PharIo\Manifest\Email;
 use Illuminate\Support\Facades\Hash;
@@ -36,13 +37,13 @@ class register extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // bikin kan verifikasi email
-        // $user->sendEmailVerificationNotification();
+        // Kirim email verifikasi
+        event(new Registered($user));
 
-        // Redirect ke halaman login setelah registrasi berhasil
+        // Redirect dengan pesan sukses
         return redirect()->route('login')->with(
             'success',
-            'Registrasi berhasil. Silakan login untuk melanjutkan.'
+            'Registrasi berhasil. Silakan cek email Anda untuk verifikasi sebelum login.'
         );
     }
 }
