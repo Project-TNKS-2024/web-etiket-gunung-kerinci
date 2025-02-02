@@ -14,6 +14,7 @@ use App\Models\gk_gates as ModelGates;
 use App\Models\gk_tiket_pendaki as ModelPendaki;
 
 use App\Http\Controllers\helper\uploadFileControlller;
+use App\Models\sop;
 use Illuminate\Database\Eloquent\Model;
 
 class destinasiController extends Controller
@@ -28,7 +29,7 @@ class destinasiController extends Controller
             ->where('gk_gates.id_destinasi', $id)
             ->get();
 
-        // return $gates;
+        // return $destinasi;
 
         return view('etiket.admin.destinasi.destinasi.detail', [
             'destinasi' => $destinasi,
@@ -36,26 +37,36 @@ class destinasiController extends Controller
             'gambar' => $gambar,
         ]);
     }
-    public function detailUpdate(Request $request, $id)
+
+    public function destinasiUpdate($id)
+    {
+        $destinasi = ModelsDestinasi::find($id);
+        return view('etiket.admin.destinasi.destinasi.destinasiUpdate', [
+            'destinasi' => $destinasi,
+        ]);
+    }
+
+    public function destinasiUpdateAction(Request $request)
     {
         $request->validate([
+            'id' => 'required',
             'nama' => 'required',
-            'status' => 'required',
             'kategori' => 'required',
+            'status' => 'required',
             'lokasi' => 'required',
             'detail' => 'required',
-            'status' => 'required',
+            'sop' => 'required',
         ]);
 
         // return $request;
-
         if (
-            !ModelsDestinasi::where('id', $id)->update([
+            !ModelsDestinasi::where('id', $request->id)->update([
                 'nama' => $request->nama,
                 'status' => $request->status,
                 'kategori' => $request->kategori,
                 'lokasi' => $request->lokasi,
                 'detail' => $request->detail,
+                'sop' => $request->sop,
             ])
         ) {
             return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);

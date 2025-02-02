@@ -12,11 +12,12 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             // $table->boolean('statusOpen');
-            // $table->boolean('statusPmbelian');
+            // $table->boolean('openBooking');
             $table->boolean('status');
             $table->enum('kategori', ['taman', 'gunung']);
             $table->string('lokasi');
-            $table->text('detail');
+            $table->text('detail')->nullable();
+            $table->text('sop')->nullable();
             $table->timestamps();
         });
     }

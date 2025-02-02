@@ -34,16 +34,9 @@
          <form method="post" action="{{ route('homepage.booking.snk.action') }}" id="form-snk">
             <input type="hidden" name="id" value="{{$id}}">
             @csrf
-            <div id="ketentuan">
-               @include('homepage.booking.snk.ketentuan')
-            </div>
-            <hr>
-            <div class="kewajiban">
-               @include('homepage.booking.snk.kewajiban')
-            </div>
-            <hr>
-            <div class="kewajiban">
-               @include('homepage.booking.snk.larangan')
+            <h1 class="fw-bold mb-3 text-center">Syarat dan Ketentuan</h1>
+            <div>
+               {!! $destinasi->sop !!}
             </div>
             <div class="form-check mt-2">
                <input class="form-check-input" type="checkbox" name="snk" id="flexCheckDefault" required>

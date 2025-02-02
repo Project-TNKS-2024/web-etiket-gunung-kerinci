@@ -2,7 +2,11 @@
 
 @section('css')
 <style>
-
+   fieldset:disabled input,
+   fieldset:disabled select {
+      pointer-events: none;
+      background-color: #e9ecef;
+   }
 </style>
 @endsection
 
@@ -11,16 +15,17 @@
 <div class="card">
    <div class="card-body">
       <label class="text-2xl font-bold gk-text-base-black mb-2">Detail Destinasi</label>
-      <form class="row gap-2" action="{{ route('admin.destinasi.detail.update', ['id' => $destinasi->id]) }}" method="post">
-         @csrf
-         <div class="col-12">
-            <label class="form-label">Nama Destinasi</label>
-            <input class="form-control borderx bg-white" name="nama" id="destinasi-nama" value="{{$destinasi->nama}}" required />
-         </div>
-         <div class="col-12 row">
-            <div class="col-6">
-               <label class="form-label" for="kategori">Kategori</label>
-               <select class="form-control borderx bg-white" id="kategori" name="kategori" required>
+      <div class="mb-2">
+         <label class=" form-label">Nama Destinasi</label>
+         <fieldset disabled>
+            <input class="form-control borderx" name="nama" id="destinasi-nama" value="{{$destinasi->nama}}" readonly />
+         </fieldset>
+      </div>
+      <div class="row">
+         <div class="col-4">
+            <label class="form-label" for="kategori">Kategori</label>
+            <fieldset disabled>
+               <select class="form-control borderx" id="kategori" name="kategori">
                   @if ($destinasi->kategori == "taman")
                   <option value="taman" selected>Taman</option>
                   <option value="gunung">Gunung</option>
@@ -29,10 +34,12 @@
                   <option value="gunung" selected>Gunung</option>
                   @endif
                </select>
-            </div>
-            <div class="col-6">
-               <label class="form-label" for="status">Status</label>
-               <select class="form-control borderx bg-white" id="status" name="status" required>
+            </fieldset>
+         </div>
+         <div class="col-4">
+            <label class="form-label" for="status">Status</label>
+            <fieldset disabled>
+               <select class="form-control borderx" id="status" name="status">
                   @if ($destinasi->status)
                   <option value="1" selected>Open</option>
                   <option value="0">Close</option>
@@ -41,23 +48,15 @@
                   <option value="0" selected>Close</option>
                   @endif
                </select>
-            </div>
+            </fieldset>
          </div>
-         <div class="col-12">
-            <label class="form-label" for="lokasi">Lokasi</label>
-            <input class="form-control borderx bg-white" name="lokasi" id="lokasi" placeholder="Lokasi Destinasi" value="{{ $destinasi->lokasi }}" required />
-         </div>
-         <div class="col-12">
-            <label class="form-label">Detail</label>
-            <textarea name="detail" id="destinasi-detail" class="form-control bg-white borderx" style="min-height: 75px;" placeholder="Detail">{{ $destinasi->detail }}</textarea>
-         </div>
-         <div class="col-12 d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">
-               <img width="20" src="{{asset('assets/icon/tnks/save-light.svg')}}" />
-               Simpan
-            </button>
-         </div>
-      </form>
+      </div>
+
+      <div class="d-flex justify-content-end mt-2">
+         <a class="btn btn-primary" href="{{route('admin.destinasi.update', ['id' => $destinasi->id])}}">
+            <img width="20" src="{{asset('assets/icon/tnks/save-light.svg')}}" />Edit
+         </a>
+      </div>
    </div>
 </div>
 
@@ -147,7 +146,7 @@
                <th>Max Pendaki/Hari</th>
                <th>Lokasi</th>
                <th>Detail</th>
-               <th class="col-2 text-center">Aksi</th>
+               <th class="text-center">Aksi</th>
             </tr>
          </thead>
          <tbody class="table-group-divider">

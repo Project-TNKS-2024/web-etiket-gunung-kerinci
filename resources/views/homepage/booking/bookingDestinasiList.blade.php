@@ -34,9 +34,9 @@
                             style="width: 100px; background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0)); pointer-events: none;">
                             <div class="card-body text-white">
                                 <h5 class="card-title">{{ $item->nama }}</h5>
-                                <p class="card-text index-text-cardDestinasi">
-                                    {{ $item->detail }}
-                                </p>
+                                <div class="card-text index-text-cardDestinasi">
+                                    {!! $item->detail !!}
+                                </div>
                             </div>
                         </div>
                         @if (count($item->gambar_destinasi) > 0)

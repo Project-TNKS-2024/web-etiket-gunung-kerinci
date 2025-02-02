@@ -10,6 +10,7 @@ use App\Http\Controllers\etiket\admin\destinasi\tiketController;
 use App\Http\Controllers\etiket\admin\master\destinasisController;
 use App\Http\Controllers\etiket\admin\destinasi\bookingController;
 use App\Http\Controllers\etiket\admin\destinasi\pembayaranController;
+use App\Http\Controllers\etiket\admin\destinasi\sopController;
 // admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
 use App\Http\Controllers\etiket\admin\master\PengunjungController;
@@ -29,13 +30,17 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // Destinasi - destinasi
     Route::get('admin/destinasi/{id}/detail', [destinasiController::class, 'detail'])->name('admin.destinasi.detail');
-    Route::post('admin/deatinasi/{id}/detail/update', [destinasiController::class, 'detailUpdate'])->name('admin.destinasi.detail.update');
+    // picture
     Route::post('admin/destinasi/detail/picture/add', [destinasiController::class, 'pictureAddAction'])->name('admin.destinasi.picture.addAction');
     Route::post('admin/destinasi/detail/picture/delete', [destinasiController::class, 'pictureDeleteAction'])->name('admin.destinasi.picture.deleteAction');
+    // gates
     Route::post('admin/destinasi/gates/add', [destinasiController::class, 'gatesAddAction'])->name('admin.destinasi.gates.addAction');
     Route::get('admin/destinasi/gates/{id}/update', [destinasiController::class, 'gatesUpdate'])->name('admin.destinasi.gates.update');
     Route::post('admin/destinasi/gates/update', [destinasiController::class, 'gatesUpdateAction'])->name('admin.destinasi.gates.updateAction');
     Route::post('admin/destinasi/gates/delete', [destinasiController::class, 'gatesDeleteAction'])->name('admin.destinasi.gates.deleteAction');
+    // destinasi
+    Route::get('admin/destinasi/{id}/update', [destinasiController::class, 'destinasiUpdate'])->name('admin.destinasi.update');
+    Route::post('admin/destinasi/update', [destinasiController::class, 'destinasiUpdateAction'])->name('admin.destinasi.update.action');
 
     // Destinasi - tiket
     Route::get('admin/destinasi/{id}/tiket', [tiketController::class, 'tiket'])->name('admin.destinasi.tiket');
@@ -59,7 +64,6 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // Destinasi - laporan
 
-    // Destinasi - sop
 
     // Master - Destinasi
     Route::get('admin/master/destinasi', [destinasisController::class, 'index'])->name('admin.master.destinasi');

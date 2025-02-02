@@ -204,14 +204,20 @@ class booking extends Controller
 
     public function bookingSnk($id)
     {
-        $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $id)->first();
+        $booking = gk_booking::with('gktiket')->where('id_user', Auth::user()->id)->where('id', $id)->first();
         if (!$booking) {
             abort(404);
         } elseif ($booking->status_booking > 3) {
             return redirect(route('homepage.booking', ['id' => $id]));
         }
+        $destinasi = destinasi::where('id', $booking->gktiket->id_destinasi)->first();
+        // return $destinasi;
 
-        return view('homepage.booking.bookingSnk', ['id' => $id, 'status' => false]);
+        return view('homepage.booking.bookingSnk', [
+            'id' => $id,
+            'destinasi' => $destinasi,
+            'status' => false
+        ]);
     }
 
     public function bookingSnkStore(Request $request)

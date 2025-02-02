@@ -15,6 +15,7 @@ class destinasi extends Model
         'kategori',
         'lokasi',
         'detail',
+        'sop',
     ];
 
     /**
