@@ -89,6 +89,10 @@
       [{
          'header': [1, 2, 3, false]
       }],
+      // background
+      [{
+         'background': []
+      }],
       [{
          'list': 'ordered'
       }, {

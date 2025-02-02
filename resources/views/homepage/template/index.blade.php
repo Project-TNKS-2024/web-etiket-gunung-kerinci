@@ -125,6 +125,12 @@
             /* Batasi teks ke 2 baris (untuk browser berbasis WebKit) */
         }
 
+        .index-text-cardDestinasi span,
+        .index-text-cardDestinasi strong {
+            background-color: transparent !important;
+            font-size: 16px !important;
+        }
+
         .index-footer {
             box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -277,7 +283,6 @@
 
     <!-- script navigasi navbar homepage -->
     <script>
-
         const extractUrls = (str) => {
             const match = str.match(/\[(.*?)\]/);
             if (match) {

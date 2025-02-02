@@ -212,11 +212,11 @@ class booking extends Controller
         }
         $destinasi = destinasi::where('id', $booking->gktiket->id_destinasi)->first();
         // return $destinasi;
-
+        // return $booking;
         return view('homepage.booking.bookingSnk', [
             'id' => $id,
             'destinasi' => $destinasi,
-            'status' => false
+            'status' => $booking->status_booking,
         ]);
     }
 

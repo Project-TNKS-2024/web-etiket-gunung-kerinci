@@ -14,6 +14,13 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         /* Memberikan bayangan */
     }
+
+    .index-text-cardDestinasi span,
+    .index-text-cardDestinasi strong {
+        color: white !important;
+        background-color: transparent !important;
+        font-size: 16px !important;
+    }
 </style>
 @endsection
 

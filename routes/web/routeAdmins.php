@@ -19,6 +19,7 @@ use App\Http\Controllers\etiket\admin\master\ValidasiPembayaranOld;
 // admin master
 use App\Http\Controllers\homepage\booking;
 use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
+use App\Http\Controllers\etiket\admin\settingController;
 
 // Admin routes
 Route::middleware(['check.role:admin'])->group(function () {
@@ -62,8 +63,6 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // Destinasi - monitoring
 
-    // Destinasi - laporan
-
 
     // Master - Destinasi
     Route::get('admin/master/destinasi', [destinasisController::class, 'index'])->name('admin.master.destinasi');
@@ -80,4 +79,13 @@ Route::middleware(['check.role:admin'])->group(function () {
     // fitur - scan tiket
     Route::get('admin/fitur/scanTiket', [Scan::class, 'index'])->name('admin.fitur.scanTiket');
     Route::get('admin/fitur/DetailTiket/{uq}', [Scan::class, 'detailtiket'])->name('admin.fitur.detailTiket');
+
+
+    // setting
+    Route::get('admin/setting', [settingController::class, 'index'])->name('admin.setting');
+    Route::get('admin/setting/add', [settingController::class, 'add'])->name('admin.setting.add');
+    Route::post('admin/setting/addAction', [settingController::class, 'addAction'])->name('admin.setting.addAction');
+    Route::get('admin/setting/{id}/update', [settingController::class, 'update'])->name('admin.setting.update');
+    Route::post('admin/setting/updateAction', [settingController::class, 'updateAction'])->name('admin.setting.updateAction');
+    Route::post('admin/setting/deleteAction', [settingController::class, 'deleteAction'])->name('admin.setting.deleteAction');
 });

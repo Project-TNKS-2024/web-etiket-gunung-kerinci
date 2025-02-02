@@ -44,40 +44,39 @@
             </form>
          </div>
       </div>
-      <table class="table table-striped table-hover table-bordered tabel1">
-         <table class="table table-striped table-hover table-bordered tabel1">
-            <thead>
-               <tr>
-                  <th rowspan="2" class="p-1 font-bold col">Ketua</th>
-                  <th colspan="2" class="p-1 font-bold col">Pendakian</th>
-                  <th rowspan="2" class="p-1 font-bold col">Gate Masuk</th>
-                  <th rowspan="2" class="p-1 font-bold col">Pendaki</th>
-                  <th rowspan="2" class="p-1 font-bold col">Status</th>
 
-                  <th rowspan="2" class="p-1 font-bold col">Aksi</th>
-               </tr>
-               <tr>
-                  <!-- = -->
-                  <th class="p-1 font-bold col">Start</th>
-                  <th class="p-1 font-bold col">End</th>
-               </tr>
-            </thead>
-            <tbody class="table-group-divider">
-               @foreach($data as $item)
-               <tr>
-                  <td class="p-1 text-center">{{ $item->pendakis->count() > 0 ? $item->pendakis[0]->biodata->first_name  . ' ' . $item->pendakis[0]->biodata->last_name : '-' }}</td>
-                  <td class="p-1 text-center">{{ $item->tanggal_masuk }}</td>
-                  <td class="p-1 text-center">{{ $item->tanggal_keluar }}</td>
-                  <td class="p-1 text-center">{{ $item->gateMasuk['nama'] }}</td>
-                  <td class="p-1 text-center">{{ $item->pendakis->count() }}</td>
-                  <td class="p-1 text-center">{{ $item->status_booking}}</td>
-                  <td class="p-1 text-center">
-                     <a href="{{route('admin.destinasi.booking.show', ['id' => $item->id])}}" class="btn btn-sm btn-info">Detail</a>
-                  </td>
-               </tr>
-               @endforeach
-            </tbody>
-         </table>
+      <table class="table table-striped table-hover table-bordered tabel1">
+         <thead>
+            <tr>
+               <th rowspan="2" class="p-1 font-bold col">Ketua</th>
+               <th colspan="2" class="p-1 font-bold col">Pendakian</th>
+               <th rowspan="2" class="p-1 font-bold col">Gate Masuk</th>
+               <th rowspan="2" class="p-1 font-bold col">Pendaki</th>
+               <th rowspan="2" class="p-1 font-bold col">Status</th>
+
+               <th rowspan="2" class="p-1 font-bold col">Aksi</th>
+            </tr>
+            <tr>
+               <!-- = -->
+               <th class="p-1 font-bold col">Start</th>
+               <th class="p-1 font-bold col">End</th>
+            </tr>
+         </thead>
+         <tbody class="table-group-divider">
+            @foreach($data as $item)
+            <tr>
+               <td class="p-1 text-center">{{ $item->pendakis->count() > 0 ? $item->pendakis[0]->biodata->first_name  . ' ' . $item->pendakis[0]->biodata->last_name : '-' }}</td>
+               <td class="p-1 text-center">{{ $item->tanggal_masuk }}</td>
+               <td class="p-1 text-center">{{ $item->tanggal_keluar }}</td>
+               <td class="p-1 text-center">{{ $item->gateMasuk['nama'] }}</td>
+               <td class="p-1 text-center">{{ $item->pendakis->count() }}</td>
+               <td class="p-1 text-center">{{ $item->status_booking}}</td>
+               <td class="p-1 text-center">
+                  <a href="{{route('admin.destinasi.booking.show', ['id' => $item->id])}}" class="btn btn-sm btn-info">Detail</a>
+               </td>
+            </tr>
+            @endforeach
+         </tbody>
       </table>
 
       <div>

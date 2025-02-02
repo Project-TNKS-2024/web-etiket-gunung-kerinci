@@ -47,7 +47,11 @@
                <td class="p-3 ">{{$d->nama}}</td>
                <td class="p-3 ">{{$d->kategori}}</td>
                <td class="p-3 ">{{$d->lokasi}}</td>
-               <td class="p-3 ">{{$d->detail}} </td>
+               <td class="p-3">
+                  <div style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 15;">
+                     {!!$d->detail!!}
+                  </div>
+               </td>
                <td class="p-3 d-flex gap-1 bg-transparent align-items-center justify-content-start">
 
                   <a href="{{ route('admin.destinasi.detail', ['id' => $d->id]) }}" class="cursor-pointer">

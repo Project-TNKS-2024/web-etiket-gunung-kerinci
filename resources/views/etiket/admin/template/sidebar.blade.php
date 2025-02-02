@@ -155,7 +155,7 @@
             </li>
             <hr>
             <li class="sidebar-item">
-               <a class="sidebar-link" href="#" aria-expanded="false">
+               <a class="sidebar-link" href="{{route('admin.setting')}}" aria-expanded="false">
                   <span>
                      <img src="{{asset('assets/icon/tnks/setting_line-dark.svg')}}"></img>
                   </span>
