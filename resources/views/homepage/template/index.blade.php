@@ -26,11 +26,26 @@
         rel="stylesheet">
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <style>
-        .pdf-container {
-            max-width: 700px;
-            width: 100%;
+        * {
+            font-family: "Poppins", sans-serif;
         }
 
+        body {
+            background-color: rgba(245, 246, 250, 1);
+            min-height: 100vh;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        .btn-gl-primary:hover {
+            background: linear-gradient(263deg, #63B8FF 12.63%, #0169BF 80.63%);
+            background-size: 500%;
+            color: white;
+            border: none;
+        }
+
+
+        /* header homepage */
         .header-bg {
             position: relative;
             background: url("{{ asset('assets/img/bg/title-header-bg.png') }}") no-repeat;
@@ -62,34 +77,7 @@
             z-index: 2;
         }
 
-        .border-between {
-            border-top: 2px solid white;
-            width: 50px;
-            margin: 20px 0;
-        }
-
-        .border-between {
-            border-top: 2px solid white;
-            width: 50px;
-            margin: 20px 0;
-        }
-
-        .poppins-thin {
-            font-family: "Poppins", sans-serif;
-            font-weight: 100;
-            font-style: normal;
-        }
-
-        .poppins-extralight {
-            font-family: "Poppins", sans-serif;
-            font-weight: 200;
-            font-style: normal;
-        }
-
-        * {
-            font-family: "Poppins", sans-serif;
-        }
-
+        /* navbar */
         .index-navbar {
             flex-wrap: wrap !important;
         }
@@ -110,19 +98,23 @@
             box-shadow: none !important;
         }
 
+        .navbar-nav .nav-link.active {
+            background-color: #fff;
+            color: var(--primary700);
+        }
+
+        .navbar-nav .nav-link {
+            padding: 0px 10px;
+        }
+
+        /* body homepage detail card destinasi */
         .index-text-cardDestinasi {
             display: -webkit-box;
-            /* Gunakan layout box untuk mendukung clamp */
             -webkit-box-orient: vertical;
-            /* Orientasi vertikal */
             overflow: hidden;
-            /* Sembunyikan teks yang melebihi batas */
             text-overflow: ellipsis;
-            /* Tambahkan "..." di akhir teks */
             line-clamp: 2;
-            /* Batasi teks ke 2 baris */
             -webkit-line-clamp: 2;
-            /* Batasi teks ke 2 baris (untuk browser berbasis WebKit) */
         }
 
         .index-text-cardDestinasi span,
@@ -131,47 +123,17 @@
             font-size: 16px !important;
         }
 
+        /* footer homepage */
+        footer {
+            background-color: white;
+        }
+
         .index-footer {
             box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .index-footer img {
-            height: 100px;
-        }
 
-        .index-footer h5 {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .index-footer h4 {
-            font-weight: bold;
-        }
-
-        .index-footer a {
-            text-decoration: none;
-            color: var(--neutrals500);
-        }
-
-        .index-footer .copyright {
-            color: var(--neutrals500);
-            font-family: 'bootstrap-icons';
-
-        }
-
-        .useradmin .btn {
-            border: 2px solid var(--primary100);
-        }
-
-        .useradmin .btn.active {
-            border: 2px solid var(--primary) !important;
-        }
-
-        .useradmin .btn.close {
-            border: none;
-            background-color: var(--error200) !important;
-            color: white;
-        }
+        /* sidebar admin user */
 
         .dashboard-sidebar-btn {
             background: none;
@@ -216,6 +178,7 @@
             border: none;
         }
 
+        /* template toast */
         .toast-container {
             position: fixed;
             top: 1rem;
@@ -223,35 +186,13 @@
             z-index: 1050;
         }
 
+
         .btn-gl-primary {
             background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
             color: #fff;
             border: none;
             background-size: 100%;
 
-        }
-
-        .btn-gl-primary:hover {
-            background: linear-gradient(263deg, #63B8FF 12.63%, #0169BF 80.63%);
-            background-size: 500%;
-            color: white;
-            border: none;
-        }
-
-
-        body {
-            background-color: rgba(245, 246, 250, 1);
-            min-height: 100vh;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-        }
-
-        footer {
-            background-color: white;
-        }
-
-        .profile-container:hover {
-            background-color: var(--primary600);
         }
     </style>
 
@@ -283,32 +224,19 @@
 
     <!-- script navigasi navbar homepage -->
     <script>
-        const extractUrls = (str) => {
-            const match = str.match(/\[(.*?)\]/);
-            if (match) {
-                const urlString = match[1];
-                return urlString.split(", ").map(url => url.trim());
-            }
-            return [];
-        };
-
         const navItems = document.querySelectorAll(".nav-link");
-        for (let i = 0; i < navItems.length; i++) {
-            const routes = navItems[i].getAttribute('data-route');
-            const tr = routes != null ? extractUrls(routes) : '[]';
-            // console.log(tr);
-            if (!tr.includes(window.location.href)) {
-                navItems[i].classList.remove('gk-bg-base-white');
-                navItems[i].classList.remove('gk-text-primary700');
-                navItems[i].classList.remove('font-semibold');
-                navItems[i].classList.add('text-white');
-            } else {
-                navItems[i].classList.add('gk-bg-base-white');
-                navItems[i].classList.add('gk-text-primary700');
-                navItems[i].classList.add('font-semibold');
-                navItems[i].classList.remove('text-white');
+
+        const currentUrl = window.location.href;
+        // Remove 'active' class from all links
+        navItems.forEach((item) => {
+            item.classList.remove('active');
+            // Check if the current URL matches the link's href
+            if (currentUrl.includes(item.getAttribute("href"))) {
+                item.classList.add('gk-text-primary700');
+                item.classList.add('gk-bg-base-white');
+                item.classList.remove('text-white');
             }
-        }
+        });
     </script>
 
     <!-- script untuk generate input -->

@@ -61,12 +61,19 @@ class settingController extends Controller
             'text1' => 'nullable|string',
             'text2' => 'nullable|string',
         ]);
-
-        setting::where('id', $request->id)->update([
-            'nama' => $request->nama,
-            'text1' => $request->text1,
-            'text2' => $request->text2,
-        ]);
+        $var = setting::find($request->id);
+        if (!$var->canDelete) {
+            $var->update([
+                'text1' => $request->text1,
+                'text2' => $request->text2,
+            ]);
+        } else {
+            $var->update([
+                'nama' => $request->nama,
+                'text1' => $request->text1,
+                'text2' => $request->text2,
+            ]);
+        }
         return redirect()->route('admin.setting')->with('success', 'Data berhasil diubah');
     }
     public function deleteAction(Request $request)

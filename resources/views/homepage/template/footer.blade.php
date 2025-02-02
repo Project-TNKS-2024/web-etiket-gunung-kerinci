@@ -1,40 +1,86 @@
- <footer class="pt-4 pb-2 index-footer">
-     <div class="container">
-         <div class="row">
-             <div class="col-md-5 d-flex align-items-center gap-2">
-                 <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="Logo" class="img-fluid my-0">
-                 <div>
-                     <h4 class="mb-0 lead fw-normal fs-3">Taman Nasional Kerinci Seblat</h4>
-                 </div>
-             </div>
-             <div class="col-md-2">
-                 <h5>Informasi</h5>
-                 <ul class="list-unstyled">
-                     <li><a href="#">Tentang Kami</a></li>
-                     <li><a href="#">Alamat</a></li>
-                     <li><a href="#">Email</a></li>
-                 </ul>
-             </div>
-             <div class="col-md-2">
-                 <h5>Bantuan</h5>
-                 <ul class="list-unstyled">
-                     <li><a href="#">FAQ</a></li>
-                     <li><a href="#">Syarat & Ketentuan</a></li>
-                     <li><a href="#">SOP Pendakian</a></li>
-                 </ul>
-             </div>
-             <div class="col-md-3">
-                 <h5>Sosial Media Kami</h5>
-                 <a href="#" class="me-2"><i class="bi bi-facebook"></i></a>
-                 <a href="#" class="me-2"><i class="bi bi-twitter"></i></a>
-                 <a href="#" class="me-2"><i class="bi bi-instagram"></i></a>
-                 <a href="#" class="me-2"><i class="bi bi-linkedin"></i></a>
-                 <a href="#"><i class="bi bi-youtube"></i></a>
-             </div>
-         </div>
+<footer class="pt-5 pb-3 index-footer">
+    <div class="container">
+        <div class="row gy-4">
+            <!-- Logo dan Nama TNKS -->
+            <div class="col-12 col-md-5 d-flex align-items-center gap-3 text-center text-md-start">
+                <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="Logo" class="img-fluid" style="max-width: 80px;">
+                <div>
+                    <h4 class="mb-0 lead fw-bold fs-4">Taman Nasional <br> Kerinci Seblat</h4>
+                    <p class="text-secondary small">Melindungi Keanekaragaman Hayati</p>
+                </div>
+            </div>
 
-         <div class="text-center mt-2">
-             <p class="mb-0 copyright">Copyright &copy; Taman Nasional Kerinci Seblat 2024</p>
-         </div>
-     </div>
- </footer>
+            <!-- Informasi -->
+            <div class="col-6 col-md-2 text-center text-md-start">
+                <h5 class="fw-bold text-uppercase">Informasi</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ $fweb->text1 ?? '#' }}" class="text-black text-decoration-none d-block py-1">Tentang Kami</a></li>
+                    <li><a href="#" class="text-black text-decoration-none d-block py-1">Alamat</a></li>
+                    <li><a href="#" class="text-black text-decoration-none d-block py-1">Email</a></li>
+                </ul>
+            </div>
+
+            <!-- Bantuan -->
+            <div class="col-6 col-md-2 text-center text-md-start">
+                <h5 class="fw-bold text-uppercase">Bantuan</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-black text-decoration-none d-block py-1">FAQ</a></li>
+                    <li><a href="#" class="text-black text-decoration-none d-block py-1">Syarat & Ketentuan</a></li>
+                    <li><a href="#" class="text-black text-decoration-none d-block py-1">SOP Pendakian</a></li>
+                </ul>
+            </div>
+
+            <!-- Sosial Media -->
+            <div class="col-12 col-md-3 text-center text-md-start">
+                <h5 class="fw-bold text-uppercase">Sosial Media</h5>
+                <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                    <a href="{{ $ffacebook->text1 ?: '#' }}" class="social-icon">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="{{ $finstagram->text1 ?: '#' }}" class="social-icon">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="{{ $fyoutube->text1 ?: '#' }}" class="social-icon">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-secondary my-4">
+
+        <!-- Hak Cipta -->
+        <div class="text-center">
+            <p class="mb-0 text-secondary small">
+                Copyright &copy; {{ date('Y') }} Taman Nasional Kerinci Seblat | All Rights Reserved
+            </p>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .social-icon {
+        font-size: 1.5rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .social-icon:hover {
+        color: #f8b400;
+        transform: scale(1.1);
+    }
+
+    footer a {
+        transition: color 0.3s ease-in-out;
+    }
+
+    footer a:hover {
+        color: #f8b400 !important;
+    }
+
+    /* Responsif untuk layar kecil */
+    @media (max-width: 576px) {
+        .social-icon {
+            font-size: 1.25rem;
+        }
+    }
+</style>
