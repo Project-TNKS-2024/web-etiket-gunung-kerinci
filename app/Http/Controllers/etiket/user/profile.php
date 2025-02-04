@@ -50,7 +50,7 @@ class profile extends Controller
             'lastName' => 'string|max:255|nullable',
             'lampiran_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:548',
             'kewarganegaraan' => 'required|in:wni,wna',
-            'nik' => 'required|numeric|digits:16|unique:biodatas,nik',
+            'nik' => 'required|numeric|digits:16|unique:biodatas,nik,' . ($user->biodata->id ?? 'NULL') . ',id',
             'nomor_telepon' => 'required|numeric',
             'telp_country' => 'required|string|max:5',
             'jenis_kelamin' => 'required|in:l,p',
@@ -67,22 +67,25 @@ class profile extends Controller
         $request['nomor_telepon'] = $request->telp_country . ' ' . $request->nomor_telepon;
 
 
-        $upload = new uploadFileControlller();
 
-        // Upload file identitas
-        if ($request->hasFile('lampiran_identitas')) {
-            $filename = $upload->create($user->id, 'identitas', $request->file('lampiran_identitas'));
-        }
+        $upload = new uploadFileControlller();
 
         // cek apakah sudah ada bio atau belum
         $bio = null;
         if ($user->id_bio) {
             $bio = bio_pendaki::find($user->id_bio);
+
             if (!$bio->verified_at) {
                 $bio->update([
                     'nik' => $request->nik,
                 ]);
             }
+
+            $filename = $upload->upadate($bio->lampiran_identitas, $request->file('lampiran_identitas'));
+            if (!$filename) {
+                $filename = $upload->create($user->id, 'identitas', $request->file('lampiran_identitas'));
+            }
+
             $bio->update([
                 'kenegaraan' => $request->kewarganegaraan,
                 'first_name' => $request->firstName,
@@ -99,6 +102,8 @@ class profile extends Controller
                 'verified' => 'pending',
             ]);
         } else {
+
+            $filename = $upload->create($user->id, 'identitas', $request->file('lampiran_identitas'));
             $bio = bio_pendaki::create([
                 'nik' => $request->nik,
                 'kenegaraan' => $request->kewarganegaraan,

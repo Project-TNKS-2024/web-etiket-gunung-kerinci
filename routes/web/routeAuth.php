@@ -17,6 +17,9 @@ Route::middleware('guest')->group(function () {
    Route::get('register', [register::class, 'register'])->name('register');
    Route::post('register', [register::class, 'actionregister'])->name('register.action');
 
+   // verifikasi email
+
+
    // lupa password
    Route::get('lupaPassword', [lupapassword::class, 'sentEmail'])->name('lupaPassword');
    Route::post('lupaPassword', [lupapassword::class, 'confirmEmail'])->name('lupaPassword.action');

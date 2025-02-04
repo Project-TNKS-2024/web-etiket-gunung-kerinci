@@ -38,7 +38,7 @@ class register extends Controller
         ]);
 
         // Kirim email verifikasi
-        event(new Registered($user));
+        // event(new Registered($user));
 
         // Redirect dengan pesan sukses
         return redirect()->route('login')->with(

@@ -34,6 +34,9 @@
                 @endif
                 @if (isset($user->biodata)and $user->biodata->verified == 'unverified')
                 <div class="alert alert-danger" role="alert">
+                    Profile anda tidak valid
+                </div>
+                <div class="alert alert-danger" role="alert">
                     Admin : {{$user->biodata->keterangan}}
                 </div>
                 @csrf

@@ -65,11 +65,7 @@
             <span class="fs-4 fw-bold">
                 Pembayaran Pemesanan
             </span>
-            @if ($booking->status_pembayaran == 1)
-            <span class="badge text-bg-success ">Sukses</span>
-            @else
-            <span class="badge text-bg-warning ">Belum Bayar</span>
-            @endif
+
         </p>
 
 

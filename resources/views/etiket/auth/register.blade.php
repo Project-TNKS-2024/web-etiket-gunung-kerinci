@@ -68,9 +68,9 @@
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
                                     id="email" name="email" value="{{ old('email') }}" required>
                                 @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                         </div>
@@ -80,9 +80,9 @@
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
                                     id="password" name="password" required>
                                 @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                                 @enderror
                             </div>
                             <div class="form-group col-6">
@@ -131,7 +131,7 @@
 
                                     iconContainer.addEventListener('click', function(e) {
 
-                                        const toggler = document.getElementById(id+'-toggler');
+                                        const toggler = document.getElementById(id + '-toggler');
                                         console.log(element.type);
                                         // element.type = element.type == 'password' ? 'text' : 'password';
                                         if (element.type == 'password') {
