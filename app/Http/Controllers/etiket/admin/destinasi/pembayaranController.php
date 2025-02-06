@@ -90,13 +90,25 @@ class pembayaranController extends Controller
             abort(404);
         }
 
-        // return $booking;
-        $booking->update([
-            'unique_code' => $request->verified === 'yes' ? $this->helper->generateCode(10) : null,
-            'status_booking' => $request->verified === 'yes' ? 4 : 3,
-            'status_pembayaran' => $request->verified === 'yes' ? 1 : 0,
-
-        ]);
+        if ($request->verified === 'yes') {
+            $struk = $this->helper->getDataStruk($booking->id);
+            $booking->update([
+                'unique_code' =>  $this->helper->generateCode(10),
+                'status_booking' =>  4,
+                'status_pembayaran' =>  1,
+                'dataStruk' => $struk,
+            ]);
+        } else {
+            if ($booking->status_booking > 4) {
+                return redirect()->back()->withErrors('Bookingan sudah melakukan pendakian');
+            }
+            $booking->update([
+                'unique_code' => null,
+                'status_booking' =>  3,
+                'status_pembayaran' =>  0,
+                'dataStruk' => null,
+            ]);
+        }
 
 
         if ($booking->pembayaran->isNotEmpty()) {

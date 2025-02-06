@@ -26,9 +26,8 @@ return new class extends Migration
             $table->integer('total_pembayaran');
             $table->boolean('status_pembayaran')->default(false);
             // {1: blm Pembayaran, 2: Sudah Konfirmasi, }
+            $table->json('dataStruk')->nullable();
 
-            $table->text('lampiran_simaksi')->nullable();
-            $table->text('lampiran_stugas')->nullable();
             $table->string('unique_code')->nullable();
             $table->text('keterangan')->nullable();
 

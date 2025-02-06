@@ -76,7 +76,7 @@
          <div class="col-sm-6 text-end">
             <strong>Tanggal Invoice:</strong><br>
             @if ($data->status_pembayaran)
-            <span>{{$data->pembayaran->last()->updated_at ?? '-'}}</span>
+            <span>{{$data->pembayaran[0]->updated_at ?? '-'}}</span>
             @else
             <span>-</span>
             @endif
@@ -101,37 +101,40 @@
                $totalHarga = 0;
                @endphp
                <tbody>
-                  @if($data->wniwna['wni'] > 0)
+                  @if($data->wniwna->wni > 0)
                   @php
-                  $tiket = $data->gkTiket->tiket_pendaki->where('kategori_pendaki', 'wni')->first();
+                  $tiket = collect($data->gktiket->tiket_pendaki)
+                  ->first(fn($item) => $item->kategori_pendaki === 'wni');
                   @endphp
                   <tr>
                      <td>
-                        <b>Tiket Kategori {{$data->gkTiket->nama}} WNI</b>
+                        <b>Tiket Kategori {{$data->gktiket->nama}} WNI</b>
                         <br>
-                        Tiket masuk ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd['weekdays'] ?? '0'}} +
-                        Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd['weekends'] ?? '0'}} +
+                        Tiket masuk ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd->weekdays ?? '0'}} +
+                        @if ($data->wkwd->weekends > 0)
+                        Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd->weekends ?? '0'}} +
+                        @endif
                         Tiket kemah ({{$tiket->harga_kemah ?? '0'}}) x {{$data->total_hari -1}} +
                         Tiket pendakian ({{$tiket->harga_traking ?? '0'}}) +
                         Asuransi ({{$tiket->harga_ansuransi ?? '0'}})
                      </td>
                      <td class="text-end text-nowrap">
-                        Rp. {{ number_format(($tiket->harga_masuk_wd ?? 0) * ($data->wkwd['weekdays'] ?? 0) + 
-                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd['weekends'] ?? 0) + 
+                        Rp. {{ number_format(($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) + 
+                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) + 
                         ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) + 
                         ($tiket->harga_traking ?? 0) + 
                         ($tiket->harga_ansuransi ?? 0), 0, ',', '.') }}
                      </td>
                      <td>
-                        {{$data->wniwna['wni'] ?? 0}}
+                        {{$data->wniwna->wni ?? 0}}
                      </td>
                      <td class="text-end text-nowrap">
                         @php
-                        $harga = (($tiket->harga_masuk_wd ?? 0) * ($data->wkwd['weekdays'] ?? 0) +
-                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd['weekends'] ?? 0) +
+                        $harga = (($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) +
+                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) +
                         ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) +
                         ($tiket->harga_traking ?? 0) +
-                        ($tiket->harga_ansuransi ?? 0)) * ($data->wniwna['wni'] ?? 0);
+                        ($tiket->harga_ansuransi ?? 0)) * ($data->wniwna->wni ?? 0);
                         $totalHarga += $harga;
                         @endphp
                         Rp. {{ number_format($harga, 0, ',', '.') }}
@@ -139,39 +142,40 @@
                   </tr>
                   @endif
 
-                  @if($data->wniwna['wna'] > 0)
+                  @if($data->wniwna->wna > 0)
                   @php
-                  $tiket = $data->gkTiket->tiket_pendaki->where('kategori_pendaki', 'wna')->first();
+                  $tiket = collect($data->gktiket->tiket_pendaki)
+                  ->first(fn($item) => $item->kategori_pendaki === 'wna');
                   @endphp
                   <tr>
                      <td>
-                        <b>Tiket Kategori {{$data->gkTiket->nama}} WNI</b>
+                        <b>Tiket Kategori {{$data->gktiket->nama}} WNI</b>
                         <br>
-                        Tiket masuk ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd['weekdays'] ?? '0'}} +
-                        Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd['weekends'] ?? '0'}} +
+                        Tiket masuk ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd->weekdays ?? '0'}} +
+                        @if ($data->wkwd->weekends > 0)
+                        Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd->weekends ?? '0'}} +
+                        @endif
                         Tiket kemah ({{$tiket->harga_kemah ?? '0'}}) x {{$data->total_hari -1}} +
                         Tiket pendakian ({{$tiket->harga_traking ?? '0'}}) +
                         Asuransi ({{$tiket->harga_ansuransi ?? '0'}})
                      </td>
                      <td class="text-end text-nowrap">
-                        Rp. {{ number_format(
-                        ($tiket->harga_masuk_wd ?? 0) * ($data->wkwd['weekdays'] ?? 0) + 
-                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd['weekends'] ?? 0) + 
+                        Rp. {{ number_format(($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) + 
+                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) + 
                         ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) + 
                         ($tiket->harga_traking ?? 0) + 
-                        ($tiket->harga_ansuransi ?? 0), 0, ',', '.'
-                        ) }}
+                        ($tiket->harga_ansuransi ?? 0), 0, ',', '.') }}
                      </td>
                      <td>
-                        {{$data->wniwna['wni'] ?? 0}}
+                        {{$data->wniwna->wni ?? 0}}
                      </td>
                      <td class="text-end text-nowrap">
                         @php
-                        $harga = (($tiket->harga_masuk_wd ?? 0) * ($data->wkwd['weekdays'] ?? 0) +
-                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd['weekends'] ?? 0) +
+                        $harga = (($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) +
+                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) +
                         ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) +
                         ($tiket->harga_traking ?? 0) +
-                        ($tiket->harga_ansuransi ?? 0)) * ($data->wniwna['wna'] ?? 0);
+                        ($tiket->harga_ansuransi ?? 0)) * ($data->wniwna->wna ?? 0);
                         $totalHarga += $harga;
                         @endphp
                         Rp. {{ number_format($harga, 0, ',', '.') }}

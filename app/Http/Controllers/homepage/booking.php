@@ -604,17 +604,18 @@ class booking extends Controller
 
     public function struk($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis', 'pendakis.biodata', 'gateMasuk', 'gktiket', 'gktiket.tiket_pendaki', 'pembayaran', 'user', 'user.biodata', 'destinasi'])->where('id', $id)->first();
+        $booking = gk_booking::where('id', $id)->first();
         if (!$booking) {
             abort(404);
         } else if ($booking->status_booking < 3) {
             abort(404);
         }
 
-        $wkwd = $this->helper->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
-        $wniwna = $this->helper->countWniWna($booking->id);
-        $booking->wkwd = $wkwd->getData(true);
-        $booking->wniwna = $wniwna->getData(true);
+        if ($booking->status_pembayaran) {
+            $booking = json_decode($booking->dataStruk);
+        } else {
+            $booking = $this->helper->getDataStruk($booking->id);
+        }
 
         // return $booking;
 

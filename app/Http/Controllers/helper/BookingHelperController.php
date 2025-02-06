@@ -120,4 +120,27 @@ class BookingHelperController extends Controller
             'wna' => $wna
         ]);
     }
+
+    function getDataStruk($idbooking)
+    {
+        $booking = gk_booking::with([
+            'gateMasuk',
+            'gateKeluar',
+            'pendakis',
+            'pendakis.biodata',
+            'gateMasuk',
+            'gktiket',
+            'gktiket.tiket_pendaki',
+            'pembayaran',
+            'user',
+            'user.biodata',
+            'destinasi'
+        ])->where('id', $idbooking)->first();
+
+        $wkwd = $this->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
+        $wniwna = $this->countWniWna($booking->id);
+        $booking->wkwd = (object) $wkwd->getData(true);
+        $booking->wniwna = (object) $wniwna->getData(true);
+        return $booking;
+    }
 }
