@@ -169,15 +169,17 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <p class="mb-0"><strong>Catatan :</strong></p>
-                    <p class="mb-1">Cara perhitungan harga tiket adalah sebagai berikut:</p>
+                    <p class="mb-0"><strong>Catatan:</strong></p>
+                    <p class="mb-1">Harga tiket dihitung berdasarkan komponen berikut:</p>
                     <ul>
                         <li><strong>Harga tiket masuk:</strong> Dikalikan dengan jumlah hari pendakian</li>
                         <li><strong>Harga kemah:</strong> Dikalikan dengan jumlah malam pendakian</li>
-                        <li><strong>Harga pendakian</strong></li>
-                        <li><strong>Harga asuransi</strong></li>
+                        <li><strong>Harga pendakian:</strong> Biaya tambahan untuk pendakian</li>
+                        <li><strong>Harga asuransi:</strong> Biaya perlindungan selama pendakian</li>
                     </ul>
-                    <p><i>Catatan: Pastikan untuk menghitung dengan benar sesuai dengan durasi dan fasilitas yang dipilih.</i></p>
+                    <p><strong>Total harga tiket</strong> = (Harga tiket masuk × jumlah hari) + (Harga kemah × jumlah malam) + Harga pendakian + Harga asuransi</p>
+                    <p><i>Pastikan untuk menghitung dengan benar sesuai dengan durasi pendakian dan fasilitas yang dipilih.</i></p>
+
                 </div>
             </div>
         </div>

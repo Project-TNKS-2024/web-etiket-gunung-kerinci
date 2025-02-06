@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');
     Route::post('booking/add-payment', [booking::class, 'addBuktiPembayaran'])->name('homepage.booking.addBuktiPembayaran');
     Route::delete('booking/payment/delete', [booking::class, 'deleteBuktiPembayaran'])->name('homepage.booking.payment.delete');
+    Route::get('booking/{id}/struk', [booking::class, 'struk'])->name('homepage.booking.struk');
 
     Route::get('tiket/{id}', [booking::class, 'tiket'])->name('dashboard.tiket');
     Route::get('booking/{id}/tiket', [booking::class, 'tiketBooking'])->name('homepage.booking.tiket');

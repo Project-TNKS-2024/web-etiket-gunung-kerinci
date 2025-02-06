@@ -16,18 +16,35 @@ class gk_pendaki extends Model
         // data booking
         'booking_id',
         'tagihan',
-
         'id_bio',
-
-
-
         'usia',
-
-
         // input lampiran
         'lampiran_surat_izin_ortu',
 
     ];
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
+            }
+        });
+    }
+
+    // Default order by updated_at descending
+    protected static function booted()
+    {
+        static::addGlobalScope('order', function ($query) {
+            $query->orderBy('updated_at', 'asc');
+            // $query->orderBy('updated_at', 'desc');
+        });
+    }
 
     public function booking()
     {
@@ -52,18 +69,5 @@ class gk_pendaki extends Model
     public function getFullNameAttribute()
     {
         return trim($this->first_name . ' ' . $this->last_name);
-    }
-
-    public $incrementing = false;
-    protected $keyType = 'string';
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (empty($model->id)) {
-                $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
-            }
-        });
     }
 }

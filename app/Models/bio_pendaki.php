@@ -34,16 +34,19 @@ class bio_pendaki extends Model
         'verified'
 
     ];
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+    ];
+
     public $incrementing = false;
     protected $keyType = 'string';
+
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            // if (empty($model->id)) {
-            //     $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
-            // }
+
 
             if (empty($model->id)) {
                 // Generate a unique 8-character ID
@@ -55,7 +58,8 @@ class bio_pendaki extends Model
             }
         });
     }
-    protected $casts = [
-        'tanggal_lahir' => 'date',
-    ];
+    public function getFullNameAttribute()
+    {
+        return trim("{$this->first_name} {$this->last_name}");
+    }
 }

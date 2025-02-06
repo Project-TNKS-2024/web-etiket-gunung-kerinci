@@ -19,8 +19,10 @@ class dashboard extends Controller
         $user = User::with('biodata')->find(Auth::user()->id);
 
         $booking = gk_booking::whereHas('pendakis', function ($query) use ($user) {
-            $query->where('id_bio', $user->id_bio); // Pastikan relasi 'biodata' ada
-        })->with('pendakis')->get();
+            $query->where('id_bio', $user->id_bio);
+            // })->with('pendakis', 'ketuaPendaki', 'user')->get();
+        })->with('pendakis', 'user')->get();
+        // return $booking;
 
         return view('etiket.user.sections.dashboard', [
             'user' => $user,
@@ -33,8 +35,10 @@ class dashboard extends Controller
         $user = User::with('biodata')->find(Auth::user()->id);
         // return $user;
         $booking = gk_booking::whereHas('pendakis', function ($query) use ($user) {
-            $query->where('id_bio', $user->id_bio); // Pastikan relasi 'biodata' ada
+            $query->where('id_bio', $user->id_bio);
         })->with('pendakis')->get();
+
+        // return $booking;
 
         return view('etiket.user.sections.riwayat', [
             'bookings' => $booking,

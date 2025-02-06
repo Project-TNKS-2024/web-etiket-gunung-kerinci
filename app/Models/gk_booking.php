@@ -78,10 +78,25 @@ class gk_booking extends Model
         return $this->belongsTo(gk_gates::class, 'gate_keluar');
     }
 
+    public function destinasi()
+    {
+        return $this->hasOneThrough(
+            destinasi::class,
+            gk_paket_tiket::class,
+            'id', // Foreign key di gk_paket_tiket yang berelasi dengan gk_booking
+            'id', // Foreign key di destinasi yang berelasi dengan gk_paket_tiket
+            'id_tiket', // Foreign key di gk_booking yang merujuk ke gk_paket_tiket
+            'id_destinasi' // Foreign key di gk_paket_tiket yang merujuk ke destinasi
+        );
+    }
+
     public function pendakis()
     {
         return $this->hasMany(gk_pendaki::class, 'booking_id');
     }
+
+
+
     public function pembayaran()
     {
         return $this->hasMany(pembayaran::class, 'id_booking');

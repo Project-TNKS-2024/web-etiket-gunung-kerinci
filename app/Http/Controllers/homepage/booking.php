@@ -106,7 +106,7 @@ class booking extends Controller
 
         $dateStart = Carbon::createFromFormat('Y-m-d', $request->date_start);
         $dateEnd = Carbon::createFromFormat('Y-m-d', $request->date_end);
-        $totalDays = $dateStart->diffInDays($dateEnd);
+        $totalDays = $dateStart->diffInDays($dateEnd) + 1;
 
         if ($dateStart > $dateEnd) {
             return back()->with('error', 'Error: Tanggal tidak sesuai');
@@ -505,11 +505,12 @@ class booking extends Controller
 
     public function bookingPayment($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'gateMasuk.destinasi', 'pendakis'])
             ->where('id', $id)
             ->where('id_user', Auth::id())
             ->first();
 
+        // return $booking;
 
         if (!$booking) {
             abort(404);
@@ -525,9 +526,7 @@ class booking extends Controller
         // Check if any 'status' in pembayaran is 'approved'
         $verified = $pembayaran->contains('status', 'approved'); // true if at least one 'status' is 'approved'
         $qris = gk_gates::where('id', $booking->gate_masuk)->first()->qris;
-        $hitung = function ($param) {
-            return $this->helper->getDetailTagihan($param);
-        };
+
 
         // dd($verified);
         return view('homepage.booking.bookingPayment', [
@@ -536,7 +535,7 @@ class booking extends Controller
             'pendakis' => $booking->pendakis,
             'pembayaran' => $pembayaran,
             'verified' => $verified, // Pass the verified value to the view
-            'hitung' => $hitung
+
         ]);
     }
 
@@ -602,6 +601,27 @@ class booking extends Controller
     }
 
     // =========================================================================================
+
+    public function struk($id)
+    {
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis', 'pendakis.biodata', 'gateMasuk', 'gktiket', 'gktiket.tiket_pendaki', 'pembayaran', 'user', 'user.biodata', 'destinasi'])->where('id', $id)->first();
+        if (!$booking) {
+            abort(404);
+        } else if ($booking->status_booking < 3) {
+            abort(404);
+        }
+
+        $wkwd = $this->helper->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
+        $wniwna = $this->helper->countWniWna($booking->id);
+        $booking->wkwd = $wkwd->getData(true);
+        $booking->wniwna = $wniwna->getData(true);
+
+        // return $booking;
+
+        return view('homepage.booking.bookingStruk', [
+            'data' => $booking,
+        ]);
+    }
 
     public function tiket($id)
     {

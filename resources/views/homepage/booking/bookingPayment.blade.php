@@ -4,7 +4,7 @@
 @section('css')
 <style>
     .table tbody tr td {
-        padding: 3px 5px;
+        padding: 1px 5px;
     }
 
     .table {
@@ -37,15 +37,7 @@
     .sticky-deskripsi {
         position: sticky;
         top: 20px;
-        /* Jarak dari atas layar */
         z-index: 10;
-        /* Pastikan elemen tetap di atas elemen lain jika diperlukan */
-        background-color: #fff;
-        /* Untuk menjaga warna latar belakang */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        /* Menambahkan bayangan untuk estetika */
-        border-radius: 0.5rem;
-        /* Opsional: untuk estetika */
     }
 </style>
 @endsection
@@ -157,7 +149,7 @@
                         </button>
                     </div>
 
-                    <button class="btn btn-primary gk-bg-primary700 my-2 my-md-0" data-bs-toggle="modal"
+                    <button class="btn btn-primary my-2 my-md-0" data-bs-toggle="modal"
                         data-bs-target="#addBuktiModal">
                         Upload
                     </button>
@@ -204,7 +196,6 @@
                                         data-id-target="bukti_upload">
                                         <i class=" fa-regular fa-eye"></i>
                                     </button>
-
                                 </td>
                                 @if ($booking->status_booking <=3)
                                     <td class="text-center">
@@ -234,126 +225,86 @@
 
             <!-- deskripsi tagihan -->
             <div class="col-12 col-md-6">
-                <div class="card sticky-deskripsi" id="pembayaran">
-                    <div class="card-body">
-                        <h1 class="fs-5 fw-bold text-center">Tagihan</h1>
+                <h1 class="fs-5 fw-bold">Detail Tagihan</h1>
+                <div class=" sticky-deskripsi">
+                    <div class="card" id="pembayaran">
+                        <div class="card-body">
+                            <p>Status :
+                                @if ($booking->status_pembayaran == 1)
+                                <span class="badge text-bg-success ">Sukses</span>
+                                @else
+                                <span class="badge text-bg-warning ">Belum Bayar</span>
+                                @endif
+                            </p>
 
-                        <h1 class="fs-6 fw-bold ">Tagian Ke:</h1>
-                        <p class="mb-0">Email : {{ $booking->user->email }}</p>
-                        <p>Status :
-                            @if ($booking->status_pembayaran == 1)
-                            <span class="badge text-bg-success ">Sukses</span>
-                            @else
-                            <span class="badge text-bg-warning ">Belum Bayar</span>
-                            @endif
-                        </p>
+                            <h1 class="fs-6 fw-bold ">Data Pemesan:</h1>
+                            <p class="mb-0">Email : {{ $booking->user->email }}</p>
+                            <p class="mb-0">Nama : {{ $booking->user->biodata->fullName }}</p>
 
-                        <h1 class="fs-6 fw-bold ">Deskripsi Pendakian</h1>
-                        <table class="table table-borderless table-des">
-                            <tr>
-                                <td>Nama Ketua</td>
-                                <td> : </td>
-                                <td>{{ $booking->pendakis[0]->first_name . ' ' . $booking->pendakis[0]->last_name }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Gate Masuk</td>
-                                <td> : </td>
-                                <td>{{ $booking->gateMasuk->nama }} </td>
-                            </tr>
-                            <tr>
-                                <td>Gate Keluar</td>
-                                <td> : </td>
-                                <td>{{ $booking->gateKeluar->nama }} </td>
-                            </tr>
-                            <tr>
-                                <td>Tanggal Pendakian</td>
-                                <td> : </td>
-                                <td>{{ $booking->tanggal_masuk }} </td>
-                            </tr>
-                            <tr>
-                                <td>Tanggal Keluar</td>
-                                <td> : </td>
-                                <td>{{ $booking->tanggal_keluar }}</td>
-                            </tr>
-                            <tr>
-                                <td>Total Pendaki</td>
-                                <td> : </td>
-                                <td>{{ $booking->total_pendaki_wni }} WNI dan {{ $booking->total_pendaki_wna }} WNA
-                                </td>
-                            </tr>
-                        </table>
 
-                        <h1 class="fs-6 fw-bold ">List Tagihan Tiket</h1>
-                        <table class="table mb-0 bg-transparent">
-                            <tr class="fw-semibold">
-                                <td>Nama Pendaki</td>
-                                <td class="text-end">Tagihan</td>
-                            </tr>
-                            @foreach ($booking->pendakis as $pendaki)
-                            @php
-                            $tagihan = $hitung($pendaki);
-                            @endphp
-                            <tr>
-                                <td>
-                                    <div>{{ $pendaki->first_name . ' ' . $pendaki->last_name }}</div>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="small text-muted">Biaya Masuk</div>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="small text-muted">Berkemah</div>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="small text-muted">Pendakian</div>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="small text-muted">Asuransi</div>
-                                    </div>
-                                    <div class="d-flex justify-content-between fw-bold">
-                                        <div class="small text-muted">Total</div>
-                                    </div>
-                                </td>
-                                <td class="text-end">
-                                    <div class="mb-2 align-items-end d-flex" style="flex-direction: column;">
-                                        <div class="">
-                                            <p></p>
+                            <h1 class="fs-6 fw-bold ">Detail Pemesanan Tiket</h1>
+                            <table class="table table-borderless table-des">
+                                <tr>
+                                    <td>Destinasi</td>
+                                    <td> : </td>
+                                    <td>{{ $booking->gateMasuk->destinasi->nama }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Gate Masuk</td>
+                                    <td> : </td>
+                                    <td>{{ $booking->gateMasuk->nama }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Gate Keluar</td>
+                                    <td> : </td>
+                                    <td>{{ $booking->gateKeluar->nama }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Tanggal Pendakian</td>
+                                    <td> : </td>
+                                    <td>{{ $booking->tanggal_masuk }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Tanggal Keluar</td>
+                                    <td> : </td>
+                                    <td>{{ $booking->tanggal_keluar }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Pendaki</td>
+                                    <td> : </td>
+                                    <td>{{ $booking->total_pendaki_wni }} WNI dan {{ $booking->total_pendaki_wna }} WNA
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <h1 class="fs-6 fw-bold ">List Tagihan Tiket</h1>
+                            <table class="table mb-0 bg-transparent">
+                                <tr class="fw-semibold">
+                                    <td>Nama Pendaki</td>
+                                    <td class="text-end">Tagihan</td>
+                                </tr>
+                                @foreach ($booking->pendakis as $pendaki)
+                                <tr>
+                                    <td>
+                                        <div>{{ $pendaki->first_name . ' ' . $pendaki->last_name }}</div>
+                                    </td>
+                                    <td class="text-end">
+                                        <div>Rp.
+                                            {{ number_format($pendaki->tagihan) }}
                                         </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="small text-muted">Rp.
-                                                {{ number_format($tagihan['masuk']) }}
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="small text-muted">Rp.
-                                                {{ number_format($tagihan['berkemah']) }}
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="small text-muted">Rp.
-                                                {{ number_format($tagihan['tracking']) }}
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="small text-muted">Rp.
-                                                {{ number_format($tagihan['asuransi']) }}
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between fw-bold">
-                                            <div class="small text-muted">Rp.
-                                                {{ number_format($pendaki->tagihan) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                            <tr>
-                                <td class="fw-semibold text-end">Total : </td>
-                                <td class="text-end">Rp. {{ number_format($booking->total_pembayaran, 0, ',', '.') }}
-                                </td>
-                            </tr>
-                        </table>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                <tr>
+                                    <td class="fw-semibold text-end">Total : </td>
+                                    <td class="text-end">Rp. {{ number_format($booking->total_pembayaran, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
+                    <a href="{{route('homepage.booking.struk', ['id' => $booking->id] )}}" class="btn btn-primary d-block mt-3 w-0">Lihat Detail Pemesanan</a>
                 </div>
             </div>
         </div>
