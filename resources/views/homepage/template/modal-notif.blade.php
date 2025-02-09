@@ -50,7 +50,8 @@
         toastElements.forEach(toastElement => {
             const toast = new bootstrap.Toast(toastElement, {
                 autohide: true,
-                delay: 5000 // 1000 milliseconds = 1 seconds
+                // delay: 5000 // 1000 milliseconds = 1 seconds
+                delay: 20000 // 1000 milliseconds = 1 seconds
             });
             toast.show();
         });

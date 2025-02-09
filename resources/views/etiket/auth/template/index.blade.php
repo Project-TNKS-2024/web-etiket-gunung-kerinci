@@ -31,6 +31,23 @@
         a {
             text-decoration: none;
         }
+
+        /* template toast */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1050;
+        }
+
+
+        .btn-gl-primary {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+            color: #fff;
+            border: none;
+            background-size: 100%;
+
+        }
     </style>
     @yield('css')
 </head>
@@ -91,7 +108,7 @@
 
                 iconContainer.addEventListener('click', function(e) {
 
-                    const toggler = document.getElementById(id+'-toggler');
+                    const toggler = document.getElementById(id + '-toggler');
                     console.log(element.type);
                     // element.type = element.type == 'password' ? 'text' : 'password';
                     if (element.type == 'password') {

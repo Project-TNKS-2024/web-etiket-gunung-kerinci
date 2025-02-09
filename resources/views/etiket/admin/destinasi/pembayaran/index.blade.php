@@ -56,11 +56,11 @@
             <tr>
                <th scope="row">{{ $dataBooking->firstItem() + $index }}</th>
                <td>{{ optional($booking->pendakis->first())->first_name }} {{ optional($booking->pendakis->first())->last_name }}</td>
-               <td>{{ optional($booking->pembayaran->first())->created_at }}</td>
-               <td>{{ optional($booking->pembayaran->first())->status }}</td>
-               <td>{{ optional($booking->pembayaran->first())->keterangan }}</td>
+               <td>{{ optional($booking->pembayaran->last())->created_at }}</td>
+               <td>{{ optional($booking->pembayaran->last())->status }}</td>
+               <td>{{ optional($booking->pembayaran->last())->keterangan }}</td>
                <td>
-                  @if (optional($booking->pembayaran->first())->status == 'pending')
+                  @if (optional($booking->pembayaran->last())->status == 'pending')
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Verifikasi</button>
                   @else
                   <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Detail</button>

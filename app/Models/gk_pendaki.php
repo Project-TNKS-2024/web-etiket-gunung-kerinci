@@ -41,8 +41,7 @@ class gk_pendaki extends Model
     protected static function booted()
     {
         static::addGlobalScope('order', function ($query) {
-            $query->orderBy('updated_at', 'asc');
-            // $query->orderBy('updated_at', 'desc');
+            $query->orderBy('created_at', 'asc');
         });
     }
 

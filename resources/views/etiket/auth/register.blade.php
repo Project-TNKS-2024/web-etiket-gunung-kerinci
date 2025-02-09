@@ -41,6 +41,23 @@
             color: var(--neutrals600);
             font-size: 14px;
         }
+
+        /* template toast */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1050;
+        }
+
+
+        .btn-gl-primary {
+            background: linear-gradient(263deg, #0169BF 12.63%, #63B8FF 80.63%);
+            color: #fff;
+            border: none;
+            background-size: 100%;
+
+        }
     </style>
 </head>
 
@@ -114,19 +131,15 @@
                                     iconContainer.style.top = '0';
                                     iconContainer.style.right = '0';
 
-                                    // const icon = document.createElement('img');
-                                    // icon.src = "{{ asset('assets/icon/tnks/eye.svg') }}";
-                                    // icon.style.cursor = 'pointer';
 
-                                    // iconContainer.appendChild(icon);
                                     iconContainer.innerHTML = `
-        <div class="position-relative d-flex align-items-center justify-content-center">
-            <img src="{{ asset('assets/icon/tnks/eye.svg') }}" />
-            <div id='${id}-toggler' class='position-absolute'
-                style='width: 100%; height: 90%; border-right: 2px solid rgba(152, 162, 179, 1); transform: rotate(-45deg) scale(0); top: 35%; left: -30%; transition: height 0.3s ease, transform 0.3s ease;'>
-            </div>
-        </div>
-        `;
+                                        <div class="position-relative d-flex align-items-center justify-content-center">
+                                            <img src="{{ asset('assets/icon/tnks/eye.svg') }}" />
+                                            <div id='${id}-toggler' class='position-absolute'
+                                                style='width: 100%; height: 90%; border-right: 2px solid rgba(152, 162, 179, 1); transform: rotate(-45deg) scale(0); top: 35%; left: -30%; transition: height 0.3s ease, transform 0.3s ease;'>
+                                            </div>
+                                        </div>
+                                        `;
 
 
                                     iconContainer.addEventListener('click', function(e) {
@@ -148,21 +161,6 @@
                                 addVisibilityToggle('password_confirmation');
                             </script>
                         </div>
-                        <!-- <div class="form-group mb-3">
-                            <label class="form-label d-block">Jenis Kelamin</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="male" value="Laki-Laki" required>
-                                <label class="form-check-label" for="male">
-                                    Laki-Laki
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="female" value="Perempuan" required>
-                                <label class="form-check-label" for="female">
-                                    Perempuan
-                                </label>
-                            </div>
-                        </div> -->
                         <div class="form-group mb-3">
                             <button type="submit" class="btn btn-primary w-100">Buat Akun</button>
                         </div>
@@ -180,6 +178,8 @@
             </footer>
         </div>
     </div>
+
+    @include('homepage.template.modal-notif')
 
 
 

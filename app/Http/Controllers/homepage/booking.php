@@ -543,9 +543,9 @@ class booking extends Controller
     {
         $request->validate([
             'id' => 'required|string',
+            'metode' => 'required|string',
             'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
-
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
             ->where('id', $request->id)
             ->where('id_user', Auth::id())
@@ -558,12 +558,17 @@ class booking extends Controller
         }
 
         $path = $this->upload->create($request->id, 'booking', $request->bukti_pembayaran);
+        if ($request->metode == 'scan') {
+            $metode = 'Scan Qris Gate Mauk';
+        } elseif ($request->metode == 'transfer') {
+            $metode = 'Transfer Bank';
+        }
         pembayaran::create([
             'id_booking' => $request->id,
             'spesial' => null,
             'amount' => $booking->total_pembayaran,
             'status' => 'pending',
-            'payment_method' => 'manual',
+            'payment_method' => $metode,
             'bukti_pembayaran' => $path,
             'keterangan' => '',
             'spesial' => '',
@@ -613,6 +618,7 @@ class booking extends Controller
 
         if ($booking->status_pembayaran) {
             $booking = json_decode($booking->dataStruk);
+            // return $booking;
         } else {
             $booking = $this->helper->getDataStruk($booking->id);
         }
@@ -626,16 +632,16 @@ class booking extends Controller
 
     public function tiket($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis', 'gateMasuk.destinasi'])->where('id', $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'destinasi'])->where('id', $id)->first();
 
         if (!$booking) {
             abort(404);
         } else if ($booking->status_booking < 4) {
             abort(404);
         }
+       
 
         // return $booking;
-
         return view('homepage.booking.bookingTiket', [
             'booking' => $booking,
             'pendakis' => $booking->pendakis

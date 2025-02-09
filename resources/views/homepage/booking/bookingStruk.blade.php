@@ -21,6 +21,10 @@
          font-weight: bold;
          font-size: 30px;
       }
+
+      body {
+         background-color: #ededed;
+      }
    </style>
 </head>
 
@@ -58,7 +62,7 @@
          <div class="col-sm-6 text-end">
             <strong>Ditagih ke:</strong>
             <address>
-               {{$data->user->biodata->fullName ?? 'N/A'}}<br>
+               {{$data->user->biodata->fullName ?? $data->user->biodata->first_name. ' ' . $data->user->biodata->last_name}}<br>
                {{$data->user->email ?? 'N/A'}}<br>
                {{$data->user->biodata->no_hp ?? 'N/A'}}<br>
             </address>
@@ -68,7 +72,7 @@
          <div class="col-sm-6">
             <strong>Metode Pembayaran:</strong><br>
             @if ($data->status_pembayaran)
-            <span>Midtrans (Bank Transfer / QRIS / Credit Card)</span>
+            <span>{{$data->pembayaran[count($data->pembayaran)-1]->payment_method ?? '-'}}</span>
             @else
             <span>-</span>
             @endif
@@ -76,7 +80,7 @@
          <div class="col-sm-6 text-end">
             <strong>Tanggal Invoice:</strong><br>
             @if ($data->status_pembayaran)
-            <span>{{$data->pembayaran[0]->updated_at ?? '-'}}</span>
+            <span>{{$data->pembayaran[count($data->pembayaran)-1]->updated_at ? \Carbon\Carbon::parse($data->pembayaran[count($data->pembayaran)-1]->updated_at)->format('d/M/Y H:i:s') : '-'}}</span>
             @else
             <span>-</span>
             @endif
@@ -197,10 +201,10 @@
          <a href="{{ url()->current() }}" target="_blank">{{url()->current()}}</a>
       </div>
    </div>
-   <div class=" text-center">
+   <div class="mb-2 text-center">
       <a href="{{ route('homepage.booking.payment', ['id' => $data->id]) }}" class="btn btn-outline-secondary"><i class="fa fa-print"></i>Laman Pembalian</a>
       <a href="javascript:void(0)" onclick="invoicePrint()" class="btn btn-outline-secondary"><i class="fa fa-print"></i> Print</a>
-      <a href="javascript:void(0)" onclick="invoiceDownload()" class="btn btn-outline-secondary"><i class="fa fa-download"></i> Download</a>
+      <!-- <a href="javascript:void(0)" onclick="invoiceDownload()" class="btn btn-outline-secondary"><i class="fa fa-download"></i> Download</a> -->
    </div>
    <script>
       function invoicePrint() {

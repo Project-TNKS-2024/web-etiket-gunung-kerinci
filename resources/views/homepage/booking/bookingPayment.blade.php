@@ -141,8 +141,14 @@
                     @csrf
                     <input type="hidden" name="id" value="{{ $booking->id }}">
 
+                    <select class="form-select" name="metode">
+                        <option selected disabled>Metode</option>
+                        <option value="transfer">Transfer Bank</option>
+                        <option value="scan">Scan QR</option>
+                    </select>
+
                     <div class="input-group flex-nowrap">
-                        <input class="form-control h-100 w-100 " type="file" name="bukti_pembayaran"
+                        <input class="form-control h-100" type="file" name="bukti_pembayaran"
                             id="bukti_pembayaran" accept="image/*,.pdf">
                         <button class="input-group-text d-none " type="button" data-id-target="bukti_pembayaran">
                             <i class=" fa-regular fa-eye"></i>
@@ -189,11 +195,11 @@
                                 </td>
                                 <td class="text-center">
 
-                                    <input class="d-none" type="file" name="bukti_upload" id="bukti_upload">
+                                    <input class="d-none" type="file" name="bukti_upload" id="bukti_upload_{{ $key + 1 }}">
                                     <input type="hidden" value="{{ asset($item->bukti_pembayaran) }}"
-                                        id="bukti_upload_existing">
+                                        id="bukti_upload_{{ $key + 1 }}_existing">
                                     <button class="btn btn-sm btn-outline-primary" type="button"
-                                        data-id-target="bukti_upload">
+                                        data-id-target="bukti_upload_{{ $key + 1 }}">
                                         <i class=" fa-regular fa-eye"></i>
                                     </button>
                                 </td>

@@ -75,26 +75,16 @@
 <div class="card fixed-card p-3">
    <div class="card-body">
       <div class="row">
-         <div class="col-4 text-center">
-            <div class="qrcode_kodebooking" data-qr='{{$booking->unique_code}}'></div>
-            <label for="ipt_kodebooking" class="w-100">Kode Booking</label>
-            <input type="text" name="ipt_kodebooking" value="{{ $booking->unique_code }}" id="ipt_kodebooking"
-               class="form-control text-center fw-bold border-0" readonly>
-         </div>
          <div class="col-8">
             <table class="table table-borderless align-middle">
                <tr class="fw-bold">
                   <td>Nama Ketua</td>
-                  <td>Simaksi</td>
+                  <td>Destinasi</td>
                </tr>
                <tr>
                   <td>{{ $booking->pendakis[0]->first_name .' '. $booking->pendakis[0]->last_name }}</td>
                   <td>
-                     @if ($booking->lampiran_simaksi == null)
-                     <span class="text-danger">Tidak</span>
-                     @else
-                     <span class="text-success">Ya</span>
-                     @endif
+                     {{$booking->destinasi->nama}}
                   </td>
                </tr>
                <tr class="fw-bold">
@@ -132,10 +122,22 @@
                </tr>
             </table>
          </div>
+         <div class="col-4 text-center card-qrboooking">
+            <div class="qrcode_kodebooking" data-qr='{{$booking->unique_code}}'></div>
+            <label for="ipt_kodebooking" class="w-100">Kode Booking</label>
+            <input type="text" name="ipt_kodebooking" value="{{ $booking->unique_code }}" id="ipt_kodebooking"
+               class="form-control text-center fw-bold border-0" readonly>
+         </div>
       </div>
    </div>
 </div>
 
+@php
+if ($booking->id_user != Auth::id()) {
+$filteredPendakis = $booking->pendakis->where('id_bio', Auth::user()->id_bio)->first();
+$booking->pendakis = [$filteredPendakis];
+}
+@endphp
 @foreach($booking->pendakis as $pendaki)
 <hr>
 <div class="card fixed-card overflow-hidden ">

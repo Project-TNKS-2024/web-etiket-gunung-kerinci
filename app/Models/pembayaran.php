@@ -14,8 +14,8 @@ class pembayaran extends Model
         'amount',
         'status',
         'spesial', //jgn dihapus
-        'payment_method',//jgn dihapus
-        'bukti_pembayaran',//
+        'payment_method', //jgn dihapus
+        'bukti_pembayaran', //
         'deadline',
         'keterangan',
     ];
@@ -35,6 +35,13 @@ class pembayaran extends Model
             if (empty($model->id)) {
                 $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
             }
+        });
+    }
+    // Default order by updated_at descending
+    protected static function booted()
+    {
+        static::addGlobalScope('order', function ($query) {
+            $query->orderBy('created_at', 'asc');
         });
     }
     public function booking()

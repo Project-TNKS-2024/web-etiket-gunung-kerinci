@@ -25,7 +25,10 @@ class pembayaranController extends Controller
     {
         $destinasi = destinasi::find($id);
 
-        $query = gk_booking::with('pembayaran', 'pendakis', 'pendakis.biodata', 'user');
+        $query = gk_booking::with('pembayaran', 'pendakis', 'pendakis.biodata', 'user', 'destinasi')
+            ->whereHas('destinasi', function ($q) use ($id) {
+                $q->where('destinasis.id', $id);
+            });
         // filter booking bedasarkan id_destinasi
 
         // Filter berdasarkan status
@@ -57,6 +60,7 @@ class pembayaranController extends Controller
 
         // Filter untuk status_booking >= 3
         $query->where('status_booking', '>=', 3);
+
 
         // Tambahkan pengurutan berdasarkan created_at dari relasi pembayaran
         $query->orderByDesc(function ($subQuery) {
@@ -91,11 +95,13 @@ class pembayaranController extends Controller
         }
 
         if ($request->verified === 'yes') {
-            $struk = $this->helper->getDataStruk($booking->id);
             $booking->update([
                 'unique_code' =>  $this->helper->generateCode(10),
                 'status_booking' =>  4,
                 'status_pembayaran' =>  1,
+            ]);
+            $struk = $this->helper->getDataStruk($booking->id);
+            $booking->update([
                 'dataStruk' => $struk,
             ]);
         } else {
