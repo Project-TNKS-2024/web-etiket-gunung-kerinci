@@ -12,7 +12,7 @@ $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->
     <div class="w-100 index-nav-ats gk-bg-neutrals-base-white py-2">
         <div class="container d-flex justify-content-between align-items-center">
             <a href="{{ route('homepage.beranda') }}" class="d-flex align-items-center gap-2">
-                <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="Logo TNKS">
+                <img src="{{ asset('assets/icon/tnks.png') }}" alt="Logo TNKS">
                 <div>Taman Nasional Kerinci Seblat</div>
             </a>
         </div>

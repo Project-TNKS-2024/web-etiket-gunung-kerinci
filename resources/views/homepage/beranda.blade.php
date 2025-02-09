@@ -184,8 +184,6 @@
         flex-direction: row;
         align-items: center;
     }
-    
-
 </style>
 @endsection
 
@@ -194,7 +192,7 @@
     <div class="my-5 w-100">
         <div class="row px-4 gap-4 w-100 mx-auto justify-content-center">
             <div class="col-12 col-lg-5 welcome-text">
-                <header class="top">Selamat Datang di Website Resmi</header>
+                <header class="top">Selamat Datang di Website Resmi </header>
                 <div class="divider"></div>
                 <header class="bottom">Taman Nasional Kerinci Seblat</header>
                 <a class="booking" href="{{ route('homepage.booking.destinasi.paket', ['id' => 1]) }}">Booking Online</a>

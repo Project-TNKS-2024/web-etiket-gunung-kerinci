@@ -33,7 +33,7 @@
       <div class="row">
          <div class="col-sm-9">
             <p>
-               <img src="{{asset('assets/img/logo/logo bulat.png')}}" title="tnks" width="80">
+               <img src="{{asset('assets/icon/tnks.png')}}" title="tnks" width="80">
                <span class="logo-text">Taman Nasional Kerinci Seblat</span>
             </p>
             <p class="fs-5">Booking <span class="fs-6">#{{$data->id}}</p>

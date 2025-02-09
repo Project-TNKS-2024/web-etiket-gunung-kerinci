@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/icon/tnks.png') }}" />
     <link rel="stylesheet" href="{{ asset('modernize/css/styles.css') }}" />
     <link rel="stylesheet" href="{{ asset('componen/tailwind-classes.css') }}" />
     <link rel="stylesheet" href="{{ asset('componen/colorplate.css') }}" />

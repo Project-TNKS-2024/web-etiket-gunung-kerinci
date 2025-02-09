@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\etiket\auth\login;
 use App\Http\Controllers\etiket\auth\register;
 use App\Http\Controllers\etiket\auth\lupapassword;
+use App\Http\Controllers\etiket\auth\OauthController;
 use App\Http\Controllers\etiket\auth\resetpassword;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -34,6 +35,9 @@ Route::middleware('guest')->group(function () {
 Route::get('/email/verify', [register::class, 'noticeEmail'])->middleware('auth')->name('verification.notice');
 Route::post('/email/resend', [register::class, 'resendEmail'])->middleware('auth')->name('verification.resend');
 Route::get('/email/verify/{id}/{hash}', [register::class, 'verifyEmail'])->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::get('oauth/google', [OauthController::class, 'redirectToProvider'])->name('oauth.google');
+Route::get('oauth/google/callback', [OauthController::class, 'handleProviderCallback'])->name('oauth.google.callback');
 
 
 // Logout hanya bisa diakses jika user sudah login

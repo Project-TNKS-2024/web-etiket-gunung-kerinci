@@ -3,7 +3,7 @@
         <div class="row gy-4">
             <!-- Logo dan Nama TNKS -->
             <div class="col-12 col-md-5 d-flex align-items-center gap-3 text-center text-md-start">
-                <img src="{{ asset('assets/img/logo/logo bulat.png') }}" alt="Logo" class="img-fluid" style="max-width: 80px;">
+                <img src="{{ asset('assets/icon/tnks.png') }}" alt="Logo" class="img-fluid" style="max-width: 80px;">
                 <div>
                     <h4 class="mb-0 lead fw-bold fs-4">Taman Nasional <br> Kerinci Seblat</h4>
                     <p class="text-secondary small">Melindungi Keanekaragaman Hayati</p>

@@ -9,9 +9,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>{{ config('app.name', 'Laravel') }}{{ isset($titleHead) ? ' - '.$titleHead : '' }}</title>
-    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/icon/tnks.png') }}" />
 
-    <link rel="stylesheet" href="{{ asset('assets/img/logo/logo bulat.png') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/icon/tnks.png') }}" />
     <!-- style -->
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.min.css') }}">
     <!-- icon -->

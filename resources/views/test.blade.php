@@ -8,9 +8,9 @@
    <meta name="description" content="">
    <meta name="author" content="">
    <title>TNKS Gunung Kerinci</title>
-   <link rel="shortcut icon" type="image/png" href="http://127.0.0.1:8000/assets/img/logo/logo bulat.png">
+   <link rel="shortcut icon" type="image/png" href="http://127.0.0.1:8000/assets/icon/tnks.png">
 
-   <link rel="stylesheet" href="http://127.0.0.1:8000/assets/img/logo/logo bulat.png">
+   <link rel="stylesheet" href="http://127.0.0.1:8000/assets/icon/tnks.png">
    <!-- style -->
    <link rel="stylesheet" href="http://127.0.0.1:8000/bootstrap-5.3.3-dist/css/bootstrap.min.css">
    <!-- icon -->
@@ -352,7 +352,7 @@
       <div class="w-100 index-nav-ats gk-bg-neutrals-base-white py-2">
          <div class="container d-flex justify-content-between align-items-center">
             <a href="http://127.0.0.1:8000/beranda" class="d-flex align-items-center" style="gap: 10px;">
-               <img src="http://127.0.0.1:8000/assets/img/logo/logo bulat.png" alt="">
+               <img src="http://127.0.0.1:8000/assets/icon/tnks.png" alt="">
                <div>Taman Nasional Kerinci Seblat</div>
             </a>
             <!-- <div class="d-none d-sm-flex align-items-center ">
@@ -907,7 +907,7 @@
       <div class="container">
          <div class="row">
             <div class="col-md-5 d-flex align-items-center gap-2">
-               <img src="http://127.0.0.1:8000/assets/img/logo/logo bulat.png" alt="Logo" class="img-fluid my-0">
+               <img src="http://127.0.0.1:8000/assets/icon/tnks.png" alt="Logo" class="img-fluid my-0">
                <div>
                   <h4 class="mb-0 lead fw-normal fs-3">Taman Nasional Kerinci Seblat</h4>
                </div>

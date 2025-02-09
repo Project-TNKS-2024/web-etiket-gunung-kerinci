@@ -24,6 +24,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'id_bio',
 
+        'gauth_id', // tambahkan ini
+        'gauth_type', // tambahkan ini
 
         'token',
         'nik_verified_at',
