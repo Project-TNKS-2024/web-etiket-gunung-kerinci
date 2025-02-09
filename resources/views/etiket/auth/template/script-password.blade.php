@@ -21,11 +21,7 @@
         iconContainer.style.top = '0';
         iconContainer.style.right = '0';
 
-        // const icon = document.createElement('img');
-        // icon.src = "{{ asset('assets/icon/tnks/eye.svg') }}";
-        // icon.style.cursor = 'pointer';
 
-        // iconContainer.appendChild(icon);
         iconContainer.innerHTML = `
 <div class="position-relative d-flex align-items-center justify-content-center">
     <img src="{{ asset('assets/icon/tnks/eye.svg') }}" />
@@ -38,7 +34,7 @@
 
         iconContainer.addEventListener('click', function(e) {
 
-            const toggler = document.getElementById(id+'-toggler');
+            const toggler = document.getElementById(id + '-toggler');
             console.log(element.type);
             // element.type = element.type == 'password' ? 'text' : 'password';
             if (element.type == 'password') {

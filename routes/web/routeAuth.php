@@ -7,6 +7,8 @@ use App\Http\Controllers\etiket\auth\login;
 use App\Http\Controllers\etiket\auth\register;
 use App\Http\Controllers\etiket\auth\lupapassword;
 use App\Http\Controllers\etiket\auth\resetpassword;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 Route::middleware('guest')->group(function () {
    // login
@@ -28,6 +30,11 @@ Route::middleware('guest')->group(function () {
    route::get('resetPassword/{token}', [resetpassword::class, 'resetpassword'])->name('resetpassword');
    route::post('resetPassword', [resetpassword::class, 'actionresetpassword'])->name('resetpassword.action');
 });
+
+Route::get('/email/verify', [register::class, 'noticeEmail'])->middleware('auth')->name('verification.notice');
+Route::post('/email/resend', [register::class, 'resendEmail'])->middleware('auth')->name('verification.resend');
+Route::get('/email/verify/{id}/{hash}', [register::class, 'verifyEmail'])->middleware(['auth', 'signed'])->name('verification.verify');
+
 
 // Logout hanya bisa diakses jika user sudah login
 Route::middleware('auth')->group(function () {
