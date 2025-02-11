@@ -14,13 +14,17 @@ class HomepageController extends Controller
         // return $destinasi;
         return view('homepage.beranda', compact('destinasi'));
     }
-    public function sop()
-    {
-        return view('homepage.sop-written');
-    }
 
     public function panduan()
     {
         return view('homepage.panduan');
+    }
+    public function faq()
+    {
+        return view('homepage.faq');
+    }
+    public function snk()
+    {
+        return view('homepage.snk');
     }
 }

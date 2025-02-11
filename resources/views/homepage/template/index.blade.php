@@ -103,9 +103,11 @@
             color: var(--primary700);
         }
 
-        .navbar-nav .nav-link {
-            padding: 0px 10px;
+        .navbar-nav .nav-link:hover {
+            color: var(--secondary) !important;
         }
+
+        /* .nav-link */
 
         /* body homepage detail card destinasi */
         .index-text-cardDestinasi {
@@ -233,7 +235,7 @@
             // Check if the current URL matches the link's href
             if (currentUrl.includes(item.getAttribute("href"))) {
                 item.classList.add('gk-text-primary700');
-                item.classList.add('gk-bg-base-white');
+                item.classList.add('active');
                 item.classList.remove('text-white');
             }
         });

@@ -5,7 +5,7 @@
     <div class="d-flex flex-column align-items-center gap-2" style="margin-top: -50px;">
         <div class="gk-bg-neutrals200"
             style="border-radius: 100%; width: 100px; height: 100px; filter: drop-shadow(0px 0px 3px var(--neutrals600));">
-            <img src="{{ asset('assets/img/dashboard/Ellipse 143.png') }}" width="100" />
+            <img src="{{ asset('assets/icon/user.svg') }}" width="100" />
         </div>
         <div class="py-0 my-0 px-4 w-100 text-center">
             @if (isset(auth()->user()->biodata) and auth()->user()->biodata->verified =='verified')
@@ -16,10 +16,6 @@
             @endif
         </div>
     </div>
-
-
-
-
 
     <!-- Bagian Link Navigasi -->
     <div class="d-flex flex-column gap-2 px-4 w-100 h-100 pb-4 mt-3">

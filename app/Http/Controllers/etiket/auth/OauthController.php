@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 
 class OauthController extends Controller
 {
@@ -29,13 +30,14 @@ class OauthController extends Controller
 
                 return redirect('/dashboard');
             } else {
+                $pw = Str::random(16);
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'gauth_id' => $user->id,
                     'gauth_type' => 'google',
                     'email_verified_at' => now(),
-                    'password' => encrypt('admin@123')
+                    'password' => encrypt($pw)
                 ]);
 
                 Auth::login($newUser);

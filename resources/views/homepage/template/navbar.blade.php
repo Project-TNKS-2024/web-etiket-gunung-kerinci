@@ -18,60 +18,51 @@ $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->
         </div>
     </div>
 
-    <div class="container">
+    <div class="container py-2 py-sm-0">
         <button class="navbar-toggler index-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <!-- <span class="navbar-toggler-icon"></span> -->
+            <span><i class="fa-solid fa-bars"></i></span>
         </button>
-        <div class="collapse navbar-collapse py-2" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-sm-0 d-flex align-items-center">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 py-2 mb-sm-0 d-flex align-items-center">
                 <li class="nav-item">
-                    <a href="{{ route('homepage.beranda') }}" class="nav-link text-white rounded-4 mx-2">Beranda</a>
+                    <a href="{{ route('homepage.beranda') }}" class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('homepage.sop') }}" class="nav-link text-white rounded-4 mx-2">SOP Pendakian</a>
+                    <a href="{{ route('homepage.panduan') }}" class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2">Panduan Booking</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('homepage.panduan') }}" class="nav-link text-white rounded-4 mx-2">Panduan Booking</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('homepage.booking.destinasi.list') }}" class="nav-link text-white rounded-4 mx-2" data-route="[{{ implode(',', $bookingRoutes) }}]">Booking Online</a>
+                    <a href="{{ route('homepage.booking.destinasi.list') }}" class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2" data-route="[{{ implode(',', $bookingRoutes) }}]">Booking Online</a>
                 </li>
             </ul>
 
             <ul class="navbar-nav d-flex align-items-center">
                 @guest
                 <li class="nav-item">
-                    <a class="nav-link text-white gk-bg-primary600 rounded-4 px-3" href="{{ route('register') }}">Register</a>
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3" href="{{ route('register') }}">Register</a>
                 </li>
                 <li class="nav-item ms-md-3">
-                    <a class="nav-link text-white gk-bg-primary600 rounded-4 px-3" href="{{ route('login') }}">Login</a>
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3" href="{{ route('login') }}">Login</a>
                 </li>
                 @endguest
 
                 @auth
                 <li class="nav-item">
                     @if (Auth::user()->role == 'user')
-                    <a class="nav-link text-white rounded-4 mx-2" href="{{ route('user.dashboard') }}">Dashboard</a>
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2" href="{{ route('user.dashboard') }}">Dashboard</a>
                     @elseif (Auth::user()->role == 'admin')
-                    <a class="nav-link text-white rounded-4 mx-2" href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2" href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
                     @endif
                 </li>
+                <form action="{{ route('etiket.auth.logout') }}" method="post" class="mb-0 w-100 px-3">
+                    @csrf
+                    <button class="nav-link text-white py-2 bg-danger align-items-center w-100" type="submit">
+                        Logout
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                </form>
 
-                <div class="dropdown">
-                    <span class="rounded-pill d-flex align-items-center" data-bs-toggle="dropdown" style="cursor: pointer;">
-                        <img src="{{ asset('assets/img/dashboard/Ellipse 143.png') }}" style="height: 30px;" />
-                    </span>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <form action="{{ route('etiket.auth.logout') }}" method="post">
-                                @csrf
-                                <button class="dropdown-item text-danger d-flex align-items-center" type="submit">
-                                    <i class="me-2 bi bi-box-arrow-right"></i> Logout
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+
                 @endauth
             </ul>
         </div>
