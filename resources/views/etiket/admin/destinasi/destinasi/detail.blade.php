@@ -165,7 +165,9 @@
                <td>{{$g->lokasi}}</td>
                <td>{{$g->detail}}</td>
                <td class="text-center">
-                  <a href="{{route('admin.destinasi.gates.update', ['id' => $g->id])}}" class="bg-transparent rounded gk-bg-primary100 cursor-pointer shadow" style="background-color: transparent;"><img width="25" src="{{asset('assets/icon/tnks-pen.svg')}}" class="bg-transparent" /></a>
+                  <a href="{{route('admin.destinasi.gates.update', ['id' => $g->id])}}" class="btn btn-primary">
+                     <i class="fa-solid fa-pen-to-square"></i>
+                  </a>
                   <a href="#" class="cursor-pointer shadow-sm"
                      data-bs-toggle="modal"
                      data-bs-target="#ModalDelete"

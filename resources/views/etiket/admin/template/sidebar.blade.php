@@ -15,7 +15,7 @@
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admin.dashboard')}}" aria-expanded="false">
                   <span>
-                     <img src="{{asset('assets/icon/tnks/darhboard_alt-dark.svg')}}"></img>
+                     <i class="fa-solid fa-gauge-high"></i>
                   </span>
                   <span class="hide-menu">Dashboard</span>
                </a>
@@ -29,7 +29,7 @@
             <li class="sidebar-item">
                <a class="sidebar-link has-arrow" data-bs-toggle="collapse" href="#collapseDestinasi{{$itemDestinasi->id}}" role="button" aria-expanded="false" aria-controls="collapseDestinasi{{$itemDestinasi->id}}">
                   <span>
-                     <img src="{{ asset('assets/icon/tnks/mountain-sun-solid.svg') }}"></img>
+                     <i class="fa-solid fa-mountain-sun"></i>
                   </span>
                   <span class="hide-menu">{{$itemDestinasi->nama}}</span>
                </a>
@@ -38,7 +38,7 @@
                      <li class="sidebar-item">
                         <a class="sidebar-link" href="{{ route('admin.destinasi.detail', ['id' => $itemDestinasi->id]) }}" aria-expanded="false">
                            <span>
-                              <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
+                              <i class="fa-solid fa-map"></i>
                            </span>
                            <span class="hide-menu">Kelola Destinasi</span>
                         </a>
@@ -46,7 +46,7 @@
                      <li class="sidebar-item">
                         <a class="sidebar-link" href="{{route('admin.destinasi.tiket', ['id' => $itemDestinasi->id])}}" aria-expanded="false">
                            <span>
-                              <img src="{{ asset('assets/icon/tnks/ticket-dark.svg') }}"></img>
+                              <i class="fa-solid fa-ticket"></i>
                            </span>
                            <span class="hide-menu">Kelola Tiket</span>
                         </a>
@@ -55,7 +55,7 @@
                      <li class="sidebar-item">
                         <a class="sidebar-link" href="{{ route('admin.destinasi.booking',  ['id' => $itemDestinasi->id] )}}" aria-expanded="false">
                            <span>
-                              <img src="{{ asset('assets/icon/tnks/ticket_alt-dark.svg') }}"></img>
+                              <i class="fa-solid fa-tachograph-digital"></i>
                            </span>
                            <span class="hide-menu">Data Booking</span>
                         </a>
@@ -63,7 +63,7 @@
                      <li class="sidebar-item">
                         <a class="sidebar-link" href="#" aria-expanded="false">
                            <span>
-                              <img src="{{ asset('assets/icon/tnks/group-dark.svg') }}"></img>
+                              <i class="fa-solid fa-file-lines"></i>
                            </span>
                            <span class="hide-menu">Data Pendaki</span>
                         </a>
@@ -98,7 +98,7 @@
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{ route('admin.master.destinasi') }}" aria-expanded="false">
                   <span>
-                     <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
+                     <i class="fa-solid fa-file-lines"></i>
                   </span>
                   <span class="hide-menu">Data Destinasi</span>
                </a>
@@ -106,7 +106,7 @@
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{ route('admin.master.pengunjung')}}" aria-expanded="false">
                   <span>
-                     <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
+                     <i class="fa-solid fa-file-lines"></i>
                   </span>
                   <span class="hide-menu">Account Pengunjung</span>
                </a>
@@ -114,19 +114,19 @@
             <li class="sidebar-item">
                <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
-                     <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
+                     <i class="fa-solid fa-file-lines"></i>
                   </span>
                   <span class="hide-menu">Account Admin</span>
                </a>
             </li>
-            <!-- <li class="sidebar-item">
-               <a class="sidebar-link" href="#" aria-expanded="false">
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="{{route('roles.index')}}" aria-expanded="false">
                   <span>
-                     <img src="{{ asset('assets/icon/tnks/user_alt-dark.svg') }}"></img>
+                     <i class="fa-solid fa-file-lines"></i>
                   </span>
                   <span class="hide-menu">Role Permision</span>
                </a>
-            </li> -->
+            </li>
 
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -135,7 +135,7 @@
             <li class="sidebar-item">
                <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
-                     <img src="{{ asset('assets/icon/tnks/compass-dark.svg') }}"></img>
+                     <i class="fa-solid fa-chart-line"></i>
                   </span>
                   <span class="hide-menu">Climber Tracking</span>
                </a>
@@ -148,7 +148,7 @@
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admin.fitur.scanTiket')}}" aria-expanded="false">
                   <span>
-                     <img src="{{asset('assets/icon/tnks/group_scan-dark.svg')}}"></img>
+                     <i class="fa-solid fa-expand"></i>
                   </span>
                   <span class="hide-menu">Scan Tiket</span>
                </a>
@@ -157,7 +157,7 @@
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admin.setting')}}" aria-expanded="false">
                   <span>
-                     <img src="{{asset('assets/icon/tnks/setting_line-dark.svg')}}"></img>
+                     <i class="fa-solid fa-gear"></i>
                   </span>
                   <span class="hide-menu">Setting</span>
                </a>

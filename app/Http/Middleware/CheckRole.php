@@ -18,7 +18,6 @@ class CheckRole
     {
         if (!Auth::check()) {
             abort(403, 'Unauthorized action.');
-
         }
         if ($roles == Auth::user()->role) {
             return $next($request);

@@ -20,6 +20,7 @@ use App\Http\Controllers\etiket\admin\master\ValidasiPembayaranOld;
 use App\Http\Controllers\homepage\booking;
 use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
 use App\Http\Controllers\etiket\admin\settingController;
+use App\Http\Controllers\RolePermisionController;
 
 // Admin routes
 Route::middleware(['check.role:admin'])->group(function () {
@@ -74,11 +75,20 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/master/pengunung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung');
     Route::post('admin/master/pengunung/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.verified');
 
+    //  Master - Role & User
+    Route::get('/roles', [RolePermisionController::class, 'index'])->name('roles.index');
+    Route::post('/roles/add', [RolePermisionController::class, 'roleAddAction'])->name('roles.addAction');
+    Route::post('/permissions/add', [RolePermisionController::class, 'permissionAddAction'])->name('permissions.addAction');
+    Route::get('/roles/{id}/update', [RolePermisionController::class, 'rolesUpdate'])->name('roles.update');
+    Route::post('/roles/updateAction', [RolePermisionController::class, 'rolesUpdateAction'])->name('roles.updateAction');
+    Route::post('/roles/deleteAction', [RolePermisionController::class, 'roleDeleteAction'])->name('roles.deleteAction');
+
+
 
 
     // fitur - scan tiket
     Route::get('admin/fitur/scanTiket', [Scan::class, 'index'])->name('admin.fitur.scanTiket');
-    Route::get('admin/fitur/DetailTiket/{uq}', [Scan::class, 'detailtiket'])->name('admin.fitur.detailTiket');
+    Route::get('admin/fitur/DetailTiket/{uq}', [Scan::class, 'rolesUpdateAction'])->name('admin.fitur.detailTiket');
 
 
     // setting

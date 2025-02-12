@@ -78,6 +78,18 @@
             width: 24px;
             justify-content: center;
         }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .card .card-header {
+            background-color: var(--bs-primary);
+        }
+
+        .body-wrapper .table tr td .btn {
+            padding: 0.5rem 0.5rem;
+        }
     </style>
 
     @yield('css')
@@ -85,24 +97,13 @@
 
 <body>
 
-
-
-    <div id="modal"
-        class="d-none align-items-center justify-content-start position-fixed top-0 left-0 w-full h-full"
-        style="overflow-x: auto; padding: 0 10%;z-index: 999; background-color: rgba(0,0,0,.2)">
-        <img class="position-fixed cursor-pointer" onclick="closeModal()"
-            src="{{ asset('assets/icon/tnks/x-light.svg') }}" width="50"
-            style="top: 20px; right: 20px;filter: drop-shadow(0px 0px 10px black) max-height: 500px;" />
-    </div>
-
-
     <!--  Body Wrapper -->
     <div class="page-wrapper w-100" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6"
         data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
         <!-- ========================================= -->
         @include('etiket.admin.template.sidebar')
         <!--  Main wrapper -->
-        <div class="body-wrapper " style="background-color: rgba(245, 246, 250, 1); min-height: 100vh;">
+        <div class="body-wrapper " style="background-color: #d3d6df; min-height: 100vh;">
             <!--  Header Start -->
             <!-- ================================================ -->
             @include('etiket.admin.template.navbar')
@@ -124,72 +125,13 @@
     <script src="{{ asset('modernize/js/sidebarmenu.js') }}"></script>
     <script src="{{ asset('modernize/js/app.min.js') }}"></script>
 
-    <!-- <script src="{{ asset('modernize/libs/simplebar/dist/simplebar.js') }}"></script> -->
-    <!-- <script src="{{ asset('modernize/js/dashboard.js') }}"></script> -->
-
     @yield('js')
 
-    @include('etiket.admin.template.modal')
 
     @include('etiket.admin.template.modal-notif')
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        function select(event, callerId, inputId, value) {
-            const caller = document.getElementById(callerId);
-            const input = document.getElementById(inputId);
-
-            caller.textContent = event.target.textContent;
-            input.value = value;
-        }
-    </script>
-
-    <!-- script untuk popper bostrap -->
-    <script>
-        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-        var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-            return new bootstrap.Popover(popoverTriggerEl)
-        })
-    </script>
-
-    <script>
-        // script modal foto desrtinasi
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.add("d-none");
-            modal.classList.remove("d-flex");
-
-            const imageContainer = document.querySelectorAll(".image-container-in-modal");
-            imageContainer.forEach(element => {
-                element.remove();
-            });
-        }
-
-        function openModal(src) {
-            const modal = document.getElementById('modal');
-            modal.classList.add("d-flex");
-            modal.classList.remove("d-none");
-            console.log(src);
-            src.forEach((image, index) => {
-                const div = document.createElement('div');
-                div.style.position = "relative";
-                div.classList.add("image-container-in-modal", "shadow");
-                div.style.width = "fit-content";
-                div.innerHTML = `
-                    <div class="gradient-top rounded w-100 h-100" style="max-height: 500px; height: 500px; width: fit-content"></div>
-                    <div class="p-3 rounded text-white position-absolute w-100 h-100 d-flex flex-column justify-content-end" style="left: 0; bottom: 0;" >
-                        <header class="text-xl font-semibold">${image.nama}</header>
-                        <div class="text-lg">${image.detail}</div>
-                    </div>
-                    <img id="modal-img" style="max-height: 500px; height: 500px;" class="rounded  " src='{{ url('') }}/${image.src}' />
-                `;
-                modal.appendChild(div);
-
-            });
-
-            // modalImg.src = src[0];
-        }
-    </script>
 </body>
 
 </html>

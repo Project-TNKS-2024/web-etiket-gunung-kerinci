@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Models\bio_pendaki;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class userSeeder extends Seeder
 {
@@ -14,8 +17,30 @@ class userSeeder extends Seeder
      */
     public function run(): void
     {
+        // ===================================================== Permision
+        $routes = collect(Route::getRoutes())->filter(function ($route) {
+            return in_array('check.role:admin', $route->middleware()) && $route->getName();
+        })->map(function ($route) {
+            return $route->getName();
+        })->unique();
+
+        $permissions = [];
+        foreach ($routes as $routeName) {
+            $permissions[] = Permission::firstOrCreate(['name' => $routeName])->id;
+        }
+
+        $this->command->info('Permissions successfully seeded from admin routes!');
+
+
+        // ===================================================== Role
+        // mebuat role
+        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
+        $superAdminRole->syncPermissions($permissions);
+
+
+        // ===================================================== User dan Biodata
         // Create Superadmin
-        User::create([
+        $admin = User::create([
             'email' => 'superadmin@tnks.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
@@ -24,6 +49,8 @@ class userSeeder extends Seeder
             'nik_verified_at' => null,
             'email_verified_at' => now(),
         ]);
+
+        $admin->assignRole($superAdminRole);
 
         // Create Admin
         User::create([
