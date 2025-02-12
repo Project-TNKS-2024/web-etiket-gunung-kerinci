@@ -50,7 +50,7 @@ class profile extends Controller
             'lastName' => 'string|max:255|nullable',
             'lampiran_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:548',
             'kewarganegaraan' => 'required|in:wni,wna',
-            'nik' => 'required|numeric|digits:16|unique:biodatas,nik,' . ($user->biodata->id ?? 'NULL') . ',id',
+            'nik' => 'required|numeric|min:8',
             'nomor_telepon' => 'required|numeric',
             'telp_country' => 'required|string|max:5',
             'jenis_kelamin' => 'required|in:l,p',
@@ -76,6 +76,12 @@ class profile extends Controller
             $bio = bio_pendaki::find($user->id_bio);
 
             if (!$bio->verified_at) {
+                $bioUseNik = bio_pendaki::where('nik', $request->nik)->where('verified', 'verified')->first();
+
+                if ($bioUseNik) {
+                    return $bioUseNik;
+                    return redirect()->back()->with('error', 'NIK sudah digunakan');
+                }
                 $bio->update([
                     'nik' => $request->nik,
                 ]);
@@ -102,7 +108,6 @@ class profile extends Controller
                 'verified' => 'pending',
             ]);
         } else {
-
             $filename = $upload->create($user->id, 'identitas', $request->file('lampiran_identitas'));
             $bio = bio_pendaki::create([
                 'nik' => $request->nik,
@@ -121,13 +126,10 @@ class profile extends Controller
                 'verified' => 'pending',
             ]);
         }
-        // $bio->refresh();
-        // return $bio;
 
         $user->id_bio = $bio->id;
         $user->save();
 
-        // return $bio;
 
         return back()->with('success', 'Berhasil mengubah data');
     }
