@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\etiket\admin\destinasi;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\AdminController;
 
-class pendakiController extends Controller
+
+class pendakiController extends AdminController
 {
     //
 }

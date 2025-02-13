@@ -9,7 +9,7 @@
 @section('main')
 <div class="card mb-3">
    <div class="card-header">
-      <h3 class="text-white mb-0"><b>Manajemen Role & Permission</b></h3>
+      <h3 class="mb-0"><b>Manajemen Role & Permission</b></h3>
    </div>
 </div>
 
@@ -17,7 +17,7 @@
    <div class="col-md-6">
       <div class="card mb-3">
          <div class="card-header">
-            <h5 class="text-white mb-0"><b>Tambah Role</b></h5>
+            <h5 class="mb-0"><b>Tambah Role</b></h5>
          </div>
          <div class="card-body">
             <form action="{{ route('roles.addAction') }}" method="POST">
@@ -35,7 +35,7 @@
    <div class="col-md-6">
       <div class="card mb-3">
          <div class="card-header">
-            <h5 class="text-white mb-0"><b>Tambah Permission</b></h5>
+            <h5 class="mb-0"><b>Tambah Permission</b></h5>
          </div>
          <div class="card-body">
             <form action="{{ route('permissions.addAction') }}" method="POST">
@@ -53,7 +53,7 @@
 
 <div class="card mb-4">
    <div class="card-header ">
-      <h5 class="text-white mb-0"><b>Daftar Role dan Permissions</b></h5>
+      <h5 class="mb-0"><b>Daftar Role dan Permissions</b></h5>
    </div>
    <div class="card-body">
       <div class="table-responsive">

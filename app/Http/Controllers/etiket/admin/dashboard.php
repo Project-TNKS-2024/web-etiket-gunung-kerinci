@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\etiket\admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\AdminController;
 
-class dashboard extends Controller
+
+class dashboard extends AdminController
 {
     public function index()
     {

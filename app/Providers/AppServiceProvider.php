@@ -6,6 +6,7 @@ use App\Models\destinasi as ModelDestinasi;
 use App\Models\setting;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -41,11 +42,22 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
+        //  mengerim email ke user ketika login manual
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)
                 ->subject('Verify Email Address')
                 ->line('Click the button below to verify your email address.')
                 ->action('Verify Email Address', $url);
+        });
+
+
+        // membuat pengecekan admin bertanggungawab atas destinasi
+        Blade::directive('canDestinasi', function ($destinasiId) {
+            return "<?php if(auth()->check() && auth()->user()->destinasis->contains('id', $destinasiId)): ?>";
+        });
+
+        Blade::directive('endCanDestinasi', function () {
+            return "<?php endif; ?>";
         });
     }
 }

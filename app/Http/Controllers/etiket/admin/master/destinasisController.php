@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\etiket\admin\master;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AdminController;
 use App\Models\destinasi as ModelDestinasi;
 use App\Models\gambar_destinasi as ModelGambarDestinasi;
 use App\Models\gk_booking as ModelBooking;
-use App\Models\gk_gates as ModelGates;
-use App\Models\gk_pendaki as ModelPendaki;
 
 use App\Http\Controllers\helper\uploadFileControlller;
 use Illuminate\Http\Request;
 
-class destinasisController extends Controller
+class destinasisController extends AdminController
 {
     public function index()
     {

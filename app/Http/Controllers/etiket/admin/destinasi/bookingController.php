@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\etiket\admin\destinasi;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AdminController;
 use App\Models\gk_booking as ModelBooking;
 use App\Models\gk_booking;
 use Illuminate\Http\Request;
 
-class bookingController extends Controller
+class bookingController extends AdminController
 {
     public function index($id, Request $request)
     {

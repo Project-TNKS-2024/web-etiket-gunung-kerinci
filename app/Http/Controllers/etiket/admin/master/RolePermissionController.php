@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\etiket\admin\master;
 
-use App\Models\User;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class RolePermisionController extends Controller
+class RolePermissionController extends AdminController
 {
     // Menampilkan daftar role dan permission
     public function index()
     {
+        // return auth()->user();
+
         $roles = Role::with('permissions')->get();
         $permissions = Permission::all();
         return view('etiket.admin.master.permision.index', compact('roles', 'permissions'));

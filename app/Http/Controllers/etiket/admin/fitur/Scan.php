@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\etiket\admin\fitur;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AdminController;
 use App\Models\gk_booking;
-use Illuminate\Http\Request;
 
-class Scan extends Controller
+class Scan extends AdminController
 {
     public function index()
     {

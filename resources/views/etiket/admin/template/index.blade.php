@@ -87,6 +87,10 @@
             background-color: var(--bs-primary);
         }
 
+        .card .card-header * {
+            color: white;
+        }
+
         .body-wrapper .table tr td .btn {
             padding: 0.5rem 0.5rem;
         }

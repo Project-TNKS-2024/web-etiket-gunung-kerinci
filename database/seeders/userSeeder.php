@@ -46,7 +46,6 @@ class userSeeder extends Seeder
             'role' => 'admin',
 
             'token' => 'superadmin_token',
-            'nik_verified_at' => null,
             'email_verified_at' => now(),
         ]);
 
@@ -59,7 +58,6 @@ class userSeeder extends Seeder
             'role' => 'admin',
 
             'token' => 'admin_token',
-            'nik_verified_at' => null,
             'email_verified_at' => now(),
         ]);
         // Create User 1
@@ -87,7 +85,6 @@ class userSeeder extends Seeder
             'role' => 'user',
             'id_bio' => $biodata1->id,
             'token' => 'user_token_1',
-            'nik_verified_at' => null,
             'email_verified_at' => now(),
         ]);
 
@@ -116,7 +113,6 @@ class userSeeder extends Seeder
             'role' => 'user',
             'id_bio' => $biodata2->id,
             'token' => 'user_token_2',
-            'nik_verified_at' => null,
             'email_verified_at' => now(),
         ]);
 
@@ -145,7 +141,6 @@ class userSeeder extends Seeder
             'role' => 'user',
             'id_bio' => $biodata3->id,
             'token' => 'user_token_3',
-            'nik_verified_at' => null,
             'email_verified_at' => null,
         ]);
     }

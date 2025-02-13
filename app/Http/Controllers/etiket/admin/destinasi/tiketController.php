@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\etiket\admin\destinasi;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AdminController;
 use App\Models\destinasi as ModelDestinasi;
 use App\Models\gk_paket_tiket as ModelPaketTiket;
 use App\Models\gk_tiket_pendaki as ModelTiket;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use PhpParser\Node\Expr\AssignOp\Mod;
 
-class tiketController extends Controller
+class tiketController extends AdminController
 {
     public function tiket($id)
     {

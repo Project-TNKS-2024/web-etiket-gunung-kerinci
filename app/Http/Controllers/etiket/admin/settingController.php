@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\etiket\admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AdminController;
 use App\Models\setting;
 use Illuminate\Http\Request;
 
-class settingController extends Controller
+class settingController extends AdminController
 {
     private $setting;
     public function __construct()

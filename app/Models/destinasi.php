@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class destinasi extends Model
 {
@@ -43,5 +44,13 @@ class destinasi extends Model
     public function gates()
     {
         return $this->hasMany(gk_gates::class, 'id_destinasi');
+    }
+
+    // Relasi many-to-many dengan User
+    public function penanggungJawabs(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'destinasi_user')
+            ->withPivot('is_penanggungjawab')
+            ->withTimestamps();
     }
 }

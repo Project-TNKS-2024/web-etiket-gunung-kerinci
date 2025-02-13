@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\etiket\admin\master;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AdminController;
 use App\Models\bio_pendaki;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class PengunjungController extends Controller
+class PengunjungController extends AdminController
 {
     public function index()
     {

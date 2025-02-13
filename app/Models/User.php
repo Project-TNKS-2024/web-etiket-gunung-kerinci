@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -60,5 +61,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function biodata()
     {
         return $this->hasOne(bio_pendaki::class, 'id', 'id_bio',);
+    }
+
+    // Relasi many-to-many dengan Destinasi
+    public function destinasis(): BelongsToMany
+    {
+        return $this->belongsToMany(Destinasi::class, 'destinasi_user')
+            ->withPivot('is_penanggungjawab')
+            ->withTimestamps();
+    }
+
+    // Cek apakah user adalah penanggung jawab suatu destinasi
+    public function isPenanggungJawab(Destinasi $destinasi): bool
+    {
+        return $this->destinasis()
+            ->where('destinasi_id', $destinasi->id)
+            ->wherePivot('is_penanggungjawab', true)
+            ->exists();
     }
 }

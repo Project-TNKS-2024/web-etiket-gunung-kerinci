@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('role')->default('user');
 
             $table->uuid('id_bio')->unique()->nullable();
-            $table->timestamp('nik_verified_at')->nullable();
 
             $table->string('token')->nullable();
             $table->timestamp('email_verified_at')->nullable();

@@ -10,17 +10,13 @@ use App\Http\Controllers\etiket\admin\destinasi\tiketController;
 use App\Http\Controllers\etiket\admin\master\destinasisController;
 use App\Http\Controllers\etiket\admin\destinasi\bookingController;
 use App\Http\Controllers\etiket\admin\destinasi\pembayaranController;
-use App\Http\Controllers\etiket\admin\destinasi\sopController;
 // admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
+use App\Http\Controllers\etiket\admin\master\AccountAdminController;
 use App\Http\Controllers\etiket\admin\master\PengunjungController;
-use App\Http\Controllers\etiket\admin\master\ValidasiPembayaranOld;
-
+use App\Http\Controllers\etiket\admin\master\RolePermissionController;
 // admin master
-use App\Http\Controllers\homepage\booking;
-use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
 use App\Http\Controllers\etiket\admin\settingController;
-use App\Http\Controllers\RolePermisionController;
 
 // Admin routes
 Route::middleware(['check.role:admin'])->group(function () {
@@ -75,13 +71,21 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/master/pengunung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung');
     Route::post('admin/master/pengunung/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.verified');
 
+    // Master - Admin
+    Route::get('/admins/akun', [AccountAdminController::class, 'index'])->name('admins.akun.index');
+    Route::get('/admins/akun/create', [AccountAdminController::class, 'create'])->name('admins.akun.create');
+    Route::post('/admins/akun/store', [AccountAdminController::class, 'store'])->name('admins.akun.store');
+    Route::get('/admins/akun/edit/{id}', [AccountAdminController::class, 'edit'])->name('admins.akun.edit');
+    Route::post('/admins/akun/update/{id}', [AccountAdminController::class, 'update'])->name('admins.akun.update');
+    Route::post('/admins/akun/delete', [AccountAdminController::class, 'destroy'])->name('admins.akun.delete');
+
     //  Master - Role & User
-    Route::get('/roles', [RolePermisionController::class, 'index'])->name('roles.index');
-    Route::post('/roles/add', [RolePermisionController::class, 'roleAddAction'])->name('roles.addAction');
-    Route::post('/permissions/add', [RolePermisionController::class, 'permissionAddAction'])->name('permissions.addAction');
-    Route::get('/roles/{id}/update', [RolePermisionController::class, 'rolesUpdate'])->name('roles.update');
-    Route::post('/roles/updateAction', [RolePermisionController::class, 'rolesUpdateAction'])->name('roles.updateAction');
-    Route::post('/roles/deleteAction', [RolePermisionController::class, 'roleDeleteAction'])->name('roles.deleteAction');
+    Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
+    Route::post('/roles/add', [RolePermissionController::class, 'roleAddAction'])->name('roles.addAction');
+    Route::post('/permissions/add', [RolePermissionController::class, 'permissionAddAction'])->name('permissions.addAction');
+    Route::get('/roles/{id}/update', [RolePermissionController::class, 'rolesUpdate'])->name('roles.update');
+    Route::post('/roles/updateAction', [RolePermissionController::class, 'rolesUpdateAction'])->name('roles.updateAction');
+    Route::post('/roles/deleteAction', [RolePermissionController::class, 'roleDeleteAction'])->name('roles.deleteAction');
 
 
 

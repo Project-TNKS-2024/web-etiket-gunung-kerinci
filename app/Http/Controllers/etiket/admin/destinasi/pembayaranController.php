@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\etiket\admin\destinasi;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\helper\BookingHelperController;
 use App\Http\Controllers\helper\uploadFileControlller;
 use App\Models\destinasi;
 use App\Models\gk_booking;
 use Illuminate\Http\Request;
 
-class pembayaranController extends Controller
+class pembayaranController extends AdminController
 {
     private $helper;
     private $upload;

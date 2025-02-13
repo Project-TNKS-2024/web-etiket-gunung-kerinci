@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers\etiket\admin\destinasi;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
 use App\Models\destinasi as ModelsDestinasi;
-use App\Models\QRIS as qris;
 use App\Models\gambar_destinasi as ModelGambar;
 use App\Models\gk_gates as ModelGates;
-use App\Models\gk_tiket_pendaki as ModelPendaki;
 
 use App\Http\Controllers\helper\uploadFileControlller;
-use App\Models\sop;
-use Illuminate\Database\Eloquent\Model;
 
-class destinasiController extends Controller
+
+class destinasiController extends AdminController
 {
     public function detail($id)
     {
