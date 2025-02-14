@@ -27,7 +27,8 @@ class tiketController extends AdminController
         $destinasi = ModelDestinasi::find($id);
 
 
-        return view('etiket.admin.destinasi.tiket.tiketAdd', [
+        return view('etiket.admin.destinasi.tiket.tiketUpdate', [
+            // return view('etiket.admin.destinasi.tiket.tiketAdd', [
             "destinasi" => $destinasi,
         ]);
     }

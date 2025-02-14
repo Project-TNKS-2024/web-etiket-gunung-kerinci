@@ -12,9 +12,17 @@
 
 @section('main')
 
+<div class="card mb-3">
+   <div class="card-header">
+      <h3 class="mb-0"><b>Destinasi : {{$destinasi->nama}}</b></h3>
+   </div>
+</div>
+
 <div class="card">
+   <div class="card-header ">
+      <h5 class="mb-0"><b>Detail Destinasi </b></h5>
+   </div>
    <div class="card-body">
-      <label class="text-2xl font-bold gk-text-base-black mb-2">Detail Destinasi</label>
       <div class="mb-2">
          <label class=" form-label">Nama Destinasi</label>
          <fieldset disabled>
@@ -54,16 +62,78 @@
 
       <div class="d-flex justify-content-end mt-2">
          <a class="btn btn-primary" href="{{route('admin.destinasi.update', ['id' => $destinasi->id])}}">
-            <img width="20" src="{{asset('assets/icon/tnks/save-light.svg')}}" />Edit
+            <i class="fa-solid fa-pen-to-square me-2"></i> Edit
          </a>
       </div>
    </div>
 </div>
 
+<div class="card">
+   <div class="card-header ">
+      <h5><b>Daftar Gates</b></h5>
+   </div>
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-bordered">
+            <thead class="bg-dark text-white">
+               <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>Status</th>
+                  <th>Max Pendaki/Hari</th>
+                  <th>Lokasi</th>
+                  <th>Detail</th>
+                  <th class="text-center">Aksi</th>
+               </tr>
+            </thead>
+            <tbody class="table-group-divider">
+               @foreach ($gates as $g)
+               <tr class="tiket-row">
+                  <td>{{$loop->index+1}}</td>
+                  <td><b>{{$g->nama}}</b></td>
+                  <td class="p-3 ">
+                     @if ($g->status)
+                     <span class="badge rounded-pill text-bg-success">Open</span>
+                     @else
+                     <span class="badge rounded-pill gk-bg-error200">Close</span>
+                     @endif
+                  </td>
+                  <td>{{$g->max_pendaki_hari}}</td>
+                  <td>{{$g->lokasi}}</td>
+                  <td>{{$g->detail}}</td>
+                  <td class="text-center">
+                     <a href="{{route('admin.destinasi.gates.update', ['id' => $g->id])}}" class="btn btn-primary">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                     </a>
+                     <form action="{{ route('admin.destinasi.gates.deleteAction')}}" method="post">
+                        @csrf
+                        <input type="hidden" name="id_destinasi" value="{{$destinasi->id}}">
+                        <input type="hidden" name="id_gate" value="{{$g->id}}">
+
+                        <button type="submit" class="btn btn-danger mt-1" onclick="openswal(event, this)">
+                           <i class="fa-solid fa-trash"></i>
+                        </button>
+                     </form>
+                  </td>
+               </tr>
+               @endforeach
+            </tbody>
+         </table>
+      </div>
+      <div class="d-flex justify-content-end">
+         <a class="btn btn-primary"
+            data-bs-toggle="collapse" href="#CollapseTambahGates">
+            <i class="fa-solid fa-plus me-2"></i>Tambah
+         </a>
+      </div>
+   </div>
+</div>
 
 <div class="card collapse" id="CollapseTambahGates">
+   <div class="card-header ">
+      <h5><b>Tambah Gates</b></h5>
+   </div>
    <div class="card-body">
-      <h5 class="text-2x1 font-bold gk-text-base-black mb-3">Tambah Gates</h5>
       <form action="{{ route('admin.destinasi.gates.addAction') }}" method="POST" enctype="multipart/form-data">
          @csrf
          <div class="row">
@@ -116,75 +186,71 @@
          </div>
 
          <div class="mb-3">
-            <label for="detail" class="form-label">Tampilan QRIS</label>
-            <input type="file" class="form-control" id="qris" name="qris">
+            <label for="detail" class="form-label">
+               Tampilan QRIS
+               <span type="span" class="text-secondary"
+                  data-bs-toggle="popover"
+                  data-bs-placement="right"
+                  data-bs-trigger="hover focus"
+                  data-bs-content="Silakan unggah foto dalam format JPG atau PNG. Max 2Mb">
+                  <i class="fa-regular fa-circle-question"></i>
+               </span>
+            </label>
+            <div class="input-group flex-nowrap">
+               <input type="file" class="form-control" id="qris" name="qris">
+               <button class="input-group-text d-none" type="button" data-id-target="qris">
+                  <i class="fa-regular fa-eye"></i>
+               </button>
+            </div>
          </div>
 
          <!-- Submit Button -->
-         <button type="submit" class="btn btn-primary d-block ms-auto">Simpan</button>
+         <button type="submit" class="btn btn-primary d-block ms-auto">
+            <i class="fa-solid fa-floppy-disk me-2"></i>Simpan
+         </button>
       </form>
    </div>
 </div>
 
-
 <div class="card">
+   <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><b>Daftar Gambar</b></h5>
+   </div>
    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-         <h5 class="text-2x1 font-bold gk-text-base-black mb-0">Daftar Gates</h5>
-         <a class="btn btn-primary btn-sm text-black gk-bg-base-white"
-            data-bs-toggle="collapse" href="#CollapseTambahGates">
-            <img src="{{asset('assets/icon/tnks-plus.svg')}}" width="17" style="margin-right: 5px;" />
-            Tambah
-         </a>
+      <div class="row">
+         @if(count($gambar) == 0)
+         <div class="col-12 text-center text-muted">Belum Ada Gambar</div>
+         @else
+         @foreach ($gambar as $g)
+         <div class="col-md-3 mb-3">
+            <div class="card shadow-sm position-relative">
+               <img src="{{ asset($g->src) }}" class="card-img-top" alt="{{ $g->nama }}" onclick="openModal({{ json_encode($gambar) }}, {{$g->id}})" style="cursor: pointer;">
+               <form action="{{route('admin.destinasi.picture.deleteAction')}}" method="post">
+                  @csrf
+                  <input type="hidden" name="id_destinasi" value="{{$destinasi->id}}">
+                  <input type="hidden" name="id_gambar" value="{{$g->id}}">
+                  <button type="submit" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" onclick="openswal(event, this)">
+                     <i class=" fa-solid fa-trash"></i>
+                  </button>
+               </form>
+               <div class="card-body text-center py-2">
+                  <p class="fw-bold mb-1 text-truncate" title="{{ $g->nama }}">{{ $g->nama }}</p>
+               </div>
+            </div>
+         </div>
+         @endforeach
+         @endif
       </div>
-      <table class="rounded table table-striped table-bordered">
-         <thead>
-            <tr class="bg-white">
-               <th>No</th>
-               <th>Nama</th>
-               <th>Status</th>
-               <th>Max Pendaki/Hari</th>
-               <th>Lokasi</th>
-               <th>Detail</th>
-               <th class="text-center">Aksi</th>
-            </tr>
-         </thead>
-         <tbody class="table-group-divider">
-            @foreach ($gates as $g)
-            <tr class="tiket-row">
-               <td>{{$loop->index+1}}</td>
-               <td>{{$g->nama}}</td>
-               <td class="p-3 ">
-                  @if ($g->status)
-                  <span class="badge rounded-pill text-bg-success">Open</span>
-                  @else
-                  <span class="badge rounded-pill gk-bg-error200">Close</span>
-                  @endif
-               </td>
-               <td>{{$g->max_pendaki_hari}}</td>
-               <td>{{$g->lokasi}}</td>
-               <td>{{$g->detail}}</td>
-               <td class="text-center">
-                  <a href="{{route('admin.destinasi.gates.update', ['id' => $g->id])}}" class="btn btn-primary">
-                     <i class="fa-solid fa-pen-to-square"></i>
-                  </a>
-                  <a href="#" class="cursor-pointer shadow-sm"
-                     data-bs-toggle="modal"
-                     data-bs-target="#ModalDelete"
-                     data-bs-action="{{route('admin.destinasi.gates.deleteAction')}}"
-                     data-bs-input-hidden-id_destinasi="{{$destinasi->id}}"
-                     data-bs-input-hidden-id_gate="{{$g->id}}"
-                     data-bs-title="Konfirmasi Hapus Gambar {{$destinasi->nama}}"
-                     data-bs-body="Konfirmasi hapus gambar {{$g->nama}}?">
-                     <img width="25" src="{{asset('assets/img/logo/delete.png')}}" />
-                  </a>
-               </td>
-            </tr>
-            @endforeach
-         </tbody>
-      </table>
+      <div class="d-flex justify-content-end">
+         <a class="btn btn-primary"
+            data-bs-toggle="collapse" href="#CollapseTambahGates">
+            <i class="fa-solid fa-plus me-2"></i>Tambah
+         </a>
+
+      </div>
    </div>
 </div>
+
 
 <div class="card collapse" id="CollapseTambahFoto">
    <div class="card-body">
@@ -195,103 +261,142 @@
             <div class="col-6">
                <label class="form-label">Judul Foto</label>
                <input type="hidden" name="id_destinasi" value="{{$destinasi->id}}">
-               <input class="form-control borderx bg-white" name="foto_nama" id="foto-nama" placeholder="Judul Foto" value="" required />
+               <input class="form-control" name="foto_nama" id="foto-nama" placeholder="Judul Foto" value="" required />
             </div>
             <div class="col-6">
-               <label class="form-label" for="gate-foto">Upload Foto</label>
-               <div class="d-flex gap-2">
-                  <label class="borderx form-control d-flex align-items-center w-fit p-0 py-2 px-2 bg-white cursor-pointer text-nowrap" for="gate-foto" style="user-select: none;width: -webkit-fill-available;border: 1px solid var(--neutrals500); overflow-x: hidden;">
-                     <div class="m-0 p-0 pe-3 py-0 borderx gk-text-primary700 font-medium d-flex gap-1">
-                        <img class="p-0 m-0" width="20" src="{{asset('assets/icon/tnks/upload.svg')}}" />
-                        <div>Pilih Foto</div>
-                     </div>
-                     <div id="input-file-label" class="m-0 p-0 d-flex"> No File Chosen</div>
-                  </label>
+               <label class="form-label" for="gate-foto">
+                  Upload Foto
+                  <span type="span" class="text-secondary"
+                     data-bs-toggle="popover"
+                     data-bs-placement="right"
+                     data-bs-trigger="hover focus"
+                     data-bs-content="Silakan unggah foto dalam format JPG atau PNG. Max 5Mb">
+                     <i class="fa-regular fa-circle-question"></i>
+                  </span>
+               </label>
+               <div class="input-group flex-nowrap">
+                  <input type="file" class="form-control" id="foto" name="foto">
+                  <button class="input-group-text d-none" type="button" data-id-target="foto">
+                     <i class="fa-regular fa-eye"></i>
+                  </button>
                </div>
-               <input class="form-control borderx bg-white d-none" type="file" name="foto" id="gate-foto" accept="image/*" onchange="collectPics(event)" />
+
             </div>
          </div>
          <div class="col-12">
             <label class="form-label">Detail Foto</label>
-            <textarea cols="1" name="foto_detail" style="height: 130px;" id="foto-detail" class="form-control bg-white borderx" placeholder="Detail Foto" required></textarea>
+            <textarea cols="1" name="foto_detail" style="height: 130px;" id="foto-detail" class="form-control" placeholder="Detail Foto" required></textarea>
          </div>
          <div class="col-12 d-flex justify-content-end">
             <button type="submit" class="btn btn-primary">
-               <img width="20" src="{{asset('assets/icon/tnks/save-light.svg')}}" style="margin-right: 5px;" />Upload
+               <i class="fa-solid fa-cloud-arrow-up me-2"></i>Upload
             </button>
          </div>
       </form>
    </div>
 </div>
 
-<div class="card">
-   <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-         <h5 class="text-2x1 font-bold gk-text-base-black mb-0">Daftar Gambar</h5>
-         <a class="btn btn-primary btn-sm text-black gk-bg-base-white"
-            data-bs-toggle="collapse" href="#CollapseTambahFoto">
-            <img src="{{asset('assets/icon/tnks-plus.svg')}}" width="17" style="margin-right: 5px;" />
-            Tambah
-         </a>
+
+<!-- Modal Fullscreen dengan Carousel -->
+<div id="imageModal" class="modal fade" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog modal-fullscreen m-0">
+      <div class="modal-content bg-transparent">
+         <div class="modal-header bg-white">
+            <h5 class="modal-title">Galeri Destinasi</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body p-0">
+            <div id="modalGalleryCarousel" class="carousel slide">
+               <div class="carousel-inner" id="modalGallery">
+                  <!-- Gambar akan dimasukkan dengan JavaScript -->
+               </div>
+               <button class="carousel-control-prev" type="button" data-bs-target="#modalGalleryCarousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+               </button>
+               <button class="carousel-control-next" type="button" data-bs-target="#modalGalleryCarousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+               </button>
+            </div>
+         </div>
       </div>
-      <table class="table table-striped table-bordered">
-         <thead>
-            <tr class="bg-white">
-               <th class="col-1">No</th>
-               <th class="col-4">Nama</th>
-               <th class="col-4">Detail</th>
-               <th class="col-2 text-center">Aksi</th>
-            </tr>
-         </thead>
-         <tbody id="data-body" class="table-group-divider">
-            @if(count($gambar) == 0)
-            <tr>
-               <td colspan="4">Belum Ada Gambar</td>
-            </tr>
-            @else
-            @foreach ($gambar as $g)
-            <tr class="tiket-row">
-               <td class="col-1">{{$loop->index+1}}</td>
-               <td class="col-4">{{$g->nama}}</td>
-               <td class="col-4">{{$g->detail}}</td>
-               <td class="d-flex gap-1 bg-transparent align-items-center justify-content-center">
-                  <div onclick="openModal([ {{ $g }} ])" class="text-black h-fit d-flex align-items-center gap-1">
-                     <img class="gk-bg-success100 rounded shadow-sm" width="25" src="{{asset('assets/icon/img_rol.svg')}}" />
-                  </div>
-                  <div class="text-black h-fit d-flex align-items-center gap-1">
-                     <a href="#" class="cursor-pointer shadow-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#ModalDelete"
-                        data-bs-action="{{route('admin.destinasi.picture.deleteAction')}}"
-                        data-bs-input-hidden-id_destinasi="{{$destinasi->id}}"
-                        data-bs-input-hidden-id_gambar="{{$g->id}}"
-                        data-bs-title="Konfirmasi Hapus Gambar {{$destinasi->nama}}"
-                        data-bs-body="Konfirmasi hapus gambar {{$g->nama}}?">
-                        <img width="25" src="{{asset('assets/img/logo/delete.png')}}" />
-                     </a>
-                  </div>
-               </td>
-            </tr>
-            @endforeach
-            @endif
-         </tbody>
-      </table>
    </div>
 </div>
 @endsection
 
 @section('js')
 <script>
-   // script input foto destinasi
-   const selectedFiles = [];
+   function openModal(gambarList, clickedId) {
 
-   function collectPics(event) {
-      const fileInput = event.target;
-      if (fileInput.files.length > 0) {
-         const file = fileInput.files[0];
-         const inputFileLabel = document.getElementById("input-file-label");
-         inputFileLabel.textContent = event.target.value.split("\\").slice(-1);
+      const modalGallery = document.getElementById('modalGallery');
+      modalGallery.innerHTML = ''; // Kosongkan carousel sebelum menambahkan gambar baru
+
+      if (gambarList.length === 0) {
+         modalGallery.innerHTML = `
+            <div class="carousel-item active text-center">
+               <p class="text-white p-5">Tidak ada gambar untuk destinasi ini.</p>
+            </div>`;
+      } else {
+         // **Cari index gambar yang diklik dalam daftar**
+         let clickedIndex = gambarList.findIndex(img => img.id == clickedId);
+         console.log(clickedIndex);
+         if (clickedIndex === -1) clickedId = gambarList[0].id; // Jika tidak ditemukan, gunakan indeks pertama
+
+         // **Tambahkan gambar ke dalam carousel**
+         gambarList.forEach((img, index) => {
+            const activeClass = (img.id === clickedId) ? 'active' : ''; // Gambar pertama dibuat aktif
+            modalGallery.innerHTML += `
+               <div class="carousel-item ${activeClass} text-center">
+                  <img src="${window.location.origin}/${img.src}" 
+                       class="img-fluid" 
+                       style="max-height: 90vh; max-width: 100%;" 
+                       alt="${img.nama}">
+                  <p class="text-white mt-2">${img.nama}</p>
+               </div>`;
+         });
       }
+
+      // **Inisialisasi ulang Carousel setiap kali modal dibuka**
+      let carouselElement = document.getElementById('modalGalleryCarousel');
+      new bootstrap.Carousel(carouselElement, {
+         interval: false, // Hanya berpindah saat tombol diklik
+         wrap: true // Bisa looping dari terakhir ke pertama
+      });
+
+      // Tampilkan modal
+      const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+      modal.show();
    }
 </script>
+
+<script>
+   function openswal(event, button) {
+      event.preventDefault(); // Mencegah submit otomatis
+
+      // Ambil form terdekat dari tombol yang ditekan
+      const form = button.closest("form");
+
+      // Tampilkan konfirmasi SweetAlert2
+      Swal.fire({
+         title: "Apakah Anda yakin?",
+         text: "Data yang dihapus tidak dapat dikembalikan!",
+         icon: "warning",
+         showCancelButton: true,
+         confirmButtonColor: "#d33",
+         cancelButtonColor: "#3085d6",
+         confirmButtonText: "Ya, hapus!",
+         cancelButtonText: "Batal"
+      }).then((result) => {
+         if (result.isConfirmed) {
+            // Jika dikonfirmasi, submit form
+            form.submit();
+         }
+      });
+   }
+</script>
+
+<!-- script modal show file -->
+@include('homepage.template.modal-prefiewFile')
+
 @endsection

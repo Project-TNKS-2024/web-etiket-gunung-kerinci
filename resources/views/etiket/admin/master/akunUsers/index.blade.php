@@ -3,7 +3,19 @@
 @section('css')
 
 <style>
+   #biodataTable {
+      width: 100%;
+      border-collapse: collapse;
+   }
 
+   #biodataTable td {
+      padding: 0px 5px;
+   }
+
+   #biodataTable th {
+      background-color: #f2f2f2;
+      padding: 0px 5px;
+   }
 </style>
 
 @endsection
@@ -11,51 +23,52 @@
 @section('main')
 
 <div class="card">
+   <div class="card-header ">
+      <h3><b>Daftar Pengguna</b></h3>
+   </div>
    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-         <label class="text-2xl font-bold gk-text-base-black mb-2">Daftar Pengguna</label>
+      <div class="table-responsive">
+         <table class="table table-bordered">
+            <thead class="bg-dark text-white">
+               <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">ID</th>
+                  <th scope="col">Nama Depan</th>
+                  <th scope="col">Nama Belakang</th>
+                  <th scope="col">Jenis Kelamin</th>
+                  <th scope="col">Satus</th>
+                  <th scope="col">Action</th>
+               </tr>
+            </thead>
+            <tbody class="table-group-divider">
+               @foreach ($dataUser as $index => $user)
+               <tr>
+                  <th scope="row">{{ $dataUser->firstItem() + $index }}</th> <!-- Nomor urut sesuai halaman -->
+                  <td>{{ $user->email }}</td>
+                  <td>{{ $user->biodata->id }}</td>
+                  <td>{{ optional($user->biodata)->first_name }}</td>
+                  <td>{{ optional($user->biodata)->last_name }}</td>
+                  <td>{{ optional($user->biodata)->jenis_kelamin == 'l' ? 'Laki-laki' : 'Perempuan' }}</td>
+                  <td>{{ optional($user->biodata)->verified }}</td>
+                  <td>
+                     @if ($user->biodata->verified == 'pending')
+                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal" data-detail="{{json_encode($user)}}" data-lampiran={{json_encode(asset($user->biodata->lampiran_identitas))}}>Verifikasi</button>
+                     @else
+                     <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal" data-detail="{{json_encode($user)}}" data-lampiran={{json_encode(asset($user->biodata->lampiran_identitas))}}>Detail</button>
+                     @endif
+                  </td>
+               </tr>
+               @endforeach
+            </tbody>
+         </table>
+
+         <!-- Tampilkan navigasi pagination -->
+         <div class="d-flex justify-content-center mt-3">
+            {{ $dataUser->links('pagination::bootstrap-5') }}
+         </div>
+
       </div>
-
-      <table class="rounded table table-striped table-bordered">
-         <thead>
-            <tr>
-               <th scope="col">#</th>
-               <th scope="col">Email</th>
-               <th scope="col">ID</th>
-               <th scope="col">Nama Depan</th>
-               <th scope="col">Nama Belakang</th>
-               <th scope="col">Jenis Kelamin</th>
-               <th scope="col">Satus</th>
-               <th scope="col">Action</th>
-            </tr>
-         </thead>
-         <tbody class="table-group-divider">
-            @foreach ($dataUser as $index => $user)
-            <tr>
-               <th scope="row">{{ $dataUser->firstItem() + $index }}</th> <!-- Nomor urut sesuai halaman -->
-               <td>{{ $user->email }}</td>
-               <td>{{ $user->biodata->id }}</td>
-               <td>{{ optional($user->biodata)->first_name }}</td>
-               <td>{{ optional($user->biodata)->last_name }}</td>
-               <td>{{ optional($user->biodata)->jenis_kelamin == 'l' ? 'Laki-laki' : 'Perempuan' }}</td>
-               <td>{{ optional($user->biodata)->verified }}</td>
-               <td>
-                  @if ($user->biodata->verified == 'pending')
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal" data-detail="{{json_encode($user)}}" data-lampiran={{json_encode(asset($user->biodata->lampiran_identitas))}}>Verifikasi</button>
-                  @else
-                  <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal" data-detail="{{json_encode($user)}}" data-lampiran={{json_encode(asset($user->biodata->lampiran_identitas))}}>Detail</button>
-                  @endif
-               </td>
-            </tr>
-            @endforeach
-         </tbody>
-      </table>
-
-      <!-- Tampilkan navigasi pagination -->
-      <div class="d-flex justify-content-center mt-3">
-         {{ $dataUser->links('pagination::bootstrap-5') }}
-      </div>
-
    </div>
 </div>
 
@@ -69,7 +82,7 @@
          </div>
          <div class="modal-body">
             <div class="container">
-               <h1 class="fs-4 fw-bold">Biodata</h1>
+               <h1 class="fs-4 form-label">Biodata</h1>
                <div class="row">
                   <div class="col-12 col-md-6">
                      <table id="biodataTable">
@@ -120,9 +133,11 @@
                         <embed id="detailLampiran" src="" type="application/pdf" width="100%" height="280px">
                      </div>
                   </div>
+                  <div>
+                     <h1 class="fs-4 form-label mt-3">Riwayat Pendakian</h1>
+                     <!-- Tambahkan jika diperlukan -->
+                  </div>
                </div>
-               <h1 class="fs-4 fw-bold mt-3">Riwayat Pendakian</h1>
-               <!-- Tambahkan jika diperlukan -->
             </div>
          </div>
          <div class="modal-footer">

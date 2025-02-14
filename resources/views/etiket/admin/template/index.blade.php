@@ -89,10 +89,22 @@
 
         .card .card-header * {
             color: white;
+            margin-bottom: 0px;
+        }
+
+        .card .card-body {
+            padding-top: 1rem;
         }
 
         .body-wrapper .table tr td .btn {
             padding: 0.5rem 0.5rem;
+        }
+
+        .modal-fullscreen {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            margin: 0;
         }
     </style>
 
@@ -128,6 +140,12 @@
 
     <script src="{{ asset('modernize/js/sidebarmenu.js') }}"></script>
     <script src="{{ asset('modernize/js/app.min.js') }}"></script>
+
+    <!-- Enable popovers  -->
+    <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    </script>
 
     @yield('js')
 

@@ -236,6 +236,6 @@ class destinasiController extends AdminController
             ->where('id_destinasi', $request->id_destinasi)
             ->first();
         $gate->delete();
-        return back()->with('success', 'Berhasil Menghapus Gambar');
+        return back()->with('success', 'Berhasil Menghapus Gate');
     }
 }

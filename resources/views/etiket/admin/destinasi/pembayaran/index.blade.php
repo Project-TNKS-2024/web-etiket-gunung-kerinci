@@ -10,10 +10,10 @@
 
 @section('main')
 <div class="card">
+   <div class="card-header">
+      <h3><b>Daftar Pembayaran</b></h3>
+   </div>
    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-         <label class="text-2xl font-bold gk-text-base-black mb-2">Daftar Pembayaran</label>
-      </div>
       <div class="d-flex justify-content-end mb-3">
          <!-- Form Filter -->
          <form action="{{ route('admin.destinasi.pembayaran', ['id' => $destinasi->id]) }}" method="GET" class="d-flex align-items-center gap-2">
@@ -40,36 +40,38 @@
 
 
       <!-- Tabel Data -->
-      <table class="rounded table table-striped table-bordered">
-         <thead>
-            <tr>
-               <th scope="col">#</th>
-               <th scope="col">Nama Ketua</th>
-               <th scope="col">Tanggal</th>
-               <th scope="col">Status</th>
-               <th scope="col">Keterangan</th>
-               <th scope="col">Aksi</th>
-            </tr>
-         </thead>
-         <tbody class="table-group-divider">
-            @foreach ($dataBooking as $index => $booking)
-            <tr>
-               <th scope="row">{{ $dataBooking->firstItem() + $index }}</th>
-               <td>{{ optional($booking->pendakis->first())->first_name }} {{ optional($booking->pendakis->first())->last_name }}</td>
-               <td>{{ optional($booking->pembayaran->last())->created_at }}</td>
-               <td>{{ optional($booking->pembayaran->last())->status }}</td>
-               <td>{{ optional($booking->pembayaran->last())->keterangan }}</td>
-               <td>
-                  @if (optional($booking->pembayaran->last())->status == 'pending')
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Verifikasi</button>
-                  @else
-                  <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Detail</button>
-                  @endif
-               </td>
-            </tr>
-            @endforeach
-         </tbody>
-      </table>
+      <div class="table-responsive">
+         <table class="table table-bordered">
+            <thead class="bg-dark text-white">
+               <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nama Ketua</th>
+                  <th scope="col">Tanggal</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Keterangan</th>
+                  <th scope="col">Aksi</th>
+               </tr>
+            </thead>
+            <tbody class="table-group-divider">
+               @foreach ($dataBooking as $index => $booking)
+               <tr>
+                  <th scope="row">{{ $dataBooking->firstItem() + $index }}</th>
+                  <td>{{ optional($booking->pendakis->first())->first_name }} {{ optional($booking->pendakis->first())->last_name }}</td>
+                  <td>{{ optional($booking->pembayaran->last())->created_at }}</td>
+                  <td>{{ optional($booking->pembayaran->last())->status }}</td>
+                  <td>{{ optional($booking->pembayaran->last())->keterangan }}</td>
+                  <td>
+                     @if (optional($booking->pembayaran->last())->status == 'pending')
+                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Verifikasi</button>
+                     @else
+                     <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailPembayaran" onclick="showDetailPembayaran({{json_encode($booking)}})">Detail</button>
+                     @endif
+                  </td>
+               </tr>
+               @endforeach
+            </tbody>
+         </table>
+      </div>
 
       <!-- Navigasi Pagination -->
       <div class="d-flex justify-content-center mt-3">

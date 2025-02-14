@@ -16,8 +16,10 @@
 </a>
 
 <div class="card">
+   <div class="card-header">
+      <h5><b>Update Gates</b></h5>
+   </div>
    <div class="card-body">
-      <label class="text-2xl font-bold gk-text-base-black mb-2">Update Gates</label>
       <form action="{{ route('admin.destinasi.gates.updateAction') }}" method="post" enctype="multipart/form-data">
          @csrf
          <div class="row">
@@ -82,8 +84,6 @@
             <label for="detail" class="form-label">Detail</label>
             <textarea class="form-control" id="detail" name="detail" rows="3">{{ old('detail', $gate->detail) }}</textarea>
          </div>
-
-
 
          <!-- Submit Button -->
          <button type="submit" class="btn btn-primary d-block ms-auto">Simpan</button>

@@ -96,23 +96,3 @@
 
    <hr style="border-width: 5px;">
    @endfor
-
-
-
-   <!-- Modal -->
-   <div class="modal fade" id="ModalShowFile" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-         <div class="modal-content">
-            <div class="modal-header">
-               <h1 class="modal-title fs-5 my-0" id="exampleModalLabel">File Preview</h1>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-               <embed id="filePreview" src="" type="application/pdf" style="width: 100%;" />
-            </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-         </div>
-      </div>
-   </div>

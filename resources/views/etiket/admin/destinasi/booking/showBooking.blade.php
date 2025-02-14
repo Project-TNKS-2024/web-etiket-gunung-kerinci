@@ -14,8 +14,10 @@
 @section('main')
 
 <div class="card">
+   <div class="card-header">
+      <h5><b>Detail Booking</b></h5>
+   </div>
    <div class="card-body">
-      <label class="fs-6 font-semibold gk-text-base-black">Detail Booking</label>
 
 
    </div>

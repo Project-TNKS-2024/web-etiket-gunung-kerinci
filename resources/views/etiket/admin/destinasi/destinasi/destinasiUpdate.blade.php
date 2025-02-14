@@ -24,9 +24,10 @@
 </a>
 
 <div class="card">
+   <div class="card-header">
+      <h5><b>Update Destinasi</b></h5>
+   </div>
    <div class="card-body">
-      <label class="text-2xl font-bold gk-text-base-black mb-2">Update Destinasi</label>
-
       <form id="destinasiForm" class="row gap-2" action="{{ route('admin.destinasi.update.action', ['id' => $destinasi->id]) }}" method="post">
          @csrf
          <div class="col-12">
@@ -68,7 +69,7 @@
 
          <div class="col-12 d-flex justify-content-end">
             <button type="submit" class="btn btn-primary">
-               <img width="20" src="{{asset('assets/icon/tnks/save-light.svg')}}" />
+               <i class="fa-solid fa-floppy-disk"></i>
                Simpan
             </button>
          </div>
