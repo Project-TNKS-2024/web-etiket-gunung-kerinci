@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             destinasi_gate::class,
             paket_tiket::class,
             settingSeeder::class,
+            CheckpointSeeder::class,
         ]);
     }
 }

@@ -130,15 +130,36 @@
 
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-               <span class="hide-menu">Traking</span>
+               <span class="hide-menu">Tracking</span>
             </li>
-            <li class="sidebar-item">
-               <a class="sidebar-link" href="#" aria-expanded="false">
+            <li class="sidebar-item">    
+               <a class="sidebar-link" data-bs-toggle="collapse" href="#collapseClimberTracking" role="button" aria-expanded="false" aria-controls="collapseClimberTracking">
                   <span>
                      <img src="{{ asset('assets/icon/tnks/compass-dark.svg') }}"></img>
                   </span>
                   <span class="hide-menu">Climber Tracking</span>
                </a>
+               <div class="collapse lis-collapse-destinasi" id="collapseClimberTracking">
+                  <ul class="list-unstyled">
+                     <li class="sidebar-item">
+                        <a class="sidebar-link" href="{{ route('admin.checkpoint.daftar') }}" aria-expanded="false">
+                           <span>
+                              <img src="{{ asset('assets/icon/tnks/map-dark.svg') }}"></img>
+                           </span>
+                           <span class="hide-menu">Kelola CheckPoint</span>
+                        </a>
+                     </li>
+                     <li class="sidebar-item">
+                        {{-- <a class="sidebar-link" href="{{ route('admin.tracking.daftar') }}" aria-expanded="false"> --}}
+                        <a class="sidebar-link" href="#" aria-expanded="false">
+                           <span>
+                              <img src="{{ asset('assets/icon/tnks/ticket-dark.svg') }}"></img>
+                           </span>
+                           <span class="hide-menu">Tracking User</span>
+                        </a>
+                     </li>
+                  </ul>
+               </div>
             </li>
 
             <li class="nav-small-cap">

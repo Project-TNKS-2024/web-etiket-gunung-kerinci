@@ -3,23 +3,24 @@
 use Illuminate\Support\Facades\Route;
 
 //admin dash
-use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
+use App\Http\Controllers\homepage\booking;
 // addmin destinasi
-use App\Http\Controllers\etiket\admin\destinasi\destinasiController;
-use App\Http\Controllers\etiket\admin\destinasi\tiketController;
-use App\Http\Controllers\etiket\admin\master\destinasisController;
-use App\Http\Controllers\etiket\admin\destinasi\bookingController;
-use App\Http\Controllers\etiket\admin\destinasi\pembayaranController;
-use App\Http\Controllers\etiket\admin\destinasi\sopController;
-// admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
+use App\Http\Controllers\etiket\admin\settingController;
+use App\Http\Controllers\etiket\admin\dashboard as dasAdmin;
+use App\Http\Controllers\etiket\admin\destinasi\sopController;
+use App\Http\Controllers\etiket\admin\destinasi\tiketController;
+use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
+// admin fitur
+use App\Http\Controllers\etiket\admin\destinasi\bookingController;
+use App\Http\Controllers\etiket\admin\master\destinasisController;
 use App\Http\Controllers\etiket\admin\master\PengunjungController;
-use App\Http\Controllers\etiket\admin\master\ValidasiPembayaranOld;
+use App\Http\Controllers\tracking\admin\checkpoint\CheckpointController;
 
 // admin master
-use App\Http\Controllers\homepage\booking;
-use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
-use App\Http\Controllers\etiket\admin\settingController;
+use App\Http\Controllers\etiket\admin\master\ValidasiPembayaranOld;
+use App\Http\Controllers\etiket\admin\destinasi\destinasiController;
+use App\Http\Controllers\etiket\admin\destinasi\pembayaranController;
 
 // Admin routes
 Route::middleware(['check.role:admin'])->group(function () {
@@ -88,4 +89,12 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/setting/{id}/update', [settingController::class, 'update'])->name('admin.setting.update');
     Route::post('admin/setting/updateAction', [settingController::class, 'updateAction'])->name('admin.setting.updateAction');
     Route::post('admin/setting/deleteAction', [settingController::class, 'deleteAction'])->name('admin.setting.deleteAction');
+
+    // checkpoint
+    Route::get('admin/kelola/chekpoint', [CheckpointController::class, 'daftar'])->name('admin.checkpoint.daftar');
+    Route::get('admin/kelola/tambah-chekpoint', [CheckpointController::class, 'tambah'])->name('admin.checkpoint.tambah');
+    Route::post('admin/kelola/tambah-checkoint', [CheckpointController::class, 'tambahAction'])->name('admin.checkpoint.tambahAction');
+    Route::get('admin/kelola/edit-checkpoint/{id}', [CheckpointController::class, 'edit'])->name('admin.checkpoint.edit');
+    Route::post('admin/kelola/edit-checkpoint/{id}', [CheckpointController::class, 'editAction'])->name('admin.checkpoint.editAction');
+    Route::post('admin/kelola/hapus-checkpoint/{id}', [CheckpointController::class, 'hapus'])->name('admin.checkpoint.hapus');
 });
