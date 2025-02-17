@@ -66,13 +66,13 @@ class User extends Authenticatable implements MustVerifyEmail
     // Relasi many-to-many dengan Destinasi
     public function destinasis(): BelongsToMany
     {
-        return $this->belongsToMany(Destinasi::class, 'destinasi_user')
+        return $this->belongsToMany(destinasi::class, 'destinasi_user')
             ->withPivot('is_penanggungjawab')
             ->withTimestamps();
     }
 
     // Cek apakah user adalah penanggung jawab suatu destinasi
-    public function isPenanggungJawab(Destinasi $destinasi): bool
+    public function isPenanggungJawab(destinasi $destinasi): bool
     {
         return $this->destinasis()
             ->where('destinasi_id', $destinasi->id)

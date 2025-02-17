@@ -207,7 +207,7 @@
          <tbody class="table-group-divider">
             @foreach ($booking->pendakis as $pendaki)
             <tr>
-               <td>{{$pendaki->biodata->first_name . ' ' .$pendaki->biodata->first_name}}</td>
+               <td>{{$pendaki->biodata->first_name . ' ' .$pendaki->biodata->last_name}}</td>
                <td>{{$pendaki->usia}}</td>
                <td>{{$pendaki->biodata->kenegaraan == 'wni' ? 'Warga Negara Indoneia' : 'Warga Negara Asing' }}</td>
                <td>{{$pendaki->biodata->jenis_kelamin=='l' ? 'Laki - laki' : 'Perempuan' }}</td>
