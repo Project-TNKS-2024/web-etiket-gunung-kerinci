@@ -25,26 +25,11 @@
     </div>
     @endif
 </div>
+<div>
+    <h5>Selamat Datang</h5>
+    <h3><b>{{$user->biodata ? ($user->biodata->verified == 'verified' ? $user->biodata->first_name . ' ' . $user->biodata->last_name : 'Pendaki Handal') : 'Pendaki Handal'}}</b></h3>
+</div>
 
-<!-- 
-<div class="row">
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col-auto">
-                        <img src="{{asset('assets/icon/tnks/compass-dark.svg')}}" width="40" />
-                    </div>
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Explorasi Selesai</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <div class="card shadow">
     <div class="card-body">

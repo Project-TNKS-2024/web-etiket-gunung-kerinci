@@ -18,11 +18,11 @@ class dashboard extends Controller
     {
         $user = User::with('biodata')->find(Auth::user()->id);
 
-        $booking = gk_booking::whereHas('pendakis', function ($query) use ($user) {
-            $query->where('id_bio', $user->id_bio);
-            // })->with('pendakis', 'ketuaPendaki', 'user')->get();
-        })->with('pendakis', 'user')->get();
-        // return $booking;
+        $booking = gk_booking::where('status_booking', '<', '8')
+            ->whereHas('pendakis', function ($query) use ($user) {
+                $query->where('id_bio', $user->id_bio);
+            })->with(['pendakis', 'user'])->get();
+
 
         return view('etiket.user.sections.dashboard', [
             'user' => $user,

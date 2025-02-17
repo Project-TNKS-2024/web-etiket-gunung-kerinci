@@ -51,6 +51,9 @@ Route::middleware(['check.role:admin'])->group(function () {
     // Destinasi - booking
     Route::get('admin/destinasi/{id}/booking', [bookingController::class, 'index'])->name('admin.destinasi.booking');
     Route::get('admin/destinasi/booking/{id}', [bookingController::class, 'showBooking'])->name('admin.destinasi.booking.show');
+    Route::post('admin/destinasi/booking/updateStatus', [bookingController::class, 'updateStatus'])->name('admin.destinasi.booking.updateStatus');
+    Route::get('admin/destinasi/booking/{id}/tiket', [bookingController::class, 'showTiket'])->name('admin.destinasi.booking.tiket.show');
+    Route::get('admin/destinasi/booking/{id}/struk', [bookingController::class, 'showStruk'])->name('admin.destinasi.booking.struk.show');
 
     // Destinasi - pembayaran
     Route::get('admin/destinasi/{id}/pembayaran', [pembayaranController::class, 'index'])->name('admin.destinasi.pembayaran');
@@ -92,7 +95,7 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // fitur - scan tiket
     Route::get('admin/fitur/scanTiket', [Scan::class, 'index'])->name('admin.fitur.scanTiket');
-    Route::get('admin/fitur/DetailTiket/{uq}', [Scan::class, 'rolesUpdateAction'])->name('admin.fitur.detailTiket');
+    Route::get('admin/fitur/scanTiketAction/{uq}', [Scan::class, 'scanTiketAction'])->name('admin.fitur.scanTiketAction');
 
 
     // setting

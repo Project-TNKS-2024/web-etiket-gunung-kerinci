@@ -28,6 +28,8 @@
                       @elseif ($booking->status_booking == 6)
                       <span class="badge text-bg-primary">Dalam Pendakian</span>
                       @elseif ($booking->status_booking == 7)
+                      <span class="badge text-bg-success">Cek in</span>
+                      @elseif ($booking->status_booking == 8)
                       <span class="badge text-bg-success">Selesai</span>
                       @endif
                 </td>

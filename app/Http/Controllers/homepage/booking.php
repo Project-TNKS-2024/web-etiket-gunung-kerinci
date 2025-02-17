@@ -639,9 +639,13 @@ class booking extends Controller
         } else if ($booking->status_booking < 4) {
             abort(404);
         }
-       
 
-        // return $booking;
+        if ($booking->id_user != Auth::id()) {
+            $filteredPendakis = $booking->pendakis->where('id_bio', Auth::user()->id_bio)->first();
+            $booking->pendakis = [$filteredPendakis];
+        }
+
+        // return $booking->pendakis[0];
         return view('homepage.booking.bookingTiket', [
             'booking' => $booking,
             'pendakis' => $booking->pendakis

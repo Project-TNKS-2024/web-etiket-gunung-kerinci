@@ -82,7 +82,7 @@
                   <td>Destinasi</td>
                </tr>
                <tr>
-                  <td>{{ $booking->pendakis[0]->first_name .' '. $booking->pendakis[0]->last_name }}</td>
+                  <td>{{ $booking->pendakis[0]->biodata->first_name .' '. $booking->pendakis[0]->biodata->last_name }}</td>
                   <td>
                      {{$booking->destinasi->nama}}
                   </td>
@@ -132,12 +132,6 @@
    </div>
 </div>
 
-@php
-if ($booking->id_user != Auth::id()) {
-$filteredPendakis = $booking->pendakis->where('id_bio', Auth::user()->id_bio)->first();
-$booking->pendakis = [$filteredPendakis];
-}
-@endphp
 @foreach($booking->pendakis as $pendaki)
 <hr>
 <div class="card fixed-card overflow-hidden ">
@@ -158,7 +152,7 @@ $booking->pendakis = [$filteredPendakis];
             <tr>
                <td>Nama</td>
                <td> : </td>
-               <td>{{ $pendaki->first_name . ' '.$pendaki->last_name }}</td>
+               <td>{{ $pendaki->biodata->first_name . ' '.$pendaki->biodata->last_name }}</td>
             </tr>
             <tr>
                <td>Tanggal Masuk</td>

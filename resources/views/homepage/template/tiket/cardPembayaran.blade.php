@@ -18,18 +18,18 @@
           <tr>
              <td>Nama Ketua</td>
              <td> : </td>
-             <td>{{ $booking->pendakis[0]->first_name . ' ' . $booking->pendakis[0]->last_name }}
+             <td>{{ $booking->pendakis[0]->biodata->first_name . ' ' . $booking->pendakis[0]->biodata->last_name }}
              </td>
           </tr>
           <tr>
              <td>Gate Masuk</td>
              <td> : </td>
-             <td>{{ $booking->gateMasuk->nama }} </td>
+             <td>{{ $booking->gate_masuk->nama }} </td>
           </tr>
           <tr>
              <td>Gate Keluar</td>
              <td> : </td>
-             <td>{{ $booking->gateKeluar->nama }} </td>
+             <td>{{ $booking->gate_keluar->nama }} </td>
           </tr>
           <tr>
              <td>Tanggal Pendakian</td>

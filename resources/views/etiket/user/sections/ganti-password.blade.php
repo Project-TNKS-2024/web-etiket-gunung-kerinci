@@ -31,9 +31,10 @@
                     <div class="col-12 col-lg-6">
                         <div class="text-start form-group">
                             <label class="font-semibold form-label" for="new_password">Password Baru</label>
-                            <input class="form-control @error('password_baru')  is-invalid @enderror "
+                            <input class="form-control @error('password_baru')  is-invalid @enderror"
                                 name="password_baru" id="password_baru" type="password" placeholder="Password Baru"
                                 required autofocus />
+
                             <label class="text-start text-sm gk-text-neutrals400">
                                 Password <span id="passwordStrength"></span>
                             </label>
@@ -72,6 +73,24 @@
 @endsection
 
 @section('js')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const btnVisibilityPassword = document.querySelectorAll(".btn-visibility");
+        btnVisibilityPassword.forEach(btn => {
+            btn.addEventListener("click", function() {
+                const ipt = document.getElementById(btn.dataset.target);
+                if (ipt.type === "password") {
+                    ipt.type = "text";
+                    btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+                } else {
+                    ipt.type = "password";
+                    btn.innerHTML = '<i class="fa-solid fa-eye"></i>';
+                }
+            });
+        });
+    });
+</script>
+
 <script>
     document.getElementById('password_baru').addEventListener('input', checkPasswordStrength);
 

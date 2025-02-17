@@ -3,12 +3,20 @@
 namespace App\Http\Controllers\etiket\admin\destinasi;
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\helper\BookingHelperController;
 use App\Models\gk_booking as ModelBooking;
 use App\Models\gk_booking;
 use Illuminate\Http\Request;
 
 class bookingController extends AdminController
 {
+    private $helper;
+
+    public function __construct(BookingHelperController $helper)
+    {
+        $this->helper = $helper;
+    }
+
     public function index($id, Request $request)
     {
         $filter = $request->filter_ipt;
@@ -72,12 +80,51 @@ class bookingController extends AdminController
         ]);
     }
 
-    public function showBooking($id_booking)
+    public function showBooking($id)
     {
-        $booking = gk_booking::with('pendakis', 'gateMasuk', 'gateKeluar', 'gkTiket')->find($id_booking);
+        // $booking = gk_booking::with('pendakis', 'pendakis.biodata', 'gateMasuk', 'gateKeluar', 'gkTiket', 'pendakis')->find($id_booking);
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'destinasi'])->where('id', $id)->first();
+
+        // return $booking->pendakis[0];
+        return view('etiket.admin.destinasi.booking.showBooking', [
+            'booking' => $booking
+        ]);
+    }
+
+    public function showTiket($id)
+    {
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'destinasi'])->where('id', $id)->first();
+        return view('etiket.admin.destinasi.booking.showTiket', [
+            'booking' => $booking
+        ]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $booking = gk_booking::find($request['id']);
+        if ($booking->status_booking < $request['status']) {
+            $booking->update([
+                'status_booking' => $request['status']
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Status booking berhasil diperbarui');
+    }
+
+    public function showStruk($id)
+    {
+        $booking = gk_booking::where('id', $id)->first();
+
+        if ($booking->status_pembayaran) {
+            $booking = json_decode($booking->dataStruk);
+            // return $booking;
+        } else {
+            $booking = $this->helper->getDataStruk($booking->id);
+        }
 
         // return $booking;
-        return view('etiket.admin.destinasi.booking.showBooking', [
+
+        return view('etiket.admin.destinasi.booking.showStruk', [
             'booking' => $booking
         ]);
     }

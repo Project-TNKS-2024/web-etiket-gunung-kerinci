@@ -4,6 +4,7 @@ namespace App\Http\Controllers\etiket\admin\fitur;
 
 use App\Http\Controllers\AdminController;
 use App\Models\gk_booking;
+use Illuminate\Http\Request;
 
 class Scan extends AdminController
 {
@@ -13,13 +14,13 @@ class Scan extends AdminController
             'page' => 'Scan',
         ]);
     }
-    public function detailtiket($uq)
+    public function scanTiketAction($code)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])->where('unique_code', $uq)->first();
-        // return $booking;
-        return view('etiket.admin.fitur.detailtiket', [
-            'page' => 'Detail Tiket',
-            'booking' => $booking,
-        ]);
+        $booking = gk_booking::where('unique_code', $code)->with('gateMasuk', 'gateKeluar', 'destinasi', 'pendakis')->first();
+        if ($booking) {
+            return redirect()->route('admin.destinasi.booking.show', ['id' => $booking->id]);
+        } else {
+            return redirect()->back()->withErrors('kode tidak ditemukan');
+        }
     }
 }

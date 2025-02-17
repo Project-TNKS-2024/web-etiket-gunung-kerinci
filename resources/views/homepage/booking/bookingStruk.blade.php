@@ -202,7 +202,7 @@
       </div>
    </div>
    <div class="mb-2 text-center">
-      <a href="{{ route('homepage.booking.payment', ['id' => $data->id]) }}" class="btn btn-outline-secondary"><i class="fa fa-print"></i>Laman Pembalian</a>
+      <a href="{{ route('homepage.booking.payment', ['id' => $data->id]) }}" class="btn btn-outline-secondary"><i class="fa fa-print"></i>Laman Pembelian</a>
       <a href="javascript:void(0)" onclick="invoicePrint()" class="btn btn-outline-secondary"><i class="fa fa-print"></i> Print</a>
       <!-- <a href="javascript:void(0)" onclick="invoiceDownload()" class="btn btn-outline-secondary"><i class="fa fa-download"></i> Download</a> -->
    </div>

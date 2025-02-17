@@ -1,7 +1,7 @@
 <div class="toast-container" id="toastContainer">
     @if(session('success'))
     @foreach((array) session('success') as $message)
-    <div class="toast align-items-center text-bg-primary border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast align-items-center text-bg-success border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
                 {{ $message }}
