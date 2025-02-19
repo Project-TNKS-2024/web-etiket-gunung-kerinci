@@ -22,7 +22,7 @@ Route::get('sarat-dan-ketentuan', [HomepageController::class, 'snk'])->name('hom
 
 
 // destinasi list
-Route::get('booking/destinasi/list', [booking::class, 'destinasiList'])->name('homepage.booking.destinasi.list');
+Route::get('booking/destinasi/list', [HomepageController::class, 'destinasi'])->name('homepage.booking.destinasi.list');
 // destinasi paket
 Route::get('booking/destinasi/{id}/paket', [booking::class, 'destinasiPaket'])->name('homepage.booking.destinasi.paket');
 // destinasi tiket

@@ -48,13 +48,7 @@
             <label class="form-label" for="status">Status</label>
             <fieldset disabled>
                <select class="form-control borderx" id="status" name="status">
-                  @if ($destinasi->status)
-                  <option value="1" selected>Open</option>
-                  <option value="0">Close</option>
-                  @else
-                  <option value="1">Open</option>
-                  <option value="0" selected>Close</option>
-                  @endif
+                  <option selected>{{$destinasi->getStatus()}}</option>
                </select>
             </fieldset>
          </div>

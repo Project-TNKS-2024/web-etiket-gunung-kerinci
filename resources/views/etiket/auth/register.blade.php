@@ -130,11 +130,12 @@
                                 <span class="input-group-text btn-visibility" data-target='password'><i class="fa-solid fa-eye"></i> </i></span>
                             </div>
                         </div>
+
                         <div class="mb-3">
                             <label for="password_confirmation" class="form-label">Ulangi Password</label>
                             <div class="input-group">
                                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
-                                <span class="input-group-text btn-visibility" data-target='password_confirmation '><i class="fa-solid fa-eye"></i> </i></span>
+                                <span class="input-group-text btn-visibility" data-target='password_confirmation'><i class="fa-solid fa-eye"></i> </i></span>
                             </div>
                         </div>
                         <div class="form-group mb-3">

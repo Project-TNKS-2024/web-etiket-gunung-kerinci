@@ -46,8 +46,9 @@
                <div class="col-6">
                   <label class="form-label" for="status">Status</label>
                   <select class="form-control borderx bg-white" id="status" name="status" required>
-                     <option value="1" {{ $destinasi->status ? 'selected' : '' }}>Open</option>
-                     <option value="0" {{ !$destinasi->status ? 'selected' : '' }}>Close</option>
+                     <option value="2" {{ $destinasi->status == 2 ? 'selected' : '' }}>{{$destinasi->getStatus(2)}}</option>
+                     <option value="1" {{ $destinasi->status == 1 ? 'selected' : '' }}>{{$destinasi->getStatus(1)}}</option>
+                     <option value="0" {{ $destinasi->status == 0 ? 'selected' : '' }}>{{$destinasi->getStatus(0)}}</option>
                   </select>
                </div>
             </div>

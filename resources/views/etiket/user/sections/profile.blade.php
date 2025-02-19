@@ -29,7 +29,7 @@
 
                 @if (isset($user->biodata)and $user->biodata->verified == 'pending')
                 <div class="alert alert-warning" role="alert">
-                    Profil anda sedang dalam verifikasi admin. Silakan hubungi admin untuk melakukan verifikasi.
+                    Profil anda sedang dalam verifikasi admin. verifikasi setiap hari pada pukul 08.00 sampai 16.00 WIB pada hari kerja.
                 </div>
                 @endif
                 @if (isset($user->biodata)and $user->biodata->verified == 'unverified')

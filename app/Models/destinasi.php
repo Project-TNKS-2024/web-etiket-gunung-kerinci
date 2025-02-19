@@ -36,6 +36,23 @@ class destinasi extends Model
         return $this->hasMany(gambar_destinasi::class, 'id_destinasi');
     }
 
+    public function getStatus($kode = null)
+    {
+        if (!isset($kode)) { // Gunakan isset agar 0 tetap dihitung
+            $kode = $this->status;
+        }
+        switch ($kode) {
+            case 0:
+                return 'Close';
+            case 1:
+                return 'Open';
+            case 2:
+                return 'Open Booking';
+            default:
+                return 'Tidak Terdefenisi';
+        }
+    }
+
     public function paket()
     {
         return $this->hasMany(gk_paket_tiket::class, 'id_destinasi');

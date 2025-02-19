@@ -51,7 +51,7 @@ $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->
                     @if (Auth::user()->role == 'user')
                     <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2" href="{{ route('user.dashboard') }}">Dashboard</a>
                     @elseif (Auth::user()->role == 'admin')
-                    <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2" href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2 text-nowrap " href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
                     @endif
                 </li>
                 <form action="{{ route('etiket.auth.logout') }}" method="post" class="mb-0 w-100 px-3">

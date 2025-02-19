@@ -33,15 +33,6 @@ class booking extends Controller
         $this->upload = $upload;
     }
 
-    public function destinasiList()
-    {
-        // ambil destinasis yang open
-        $destinasi = destinasi::where('status', 1)->with('gambar_destinasi')->get();
-        // return $destinasi;
-        return view('homepage.booking.bookingDestinasiList', [
-            'destinasi' => $destinasi,
-        ]);
-    }
     // booking : destinasi - paket - tiket - snk - fp -
     public function destinasiPaket($id)
     {
@@ -113,11 +104,11 @@ class booking extends Controller
         }
 
         if ($request->wni + $request->wna < 2) {
-            return back()->with('error', 'Error: Jumlah pendaki tidak mencukupi');
+            return back()->with('error', 'Error: Jumlah pendaki tidak mencukupi. Minimal 2 orang');
         }
 
         $booking = gk_booking::where('id_user', Auth::user()->id)
-            ->where('status_booking', '<', 3)
+            ->where('status_booking', '<', 4)
             ->orderBy('created_at', 'desc')
             ->first();
 

@@ -199,13 +199,13 @@
             </div>
             <div class="col-12 col-lg-4 welcome-text header-right widget">
                 <section class="col-12 glassmorphic card row info">
-                    20 orang sedang mendaki Gunung Kerinci
+                    {{$total_mendaki}} orang sedang mendaki Gunung Kerinci
                 </section>
                 <section class="col-12 glassmorphic card row weather ">
                     <div class="col-7">Cuaca Gunung Kerinci Hari Ini</div>
                     <div class="col-4">
-                        <img width="50" id="weather-icon" />
-                        <span style="font-weight: 300; font-size: 24px;"><span id="temp_c"></span>&deg;c</span>
+                        <img width="50" id="weather-icon" src="{{$weatherData['current']['condition']['icon']}}" />
+                        <span style="font-weight: 300; font-size: 24px;"><span id="temp_c">{{$weatherData['current']['temp_c']}}</span>&deg;c</span>
                     </div>
                 </section>
                 <section class="col-12 glassmorphic card row status">
@@ -221,6 +221,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="container">
     <div class="row" style="overflow-x:hidden">
@@ -326,6 +327,8 @@
                     <h5 class="card-title">{{ $item['nama'] }}
                         @if ($item['status'] == 1)
                         <span class="ms-2 badge gk-bg-primary400">Open</span>
+                        @elseif ($item['status'] == 2)
+                        <span class="ms-2 badge gk-bg-primary400">Open Booking</span>
                         @elseif ($item['status'] == 0)
                         <span class="ms-2 badge gk-bg-error200">Close</span>
                         @endif
@@ -435,31 +438,6 @@
 </script>
 
 <script>
-    // Your API key and endpoint
-    const apiKey = '579c99aaf8c043fb95e90132240912'; // Replace with your actual API key
-    const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=-1.7,101.267&aqi=no`;
-
-    // Fetch data from the API
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const iconImg = document.getElementById("weather-icon");
-            const temp_c = document.getElementById("temp_c");
-            iconImg.src = data.current.condition.icon;
-            temp_c.innerText = data.current.temp_c
-            console.log(data.current.temp_c);
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-</script>
-
-<script>
     function animateNumber(id, targetNumber, duration) {
         const element = document.getElementById(id);
         // const targetNumber = parseInt(element.textContent);
@@ -482,9 +460,9 @@
         requestAnimationFrame(updateNumber);
     }
 
-    animateNumber("total-pendaki", 5245, 1000);
-    animateNumber("sedang-mendaki", 245, 1000);
-    animateNumber("pendaki-wni", 4683, 1000);
-    animateNumber("pendaki-wna", 562, 1000);
+    animateNumber("total-pendaki", @json($total_pendaki), 1000);
+    animateNumber("sedang-mendaki", @json($total_mendaki), 1000);
+    animateNumber("pendaki-wni", @json($total_pendaki_wni), 1000);
+    animateNumber("pendaki-wna", @json($total_pendaki_wna), 1000);
 </script>
 @endsection
