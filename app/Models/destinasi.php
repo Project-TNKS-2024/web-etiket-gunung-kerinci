@@ -13,6 +13,7 @@ class destinasi extends Model
     protected $fillable = [
         'nama',
         'status',
+        'statusGunung',
         'kategori',
         'lokasi',
         'detail',
@@ -48,6 +49,27 @@ class destinasi extends Model
                 return 'Open';
             case 2:
                 return 'Open Booking';
+            default:
+                return 'Tidak Terdefenisi';
+        }
+    }
+
+    public function getStatusGunung($kode = null)
+    {
+        if (!isset($kode)) {
+            $kode = $this->statusGunung;
+        }
+        switch ($kode) {
+            case 0:
+                return 'Tidak Aktif';
+            case 1:
+                return 'Normal (Leverl 1)';
+            case 2:
+                return 'Waspada (Level 2)';
+            case 3:
+                return 'Siaga (Level 3)';
+            case 4:
+                return 'Awas (Level 4)';
             default:
                 return 'Tidak Terdefenisi';
         }

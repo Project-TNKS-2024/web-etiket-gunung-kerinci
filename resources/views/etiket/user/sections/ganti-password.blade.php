@@ -21,19 +21,17 @@
 
             <form class="form" method="POST" id="resetForm" action="{{ route('user.dashboard.reset-password-action') }}">
                 @csrf
-                @if (session('status'))
-                <div class="d-block m-auto p-1 px-2 rounded-pill gk-bg-success200">
-                    {{ session('status') }}
-                </div>
-                @endif
 
                 <div class="row">
                     <div class="col-12 col-lg-6">
                         <div class="text-start form-group">
                             <label class="font-semibold form-label" for="new_password">Password Baru</label>
-                            <input class="form-control @error('password_baru')  is-invalid @enderror"
-                                name="password_baru" id="password_baru" type="password" placeholder="Password Baru"
-                                required autofocus />
+
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('password_baru') is-invalid @enderror" name="password_baru" id="password_baru" type="password" placeholder="Password Baru"
+                                    required autofocus autocomplete="current-password">
+                                <span class="input-group-text btn-visibility" data-target='password_baru'><i class="fa-solid fa-eye"></i> </i></span>
+                            </div>
 
                             <label class="text-start text-sm gk-text-neutrals400">
                                 Password <span id="passwordStrength"></span>
@@ -42,10 +40,6 @@
                     </div>
                     <div class="col-12 col-lg-6">
                         <div class="text-start form-group">
-                            <div class="input-group">
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required autocomplete="current-password">
-                                <span class="input-group-text btn-visibility" data-target='password_baru_confirmation'><i class="fa-solid fa-eye"></i> </i></span>
-                            </div>
 
                             <label class="font-semibold form-label" for="password_baru">Konfirmasi Password Baru</label>
 
@@ -63,10 +57,6 @@
                 </div>
             </form>
 
-            <script>
-                addVisibilityToggle('password_baru');
-                addVisibilityToggle('password_baru_confirmation');
-            </script>
         </div>
     </div>
 </div>

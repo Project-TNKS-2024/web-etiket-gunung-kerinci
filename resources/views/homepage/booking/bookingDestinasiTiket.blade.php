@@ -192,27 +192,34 @@
                 </div>
                 <div class="card-body" style="overflow-x: auto">
                     <div class="row">
+                        <!-- Kalender Bulan Saat Ini -->
                         <div class="col-12 col-lg-6 mb-3 mb-lg-0">
                             <div class="card">
                                 <div class="card-header">
-                                    <p class="mb-0">Agustus</p>
+                                    <p class="mb-0">Bulan Saat Ini</p>
                                 </div>
                                 <div class="card-body">
-
+                                    <div id='calendar1'></div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Kalender Bulan Depan -->
                         <div class="col-12 col-lg-6 mb-3 mb-lg-0">
                             <div class="card">
                                 <div class="card-header">
-                                    <p class="mb-0">Agustus</p>
+                                    <p class="mb-0">Bulan Depan</p>
                                 </div>
                                 <div class="card-body">
-
+                                    <div id='calendar2'></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- FullCalendar -->
+
+
                 </div>
             </div>
         </div>
@@ -304,7 +311,7 @@
     function checkIfWeekend(dateString) {
         const date = new Date(dateString);
         const day = date.getDay(); // 0 = Minggu, 6 = Sabtu
-        return day === 0;
+        return day === 0 || day === 6;
     }
 
     // Fungsi untuk memformat angka ke format Rupiah

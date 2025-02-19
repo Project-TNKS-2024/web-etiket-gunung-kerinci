@@ -114,12 +114,16 @@
                      <td>
                         <b>Tiket Kategori {{$data->gktiket->nama}} WNI</b>
                         <br>
-                        Tiket masuk ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd->weekdays ?? '0'}} +
+                        Tiket masuk weekday ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd->weekdays ?? '0'}} hari +
+                        <br>
                         @if ($data->wkwd->weekends > 0)
-                        Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd->weekends ?? '0'}} +
+                        Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd->weekends ?? '0'}} hari +
                         @endif
-                        Tiket kemah ({{$tiket->harga_kemah ?? '0'}}) x {{$data->total_hari -1}} +
+                        <br>
+                        Tiket kemah ({{$tiket->harga_kemah ?? '0'}}) x {{$data->total_hari -1}} malam +
+                        <br>
                         Tiket pendakian ({{$tiket->harga_traking ?? '0'}}) +
+                        <br>
                         Asuransi ({{$tiket->harga_ansuransi ?? '0'}})
                      </td>
                      <td class="text-end text-nowrap">

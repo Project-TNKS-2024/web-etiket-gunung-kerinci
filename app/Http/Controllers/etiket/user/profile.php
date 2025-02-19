@@ -79,7 +79,7 @@ class profile extends Controller
                 $bioUseNik = bio_pendaki::where('nik', $request->nik)->where('verified', 'verified')->first();
 
                 if ($bioUseNik) {
-                    return $bioUseNik;
+                    // return $bioUseNik;
                     return redirect()->back()->with('error', 'NIK sudah digunakan');
                 }
                 $bio->update([
@@ -98,7 +98,7 @@ class profile extends Controller
                 'last_name' => $request->lastName,
                 'lampiran_identitas' => $filename,
                 'no_hp' => $request->nomor_telepon,
-                'no_hp_darurat' => "0000000000000000",
+                'no_hp_darurat' => null,
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'provinsi' => $request->provinsi,

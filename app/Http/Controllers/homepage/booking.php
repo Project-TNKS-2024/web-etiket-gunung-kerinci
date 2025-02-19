@@ -15,10 +15,12 @@ use App\Models\gk_tiket_pendaki;
 use App\Models\gambar_destinasi;
 use App\Models\gk_paket_tiket;
 use App\Models\pembayaran;
+use App\Models\setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isNull;
 
@@ -58,6 +60,21 @@ class booking extends Controller
         $id_destinasi = $paket->id_destinasi;
         $destinasi = destinasi::with('gates')->where('id', $id_destinasi)->first();
         $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id_destinasi)->get();
+
+        // ambil jumlah pendaki perhari selama 2 bulan kedepan dihitung dari tanggal_masuk, dan booking->verivied==verified
+        $bookingBulanan = gk_booking::where('id_tiket', $id)
+            ->where('status_booking', '>=', 4) // Hanya booking yang sudah diverifikasi
+            ->whereBetween('tanggal_masuk', [
+                Carbon::now()->format('Y-m-d'),
+                Carbon::now()->addMonths(2)->format('Y-m-d')
+            ])
+            // jumlahkan total_pendaki_wni+total_pendaki_wna perbooking tiap hari
+            ->select('tanggal_masuk', DB::raw('SUM(total_pendaki_wni + total_pendaki_wna) as jumlah_pendaki'))
+            ->groupBy('tanggal_masuk')
+            ->orderBy('tanggal_masuk', 'asc')
+            ->get();
+
+        // return $bookingBulanan;
 
         // ambil data tiket
         $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)
@@ -378,6 +395,8 @@ class booking extends Controller
         $formulirPendakis = $request->formulir;
         $upload = new uploadFileControlller();
 
+        $totalTagihan = 0;
+
         foreach ($formulirPendakis as $key => $formulir) {
             $pendaki = gk_pendaki::find($formulir['id_pendaki']);
             $bioPendaki = bio_pendaki::find($formulir['kode_bio']);
@@ -404,6 +423,7 @@ class booking extends Controller
             }
 
             $pendaki->tagihan = $this->helper->getTagihanPendaki($pendaki);
+            $totalTagihan += $pendaki->tagihan;
             $pendaki->save();
         }
 
@@ -417,6 +437,7 @@ class booking extends Controller
             ]);
 
             $booking->status_booking = 3;
+            $booking->total_pembayaran = $totalTagihan;
             $booking->save();
 
             return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking Berhasil disimpan');
@@ -467,31 +488,26 @@ class booking extends Controller
 
         if (!$booking) {
             abort(404);
-        } elseif ($booking->status_booking != 3) {
+        } elseif ($booking->status_booking > 4) {
             return redirect()->route('homepage.booking', ['id' => $id]);
         }
 
         // hapus pembayaran
         $pembayaran = pembayaran::where('id_booking', $id)->get();
-
-        // return $pembayaran;
-        if ($pembayaran->isEmpty()) {
-            // return redirect()->back()->withErrors(['error' => 'Pembayaran tidak ditemukan']);
-
-            $booking->status_booking = 2;
-            // return redirect()->route('homepage.booking.formulir', ['id' => $id]);
+        foreach ($pembayaran as $p) {
+            $p->delete();
         }
 
-        foreach ($pembayaran as $payment) {
-            if ($payment->status == 'success') {
-                return redirect()->back()->withErrors(['error' => 'Pembayaran sudah dibayar']);
-            }
-            $payment->delete();
+        // hapus pendakian
+        $pendakis = gk_pendaki::where('booking_id', $id)->get();
+        foreach ($pendakis as $p) {
+            $p->delete();
         }
 
-        $booking->status_booking = 2;
-        $booking->save();
-        return redirect(route('homepage.booking.formulir', ['id' => $id]));
+        // hapus booking
+        $booking->delete();
+
+        return redirect()->route('homepage.booking.destinasi.list')->with('success', 'Booking berhasil dibatalkan');
     }
 
     public function bookingPayment($id)
@@ -518,6 +534,9 @@ class booking extends Controller
         $verified = $pembayaran->contains('status', 'approved'); // true if at least one 'status' is 'approved'
         $qris = gk_gates::where('id', $booking->gate_masuk)->first()->qris;
 
+        // no bank
+        $Bank = setting::where('id', '0000bank')->first();
+
 
         // dd($verified);
         return view('homepage.booking.bookingPayment', [
@@ -525,6 +544,7 @@ class booking extends Controller
             'booking' => $booking,
             'pendakis' => $booking->pendakis,
             'pembayaran' => $pembayaran,
+            'bank' => $Bank,
             'verified' => $verified, // Pass the verified value to the view
 
         ]);

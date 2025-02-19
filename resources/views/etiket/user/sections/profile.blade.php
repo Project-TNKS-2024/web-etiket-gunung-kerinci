@@ -125,6 +125,7 @@
                     <div class="form-group col-12 col-md-6">
                         <label class="font-semibold mandatory">Jenis Kelamin</label>
                         <select class="form-control form-control border-secondary" name="jenis_kelamin" id="jenis_kelamin">
+                            <option value="" disabled selected> -- Jenis Kelamin -- </option>
                             <option value="l" {{ old('jenis_kelamin', isset($user->biodata->jenis_kelamin) && $user->biodata->jenis_kelamin == 'l' ? 'selected' : '') }}>Laki-Laki</option>
                             <option value="p" {{ old('jenis_kelamin', isset($user->biodata->jenis_kelamin) && $user->biodata->jenis_kelamin == 'p' ? 'selected' : '') }}>Perempuan</option>
                         </select>
@@ -249,14 +250,17 @@
         fetch('/assets/js/telepon.json')
             .then(response => response.json())
             .then(countriesData => {
-                // ambil nilai asli dari input dropdown
                 const defaultCountryCode = inputDropdownCountry.value;
-
-                // ambil div itemm
                 const teleponItem = document.querySelector('#telepon-item');
+
                 countriesData.forEach((country, index) => {
                     if (country.idd.root) {
-                        teleponItem.appendChild(createCountryButton(country));
+                        // cek jika no id tarok di depan prepend()
+                        if (country.idd.root + country.idd.suffixes[0] === '+62') {
+                            teleponItem.prepend(createCountryButton(country));
+                        } else {
+                            teleponItem.appendChild(createCountryButton(country));
+                        }
 
                         if (country.idd.root + country.idd.suffixes[0] === defaultCountryCode) {
                             console.log(country.idd);

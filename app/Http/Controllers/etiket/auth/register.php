@@ -37,6 +37,7 @@ class register extends Controller
         // Membuat user baru berdasarkan data yang diterima
         $user = User::create([
             'email' => $request->email,
+            'gauth_type' => 'manual',
             'password' => Hash::make($request->password),
         ]);
 

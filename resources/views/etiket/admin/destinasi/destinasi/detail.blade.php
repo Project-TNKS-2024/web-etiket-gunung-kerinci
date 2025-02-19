@@ -52,9 +52,17 @@
                </select>
             </fieldset>
          </div>
+         <div class="col-4">
+            <label class="form-label" for="status">Status</label>
+            <fieldset disabled>
+               <select class="form-control borderx" id="status" name="status">
+                  <option selected>{{$destinasi->getStatusGunung()}}</option>
+               </select>
+            </fieldset>
+         </div>
       </div>
 
-      <div class="d-flex justify-content-end mt-2">
+      <div class="d-flex justify-content-end mt-3">
          <a class="btn btn-primary" href="{{route('admin.destinasi.update', ['id' => $destinasi->id])}}">
             <i class="fa-solid fa-pen-to-square me-2"></i> Edit
          </a>

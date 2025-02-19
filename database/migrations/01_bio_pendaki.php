@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('lampiran_identitas');
 
             $table->string('no_hp');
-            $table->string('no_hp_darurat');
+            $table->string('no_hp_darurat')->nullable();
             $table->enum('jenis_kelamin', ['l', 'p']);
             $table->date('tanggal_lahir');
 

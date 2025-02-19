@@ -36,19 +36,29 @@
          </div>
          <div class="col-12 ">
             <div class="row">
-               <div class="col-6">
+               <div class="col-4">
                   <label class="form-label" for="kategori">Kategori</label>
                   <select class="form-control borderx bg-white" id="kategori" name="kategori" required>
                      <option value="taman" {{ $destinasi->kategori == 'taman' ? 'selected' : '' }}>Taman</option>
                      <option value="gunung" {{ $destinasi->kategori == 'gunung' ? 'selected' : '' }}>Gunung</option>
                   </select>
                </div>
-               <div class="col-6">
+               <div class="col-4">
                   <label class="form-label" for="status">Status</label>
                   <select class="form-control borderx bg-white" id="status" name="status" required>
                      <option value="2" {{ $destinasi->status == 2 ? 'selected' : '' }}>{{$destinasi->getStatus(2)}}</option>
                      <option value="1" {{ $destinasi->status == 1 ? 'selected' : '' }}>{{$destinasi->getStatus(1)}}</option>
                      <option value="0" {{ $destinasi->status == 0 ? 'selected' : '' }}>{{$destinasi->getStatus(0)}}</option>
+                  </select>
+               </div>
+               <div class="col-4">
+                  <label class="form-label" for="statusGunung">Status Gunung </label>
+                  <select class="form-control borderx bg-white" id="statusGunung" name="statusGunung" required>
+                     <option value="2" {{ $destinasi->statusGunung == 4 ? 'selected' : '' }}>{{$destinasi->getStatusGunung(4)}}</option>
+                     <option value="2" {{ $destinasi->statusGunung == 3 ? 'selected' : '' }}>{{$destinasi->getStatusGunung(3)}}</option>
+                     <option value="2" {{ $destinasi->statusGunung == 2 ? 'selected' : '' }}>{{$destinasi->getStatusGunung(2)}}</option>
+                     <option value="1" {{ $destinasi->statusGunung == 1 ? 'selected' : '' }}>{{$destinasi->getStatusGunung(1)}}</option>
+                     <option value="0" {{ $destinasi->statusGunung == 0 ? 'selected' : '' }}>{{$destinasi->getStatusGunung(0)}}</option>
                   </select>
                </div>
             </div>

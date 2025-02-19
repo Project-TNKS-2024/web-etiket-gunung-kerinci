@@ -187,40 +187,59 @@
 </style>
 @endsection
 
-@section('main')
-<div class="position-relative overflow-hidden text-center bg-body-tertiary" style="">
-    <div class="my-5 w-100">
-        <div class="row px-4 gap-4 w-100 mx-auto justify-content-center">
-            <div class="col-12 col-lg-5 welcome-text">
-                <header class="top">Selamat Datang di Website Resmi </header>
-                <div class="divider"></div>
+@section('main')<div class="position-relative overflow-hidden text-center bg-body-tertiary py-5">
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            <!-- Bagian Selamat Datang -->
+            <div class="col-12 col-md-6 col-lg-8 welcome-text text-lg-start text-center">
+                <header class="top">Selamat Datang di Website Resmi</header>
+                <div class="divider mx-auto"></div>
                 <header class="bottom">Taman Nasional Kerinci Seblat</header>
-                <a class="booking" href="{{ route('homepage.booking.destinasi.paket', ['id' => 1]) }}">Booking Online</a>
+                <a class="btn btn-primary mt-3" href="{{ route('homepage.booking.destinasi.paket', ['id' => 1]) }}">
+                    Booking Online
+                </a>
             </div>
-            <div class="col-12 col-lg-4 welcome-text header-right widget">
-                <section class="col-12 glassmorphic card row info">
-                    {{$total_mendaki}} orang sedang mendaki Gunung Kerinci
-                </section>
-                <section class="col-12 glassmorphic card row weather ">
-                    <div class="col-7">Cuaca Gunung Kerinci Hari Ini</div>
-                    <div class="col-4">
-                        <img width="50" id="weather-icon" src="{{$weatherData['current']['condition']['icon']}}" />
-                        <span style="font-weight: 300; font-size: 24px;"><span id="temp_c">{{$weatherData['current']['temp_c']}}</span>&deg;c</span>
-                    </div>
-                </section>
-                <section class="col-12 glassmorphic card row status">
-                    <div class="col-7">Status Gunung Kerinci</div>
-                    <div class="col-4" style="display: flex; gap: 10px;" id="status-gunung">
-                        <section
-                            style="width: 20px; height: 20px; border-radius: 100%; background: rgba(251, 112, 49, 1);">
+
+            <!-- Bagian Info Cuaca & Status Gunung -->
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="row g-3">
+                    <!-- Info Pendaki -->
+                    <div class="col-12 col-sm-4 col-md-12">
+                        <section class="glassmorphic card p-3 d-flex align-items-center justify-content-between">
+                            <div class="fw-bold">Pendaki Saat Ini</div>
+                            <div class="fs-5 fw-semibold text-primary">{{$total_mendaki}} orang</div>
                         </section>
-                        <span id="status-text" style="font-size: 12px; font-weight: 500;"> II Waspada</span>
                     </div>
-                </section>
+
+                    <!-- Cuaca Gunung -->
+                    <div class="col-12 col-sm-4 col-md-12">
+                        <section class="glassmorphic card p-3 d-flex align-items-center justify-content-between">
+                            <div>Cuaca Gunung Kerinci</div>
+                            <div class="d-flex align-items-center">
+                                <img width="40" id="weather-icon" src="{{$weatherData['current']['condition']['icon']}}" alt="Cuaca">
+                                <span class="ms-2 fw-bold fs-5">
+                                    <span id="temp_c">{{$weatherData['current']['temp_c']}}</span>&deg;C
+                                </span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Status Gunung -->
+                    <div class="col-12 col-sm-4 col-md-12">
+                        <section class="glassmorphic card p-3 d-flex align-items-center justify-content-between">
+                            <div>Status Gunung Kerinci</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <div style="width: 20px; height: 20px; border-radius: 50%; background: rgba(251, 112, 49, 1);"></div>
+                                <span class="fw-bold" id="status-text">{{$destinasi[0]->getStatusGunung()}}</span>
+                            </div>
+                        </section>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <div class="container">

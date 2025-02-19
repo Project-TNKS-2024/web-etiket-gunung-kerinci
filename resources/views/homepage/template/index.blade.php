@@ -125,6 +125,12 @@
             font-size: 16px !important;
         }
 
+        label.mandatory::after {
+            content: " *";
+            color: red;
+        }
+
+
         /* footer homepage */
         footer {
             background-color: white;

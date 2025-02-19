@@ -120,7 +120,7 @@
 'caption' => 'Detail Booking',
 ])
 <div class="container my-5">
-    @include('homepage.booking.booking-nav', ['step' => 2])
+    @include('homepage.booking.booking-nav', ['step' => 3])
 
     <div class="card border-0 shadow">
         <div class="card-body px-4 px-md-5 pb-4">
@@ -164,79 +164,7 @@
                 </div>
             </div>
             <hr>
-            <!-- @foreach ($formulirPendakis as $key => $pendaki)
-            <div class=" mt-4">
-                <h1 class="fs-5 fw-bold">
-                    @if ($key === 0)
-                    Biodata Ketua
-                    @else
-                    Biodata Pendaki {{ $key }}
-                    @endif
-                </h1>
-                <div class="row">
-                    <div class="row">
-                        <div class="col-12 col-lg-6">
-                            <div class="mb-3">
-                                <label for="first_name" class="form-label my-0">Nama</label>
-                                <input readonly disabled type="text" class="form-control" id="first_name" name="first_name"
-                                    value="{{ $pendaki->first_name.' '.$pendaki->last_name }}" required>
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="first_name" class="form-label my-0">Nama</label>
-                                <input readonly disabled type="text" class="form-control" id="first_name" name="first_name"
-                                    value="{{ $pendaki->kategori_pendaki == 'wni' ? 'Warga Negara Asing' : 'Warga Negara Indonesia' }}" required>
-                            </div>
-
-                            <div class="row">
-                                <div class="mb-3 col-12 col-sm-6">
-                                    <label for="no_hp" class="form-label my-0">No Telepon</label>
-                                    <input readonly disabled type="text" class="form-control" id="no_hp" name="no_hp"
-                                        value="{{ $pendaki->biodata->no_hp }}" required>
-                                </div>
-
-                                <div class="mb-3 col-12 col-sm-6">
-                                    <label for="no_hp_darurat" class="form-label my-0">No Telepon Darurat</label>
-                                    <input readonly disabled type="text" class="form-control" id="no_hp_darurat" name="no_hp_darurat"
-                                        value="{{ $pendaki->biodata->no_hp_darurat }}" required>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="usia" class="form-label my-0">Usia</label>
-                                <input readonly disabled type="number" class="form-control" id="usia" name="usia"
-                                    value="{{ intval(\Carbon\Carbon::parse(now())->isoFormat('Y')) - intval(\Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('Y')) }}"
-                                    readonly>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="col-12 col-lg-6">
-                        @if ($pendaki->lampiran_surat_izin_ortu)
-                        <div class="border rounded p-2" style="max-height: 300px; overflow: hidden;">
-                            @php
-                            $extension = pathinfo(
-                            $pendaki->lampiran_surat_izin_ortu,
-                            PATHINFO_EXTENSION,
-                            );
-                            @endphp
-
-
-                            @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']))
-                            <img src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
-                                alt="Lampiran Identitas" class="img-fluid"
-                                style="max-height: 280px; width: auto; display: block; margin: 0 auto;">
-                            @else
-                            <embed src="{{ asset($pendaki->biodata->lampiran_identitas) }}"
-                                type="application/pdf" width="100%" height="280px">
-                            @endif
-                        </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            @endforeach -->
             @foreach ($formulirPendakis as $key => $pendaki)
             <div class=" mt-4">
                 <h1 class="fs-5 fw-bold">
@@ -316,37 +244,39 @@
             <hr>
             <div class="mt-3">
                 <h1 class="fs-5 fw-bold">Barang Bawaan Wajib</h1>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="barangWajib[perlengkapan_gunung_standar]"
-                        value="1" checked readonly>
-                    <label class="form-check-label" for="perle_gunung">
-                        Perlengkapan Standar Pendaki Gunung
-                    </label>
-                </div>
+                <fieldset disabled>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="barangWajib[perlengkapan_gunung_standar]"
+                            value="1" checked readonly>
+                        <label class="form-check-label" for="perle_gunung">
+                            Perlengkapan Standar Pendaki Gunung
+                        </label>
+                    </div>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="barangWajib[trash_bag]" value="1"
-                        id="trash_bag" checked readonly>
-                    <label class="form-check-label" for="trash_bag">
-                        Trash Bag
-                    </label>
-                </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="barangWajib[trash_bag]" value="1"
+                            id="trash_bag" checked readonly>
+                        <label class="form-check-label" for="trash_bag">
+                            Trash Bag
+                        </label>
+                    </div>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="barangWajib[p3k_standart]" value="1"
-                        id="p3k_standart" checked readonly>
-                    <label class="form-check-label" for="p3k_standart">
-                        P3K Standart
-                    </label>
-                </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="barangWajib[p3k_standart]" value="1"
+                            id="p3k_standart" checked readonly>
+                        <label class="form-check-label" for="p3k_standart">
+                            P3K Standart
+                        </label>
+                    </div>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="barangWajib[survival_kit_standart]"
-                        value="1" id="survival_kit_standart" checked readonly>
-                    <label class="form-check-label" for="survival_kit_standart">
-                        Survival Kit Standart
-                    </label>
-                </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="barangWajib[survival_kit_standart]"
+                            value="1" id="survival_kit_standart" checked readonly>
+                        <label class="form-check-label" for="survival_kit_standart">
+                            Survival Kit Standart
+                        </label>
+                    </div>
+                </fieldset>
 
             </div>
         </div>
@@ -354,10 +284,14 @@
 
     <div class="row">
         <div class="col-12 col-md-4">
+            @if ($booking->status_booking <=3)
+                <a type="submit" class="btn btn-warning w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Booking</a>
+                @endif
+        </div>
+        <div class="col-12 col-md-4">
             <a type="submit" class="btn btn-primary w-100 fw-bold mt-3"
                 href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}">Kembali</a>
         </div>
-        <div class="col-12 col-md-4"></div>
         <div class="col-12 col-md-4 text-end">
             <a type="submit" class="btn btn-primary w-100 fw-bold mt-3"
                 href="{{ route('homepage.booking.payment', ['id' => $booking->id]) }}">Selanjutnya</a>
@@ -367,5 +301,27 @@
 @endsection
 @section('js')
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function openswal(event, button) {
+        event.preventDefault(); // Mencegah navigasi otomatis
+
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect ke halaman pembatalan booking
+                window.location.href = button.getAttribute("href");
+            }
+        });
+    }
+</script>
 
 @endsection

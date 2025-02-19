@@ -3,8 +3,8 @@
       <input type="hidden">
 
       <div class="row mb-3">
-         <div class="col-12 col-md-6">
-            <label class="w-100 fw-bold mandatory">Kode Pendaki</label>
+         <div class="col-12 col-md-6 form-group">
+            <label class="mandatory fw-bold">Kode Pendaki</label>
             <div class="input-group mb-3">
                <input type="text" class="form-control" placeholder="Kode User" name="formulir[{{$i}}][kode_bio]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->id : '' }}">
                <input type="hidden" class="form-control" name="formulir[{{$i}}][id_pendaki]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->id : '' }}">
@@ -52,7 +52,7 @@
          <div class="col-12 col-md-6">
             <div class="row">
                <div class="col-12 col-md-6">
-                  <label class="w-100 fw-bold mandatory">No Telepon</label>
+                  <label class="w-100 fw-bold">No Telepon</label>
                   <input type="text" class="form-control" name="formulir[{{$i}}][no_hp]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->no_hp : '' }}" readonly disabled>
                   <span class="keterangan"></span>
                </div>

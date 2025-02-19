@@ -50,7 +50,7 @@
 ])
 
 <div class="container my-5">
-    @include('homepage.booking.booking-nav', ['step' => 2])
+    @include('homepage.booking.booking-nav', ['step' => $booking->status_booking])
 
     <div id="booking-detail">
         <p class=" text-center">
@@ -166,8 +166,8 @@
                                 <div class="bank-info mb-4 d-flex align-items-center justify-content-between bg-light p-3 rounded-3 shadow-sm">
                                     <!-- Informasi Rekening -->
                                     <div class="d-flex flex-column">
-                                        <span class="fs-5 fw-semibold text-dark">7338 0102 6542 535</span>
-                                        <span class="fs-6 text-secondary">a.n PT. Gunung Kerinci</span>
+                                        <span class="fs-5 fw-semibold text-dark">{{$bank->text1}}</span>
+                                        <span class="fs-6 text-secondary">{{$bank->text2}}</span>
                                     </div>
                                     <!-- Nama Bank -->
                                     <div
@@ -177,18 +177,20 @@
                                 </div>
                                 <p class="mb-0">Cara Pembayaran</p>
                                 <ul>
-                                    <li>Datangi ATM terdekat</li>
-                                    <li>Masukkan kartu ATM BRI</li>
-                                    <li>Pilih bahasa selama transaksi</li>
-                                    <li>Masukkan pin kartu ATM</li>
-                                    <li>Pilih menu Transfer Lainnya dan klik Tranfer</li>
-                                    <li>Masukkan kode bank BRI 002 diikuti nomor rekening BRI yang dituju, misal: 002(4455XXXXXXXX)</li>
-                                    <li>Masukkan nominal yang ingin ditransfer lalu klik Benar atau Ya</li>
-                                    <li>Lanjut pilih jenis rekening Tabungan atau Giro</li>
-                                    <li>Transaksi segera diproses</li>
-                                    <li>Keluar struk atau info di layar jika transfer berhasil.</li>
-                                    <li>Foto bukti pembayaran dan upload bukti pembayaran di bawah.</li>
+                                    <li>Kunjungi ATM BRI atau ATM Bersama terdekat.</li>
+                                    <li>Masukkan kartu ATM dan pilih bahasa transaksi.</li>
+                                    <li>Masukkan PIN ATM Anda dengan benar.</li>
+                                    <li>Pilih menu <strong>"Transfer"</strong> lalu pilih <strong>"Ke Rekening Bank Lain"</strong> atau <strong>"Transfer Antar Bank"</strong>.</li>
+                                    <li>Masukkan kode bank BRI (<strong>002</strong>) diikuti nomor rekening tujuan: <br>
+                                        <strong>{{$bank->text1}}</strong> ({{$bank->text2}}).
+                                    </li>
+                                    <li>Masukkan nominal yang ingin ditransfer.</li>
+                                    <li>Konfirmasi detail transaksi, pastikan nama penerima sesuai.</li>
+                                    <li>Pilih jenis rekening (Tabungan/Giro) dan selesaikan transaksi.</li>
+                                    <li>Simpan struk transaksi atau screenshot bukti transfer.</li>
+                                    <li>Upload bukti pembayaran di bawah untuk verifikasi.</li>
                                 </ul>
+
                             </div>
                         </div>
                     </div>
@@ -211,8 +213,14 @@
                                 </div>
                                 <p class="mb-0">Cara Pembayaran</p>
                                 <ul>
-                                    <li>lorem</li>
+                                    <li>Buka aplikasi m-banking atau dompet digital (OVO, GoPay, DANA, ShopeePay, dll.).</li>
+                                    <li>Pilih menu <strong>"Scan QR"</strong> dan arahkan kamera ke QRIS yang tertera.</li>
+                                    <li>Pastikan nama penerima adalah <i>nama yang terteri di barcode di atas</i>.</li>
+                                    <li>Masukkan jumlah pembayaran yang sesuai.</li>
+                                    <li>Konfirmasi dan selesaikan pembayaran.</li>
+                                    <li>Simpan bukti transaksi dan upload bukti pembayaran di bawah.</li>
                                 </ul>
+
                             </div>
                         </div>
                     </div>
@@ -323,7 +331,7 @@
     <div class="row">
         <div class="col-12 col-md-4">
             @if ($booking->status_booking <=3)
-                <a type="submit" class="btn btn-warning w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}">Batalkan Pembayaran</a>
+                <a type="submit" class="btn btn-warning w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Booking</a>
                 @endif
         </div>
         <div class="col-12 col-md-4"></div>
@@ -339,4 +347,27 @@
 @section('js')
 <!-- script modal show file -->
 @include('homepage.template.modal-prefiewFile')
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function openswal(event, button) {
+        event.preventDefault(); // Mencegah navigasi otomatis
+
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Batal"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect ke halaman pembatalan booking
+                window.location.href = button.getAttribute("href");
+            }
+        });
+    }
+</script>
 @endsection

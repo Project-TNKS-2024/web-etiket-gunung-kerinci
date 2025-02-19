@@ -26,8 +26,10 @@
         <a href="{{ route('user.dashboard.reiwayat') }}" id="dashboard-profile"
             class="dashboard-sidebar-btn rounded-lg">Riwayat Booking</a>
 
+        @if (auth()->user()->gauth_type == 'manual')
         <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
             class="dashboard-sidebar-btn rounded-lg">Ubah Password</a>
+        @endif
 
         <!-- Bagian Logout -->
         <form action="{{ route('etiket.auth.logout') }}" class="mt-auto" method="post">

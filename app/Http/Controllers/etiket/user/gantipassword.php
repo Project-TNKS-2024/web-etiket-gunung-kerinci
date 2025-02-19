@@ -14,11 +14,16 @@ class GantiPassword extends Controller
     {
         return view('etiket.user.sections.ganti-password');
     }
-
+    public function __construct()
+    {
+        // cek apakah user.gauth_type = manual
+        if (Auth::user()->gauth_type !== 'manual') {
+            return redirect()->route('user.dashboard')->with('error', 'Anda tidak memiliki akses untuk mengakses halaman ini.');
+        }
+    }
     public function resetAction(Request $request)
     {
         // Actual logic
-        $email = Auth::user()->email;
         $request->validate([
             'password_baru' => 'required|string|min:8|confirmed',
         ], [
@@ -30,25 +35,12 @@ class GantiPassword extends Controller
             'password_baru.confirmed' => 'Periksa kembali password.',
         ]);
 
-        return Auth::user()->email;
-        // Find the user by email
-
-        $user = User::where(
-            'email',
-            $email
-        )->first();
-
-        if (!$user) {
-            return back()->with(['error' => 'Email tidak ditemukan.']);
-        }
+        $user = User::where('email', Auth::user()->email)->first();
 
         // Update the user's password
         $user->password = Hash::make($request->password);
-        // If authentication fails
-        // Redirect to login page with success message
+
         if ($user->save())
-            return back()->with('status', 'Password Anda telah berhasil direset.');
-
-
+            return back()->with('success', 'Password Anda telah berhasil direset.');
     }
 }

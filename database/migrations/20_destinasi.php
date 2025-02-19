@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->integer('status')->default(1);
+            $table->integer('statusGunung')->default(1);
             $table->enum('kategori', ['taman', 'gunung']);
             $table->string('lokasi');
             $table->text('detail')->nullable();
