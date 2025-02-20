@@ -24,7 +24,7 @@
             <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
                 required>
         </div>
-
+    
         <div class="form-group mb-3">
             <button type="submit" class="btn btn-primary w-100">Atur Ulang Kata Sandi</button>
         </div>

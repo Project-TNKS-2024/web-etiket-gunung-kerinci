@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\etiket\auth;
 
+use App\Events\EmailResetPasswordRequested;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Mail\MyTestEmail;
+use App\Mail\ResetPasswordMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -46,7 +48,8 @@ class lupapassword extends Controller
 
         // return $credentials['email'];
 
-        Mail::to($credentials['email'])->send(new MyTestEmail($token));
+        Mail::to($credentials['email'])->send(new ResetPasswordMail($token));
+
         return view('etiket.auth.lupa-confirm', ['email' => $credentials['email']]);
     }
 

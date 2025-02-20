@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\EmailResetPasswordRequested;
+use App\Listeners\SendPasswordResetEmail;
 use App\Models\destinasi as ModelDestinasi;
 use App\Models\setting;
 use Illuminate\Auth\Notifications\VerifyEmail;

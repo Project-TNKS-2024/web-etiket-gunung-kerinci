@@ -5,9 +5,12 @@ namespace App\Http\Controllers\etiket\admin\destinasi;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\helper\BookingHelperController;
 use App\Http\Controllers\helper\uploadFileControlller;
+use App\Mail\BookingPayment;
 use App\Models\destinasi;
 use App\Models\gk_booking;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class pembayaranController extends AdminController
 {
@@ -90,6 +93,7 @@ class pembayaranController extends AdminController
         ]);
 
         $booking = gk_booking::with('pembayaran')->findOrFail($request->id_booking);
+        $userBooking = User::with('biodata')->find($booking->id_user);
         if (!$booking) {
             abort(404);
         }
@@ -104,6 +108,16 @@ class pembayaranController extends AdminController
             $booking->update([
                 'dataStruk' => $struk,
             ]);
+
+            $order = [
+                'name' => $userBooking->biodata->first_name . ' ' . $userBooking->biodata->last_name,
+                'booking_code' => $booking->unique_code,
+                'amount' => $booking->total_pembayaran,
+                'payment_date' => $booking->pembayaran->last()->created_at,
+                'invoice_url' => route('homepage.booking.struk', $booking->id),
+                'email' => $userBooking->email,
+            ];
+            Mail::to($userBooking->email)->send(new BookingPayment($order));
         } else {
             if ($booking->status_booking > 4) {
                 return redirect()->back()->withErrors('Bookingan sudah melakukan pendakian');
