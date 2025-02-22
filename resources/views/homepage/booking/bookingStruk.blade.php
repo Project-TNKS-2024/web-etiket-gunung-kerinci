@@ -115,8 +115,8 @@
                         <b>Tiket Kategori {{$data->gktiket->nama}} WNI</b>
                         <br>
                         Tiket masuk weekday ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd->weekdays ?? '0'}} hari +
-                        <br>
                         @if ($data->wkwd->weekends > 0)
+                        <br>
                         Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd->weekends ?? '0'}} hari +
                         @endif
                         <br>

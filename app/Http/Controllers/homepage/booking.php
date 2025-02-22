@@ -50,6 +50,32 @@ class booking extends Controller
             'gambar' => $gambar_destinasi,
         ]);
     }
+    public function GateCapacity($idTiket, $startDate, $endDate = null, $idGate = null)
+    {
+        if (!$endDate) {
+            $endDate = Carbon::parse($startDate)->addMonths(2)->format('Y-m-d');
+        }
+
+        $query = gk_booking::where('id_tiket', $idTiket)
+            ->with('gateMasuk')
+            ->where('status_booking', '>=', 4)
+            ->whereBetween('tanggal_masuk', [$startDate, $endDate])
+            ->select(
+                'tanggal_masuk',
+                'gate_masuk',
+                DB::raw('SUM(total_pendaki_wni + total_pendaki_wna) as jumlah_pendaki')
+            )
+            ->groupBy('tanggal_masuk', 'gate_masuk')
+            ->orderBy('tanggal_masuk', 'asc');
+
+        // Filter berdasarkan ID Gate jika diberikan
+        if (!is_null($idGate)) {
+            $query->where('gate_masuk', $idGate);
+        }
+
+        return $query->get();
+    }
+
 
     public function destinasiTiket($id)
     {
@@ -62,19 +88,7 @@ class booking extends Controller
         $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id_destinasi)->get();
 
         // ambil jumlah pendaki perhari selama 2 bulan kedepan dihitung dari tanggal_masuk, dan booking->verivied==verified
-        $bookingBulanan = gk_booking::where('id_tiket', $id)
-            ->where('status_booking', '>=', 4) // Hanya booking yang sudah diverifikasi
-            ->whereBetween('tanggal_masuk', [
-                Carbon::now()->format('Y-m-d'),
-                Carbon::now()->addMonths(2)->format('Y-m-d')
-            ])
-            // jumlahkan total_pendaki_wni+total_pendaki_wna perbooking tiap hari
-            ->select('tanggal_masuk', DB::raw('SUM(total_pendaki_wni + total_pendaki_wna) as jumlah_pendaki'))
-            ->groupBy('tanggal_masuk')
-            ->orderBy('tanggal_masuk', 'asc')
-            ->get();
-
-        // return $bookingBulanan;
+        $bookingBulanan = $this->GateCapacity($id, now());
 
         // ambil data tiket
         $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)
@@ -86,6 +100,7 @@ class booking extends Controller
             'destinasi' => $destinasi,
             'gambar' => $gambar_destinasi,
             'tiket' => $tiket,
+            'bookingBulanan' => $bookingBulanan,
         ]);
     }
 
@@ -105,25 +120,35 @@ class booking extends Controller
         // cek user verified
         $user = User::where('id', Auth::user()->id)
             ->with('biodata')->first();
-
-        // return $user;
         if (!$user->biodata or $user->biodata->verified != 'verified') {
             return redirect()->route('user.dashboard.profile')->with('error', 'Biodata anda belum terverifikasi');
         }
 
-
+        // cek tanggal masuk < tanggal keluar
         $dateStart = Carbon::createFromFormat('Y-m-d', $request->date_start);
         $dateEnd = Carbon::createFromFormat('Y-m-d', $request->date_end);
         $totalDays = $dateStart->diffInDays($dateEnd) + 1;
-
         if ($dateStart > $dateEnd) {
             return back()->with('error', 'Error: Tanggal tidak sesuai');
         }
 
-        if ($request->wni + $request->wna < 2) {
-            return back()->with('error', 'Error: Jumlah pendaki tidak mencukupi. Minimal 2 orang');
+        // cek jumlah min pendaki
+        $tiket = gk_tiket_pendaki::where('id', $request->jenis_tiket)->with('paket_tiket')->first();
+        if ($request->wni + $request->wna < $tiket->paket_tiket->min_pendaki) {
+            return back()->with('error', 'Error: Jumlah pendaki tidak mencukupi. Minimal ' . $tiket->paket_tiket->min_pendaki . ' orang');
         }
 
+        // cek kapasitas gate
+        $gates = gk_gates::where('id', $request->gerbang_masuk)->first();
+        $kapasitas = collect($this->GateCapacity($request->jenis_tiket, $request->date_start, $request->date_start, $request->gerbang_masuk));
+        if (!$kapasitas->isEmpty()) {
+            if ($gates->max_pendaki_hari < $kapasitas->first()->jumlah_pendaki + $request->wni + $request->wna) {
+                return back()->with('error', 'Error: Kapasitas penuh');
+            }
+            return 'tidak';
+        }
+
+        // cari booking terakhir yang blm di verifikasi
         $booking = gk_booking::where('id_user', Auth::user()->id)
             ->where('status_booking', '<', 4)
             ->orderBy('created_at', 'desc')
@@ -219,8 +244,6 @@ class booking extends Controller
             return redirect(route('homepage.booking', ['id' => $id]));
         }
         $destinasi = destinasi::where('id', $booking->gktiket->id_destinasi)->first();
-        // return $destinasi;
-        // return $booking;
         return view('homepage.booking.bookingSnk', [
             'id' => $id,
             'destinasi' => $destinasi,
@@ -396,10 +419,18 @@ class booking extends Controller
         $upload = new uploadFileControlller();
 
         $totalTagihan = 0;
+        $wni = 0;
+        $wna = 0;
 
         foreach ($formulirPendakis as $key => $formulir) {
             $pendaki = gk_pendaki::find($formulir['id_pendaki']);
             $bioPendaki = bio_pendaki::find($formulir['kode_bio']);
+
+            if ($bioPendaki->kenegaraan == 'wni') {
+                $wni++;
+            } else {
+                $wna++;
+            }
 
             if (!$bioPendaki) {
                 return back()->withErrors(['formulir' => 'Bio pendaki tidak ditemukan']);
@@ -436,6 +467,8 @@ class booking extends Controller
                 'barangWajib.survival_kit_standart' => 'required|boolean',
             ]);
 
+            $booking->total_pendaki_wni = $wni;
+            $booking->total_pendaki_wna = $wna;
             $booking->status_booking = 3;
             $booking->total_pembayaran = $totalTagihan;
             $booking->save();

@@ -181,48 +181,33 @@ class destinasiController extends AdminController
             'qris' => 'nullable|image|mimes:jpg,png,jpeg|max:1048', // Make QRIS optional
         ]);
 
+        // return $request;
         // Find the gate
         $gate = ModelGates::find($request->id_gate);
 
-        // Update gate details
+        $dataUpdate = [
+            'nama' => $request->nama,
+            'status' => $request->status,
+            'max_pendaki_hari' => $request->max_pendaki_hari,
+            'min_pendaki_booking' => $request->min_pendaki_booking,
+            'lokasi' => $request->lokasi,
+            'lokasi_maps' => $request->lokasi_maps,
+            'detail' => $request->detail,
+        ];
 
         if ($request->hasFile('qris')) {
             $uploadController = new uploadFileControlller();
-
             if ($gate->qris) {
-                // Update the existing QRIS file
                 $path = $uploadController->upadate($gate->qris->path, $request->file('qris'));
-
-                // Update QRIS entry in the database
-                $gate->update([
-                    'nama' => $request->nama,
-                    'status' => $request->status,
-                    'max_pendaki_hari' => $request->max_pendaki_hari,
-                    'min_pendaki_booking' => $request->min_pendaki_booking,
-                    'lokasi' => $request->lokasi,
-                    'lokasi_maps' => $request->lokasi_maps,
-                    'detail' => $request->detail,
-                    'qris' => $path,
-                ]);
+                $dataUpdate['qris'] = $path;
             } else {
-                // Upload the new QRIS file
-                $path = $uploadController->create($type = 'foto', $folder = 'qris', $request->file('qris'));
-
-                // Create a new QRIS record
-                $gate->update([
-                    'nama' => $request->nama,
-                    'status' => $request->status,
-                    'max_pendaki_hari' => $request->max_pendaki_hari,
-                    'min_pendaki_booking' => $request->min_pendaki_booking,
-                    'lokasi' => $request->lokasi,
-                    'lokasi_maps' => $request->lokasi_maps,
-                    'detail' => $request->detail,
-                    'qris' => $path,
-                ]);
+                $path = $uploadController->create('foto', 'qris', $request->file('qris'));
+                $dataUpdate['qris'] = $path;
             }
         }
 
-        // Check if a QRIS record exists
+        $gate->update($dataUpdate);
+
 
         // Redirect with success message
         return back()->with('success', 'Berhasil update gate');

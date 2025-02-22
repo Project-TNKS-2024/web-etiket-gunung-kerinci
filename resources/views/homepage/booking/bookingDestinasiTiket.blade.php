@@ -2,6 +2,12 @@
 
 
 @section('css')
+<style>
+    .fc-daygrid-day-top a {
+        text-decoration: none !important;
+        color: inherit;
+    }
+</style>
 @endsection
 
 @section('main')
@@ -196,7 +202,7 @@
                         <div class="col-12 col-lg-6 mb-3 mb-lg-0">
                             <div class="card">
                                 <div class="card-header">
-                                    <p class="mb-0">Bulan Saat Ini</p>
+                                    <p class="mb-0">{{ \Carbon\Carbon::now()->format('F Y') }}</p>
                                 </div>
                                 <div class="card-body">
                                     <div id='calendar1'></div>
@@ -208,7 +214,7 @@
                         <div class="col-12 col-lg-6 mb-3 mb-lg-0">
                             <div class="card">
                                 <div class="card-header">
-                                    <p class="mb-0">Bulan Depan</p>
+                                    <p class="mb-0">{{ \Carbon\Carbon::now()->addMonth()->format('F Y') }}</p>
                                 </div>
                                 <div class="card-body">
                                     <div id='calendar2'></div>
@@ -216,10 +222,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- FullCalendar -->
-
-
                 </div>
             </div>
         </div>
@@ -229,6 +231,51 @@
 @endsection
 
 @section('js')
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+
+<script>
+    var divCalendars = [
+        document.getElementById('calendar1'),
+        document.getElementById('calendar2'),
+    ]
+
+    const dataBulanan = JSON.parse('@json($bookingBulanan)');
+
+    function getDate(index) {
+        let today = new Date();
+        return new Date(today.getFullYear(), today.getMonth() + index, 1);
+    }
+
+    // Mengubah dataBulanan menjadi format FullCalendar
+    var eventsData = dataBulanan.map(item => ({
+        title: `${item.gate_masuk.nama}: ${item.jumlah_pendaki} / ${item.gate_masuk.max_pendaki_hari}`,
+        start: item.tanggal_masuk,
+        allDay: true
+    }));
+
+    divCalendars.forEach((div, index) => {
+        var calendar = new FullCalendar.Calendar(div, {
+            initialView: 'dayGridMonth',
+            themeSystem: 'bootstrap5',
+            headerToolbar: false,
+            initialDate: getDate(index),
+            weekNumbers: false,
+            dayMaxEvents: false,
+            height: 'auto', // Pastikan tinggi menyesuaikan konten
+            contentHeight: 'auto',
+            dayMaxEventRows: 9999,
+            eventContent: function(arg) {
+                return {
+                    html: `<div style="white-space: normal; word-wrap: break-word; font-size: 12px;">${arg.event.title}</div>`
+                };
+            },
+            events: eventsData,
+        });
+        calendar.render();
+    });
+</script>
+
 
 <script>
     // Data harga tiket
