@@ -245,7 +245,7 @@
       </div>
       <div class="d-flex justify-content-end">
          <a class="btn btn-primary"
-            data-bs-toggle="collapse" href="#CollapseTambahGates">
+            data-bs-toggle="collapse" href="#CollapseTambahFoto">
             <i class="fa-solid fa-plus me-2"></i>Tambah
          </a>
 

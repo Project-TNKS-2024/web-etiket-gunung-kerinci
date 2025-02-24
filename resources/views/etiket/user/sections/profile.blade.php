@@ -82,11 +82,19 @@
                         </div>
                         <span class="keterangan" style="font-size: 12px;">Lampiran KTP, Max 500kb</span>
                     </div>
+                    @if (isset($user->biodata) and ($user->biodata->verified !== 'unverified'))
                     <div class="form-group col-12 iptFile-label">
-                        <label for="lampiran_identitas" class="w-100 fw-bold mandatory">Lampiran Identitas</label>
-                        <input value="{{ $user->biodata ? $user->biodata->lampiran_identitas : null }}" type="text" class="form-control border-secondary">
+                        <label for="lampiran_save" class="w-100 fw-bold mandatory">Lampiran Identitas</label>
+                        <div class="input-group flex-nowrap">
+                            <input class="form-control border-secondary d-none" type="file" id="lampiran_save" accept="image/*,.pdf">
+                            <input value="{{ $user->biodata ? asset( $user->biodata->lampiran_identitas) : null }}" type="text" class="form-control border-secondary" id="lampiran_save_existing">
+                            <button class="input-group-text border-secondary" type="button" data-id-target="lampiran_save">
+                                <i class=" fa-regular fa-eye"></i>
+                            </button>
+                        </div>
                         <span class="keterangan" style="font-size: 12px;">Lampiran KTP, Max 500kb</span>
                     </div>
+                    @endif
 
                     <!-- Nationality -->
                     <div class="form-group col-12 col-md-6">
