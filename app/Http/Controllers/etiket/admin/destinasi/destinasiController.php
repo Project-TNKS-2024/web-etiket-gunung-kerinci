@@ -83,6 +83,7 @@ class destinasiController extends AdminController
             'foto_detail' => 'required|string|max:500', // Added max length constraint
         ]);
 
+        return $request;
         try {
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
@@ -103,7 +104,7 @@ class destinasiController extends AdminController
             }
         } catch (Exception $e) {
             Log::error('Error uploading file: ' . $e->getMessage());
-            return back()->withErrors(['Terjadi kesalahan saat mengupload gambar: ' . $e->getMessage()]);
+            return back()->withErrors('Terjadi kesalahan saat mengupload gambar: ' . $e->getMessage());
         }
     }
     public function pictureDeleteAction(Request $request)
