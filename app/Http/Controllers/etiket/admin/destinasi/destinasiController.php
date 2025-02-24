@@ -103,7 +103,7 @@ class destinasiController extends AdminController
             }
         } catch (Exception $e) {
             Log::error('Error uploading file: ' . $e->getMessage());
-            return back()->withErrors(['database' => 'Terjadi kesalahan saat mengupload gambar: ' . $e->getMessage()]);
+            return back()->withErrors(['Terjadi kesalahan saat mengupload gambar: ' . $e->getMessage()]);
         }
     }
     public function pictureDeleteAction(Request $request)
