@@ -84,7 +84,7 @@
                     </div>
                     <div class="form-group col-12 iptFile-label">
                         <label for="lampiran_identitas" class="w-100 fw-bold mandatory">Lampiran Identitas</label>
-                        <input value="{{ $user->biodata->lampiran_identitas ? $user->biodata->lampiran_identitas : null }}" type="text" class="form-control border-secondary">
+                        <input value="{{ $user->biodata ? $user->biodata->lampiran_identitas : null }}" type="text" class="form-control border-secondary">
                         <span class="keterangan" style="font-size: 12px;">Lampiran KTP, Max 500kb</span>
                     </div>
 
