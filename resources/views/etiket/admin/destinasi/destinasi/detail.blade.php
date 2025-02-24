@@ -55,7 +55,7 @@
          <div class="col-4">
             <label class="form-label" for="status">Status</label>
             <fieldset disabled>
-               <select class="form-control borderx" id="status" name="status">
+               <select class="form-control borderx" id="statusGunung" name="statusGunung">
                   <option selected>{{$destinasi->getStatusGunung()}}</option>
                </select>
             </fieldset>
@@ -259,30 +259,32 @@
       <h5 class="text-2x1 font-bold gk-text-base-black mb-2">Tambah Foto</h5>
       <form class="form row gap-2" action="{{route('admin.destinasi.picture.addAction')}}" method="post" enctype="multipart/form-data">
          @csrf
-         <div class="row">
-            <div class="col-6">
-               <label class="form-label">Judul Foto</label>
-               <input type="hidden" name="id_destinasi" value="{{$destinasi->id}}">
-               <input class="form-control" name="foto_nama" id="foto-nama" placeholder="Judul Foto" value="" required />
-            </div>
-            <div class="col-6">
-               <label class="form-label" for="gate-foto">
-                  Upload Foto
-                  <span type="span" class="text-secondary"
-                     data-bs-toggle="popover"
-                     data-bs-placement="right"
-                     data-bs-trigger="hover focus"
-                     data-bs-content="Silakan unggah foto dalam format JPG atau PNG. Max 5Mb">
-                     <i class="fa-regular fa-circle-question"></i>
-                  </span>
-               </label>
-               <div class="input-group flex-nowrap">
-                  <input type="file" class="form-control" id="foto" name="foto">
-                  <button class="input-group-text d-none" type="button" data-id-target="foto">
-                     <i class="fa-regular fa-eye"></i>
-                  </button>
+         <div class="col-12">
+            <div class="row">
+               <div class="col-6">
+                  <label class="form-label">Judul Foto</label>
+                  <input type="hidden" name="id_destinasi" value="{{$destinasi->id}}">
+                  <input class="form-control" name="foto_nama" id="foto-nama" placeholder="Judul Foto" value="" required />
                </div>
+               <div class="col-6">
+                  <label class="form-label" for="foto">
+                     Upload Foto
+                     <span type="span" class="text-secondary"
+                        data-bs-toggle="popover"
+                        data-bs-placement="right"
+                        data-bs-trigger="hover focus"
+                        data-bs-content="Silakan unggah foto dalam format JPG atau PNG. Max 5Mb">
+                        <i class="fa-regular fa-circle-question"></i>
+                     </span>
+                  </label>
+                  <div class="input-group flex-nowrap">
+                     <input type="file" class="form-control" id="foto" name="foto">
+                     <button class="input-group-text d-none" type="button" data-id-target="foto">
+                        <i class="fa-regular fa-eye"></i>
+                     </button>
+                  </div>
 
+               </div>
             </div>
          </div>
          <div class="col-12">
