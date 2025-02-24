@@ -14,6 +14,18 @@
         background-color: #e9ecef;
         opacity: 1;
     }
+
+    .input-none .iptFile-label {
+        display: block;
+    }
+
+    .iptFile-label {
+        display: none;
+    }
+
+    .input-none .iptFile-input {
+        display: none;
+    }
 </style>
 @endsection
 
@@ -57,7 +69,7 @@
                         <input value="{{ old('lastName', isset($user->biodata->last_name) ? $user->biodata->last_name : null) }}" type="text" class="form-control border-secondary" id="nama-belakang" name="lastName" placeholder="Nama Belakang">
                     </div>
 
-                    <div class="form-group col-12 col-md-6">
+                    <div class="form-group col-12 iptFile-input">
                         <label for="lampiran_identitas" class="w-100 fw-bold mandatory">Lampiran Identitas</label>
                         <div class="input-group flex-nowrap">
                             <input class="form-control border-secondary" type="file" name="lampiran_identitas" id="lampiran_identitas" accept="image/*,.pdf">
@@ -70,9 +82,12 @@
                         </div>
                         <span class="keterangan" style="font-size: 12px;">Lampiran KTP, Max 500kb</span>
                     </div>
-                </div>
+                    <div class="form-group col-12 iptFile-label">
+                        <label for="lampiran_identitas" class="w-100 fw-bold mandatory">Lampiran Identitas</label>
+                        <input value="{{ $user->biodata->lampiran_identitas ? $user->biodata->lampiran_identitas : null }}" type="text" class="form-control border-secondary">
+                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP, Max 500kb</span>
+                    </div>
 
-                <div class="row">
                     <!-- Nationality -->
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold">Kewarganegaraan</label>
@@ -87,9 +102,7 @@
                         <label class="mandatory font-semibold" for="id-pendaftar">NIK/Passport</label>
                         <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport">
                     </div>
-                </div>
 
-                <div class="row">
                     <!-- Email -->
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold">Email</label>
@@ -118,9 +131,7 @@
                             <input type="hidden" name="telp_country" value="{{ old('telp_country', isset($user->biodata->telp_country) ? $user->biodata->telp_country : null) }}" id="telp_country">
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
                     <!-- Gender -->
                     <div class="form-group col-12 col-md-6">
                         <label class="font-semibold mandatory">Jenis Kelamin</label>

@@ -20,6 +20,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isNull;
@@ -130,6 +131,11 @@ class booking extends Controller
         $totalDays = $dateStart->diffInDays($dateEnd) + 1;
         if ($dateStart > $dateEnd) {
             return back()->with('error', 'Error: Tanggal tidak sesuai');
+        }
+
+        // cek jarak booking max 2 bulan
+        if (Date::now()->addMonths(1) < $dateStart) {
+            return back()->with('error', 'Error: Jarak booking tidak boleh lebih dari 1 bulan sekarang');
         }
 
         // cek jumlah min pendaki
@@ -334,33 +340,29 @@ class booking extends Controller
             ->where('id_user', Auth::id())
             ->first();
 
-        // return $booking;
         if (!$booking) {
             abort(404);
         } elseif ($booking->status_booking != 2) {
             return redirect()->route('homepage.booking', ['id' => $request->id]);
         }
 
+        // cek pendaki dalam bookingan
         $bioPendaki = bio_pendaki::where('id', $request->code)
             ->where('verified', 'verified')
             ->first();
-
         if ($bioPendaki == null) {
             return back()->withErrors(['code' => 'Kode tidak ditemukan']);
         }
-
         $pendaki = gk_pendaki::with('booking')
             ->where('id_bio', $bioPendaki->id)
             ->whereHas('booking', function ($query) {
                 $query->where('status_booking', '<', 7);
             })
             ->first();
-
         if ($pendaki) {
             return back()->withErrors(['code' => 'Kode sudah terdaftar dalam pendakian lain dan belum menyelesaikannya']);
         } else {
             $userUsia = Carbon::parse($bioPendaki->tanggal_lahir)->age;
-
             if ($request->id != null) {
                 $pendaki = gk_pendaki::find($request->id);
                 $pendaki->update([
@@ -504,11 +506,9 @@ class booking extends Controller
         };
 
         return view('homepage.booking.bookingDetail', [
-            // 'snaptoken' => $snapToken,
             'booking' => $booking,
             'formulirPendakis' => $booking->pendakis,
             'hitung' => $hitung
-            // 'pendakis' => $booking->pendakis,
         ]);
     }
 

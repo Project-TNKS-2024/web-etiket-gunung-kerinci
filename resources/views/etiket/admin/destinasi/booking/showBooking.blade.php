@@ -201,6 +201,9 @@
                <td>Umur</td>
                <td>Warga Negara</td>
                <td>Jenis Kelamin</td>
+               <td>Konfirmasi</td>
+               <td>Cek In</td>
+               <td>Cek Out</td>
                <td></td>
             </tr>
          </thead>
@@ -211,6 +214,22 @@
                <td>{{$pendaki->usia}}</td>
                <td>{{$pendaki->biodata->kenegaraan == 'wni' ? 'Warga Negara Indoneia' : 'Warga Negara Asing' }}</td>
                <td>{{$pendaki->biodata->jenis_kelamin=='l' ? 'Laki - laki' : 'Perempuan' }}</td>
+               <td>
+                  <div class="form-check">
+                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  </div>
+               </td>
+               <td>
+                  <div class="form-check">
+                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  </div>
+               </td>
+               <td>
+                  <div class="form-check">
+                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  </div>
+               </td>
+
                <td>
                   <a href="" class="btn btn-sm btn-warning"><i class="fa-solid fa-eye"></i></a>
                </td>
