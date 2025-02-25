@@ -87,11 +87,8 @@
                   </button>
                </div>
                @if (isset($pendaki[$i]) && $pendaki[$i]->lampiran_surat_izin_ortu)
-               @php
-               use Illuminate\Support\Str;
-               $fileName = pathinfo($pendaki[$i]->lampiran_surat_izin_ortu, PATHINFO_FILENAME);
-               @endphp
-               <span>{{ $fileName }}</span>
+
+               <span>{{ $pendaki[$i]->lampiran_surat_izin_ortu }}</span>
                @endif
 
             </div>
