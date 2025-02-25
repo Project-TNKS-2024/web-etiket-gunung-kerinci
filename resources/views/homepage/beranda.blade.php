@@ -277,7 +277,7 @@
                     </section>
                     @if ($item->id == 1)
                     <section class="mt-3">
-                        <a href="{{ route('homepage.booking.destinasi.paket.tiket', ['id' => $item->id]) }}"
+                        <a href="{{ route('homepage.booking.destinasi.paket', ['id' => $item->id]) }}"
                             class="btn btn-primary gk-bg-primary600 border-0 text-white rounded-pill">Explore
                             Sekarang
                         </a>
