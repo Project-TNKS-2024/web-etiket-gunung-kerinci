@@ -195,7 +195,7 @@
                 <header class="top">Selamat Datang di Website Resmi</header>
                 <div class="divider mx-auto"></div>
                 <header class="bottom">Taman Nasional Kerinci Seblat</header>
-                <a class="btn btn-primary mt-3" href="{{ route('homepage.booking.destinasi.paket', ['id' => 1]) }}">
+                <a class="btn btn-primary mt-3" href="{{ route('homepage.booking.destinasi.list') }}">
                     Booking Online
                 </a>
             </div>
