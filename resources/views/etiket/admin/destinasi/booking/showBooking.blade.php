@@ -201,7 +201,7 @@
                <td>Umur</td>
                <td>Warga Negara</td>
                <td>Jenis Kelamin</td>
-               <td>Konfirmasi</td>
+               <td>Batal Mendaki</td>
                <td>Cek In</td>
                <td>Cek Out</td>
                <td></td>
