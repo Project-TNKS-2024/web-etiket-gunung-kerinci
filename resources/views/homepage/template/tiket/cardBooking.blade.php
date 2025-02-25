@@ -158,7 +158,11 @@
                <td>Tanggal Masuk</td>
                <td> : </td>
                <td>{{ $booking->tanggal_masuk }}</td>
-
+            </tr>
+            <tr>
+               <td>Tanggal Keluar</td>
+               <td> : </td>
+               <td>{{ $booking->tanggal_keluar }}</td>
             </tr>
             <tr>
                <td>Harga</td>
