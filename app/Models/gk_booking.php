@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+use function PHPUnit\Framework\isEmpty;
+
 class gk_booking extends Model
 {
     use HasFactory;
@@ -67,6 +69,27 @@ class gk_booking extends Model
     public function gateMasuk()
     {
         return $this->belongsTo(gk_gates::class, 'gate_masuk');
+    }
+
+    public function getStatusBooking($id = null)
+    {
+        // if (isEmpty($id)) {
+        //     $id = $this->status;
+        // }
+        if (isEmpty($id)) {
+            $id = $this->status_booking;
+        }
+        $status = [
+            1 => 'Menyetujui SNK',
+            2 => 'Mengisi Formulir',
+            3 => 'Menunggu Pembayaran',
+            4 => 'Sudah  Bayar',
+            5 => 'Konfiirmasi Pendakian',
+            6 => 'Check in',
+            7 => 'Check Out',
+            8 => 'Selesai',
+        ];
+        return $status[$id];
     }
 
     /**

@@ -52,16 +52,14 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/destinasi/{id}/booking', [bookingController::class, 'index'])->name('admin.destinasi.booking');
     Route::get('admin/destinasi/booking/{id}', [bookingController::class, 'showBooking'])->name('admin.destinasi.booking.show');
     Route::post('admin/destinasi/booking/updateStatus', [bookingController::class, 'updateStatus'])->name('admin.destinasi.booking.updateStatus');
+
+    Route::get('admin/destinasi/booking/{id}/pembayaran', [bookingController::class, 'showPembayaran'])->name('admin.destinasi.booking.payment.show');
+    Route::post('admin/destinasi/booking/pembayaran/update', [bookingController::class, 'updatePembayaran'])->name('admin.destinasi.booking.payment.update');
+
     Route::get('admin/destinasi/booking/{id}/tiket', [bookingController::class, 'showTiket'])->name('admin.destinasi.booking.tiket.show');
     Route::get('admin/destinasi/booking/{id}/struk', [bookingController::class, 'showStruk'])->name('admin.destinasi.booking.struk.show');
 
-    // Destinasi - pembayaran
-    Route::get('admin/destinasi/{id}/pembayaran', [pembayaranController::class, 'index'])->name('admin.destinasi.pembayaran');
-    Route::post('admin/destinasi/pembayaran/update', [pembayaranController::class, 'updateAction'])->name('admin.destinasi.pembayaran.updateAction');
-
     // Destinasi - pendaki
-
-    // Destinasi - monitoring
 
 
     // Master - Destinasi
