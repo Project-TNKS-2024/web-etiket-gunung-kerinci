@@ -186,7 +186,7 @@
                                 <td>Kewarganegaraan</td>
                                 <td> : </td>
                                 <td>
-                                    @if($pendaki->kategori_pendaki == 'wni')
+                                    @if($pendaki->biodata->kenegaraan == 'wni')
                                     Warga Negara Indonesia (WNI)
                                     @else
                                     Warga Negara Asing (WNA)
@@ -211,7 +211,7 @@
                             <tr>
                                 <td>Tanggal Lahir</td>
                                 <td> : </td>
-                                <td>{{ \Carbon\Carbon::parse($pendaki->tanggal_lahir)->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($pendaki->biodata->tanggal_lahir)->isoFormat('D MMMM Y') }}</td>
                             </tr>
                             <tr>
                                 <td>Usia</td>
