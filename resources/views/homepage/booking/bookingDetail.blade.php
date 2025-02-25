@@ -152,7 +152,7 @@
                             <tr>
                                 <td>Check Out</td>
                                 <td> : </td>
-                                <td>{{ \Carbon\Carbon::parse($booking->tanggal_masuk)->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($booking->tanggal_keluar)->isoFormat('D MMMM Y') }}</td>
                             </tr>
                             <tr>
                                 <td>Jumlah Pendaki</td>

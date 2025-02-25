@@ -386,8 +386,6 @@ class booking extends Controller
 
     public function bookingFPStore(Request $request)
     {
-        // return $request;
-        // dd($this->helper->generateCode(10));
         $request->validate([
             'id_booking' => 'required|string',
             'action' => 'required|string',
