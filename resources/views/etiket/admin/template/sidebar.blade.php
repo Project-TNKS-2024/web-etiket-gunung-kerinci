@@ -29,14 +29,14 @@
             </li>
             @foreach ($DataDestinasi as $itemDestinasi)
             @canDestinasi($itemDestinasi->id)
-            <li class="sidebar-item selected">
+            <li class="sidebar-item">
                <a class="sidebar-link has-arrow" data-bs-toggle="collapse" href="#collapseDestinasi{{$itemDestinasi->id}}" role="button" aria-expanded="false" aria-controls="collapseDestinasi{{$itemDestinasi->id}}">
                   <span>
                      <i class="fa-solid fa-mountain-sun"></i>
                   </span>
                   <span class="hide-menu">{{$itemDestinasi->nama}}</span>
                </a>
-               <div class="collapse lis-collapse-destinasi show" id="collapseDestinasi{{$itemDestinasi->id}}">
+               <div class="collapse lis-collapse-destinasi" id="collapseDestinasi{{$itemDestinasi->id}}">
                   <ul class="list-unstyled">
                      @can('admin.destinasi.detail')
                      <li class="sidebar-item">
