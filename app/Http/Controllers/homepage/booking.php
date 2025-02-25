@@ -524,7 +524,7 @@ class booking extends Controller
         }
 
         if ($booking->status_booking == 3) {
-            $booking->status_booking = 3;
+            $booking->status_booking = 2;
             $booking->save();
         }
 
