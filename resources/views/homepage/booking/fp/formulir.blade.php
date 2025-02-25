@@ -80,13 +80,19 @@
                   <input class="form-control" type="file" name="formulir[{{$i}}][surat_izin_ortu]" id="surat_izin_ortu-{{$i}}">
                   </input>
                   @if (isset($pendaki[$i]) && $pendaki[$i]->lampiran_surat_izin_ortu)
-                  <span>{{$pendaki[$i]->lampiran_surat_izin_ortu}}</span>
                   <input type="hidden" id="surat_izin_ortu-{{$i}}_existing" value="{{asset($pendaki[$i]->lampiran_surat_izin_ortu)}}">
                   @endif
                   <button class="input-group-text d-none" type="button" data-id-target="surat_izin_ortu-{{$i}}">
                      <i class="fa-regular fa-eye"></i>
                   </button>
                </div>
+               @if (isset($pendaki[$i]) && $pendaki[$i]->lampiran_surat_izin_ortu)
+               @php
+               use Illuminate\Support\Str;
+               $fileName = pathinfo($pendaki[$i]->lampiran_surat_izin_ortu, PATHINFO_FILENAME);
+               @endphp
+               <span>{{ $fileName }}</span>
+               @endif
 
             </div>
          </div>
