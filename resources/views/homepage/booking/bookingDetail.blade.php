@@ -290,7 +290,7 @@
         </div>
         <div class="col-12 col-md-4">
             <a type="submit" class="btn btn-primary w-100 fw-bold mt-3"
-                href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}">Kembali</a>
+                href="{{ route('homepage.booking.edit', ['id' => $booking->id]) }}">Kembali</a>
         </div>
         <div class="col-12 col-md-4 text-end">
             <a type="submit" class="btn btn-primary w-100 fw-bold mt-3"

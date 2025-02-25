@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::post('booking/formulir', [booking::class, 'bookingFPStore'])->name('homepage.booking.formulir.action');
 
     Route::get('booking/{id}/detail', [booking::class, 'bookingDetail'])->name('homepage.booking.detail');
+    Route::get('booking/{id}/edit', [booking::class, 'bookingEdit'])->name('homepage.booking.edit');
     Route::get('booking/{id}/cancel', [booking::class, 'bookingCancel'])->name('homepage.booking.cancel');
 
     Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');

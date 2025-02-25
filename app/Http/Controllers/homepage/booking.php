@@ -512,6 +512,27 @@ class booking extends Controller
         ]);
     }
 
+    public function bookingEdit($id)
+    {
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
+            ->where('id', $id)
+            ->where('id_user', Auth::id())
+            ->first();
+
+        if (!$booking) {
+            abort(404);
+        } elseif ($booking->status_booking > 4) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
+
+        if ($booking->status_booking == 3) {
+            $booking->status_booking = 3;
+            $booking->save();
+        }
+
+        return redirect()->route('homepage.booking', ['id' => $id]);
+    }
+
     public function bookingCancel($id)
     {
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
