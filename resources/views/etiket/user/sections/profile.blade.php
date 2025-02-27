@@ -100,8 +100,9 @@
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold">Kewarganegaraan</label>
                         <select class="form-control border-secondary" name="kewarganegaraan" id="kewarganegaraan">
-                            <option value="wni" {{ old('kewarganegaraan', isset($user->biodata->kenegaraan) && $user->biodata->kenegaraan == 'wni' ? 'selected' : '') }}>Warga Negara Indonesia</option>
-                            <option value="wna" {{ old('kewarganegaraan', isset($user->biodata->kenegaraan) && $user->biodata->kenegaraan == 'wna' ? 'selected' : '') }}>Warga Negara Asing</option>
+                            @foreach ($negara as $n)
+                            <option value="{{$n->code}}" {{ old('kewarganegaraan', isset($user->biodata->kenegaraan) && $user->biodata->kenegaraan == $n->code ? 'selected' : '') }}>{{ $n->name}}</option>
+                            @endforeach
                         </select>
                     </div>
 

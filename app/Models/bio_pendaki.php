@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Data\Negara;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -61,5 +62,10 @@ class bio_pendaki extends Model
     public function getFullNameAttribute()
     {
         return trim("{$this->first_name} {$this->last_name}");
+    }
+
+    public function getNegara()
+    {
+        return Negara::getByCode($this->kenegaraan);
     }
 }

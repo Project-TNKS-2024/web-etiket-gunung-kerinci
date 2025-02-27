@@ -37,7 +37,7 @@ class paket_tiket extends Seeder
             'harga_masuk_wk' => 7500,
             'harga_masuk_wd' => 5000,
             'harga_kemah' => 5000,
-            'harga_traking' => 5000,
+            'harga_traking' => 20000,
             'harga_ansuransi' => 5000,
         ]);
 
@@ -54,10 +54,10 @@ class paket_tiket extends Seeder
         gk_tiket_pendaki::create([
             'id_paket_tiket' => 1,
             'kategori_pendaki' => 'wna',
-            'harga_masuk_wk' => 225000,
+            'harga_masuk_wk' => 150000,
             'harga_masuk_wd' => 150000,
             'harga_kemah' => 5000,
-            'harga_traking' => 5000,
+            'harga_traking' => 20000,
             'harga_ansuransi' => 5000,
         ]);
 

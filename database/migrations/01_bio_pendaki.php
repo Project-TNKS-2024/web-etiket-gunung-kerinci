@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
 
             $table->string('nik');
-            $table->enum('kenegaraan', ['wna', 'wni']);
+            $table->string('kenegaraan');
             $table->string('first_name');
             $table->string('last_name')->nullable();
             $table->string('lampiran_identitas');

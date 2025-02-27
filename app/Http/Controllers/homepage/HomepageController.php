@@ -14,11 +14,16 @@ class HomepageController extends Controller
     public function Beranda()
     {
         // ambil data cuaca 
-        $apiWeatherKey = 'a2e80ea3991444f38a015609251802';
-        $laLongitude = '-1.6955471535960556,101.26376495341809'; // gunung kerinci
-        $apiWeatherUrl = 'https://api.weatherapi.com/v1/current.json?key=' . $apiWeatherKey . '&q=' . $laLongitude . '&aqi=no';
-        $weatherResponse = file_get_contents($apiWeatherUrl);
-        $weatherData = json_decode($weatherResponse, true);
+        try {
+            $apiWeatherKey = 'a2e80ea3991444f38a015609251802';
+            $laLongitude = '-1.6955471535960556,101.26376495341809'; // gunung kerinci
+            $apiWeatherUrl = 'https://api.weatherapi.com/v1/current.json?key=' . $apiWeatherKey . '&q=' . $laLongitude . '&aqi=no';
+            $weatherResponse = file_get_contents($apiWeatherUrl);
+            $weatherData = json_decode($weatherResponse, true);
+        } catch (\Exception $e) {
+            $weatherData = null;
+        }
+        // $weatherData = null;
 
         $destinasi = destinasi::all();
 
@@ -37,7 +42,7 @@ class HomepageController extends Controller
             ->sum(DB::raw('total_pendaki_wna + total_pendaki_wni'));
 
         // return $weatherData->current;
-        // return $weatherData;
+        // return $destinasi;
         return view('homepage.beranda', [
             'destinasi' => $destinasi,
             'total_mendaki' => $total_sedang_cekin,
@@ -54,6 +59,11 @@ class HomepageController extends Controller
         return view('homepage.booking.bookingDestinasiList', [
             'destinasi' => $destinasi,
         ]);
+    }
+
+    public function gunungApi()
+    {
+        return view('homepage.statusGunungApi');
     }
 
     public function panduan()

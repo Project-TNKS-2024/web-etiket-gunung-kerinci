@@ -5,6 +5,7 @@ namespace App\Http\Controllers\etiket\user;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\uploadFileControlller;
 use App\Models\bio_pendaki;
+use App\Models\Data\Negara;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
@@ -17,6 +18,10 @@ class profile extends Controller
     {
         $auth = Auth::user();
         $user = User::with('biodata')->find($auth->id);
+        $negara = Negara::getAll();
+
+        // dd($negara);
+        // return $negara;
 
         // Pisahkan kode negara dari nomor telepon
         $telp_country = explode(" ", $user->biodata->no_hp ?? '');
@@ -36,6 +41,7 @@ class profile extends Controller
 
         return view('etiket.user.sections.profile', [
             'user' => $user,
+            'negara' => $negara,
         ]);
     }
 
@@ -49,7 +55,7 @@ class profile extends Controller
             'firstName' => 'required|string|max:255',
             'lastName' => 'string|max:255|nullable',
             'lampiran_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:548',
-            'kewarganegaraan' => 'required|in:wni,wna',
+            'kewarganegaraan' => 'required|string',
             'nik' => 'required|numeric|min:8',
             'nomor_telepon' => 'required|numeric',
             'telp_country' => 'required|string|max:5',
@@ -116,7 +122,7 @@ class profile extends Controller
                 'last_name' => $request->lastName,
                 'lampiran_identitas' => $filename,
                 'no_hp' => $request->nomor_telepon,
-                'no_hp_darurat' => "0000000000000000",
+                'no_hp_darurat' => "",
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'provinsi' => $request->provinsi,

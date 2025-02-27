@@ -9,6 +9,8 @@ use App\Models\destinasi;
 use App\Models\gk_booking;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class bookingController extends AdminController
@@ -122,7 +124,18 @@ class bookingController extends AdminController
                 'invoice_url' => route('homepage.booking.struk', $booking->id),
                 'email' => $userBooking->email,
             ];
-            Mail::to($userBooking->email)->send(new BookingPayment($order));
+            try {
+                Mail::to($userBooking->email)->send(new BookingPayment($order));
+            } catch (\Exception $e) {
+                Log::channel('admin')->error(
+                    'Terjadi kesalahan pada proses booking kirim email pembelian booking ke ' . $userBooking->email,
+                    [
+                        'admin' => Auth::user(),
+                        'pengguna' => $userBooking,
+                        'error' => $e->getMessage()
+                    ]
+                );
+            }
         } else {
             if ($booking->status_booking > 4) {
                 return redirect()->back()->withErrors('Bookingan sudah melakukan pendakian');
@@ -144,7 +157,7 @@ class bookingController extends AdminController
                 'keterangan' => $request->keterangan,
             ]);
         } else {
-            return redirect()->back()->with('error', 'Pembayaran tidak ditemukan');
+            return redirect()->back()->withErrors('Pembayaran tidak ditemukan');
         }
 
         return redirect()->back()->with('success', 'Pengajuan berhasil diperbarui');

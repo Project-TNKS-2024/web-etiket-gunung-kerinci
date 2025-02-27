@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
+use function PHPUnit\Framework\isEmpty;
 use function PHPUnit\Framework\isNull;
 
 class booking extends Controller
@@ -36,22 +37,7 @@ class booking extends Controller
         $this->upload = $upload;
     }
 
-    // booking : destinasi - paket - tiket - snk - fp -
-    public function destinasiPaket($id)
-    {
-        // id  = id destinasi
-        $gunung = destinasi::find($id);
-        $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id)->get();
-        // paket tiket
-        $paket = gk_paket_tiket::where('id_destinasi', $id)->get();
-
-        return view('homepage.booking.bookingDestinasiPaket', [
-            'gunung' => $gunung,
-            'paket' => $paket,
-            'gambar' => $gambar_destinasi,
-        ]);
-    }
-    public function GateCapacity($idTiket, $startDate, $endDate = null, $idGate = null)
+    private function GateCapacity($idTiket, $startDate, $endDate = null, $idGate = null)
     {
         if (!$endDate) {
             $endDate = Carbon::parse($startDate)->addMonths(2)->format('Y-m-d');
@@ -77,10 +63,22 @@ class booking extends Controller
         return $query->get();
     }
 
+    public function destinasiPaket($id)
+    {
+        $gunung = destinasi::find($id);
+        $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id)->get();
+        $paket = gk_paket_tiket::where('id_destinasi', $id)->get();
+
+        return view('homepage.booking.bookingDestinasiPaket', [
+            'gunung' => $gunung,
+            'paket' => $paket,
+            'gambar' => $gambar_destinasi,
+        ]);
+    }
 
     public function destinasiTiket($id)
     {
-        // id = id paket
+        // ambil data paket
         $paket = gk_paket_tiket::where('id', $id)->first();
 
         // ambil data destinasi
@@ -147,11 +145,18 @@ class booking extends Controller
         // cek kapasitas gate
         $gates = gk_gates::where('id', $request->gerbang_masuk)->first();
         $kapasitas = collect($this->GateCapacity($request->jenis_tiket, $request->date_start, $request->date_start, $request->gerbang_masuk));
+
         if (!$kapasitas->isEmpty()) {
             if ($gates->max_pendaki_hari < $kapasitas->first()->jumlah_pendaki + $request->wni + $request->wna) {
                 return back()->with('error', 'Error: Kapasitas penuh');
             }
-            return 'tidak';
+        }
+
+        // cek umur ketua min 17 tahun
+        $userBio = bio_pendaki::find(Auth::user()->id_bio);
+        $userUsia = Carbon::parse($userBio->tanggal_lahir)->age;
+        if ($userUsia < 17) {
+            return back()->with('error', 'Error: Umur tidak mencukupi. Minimal 17 tahun');
         }
 
         // cari booking terakhir yang blm di verifikasi
@@ -161,6 +166,7 @@ class booking extends Controller
             ->first();
 
         if ($booking) {
+            // update total pendaki, gate, dan tanggal
             $booking->update([
                 'total_pendaki' => $request->wni + $request->wna,
                 'total_pendaki_wni' => $request->wni,
@@ -184,6 +190,7 @@ class booking extends Controller
                 ->route('homepage.booking.snk', ['id' => $booking->id])
                 ->with('success', 'Update Booking');
         } else {
+            // craete booking
             $newBooking = gk_booking::create([
                 'id_user' => Auth::user()->id,
                 'id_tiket' => $request->jenis_tiket,
@@ -204,10 +211,60 @@ class booking extends Controller
                 'id_booking_master' => null,
             ]);
 
+            // craete ketua pendaki
+            gk_pendaki::create([
+                'booking_id' => $newBooking->id,
+                'tagihan' => 0,
+                'id_bio' => $userBio->id,
+                'usia' => $userUsia,
+                'lampiran_surat_izin_ortu' => null,
+            ]);
+
+
             return redirect()
                 ->route('homepage.booking.snk', ['id' => $newBooking->id])
                 ->with('success', 'Create Booking');
         }
+    }
+
+    private function getBookingByUser($id, $status = null): gk_booking
+    {
+        $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $id)->first();
+        if (!$booking) {
+            abort(404);
+        }
+
+        if (isset($status)) {
+            if (is_array($status)) {
+                if (!in_array($booking->status_booking, $status)) {
+                    return redirect(route('homepage.booking', ['id' => $id]))->send();
+                }
+            } else {
+                if ($booking->status_booking !== $status) {
+                    return redirect(route('homepage.booking', ['id' => $id]))->send();
+                }
+            }
+        }
+
+        // cek booking sudah expired atau belum
+        if ($booking->status_booking == 3 && $booking->updated_at->diffInHours(Carbon::now()) >= 24) {
+
+            $booking->load('pembayaran');
+            $pembayaranTerakhir = $booking->pembayaran()->latest()->first();
+
+            // Jika pembayaran terakhir ada dan statusnya bukan "pending"
+            if (($pembayaranTerakhir && $pembayaranTerakhir->status !== 'pending') or isEmpty($pembayaranTerakhir)) {
+                // hapus semua pembayaran
+                $booking->pembayaran()->delete();
+
+                $booking->status_booking = 2;
+                $booking->save();
+
+                return redirect(route('homepage.booking', ['id' => $id]))->send();
+            }
+        }
+
+        return $booking;
     }
 
     public function bookingId($id)
@@ -243,12 +300,10 @@ class booking extends Controller
 
     public function bookingSnk($id)
     {
-        $booking = gk_booking::with('gktiket')->where('id_user', Auth::user()->id)->where('id', $id)->first();
-        if (!$booking) {
-            abort(404);
-        } elseif ($booking->status_booking > 3) {
-            return redirect(route('homepage.booking', ['id' => $id]));
-        }
+        $booking = $this->getBookingByUser($id, [0, 1, 2]);
+        $booking->load('gktiket');
+
+
         $destinasi = destinasi::where('id', $booking->gktiket->id_destinasi)->first();
         return view('homepage.booking.bookingSnk', [
             'id' => $id,
@@ -264,17 +319,7 @@ class booking extends Controller
             'snk' => 'required|string',
         ]);
 
-        if (!$request->snk) {
-            return back()->withErrors(['snk' => 'Silahkan ceklis data diri anda']);
-        }
-
-        $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $request->id)->first();
-        if (!$booking) {
-            abort(404);
-        }
-        if ($booking->status_booking > 3) {
-            return redirect()->route('homepage.booking', ['id' => $request->id]);
-        }
+        $booking = $this->getBookingByUser($request->id, [0, 1, 2]);
 
         $booking->update(['status_booking' => 2]);
         return redirect()->route('homepage.booking.formulir', ['id' => $request->id]);
@@ -282,41 +327,13 @@ class booking extends Controller
 
     public function bookingFP($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis', 'gktiket'])
-            ->where('id', $id)
-            ->where('id_user', Auth::id())
-            ->first();
-
-        if (!$booking) {
-            abort(404);
-        } elseif ($booking->status_booking != 2) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
-        }
+        $booking = $this->getBookingByUser($id, [1, 2]);
+        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'gktiket']);
 
         // ================================ cek ketua pendaki ============================================
-        $pendaki = gk_pendaki::where('booking_id', $booking->id)
-            ->with('biodata')
-            ->get();
-
-        $userBio = bio_pendaki::find(Auth::user()->id_bio);
-        $userUsia = Carbon::parse($userBio->tanggal_lahir)->age;
-        if ($pendaki->count() == 0) {
-            gk_pendaki::create([
-                'booking_id' => $booking->id,
-                'tagihan' => 0,
-                'id_bio' => $userBio->id,
-                'usia' => $userUsia,
-                'lampiran_surat_izin_ortu' => null,
-            ]);
-
-            $pendaki = gk_pendaki::where('booking_id', $booking->id)
-                ->with('biodata')
-                ->get();
-        }
-
+        $pendaki = $booking->pendakis;
         $barang = gk_barang_bawaan::where('id_booking', $booking->id)->get();
 
-        // return $pendaki;
         return view('homepage.booking.bookingFp', [
             'id' => $id,
             'booking' => $booking,
@@ -327,32 +344,23 @@ class booking extends Controller
 
     public function bookingPendakiAdd(Request $request)
     {
-
-        // return $request;
         $request->validate([
             'code' => 'required|string',
             'booking' => 'required|string',
             'id' => 'string|nullable',
         ]);
 
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $request->booking)
-            ->where('id_user', Auth::id())
-            ->first();
+        $booking = $this->getBookingByUser($request->booking, 2);
+        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
-        if (!$booking) {
-            abort(404);
-        } elseif ($booking->status_booking != 2) {
-            return redirect()->route('homepage.booking', ['id' => $request->id]);
-        }
-
-        // cek pendaki dalam bookingan
+        // cek id biodata
         $bioPendaki = bio_pendaki::where('id', $request->code)
             ->where('verified', 'verified')
             ->first();
         if ($bioPendaki == null) {
             return back()->withErrors(['code' => 'Kode tidak ditemukan']);
         }
+        // cek pendaki dalam bookingan
         $pendaki = gk_pendaki::with('booking')
             ->where('id_bio', $bioPendaki->id)
             ->whereHas('booking', function ($query) {
@@ -361,24 +369,27 @@ class booking extends Controller
             ->first();
         if ($pendaki) {
             return back()->withErrors(['code' => 'Kode sudah terdaftar dalam pendakian lain dan belum menyelesaikannya']);
+        }
+
+        // tambahkan pendaki
+        $userUsia = Carbon::parse($bioPendaki->tanggal_lahir)->age;
+        if ($request->id != null) {
+            // update pendaki
+            $pendaki = gk_pendaki::find($request->id);
+            $pendaki->update([
+                'id_bio' => $bioPendaki->id,
+                'usia' => $userUsia,
+                'lampiran_surat_izin_ortu' => null,
+            ]);
         } else {
-            $userUsia = Carbon::parse($bioPendaki->tanggal_lahir)->age;
-            if ($request->id != null) {
-                $pendaki = gk_pendaki::find($request->id);
-                $pendaki->update([
-                    'id_bio' => $bioPendaki->id,
-                    'usia' => $userUsia,
-                    'lampiran_surat_izin_ortu' => null,
-                ]);
-            } else {
-                gk_pendaki::create([
-                    'booking_id' => $request->booking,
-                    'tagihan' => 0,
-                    'id_bio' => $bioPendaki->id,
-                    'usia' => $userUsia,
-                    'lampiran_surat_izin_ortu' => null,
-                ]);
-            }
+            // update pendakki
+            gk_pendaki::create([
+                'booking_id' => $request->booking,
+                'tagihan' => 0,
+                'id_bio' => $bioPendaki->id,
+                'usia' => $userUsia,
+                'lampiran_surat_izin_ortu' => null,
+            ]);
         }
 
         return back()->with('success', 'Berhasil menambahkan pendaki');
@@ -388,85 +399,111 @@ class booking extends Controller
     {
         $request->validate([
             'id_booking' => 'required|string',
-            'action' => 'required|string',
+            'action' => 'required|in:next,save',
 
             'formulir' => 'required|array',
 
             'formulir.*.id_pendaki' => 'nullable|string',
             'formulir.*.kode_bio' => 'nullable|string',
-            'formulir.*.no_hp_darurat' => 'nullable|string',
-            'formulir.*.surat_izin_ortu' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-
-            'barangWajib' => 'nullable|array',
-            'barangWajib.perlengkapan_gunung_standar' => 'nullable|boolean',
-            'barangWajib.trash_bag' => 'nullable|boolean',
-            'barangWajib.p3k_standart' => 'nullable|boolean',
-            'barangWajib.survival_kit_standart' => 'nullable|boolean',
+            'formulir.*.no_hp_darurat' => 'nullable|string|regex:/^(\+?[1-9]\d{0,2})?\s?\d{6,15}$/',
+            'formulir.*.surat_izin_ortu' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
 
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $request->id_booking)
-            ->where('id_user', Auth::id())
-            ->first();
-
-        if (!$booking) {
-            abort(404);
-        } elseif ($booking->status_booking != 2) {
-            return redirect()->route('homepage.booking', ['id' => $request->id]);
-        }
-
-        $formulirPendakis = $request->formulir;
-        $upload = new uploadFileControlller();
+        $booking = $this->getBookingByUser($request->id_booking, 2);
+        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
         $totalTagihan = 0;
         $wni = 0;
         $wna = 0;
 
-        foreach ($formulirPendakis as $key => $formulir) {
-            $pendaki = gk_pendaki::find($formulir['id_pendaki']);
-            $bioPendaki = bio_pendaki::find($formulir['kode_bio']);
-
-            if ($bioPendaki->kenegaraan == 'wni') {
-                $wni++;
-            } else {
-                $wna++;
-            }
-
-            if (!$bioPendaki) {
-                return back()->withErrors(['formulir' => 'Bio pendaki tidak ditemukan']);
-            }
-            $bioPendaki->no_hp_darurat = $formulir['no_hp_darurat'] ?? '';
-            $bioPendaki->save();
-
-            if (!$pendaki) {
-                return back()->withErrors(['formulir' => 'Pendaki tidak ditemukan']);
-            }
-
-            if (isset($formulir['surat_izin_ortu'])) {
-                $path = '';
-                if (strlen($pendaki->lampiran_surat_izin_ortu) > 0) {
-                    $upload->delete($pendaki->lampiran_surat_izin_ortu);
-                    $path = $upload->create($booking->id, 'booking', $formulir['surat_izin_ortu']);
-                } else {
-                    $path = $upload->create($booking->id, 'booking', $formulir['surat_izin_ortu']);
+        foreach ($request->formulir as $formulir) {
+            // cek kode bio
+            if (isset($formulir['kode_bio'])) {
+                $bioPendaki = bio_pendaki::find($formulir['kode_bio']);
+                if (!$bioPendaki) {
+                    return back()->withErrors(['formulir' => 'Bio pendaki tidak ditemukan']);
                 }
-                $pendaki->lampiran_surat_izin_ortu = $path;
-            }
 
-            $pendaki->tagihan = $this->helper->getTagihanPendaki($pendaki);
-            $totalTagihan += $pendaki->tagihan;
-            $pendaki->save();
+                // jumlah ulang pendaki wna/ni
+                ($bioPendaki->kenegaraan == 'ID') ? $wni++ : $wna++;
+
+                // update no telp darurat pendaki
+                $bioPendaki->no_hp_darurat = $formulir['no_hp_darurat'] ?? '';
+                $bioPendaki->save();
+
+                // cek pendaki
+                $pendaki = gk_pendaki::find($formulir['id_pendaki']);
+                if (!$pendaki) {
+                    return back()->withErrors(['formulir' => 'Pendaki tidak ditemukan']);
+                }
+
+                // cek pendaki sudah dewasa
+                if ($pendaki->usia < 17) {
+                    // cek surat izin
+                    if (isset($formulir['surat_izin_ortu'])) {
+                        $path = '';
+                        if (strlen($pendaki->lampiran_surat_izin_ortu) > 0) {
+                            $this->upload->delete($pendaki->lampiran_surat_izin_ortu);
+                            $path = $this->upload->create($booking->id, 'booking', $formulir['surat_izin_ortu']);
+                        } else {
+                            $path = $this->upload->create($booking->id, 'booking', $formulir['surat_izin_ortu']);
+                        }
+                        $pendaki->lampiran_surat_izin_ortu = $path;
+                    }
+                }
+
+                // hitung tagihan pendaki dan booking
+                $pendaki->tagihan = $this->helper->getTagihanPendaki($pendaki);
+                $totalTagihan += $pendaki->tagihan;
+                $pendaki->save();
+            }
         }
 
         if ($request->action == 'next') {
+            // cek kelengkapan bio pendaki
+            $booking->load(['pendakis.biodata']);
+
+            foreach ($booking->pendakis as $p) {
+                // Cek apakah biodata ada
+                if (!$p->biodata) {
+                    return redirect()->back()->withErrors('Biodata pendaki tidak ditemukan.');
+                }
+
+                // Cek apakah no_hp_darurat ada dan sesuai format nomor telepon
+                if (
+                    !isset($p->biodata->no_hp_darurat) ||
+                    !preg_match('/^(\+?[1-9]\d{0,2})?\s?\d{6,15}$/', $p->biodata->no_hp_darurat)
+                ) {
+                    return redirect()->back()->withErrors('No telp darurat pendaki ' . $p->biodata->first_name . ' tidak valid.');
+                }
+
+                // Cek jika pendaki <17 tahun, pastikan lampiran_surat_izin_ortu ada
+                if ($p->usia < 17 && !($this->upload->check($p->lampiran_surat_izin_ortu))) {
+                    return redirect()->back()->withErrors('Lampiran surat izin orang tua pendaki ' . $p->biodata->first_name . ' harus ada.');
+                }
+            }
+
+            // cek min pendaki
+            if ($wni + $wna < $booking->gateMasuk->min_pendaki_booking) {
+                return redirect()->back()->withErrors('Minimal pendaki wni ' . $booking->gateMasuk->min_pendaki_booking . ' orang.');
+            }
+
+            // cek kapasitas pendaki
+            $kapasitas = collect($this->GateCapacity($booking->id_tiket, $booking->tanggal_masuk, $booking->tanggal_masuk, $booking->gerbang_masuk));
+            if (!$kapasitas->isEmpty()) {
+                if ($booking->gateMasuk->max_pendaki_hari < $kapasitas->first()->jumlah_pendaki + $wni + $wna) {
+                    return back()->with('error', 'Error: Kapasitas penuh');
+                }
+            }
+
+            // cek persetujuan barang bawaan
             $request->validate([
-                'barangWajib' => 'required|array',
                 'barangWajib.perlengkapan_gunung_standar' => 'required|boolean',
                 'barangWajib.trash_bag' => 'required|boolean',
                 'barangWajib.p3k_standart' => 'required|boolean',
                 'barangWajib.survival_kit_standart' => 'required|boolean',
             ]);
-
+            // update total pendaki dan total pembayaran booking
             $booking->total_pendaki_wni = $wni;
             $booking->total_pendaki_wna = $wna;
             $booking->status_booking = 3;
@@ -474,8 +511,6 @@ class booking extends Controller
             $booking->save();
 
             return redirect()->route('homepage.booking.detail', ['id' => $booking->id])->with('Data Booking Berhasil disimpan');
-
-            // pindah laman
         } elseif ($request->action == 'save') {
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         }
@@ -485,64 +520,30 @@ class booking extends Controller
     public function bookingDetail($id)
     {
 
-        // cek booking
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $id)
-            ->where('id_user', Auth::id())
-            ->first();
-
-        if (!$booking) {
-            abort(404);
-        } else if ($booking->status_booking != 3) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
-        }
-
-        $booking->total_pembayaran = gk_pendaki::where('booking_id', $booking->id)->sum('tagihan');
-
-        $hitung = function ($param) {
-            return $this->helper->getDetailTagihan($param);
-        };
+        $booking = $this->getBookingByUser($id, 3);
+        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
         return view('homepage.booking.bookingDetail', [
             'booking' => $booking,
             'formulirPendakis' => $booking->pendakis,
-            'hitung' => $hitung
         ]);
     }
 
     public function bookingEdit($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $id)
-            ->where('id_user', Auth::id())
-            ->first();
+        $booking = $this->getBookingByUser($id, 3);
+        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
-        if (!$booking) {
-            abort(404);
-        } elseif ($booking->status_booking > 4) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
-        }
-
-        if ($booking->status_booking == 3) {
-            $booking->status_booking = 2;
-            $booking->save();
-        }
+        $booking->status_booking = 2;
+        $booking->save();
 
         return redirect()->route('homepage.booking', ['id' => $id]);
     }
 
     public function bookingCancel($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $id)
-            ->where('id_user', Auth::id())
-            ->first();
-
-        if (!$booking) {
-            abort(404);
-        } elseif ($booking->status_booking > 4) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
-        }
+        $booking = $this->getBookingByUser($id, [0, 1, 2, 3]);
+        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
         // hapus pembayaran
         $pembayaran = pembayaran::where('id_booking', $id)->get();
@@ -564,40 +565,19 @@ class booking extends Controller
 
     public function bookingPayment($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'gateMasuk.destinasi', 'pendakis'])
-            ->where('id', $id)
-            ->where('id_user', Auth::id())
-            ->first();
+        $booking = $this->getBookingByUser($id, [3, 4, 5, 6, 7, 8]);
+        $booking->load(['gateMasuk', 'gateKeluar', 'gateMasuk.destinasi', 'pendakis']);
 
-        // return $booking;
-
-        if (!$booking) {
-            abort(404);
-        }
-        if ($booking->status_booking < 3) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
-        }
-
-        $booking->total_pembayaran = gk_pendaki::where('booking_id', $id)->sum('tagihan');
         $pembayaran = pembayaran::where('id_booking', $id)->get();
-
-
-        // Check if any 'status' in pembayaran is 'approved'
-        $verified = $pembayaran->contains('status', 'approved'); // true if at least one 'status' is 'approved'
         $qris = gk_gates::where('id', $booking->gate_masuk)->first()->qris;
-
-        // no bank
         $Bank = setting::where('id', '0000bank')->first();
 
-
-        // dd($verified);
         return view('homepage.booking.bookingPayment', [
             'qris' => $qris,
             'booking' => $booking,
             'pendakis' => $booking->pendakis,
             'pembayaran' => $pembayaran,
             'bank' => $Bank,
-            'verified' => $verified, // Pass the verified value to the view
 
         ]);
     }
@@ -609,16 +589,9 @@ class booking extends Controller
             'metode' => 'required|string',
             'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $request->id)
-            ->where('id_user', Auth::id())
-            ->first();
 
-        if (!$booking) {
-            abort(404);
-        } elseif ($booking->status_booking != 3) {
-            return redirect()->route('homepage.booking', ['id' => $request->id]);
-        }
+        $booking = $this->getBookingByUser($request->id, 3);
+        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
         $path = $this->upload->create($request->id, 'booking', $request->bukti_pembayaran);
         if ($request->metode == 'scan') {
@@ -626,6 +599,7 @@ class booking extends Controller
         } elseif ($request->metode == 'transfer') {
             $metode = 'Transfer Bank';
         }
+
         pembayaran::create([
             'id_booking' => $request->id,
             'spesial' => null,
@@ -648,16 +622,7 @@ class booking extends Controller
             'id_pembayaran' => 'required|string',
         ]);
 
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis'])
-            ->where('id', $request->id)
-            ->where('id_user', Auth::id())
-            ->first();
-
-        if (!$booking) {
-            abort(404);
-        } elseif ($booking->status_booking != 3) {
-            return redirect()->route('homepage.booking', ['id' => $request->id]);
-        }
+        $this->getBookingByUser($request->id, 3);
 
         $pembayaran = pembayaran::find($request->id_pembayaran);
         if (!$pembayaran) {
@@ -672,21 +637,13 @@ class booking extends Controller
 
     public function struk($id)
     {
-        $booking = gk_booking::where('id', $id)->first();
-        if (!$booking) {
-            abort(404);
-        } else if ($booking->status_booking < 3) {
-            abort(404);
-        }
+        $booking = $this->getBookingByUser($id, [3, 4, 5, 6, 7, 8]);
 
         if ($booking->status_pembayaran) {
             $booking = json_decode($booking->dataStruk);
-            // return $booking;
         } else {
             $booking = $this->helper->getDataStruk($booking->id);
         }
-
-        // return $booking;
 
         return view('homepage.booking.bookingStruk', [
             'data' => $booking,

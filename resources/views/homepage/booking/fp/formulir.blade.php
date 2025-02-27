@@ -6,7 +6,7 @@
          <div class="col-12 col-md-6 form-group">
             <label class="mandatory fw-bold">Kode Pendaki</label>
             <div class="input-group mb-3">
-               <input type="text" class="form-control" placeholder="Kode User" name="formulir[{{$i}}][kode_bio]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->id : '' }}">
+               <input type="text" class="form-control" placeholder="Kode User" name="formulir[{{$i}}][kode_bio]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->id : '' }}" onkeydown="if(event.key === 'Enter') { event.preventDefault(); addKodePendaki('formulir[{{$i}}]'); }">
                <input type="hidden" class="form-control" name="formulir[{{$i}}][id_pendaki]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->id : '' }}">
 
                @if ($i !==0)
@@ -71,27 +71,31 @@
                </div>
                <div class="col-4">
                   <label class="w-100 fw-bold">Usia</label>
-                  <input type="number" class="form-control" id="usia-{{$i}}" readonly disabled>
+                  <input type="number" class="form-control" id="usia-{{$i}}" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->usia : '' }}" readonly disabled>
                </div>
             </div>
-            <div class="" id="div-surat_izin_ortu-{{$i}}">
+
+            @if (isset($pendaki[$i]) && $pendaki[$i]->usia < 17)
+
                <label for="surat_izin_ortu-{{$i}}" class="w-100 fw-bold mandatory">Surat Izin Orang Tua</label>
                <div class="input-group flex-nowrap">
-                  <input class="form-control" type="file" name="formulir[{{$i}}][surat_izin_ortu]" id="surat_izin_ortu-{{$i}}">
-                  </input>
+                  <input class="form-control" type="file" style="min-width:85px;" name="formulir[{{$i}}][surat_izin_ortu]" id="surat_izin_ortu-{{$i}}"></input>
+
                   @if (isset($pendaki[$i]) && $pendaki[$i]->lampiran_surat_izin_ortu)
+                  <label for="surat_izin_ortu-{{$i}}" class="form-control text-secondary text-truncate w-100">
+                     {{ basename($pendaki[$i]->lampiran_surat_izin_ortu) }}
+                  </label>
+
                   <input type="hidden" id="surat_izin_ortu-{{$i}}_existing" value="{{asset($pendaki[$i]->lampiran_surat_izin_ortu)}}">
                   @endif
                   <button class="input-group-text d-none" type="button" data-id-target="surat_izin_ortu-{{$i}}">
                      <i class="fa-regular fa-eye"></i>
                   </button>
                </div>
-               @if (isset($pendaki[$i]) && $pendaki[$i]->lampiran_surat_izin_ortu)
 
-               <span>{{ $pendaki[$i]->lampiran_surat_izin_ortu }}</span>
+
+
                @endif
-
-            </div>
          </div>
       </div>
 

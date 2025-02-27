@@ -41,12 +41,16 @@ class BookingHelperController extends Controller
     {
         $booking = gk_booking::find($pendaki->booking_id);
         $idtiket = $booking->id_tiket;
+        if ($pendaki->biodata->kenegaraan == 'ID') {
+            $pendakiNegara = 'wni';
+        } else {
+            $pendakiNegara = 'wna';
+        }
         $tiket = gk_tiket_pendaki::where([
             'id_paket_tiket' => $idtiket,
-            'kategori_pendaki' => $pendaki->biodata->kenegaraan,
+            'kategori_pendaki' => $pendakiNegara,
         ])->first();
 
-        // dd($tiket);
 
         $hari = $this->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
 

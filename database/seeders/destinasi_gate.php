@@ -25,8 +25,8 @@ class destinasi_gate extends Seeder
         ]);
 
         gambar_destinasi::create([
-            'src' => asset('componen/gambar_destinasi/kerinci.png'),
-            'nama' => 'Kerinci',,
+            'src' => 'componen/gambar_destinasi/kerinci.png',
+            'nama' => 'Kerinci',
             'detail' => 'Gunung Kerinci',
             'id_destinasi' => 1,
         ]);
@@ -41,8 +41,8 @@ class destinasi_gate extends Seeder
         ]);
 
         gambar_destinasi::create([
-            'src' => asset('componen/gambar_destinasi/danau kaco.jpg'),
-            'nama' => 'Danau Kaco',,
+            'src' => 'componen/gambar_destinasi/danau kaco.jpg',
+            'nama' => 'Danau Kaco',
             'detail' => 'Danau Kaco',
             'id_destinasi' => 2,
         ]);
@@ -57,8 +57,8 @@ class destinasi_gate extends Seeder
         ]);
 
         gambar_destinasi::create([
-            'src' => asset('componen/gambar_destinasi/danau gunung tujuh.jpg'),
-            'nama' => 'Danau Gunung Tujuh',,
+            'src' => 'componen/gambar_destinasi/danau gunung tujuh.jpg',
+            'nama' => 'Danau Gunung Tujuh',
             'detail' => 'Danau Gunung Tujuh',
             'id_destinasi' => 2,
         ]);

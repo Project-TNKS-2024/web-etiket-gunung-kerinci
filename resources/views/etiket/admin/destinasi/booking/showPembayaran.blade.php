@@ -20,9 +20,9 @@
          <span class="badge text-bg-info">Belum ada Pembayaran</span>
          @else
 
-         @if ($booking->pembayaran->last()->status_pembayaran == 'success')
+         @if ($booking->pembayaran->last()->status == 'success')
          <span class="badge text-bg-success">Success</span>
-         @elseif ($booking->pembayaran->last()->status_pembayaran == 'failed')
+         @elseif ($booking->pembayaran->last()->status == 'failed')
          <span class="badge text-bg-danger">Failed</span>
          @else
          <span class="badge text-bg-warning">Pending</span>

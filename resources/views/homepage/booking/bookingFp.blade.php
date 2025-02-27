@@ -253,55 +253,6 @@
     });
 </script>
 
-<!-- script auto generate usia -->
-<script>
-    function generateUsia(index) {
-        // Ambil elemen input tanggal lahir berdasarkan index
-        var tanggalLahirInput = document.getElementById('tanggal_lahir-' + index);
-        var usiaInput = document.getElementById('usia-' + index);
-        var divSuratIzin = document.getElementById('div-surat_izin_ortu-' + index);
-
-        // Ambil nilai tanggal lahir dari input
-        var tanggalLahir = new Date(tanggalLahirInput.value);
-        var today = new Date();
-
-        // Periksa apakah input tanggal lahir diisi
-        if (!isNaN(tanggalLahir.getTime())) {
-            // Hitung usia berdasarkan tanggal lahir
-            var age = today.getFullYear() - tanggalLahir.getFullYear();
-            var monthDiff = today.getMonth() - tanggalLahir.getMonth();
-
-            // Jika bulan belum lewat, kurangi usia
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < tanggalLahir.getDate())) {
-                age--;
-            }
-            // Isi input usia dengan nilai yang dihitung
-            usiaInput.value = age;
-
-            if (age >= 17) {
-                divSuratIzin.classList.add('d-none');
-            } else {
-                divSuratIzin.classList.remove('d-none');
-            }
-        } else {
-            // Jika tanggal lahir tidak valid, kosongkan input usia
-            usiaInput.value = 0;
-        }
-        console.log(age);
-    }
-
-    const inputsTanggalLahir = document.querySelectorAll('input.ipt-tanggal-lahir');
-    document.addEventListener('DOMContentLoaded', function() {
-        inputsTanggalLahir.forEach(function(input) {
-            const index = input.getAttribute('data-index');
-            generateUsia(index);
-            input.addEventListener('change', function() {
-                generateUsia(index);
-            });
-        });
-    });
-</script>
-
 <!-- script modal show file -->
 @include('homepage.template.modal-prefiewFile')
 

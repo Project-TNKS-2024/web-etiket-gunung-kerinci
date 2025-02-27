@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\etiket\user;
 
 use App\Http\Controllers\Controller;
+use App\Models\Data\Negara;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
@@ -10,12 +11,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\gk_booking;
 use App\Models\gk_pendaki;
 
-use function PHPUnit\Framework\isEmpty;
 
 class dashboard extends Controller
 {
     public function index()
     {
+
         $user = User::with('biodata')->find(Auth::user()->id);
 
         $booking = gk_booking::where('status_booking', '<', '8')

@@ -74,7 +74,7 @@ class userSeeder extends Seeder
         // Create User 1
         $biodata1 = bio_pendaki::create([
             'nik' => '1234567834567347',
-            'kenegaraan' => 'wni',
+            'kenegaraan' => 'ID',
             'first_name' => 'User',
             'last_name' => 'One',
             'lampiran_identitas' => 'lampiran1.jpg',
@@ -87,7 +87,7 @@ class userSeeder extends Seeder
             'kec' => '4730',
             'desa' => '26624',
             'keterangan' => 'Pendaki Pemula',
-            'verified' => 'unverified',
+            'verified' => 'verified',
         ]);
 
         User::create([
@@ -103,7 +103,7 @@ class userSeeder extends Seeder
         // Create User 2
         $biodata2 = bio_pendaki::create([
             'nik' => '1234567834567348',
-            'kenegaraan' => 'wni',
+            'kenegaraan' => 'ID',
             'first_name' => 'User',
             'last_name' => 'Two',
             'lampiran_identitas' => 'lampiran2.jpg',
@@ -116,7 +116,7 @@ class userSeeder extends Seeder
             'kec' => '3341',
             'desa' => '54554',
             'keterangan' => 'Pendaki Berpengalaman',
-            'verified' => 'unverified',
+            'verified' => 'verified',
         ]);
 
         User::create([
@@ -132,7 +132,7 @@ class userSeeder extends Seeder
         // Create User 3
         $biodata3 = bio_pendaki::create([
             'nik' => '1234567834567349',
-            'kenegaraan' => 'wna',
+            'kenegaraan' => 'SA',
             'first_name' => 'User',
             'last_name' => 'Three',
             'lampiran_identitas' => 'lampiran3.jpg',
@@ -145,7 +145,7 @@ class userSeeder extends Seeder
             'kec' => '596',
             'desa' => '80177',
             'keterangan' => 'Pendaki Profesional',
-            'verified' => 'unverified',
+            'verified' => 'verified',
         ]);
 
         User::create([
@@ -155,7 +155,7 @@ class userSeeder extends Seeder
             'gauth_type' => 'manual',
             'id_bio' => $biodata3->id,
             'token' => 'user_token_3',
-            'email_verified_at' => null,
+            'email_verified_at' => now(),
         ]);
     }
 }

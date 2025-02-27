@@ -216,9 +216,9 @@
                         <section class="glassmorphic card p-3 d-flex align-items-center justify-content-between">
                             <div>Cuaca Gunung Kerinci</div>
                             <div class="d-flex align-items-center">
-                                <img width="40" id="weather-icon" src="{{$weatherData['current']['condition']['icon']}}" alt="Cuaca">
+                                <img width="40" id="weather-icon" src="{{$weatherData['current']['condition']['icon'] ?? asset('assets/icon/cloud-sun-solid.svg')}}" alt="Cuaca">
                                 <span class="ms-2 fw-bold fs-5">
-                                    <span id="temp_c">{{$weatherData['current']['temp_c']}}</span>&deg;C
+                                    <span id="temp_c">{{$weatherData['current']['temp_c'] ?? 'N/A'}}</span>&deg;C
                                 </span>
                             </div>
                         </section>

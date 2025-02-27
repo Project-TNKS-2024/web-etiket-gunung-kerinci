@@ -52,4 +52,15 @@ class uploadFileControlller extends HelperController
         }
         return null;
     }
+    public function check($path)
+    {
+        if (strlen($path) == 0) {
+            return false;
+        }
+        if (file_exists(public_path($path))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
