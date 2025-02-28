@@ -62,7 +62,7 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-4">
                 @if ($booking->status_booking <=3)
-                    <a type="submit" class="btn btn-warning w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Booking</a>
+                    <a type="submit" class="btn btn-danger w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Booking</a>
                     @endif
             </div>
             <div class="col-12 col-md-4">

@@ -8,6 +8,7 @@ use App\Models\gk_booking;
 use App\Models\gk_pendaki;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class HomepageController extends Controller
 {
@@ -21,6 +22,14 @@ class HomepageController extends Controller
             $weatherResponse = file_get_contents($apiWeatherUrl);
             $weatherData = json_decode($weatherResponse, true);
         } catch (\Exception $e) {
+            Log::channel('admin')->error(
+                'Terjadi kesalahan pada proses pengambilan cuaca dari api  ',
+                [
+                    'api' => $apiWeatherUrl,
+                    'respon' => $weatherResponse,
+                    'error' => $e->getMessage()
+                ]
+            );
             $weatherData = null;
         }
         // $weatherData = null;

@@ -7,38 +7,6 @@
         padding: 3px 5px;
     }
 
-    .header-bg {
-        position: relative;
-        background: url("{{ asset('assets/img/bg/title-header-bg.png') }}") no-repeat;
-        background-size: cover;
-        background-position: 50% 50%;
-        color: white;
-    }
-
-
-    .header-bg::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-        /* Adjust the alpha value for the desired opacity */
-        z-index: 1;
-    }
-
-    .header-content {
-        position: relative;
-        z-index: 2;
-    }
-
-    .border-between {
-        border-top: 2px solid white;
-        width: 50px;
-        margin: 20px 0;
-    }
-
     /* booking detail */
     #booking-detail h1 {
         font-size: 20px;
@@ -125,7 +93,7 @@
     <div class="card border-0 shadow">
         <div class="card-body px-4 px-md-5 pb-4">
             <div class="mt-3">
-                <h1 class="fs-5 fw-bold">Booking {{ $booking->gateMasuk->destinasi->nama }}</h1>
+                <h1 class="fs-5 fw-bold">Booking {{ $booking->gateMasuk->destinasi->kategori }}</h1>
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <table class="table table-borderless ">
@@ -133,16 +101,6 @@
                                 <td>Nama Ketua</td>
                                 <td> : </td>
                                 <td>{{ $formulirPendakis[0]->first_name . ' ' . $formulirPendakis[0]->last_name }}</td>
-                            </tr>
-                            <tr>
-                                <td>Gerbang Masuk</td>
-                                <td> : </td>
-                                <td>{{ $booking->gateMasuk->nama }}</td>
-                            </tr>
-                            <tr>
-                                <td>Gerbang Keluar</td>
-                                <td> : </td>
-                                <td>{{ $booking->gateKeluar->nama }}</td>
                             </tr>
                             <tr>
                                 <td>Check In</td>
@@ -158,6 +116,30 @@
                                 <td>Jumlah Pendaki</td>
                                 <td> : </td>
                                 <td>{{ $booking->total_pendaki_wni }} WNI dan {{ $booking->total_pendaki_wna }} WNA</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <table class="table table-borderless ">
+                            <tr>
+                                <td>Nama Destinasi</td>
+                                <td> : </td>
+                                <td>{{ $formulirPendakis[0]->first_name . ' ' . $formulirPendakis[0]->last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Paket Pendakian</td>
+                                <td> : </td>
+                                <td>{{ $booking->gkTiket->nama }}</td>
+                            </tr>
+                            <tr>
+                                <td>Gerbang Masuk</td>
+                                <td> : </td>
+                                <td>{{ $booking->gateMasuk->nama }}</td>
+                            </tr>
+                            <tr>
+                                <td>Gerbang Keluar</td>
+                                <td> : </td>
+                                <td>{{ $booking->gateKeluar->nama }}</td>
                             </tr>
                         </table>
                     </div>
@@ -186,10 +168,10 @@
                                 <td>Kewarganegaraan</td>
                                 <td> : </td>
                                 <td>
-                                    @if($pendaki->biodata->kenegaraan == 'wni')
-                                    Warga Negara Indonesia (WNI)
+                                    @if($pendaki->biodata->kenegaraan == 'ID')
+                                    (WNI) {{$pendaki->biodata->Datanegara->name}}
                                     @else
-                                    Warga Negara Asing (WNA)
+                                    (WNA) {{$pendaki->biodata->Datanegara->name}}
                                     @endif
                                 </td>
                             </tr>
@@ -285,11 +267,11 @@
     <div class="row">
         <div class="col-12 col-md-4">
             @if ($booking->status_booking <=3)
-                <a type="submit" class="btn btn-warning w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Booking</a>
+                <a type="submit" class="btn btn-danger w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Booking</a>
                 @endif
         </div>
         <div class="col-12 col-md-4">
-            <a type="submit" class="btn btn-primary w-100 fw-bold mt-3"
+            <a type="submit" class="btn btn-info w-100 fw-bold mt-3"
                 href="{{ route('homepage.booking.edit', ['id' => $booking->id]) }}">Kembali</a>
         </div>
         <div class="col-12 col-md-4 text-end">

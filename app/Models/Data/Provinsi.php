@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 
-class Negara extends Model
+class Provinsi extends Model
 {
-    protected static $filePath = 'assets/json/negara.json';
+    protected static $filePath = 'assets/json/provinsi.json';
 
     public static function getAll(): Collection
     {
@@ -23,13 +23,13 @@ class Negara extends Model
 
     public static function getByCode($code)
     {
-        return self::getAll()->where('code', $code)->first();
+        return self::getAll()->where('id', $code)->first();
     }
 
     public static function getDuplicateCodes(): array
     {
         $data = self::getAll();
-        $grouped = $data->groupBy('code')->filter(fn($items) => $items->count() > 1);
+        $grouped = $data->groupBy('id')->filter(fn($items) => $items->count() > 1);
         return $grouped->toArray();
     }
 }

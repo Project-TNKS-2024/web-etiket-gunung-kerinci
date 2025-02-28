@@ -69,8 +69,9 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/master/destinasi/delete', [destinasisController::class, 'deleteAction'])->name('admin.master.destinasi.deleteAction');
 
     // Master - Pengunjung
-    Route::get('admin/master/pengunung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung');
-    Route::post('admin/master/pengunung/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.verified');
+    Route::get('admin/master/pengujung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung');
+    Route::get('admin/master/pengujung/{id}/biodata', [PengunjungController::class, 'biodata'])->name('admin.master.pengunjung.biodata');
+    Route::post('admin/master/pengujung/biodata/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.biodata.verified');
 
     // Master - Admin
     Route::get('/admins/akun', [AccountAdminController::class, 'index'])->name('admins.akun.index');

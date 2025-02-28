@@ -73,9 +73,6 @@ class gk_booking extends Model
 
     public function getStatusBooking($id = null)
     {
-        // if (isEmpty($id)) {
-        //     $id = $this->status;
-        // }
         if (isEmpty($id)) {
             $id = $this->status_booking;
         }

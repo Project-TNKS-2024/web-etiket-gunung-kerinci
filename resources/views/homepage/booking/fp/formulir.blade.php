@@ -33,12 +33,8 @@
             <div class="row">
                <div class="col-6">
                   <label class="w-100 fw-bold">Kewarganegaraan</label>
-                  <input type="text" class="form-control" name="formulir[{{$i}}][kewarganegaraan]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->kenegaraan : '' }}" readonly disabled>
+                  <input type="text" class="form-control" name="formulir[{{$i}}][kewarganegaraan]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->Datanegara->name : '' }}" readonly disabled>
                </div>
-               <!-- <div class="col-6">
-                  <label class="w-100 fw-bold">No Induk</label>
-                  <input type="number" class="form-control" name="formulir[{{$i}}][identitas]" value="{{ isset($pendaki[$i]) ? $pendaki[$i]->biodata->nik : '' }}" readonly disabled>
-               </div> -->
                <div class="col-6">
                   <label class="w-100 fw-bold">Jenis Kelamin</label>
                   <input type="text" class="form-control" name="formulir[{{$i}}][jenis_kelamin]" value="{{ isset($pendaki[$i]) ? ($pendaki[$i]->biodata->jenis_kelamin == 'l' ? 'Laki-laki' : 'Perempuan') : '' }}" readonly disabled>

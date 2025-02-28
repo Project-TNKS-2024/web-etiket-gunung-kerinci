@@ -151,6 +151,12 @@ class bookingController extends AdminController
 
         if ($booking->pembayaran->isNotEmpty()) {
             // Perbarui keterangan pembayaran terakhir
+            $pembayaranPending = $booking->pembayaran->where('status', 'pending');
+            foreach ($pembayaranPending as  $p) {
+                $p->update([
+                    'status' => $request->verified === 'yes' ? 'success' : 'failed',
+                ]);
+            }
             $lastPembayaran = $booking->pembayaran->last();
             $lastPembayaran->update([
                 'status' => $request->verified === 'yes' ? 'success' : 'failed',
@@ -166,7 +172,7 @@ class bookingController extends AdminController
     public function showBooking($id)
     {
         // $booking = gk_booking::with('pendakis', 'pendakis.biodata', 'gateMasuk', 'gateKeluar', 'gkTiket', 'pendakis')->find($id_booking);
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'destinasi'])->where('id', $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'destinasi'])->where('id', $id)->first();
 
         // return $booking->pendakis[0];
         return view('etiket.admin.destinasi.booking.showBooking', [
@@ -184,15 +190,19 @@ class bookingController extends AdminController
 
     public function updateStatus(Request $request)
     {
-        $booking = gk_booking::find($request['id']);
-        if ($booking->status_booking < $request['status']) {
-            $booking->update([
-                'status_booking' => $request['status']
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Status booking berhasil diperbarui');
+        return $request;
     }
+    // public function updateStatus(Request $request)
+    // {
+    //     $booking = gk_booking::find($request['id']);
+    //     if ($booking->status_booking < $request['status']) {
+    //         $booking->update([
+    //             'status_booking' => $request['status']
+    //         ]);
+    //     }
+
+    //     return redirect()->back()->with('success', 'Status booking berhasil diperbarui');
+    // }
 
     public function showStruk($id)
     {

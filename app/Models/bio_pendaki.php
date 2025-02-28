@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Data\Desa;
+use App\Models\Data\Kabupaten;
+use App\Models\Data\Kecamatan;
 use App\Models\Data\Negara;
+use App\Models\Data\Provinsi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -39,6 +43,9 @@ class bio_pendaki extends Model
         'tanggal_lahir' => 'date',
     ];
 
+    protected $appends = ['fullName', 'dataNegara', 'dataProvinsi', 'dataKabupaten', 'dataKecamatan', 'dataDesa'];
+
+
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -59,13 +66,46 @@ class bio_pendaki extends Model
             }
         });
     }
+
+    public function Booking()
+    {
+        return $this->hasManyThrough(
+            gk_booking::class,
+            gk_pendaki::class,
+            'id_bio',
+            'id',
+            'id',
+            'booking_id'
+        );
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id_bio', 'id');
+    }
+
     public function getFullNameAttribute()
     {
         return trim("{$this->first_name} {$this->last_name}");
     }
-
-    public function getNegara()
+    public function getDataNegaraAttribute()
     {
         return Negara::getByCode($this->kenegaraan);
+    }
+    public function getDataProvinsiAttribute()
+    {
+        return Provinsi::getByCode($this->provinsi);
+    }
+    public function getDataKabupatenAttribute()
+    {
+        return Kabupaten::getByCode($this->kabupaten);
+    }
+    public function getDataKecamatanAttribute()
+    {
+        return Kecamatan::getByCode($this->kec);
+    }
+    public function getDataDesaAttribute()
+    {
+        return Desa::getByCode($this->desa);
     }
 }

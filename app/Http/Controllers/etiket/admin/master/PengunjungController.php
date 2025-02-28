@@ -19,9 +19,15 @@ class PengunjungController extends AdminController
             ->with('biodata')
             ->paginate(50);
 
-        // return $dataUser;
-
         return view('etiket.admin.master.akunUsers.index', compact('dataUser'));
+    }
+    public function biodata($id)
+    {
+        $user = User::with('booking.destinasi', 'booking.pendakis', 'biodata')->where('role', 'user')->find($id);
+
+        // return $user;
+        // return $user->biodata->dataDesa->name;
+        return view('etiket.admin.master.akunUsers.biodata', compact('user'));
     }
     public function verificationBiodata(Request $request)
     {

@@ -53,9 +53,13 @@
                   <td>{{ optional($user->biodata)->verified }}</td>
                   <td>
                      @if ($user->biodata->verified == 'pending')
-                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal" data-detail="{{json_encode($user)}}" data-lampiran={{json_encode(asset($user->biodata->lampiran_identitas))}}>Verifikasi</button>
+                     <a href="{{route('admin.master.pengunjung.biodata', ['id' => $user->id])}}" class="btn btn-sm btn-warning">
+                        <i class="fa-solid fa-circle-info"></i>
+                     </a>
                      @else
-                     <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal" data-detail="{{json_encode($user)}}" data-lampiran={{json_encode(asset($user->biodata->lampiran_identitas))}}>Detail</button>
+                     <a href="{{route('admin.master.pengunjung.biodata', ['id' => $user->id])}}" class="btn btn-sm btn-info">
+                        <i class="fa-solid fa-circle-info"></i>
+                     </a>
                      @endif
                   </td>
                </tr>
@@ -73,132 +77,9 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="detailModalLabel">Detail Pengguna</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-            <div class="container">
-               <h1 class="fs-4 form-label">Biodata</h1>
-               <div class="row">
-                  <div class="col-12 col-md-6">
-                     <table id="biodataTable">
-                        <tr>
-                           <td>NIK/Passport</td>
-                           <td>:</td>
-                           <td id="detailNIK">-</td>
-                        </tr>
-                        <tr>
-                           <td>Nama Lengkap</td>
-                           <td>:</td>
-                           <td id="detailNama">-</td>
-                        </tr>
-                        <tr>
-                           <td>Kewarganegaraan</td>
-                           <td>:</td>
-                           <td id="detailKewarganegaraan">-</td>
-                        </tr>
-                        <tr>
-                           <td>Tempat/Tanggal Lahir</td>
-                           <td>:</td>
-                           <td id="detailTTL">-</td>
-                        </tr>
-                        <tr>
-                           <td>Jenis Kelamin</td>
-                           <td>:</td>
-                           <td id="detailJenisKelamin">-</td>
-                        </tr>
-                        <tr>
-                           <td>No Telp</td>
-                           <td>:</td>
-                           <td id="detailNoTelp">-</td>
-                        </tr>
-                        <tr>
-                           <td>No Telp Darurat</td>
-                           <td>:</td>
-                           <td id="detailNoDarurat">-</td>
-                        </tr>
-                        <tr>
-                           <td>Alamat</td>
-                           <td>:</td>
-                           <td id="detailAlamat">-</td>
-                        </tr>
-                     </table>
-                  </div>
-                  <div class="col-12 col-md-6">
-                     <div class="border rounded p-2" style="max-height: 300px; overflow: hidden;">
-                        <embed id="detailLampiran" src="" type="application/pdf" width="100%" height="280px">
-                     </div>
-                  </div>
-                  <div>
-                     <h1 class="fs-4 form-label mt-3">Riwayat Pendakian</h1>
-                     <!-- Tambahkan jika diperlukan -->
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="modal-footer">
-            <form method="post" id="btnVerify" class="d-flex align-items-center w-100" action="{{ route('admin.master.pengunjung.verified') }}">
-               @csrf
-               <!-- Input keterangan dengan fleksibilitas penuh -->
-               <input type="text" name="keterangan" class="form-control me-3" placeholder="Masukkan keterangan">
-               <input type="hidden" name="id_user" id="id_user" value="">
-
-               <!-- Tombol aksi -->
-               <button type="submit" name="verified" class="btn btn-success me-2" value="verified">Verifikasi</button>
-               <button type="submit" name="verified" class="btn btn-danger me-2" value="unverified">Unverifikasi</button>
-            </form>
-            <!-- Tombol close di luar form -->
-         </div>
-
-
-      </div>
-   </div>
-</div>
 @endsection
 
 @section('js')
-<!-- modal detail pendaki -->
-<script>
-   document.addEventListener('DOMContentLoaded', () => {
-      const detailModal = document.getElementById('detailModal');
 
-      document.querySelector('tbody').addEventListener('click', function(e) {
-         if (e.target && e.target.matches('button[data-detail]')) {
-            const detailData = JSON.parse(e.target.getAttribute('data-detail'));
-            const lampiran = JSON.parse(e.target.getAttribute('data-lampiran'));
-
-            // Update modal content
-            document.getElementById('detailNIK').textContent = detailData.biodata?.nik || '-';
-            document.getElementById('id_user').value = detailData.id || '-';
-            document.getElementById('detailNama').textContent = detailData.biodata?.first_name + ' ' + (detailData.biodata?.last_name || '');
-            document.getElementById('detailKewarganegaraan').textContent = detailData.biodata?.kenegaraan || '-';
-            document.getElementById('detailTTL').textContent = detailData.biodata?.tanggal_lahir || '-';
-            document.getElementById('detailJenisKelamin').textContent = detailData.biodata?.jenis_kelamin === 'l' ? 'Laki-laki' : 'Perempuan';
-            document.getElementById('detailNoTelp').textContent = detailData.biodata?.no_hp || '-';
-            document.getElementById('detailNoDarurat').textContent = detailData.biodata?.no_hp_darurat || '-';
-            document.getElementById('detailAlamat').textContent = detailData.biodata?.provinsi + ' ' + detailData.biodata?.kabupaten + ' ' + detailData.biodata?.kec + ' ' + detailData.biodata?.desa || '-';
-            document.getElementById('detailLampiran').setAttribute('src', lampiran + '#toolbar=0' || '');
-
-            // Show or hide buttons based on verification status
-            const btnVerify = document.getElementById('btnVerify');
-            if (detailData.biodata?.verified === 'pending') {
-               btnVerify.classList.remove('d-none');
-            } else {
-               btnVerify.classList.add('d-none');
-            }
-
-
-
-            // Show modal
-            const modalInstance = bootstrap.Modal.getOrCreateInstance(detailModal);
-            modalInstance.show();
-         }
-      });
-   })
-</script>
 
 @endsection

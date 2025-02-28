@@ -227,38 +227,31 @@
                 </div>
 
                 @if ($booking->status_booking ==3)
-                <h1 class="fs-5 fw-bold">Upload Bukti Pembayaran</h1>
-                <form class="mb-3 d-block d-flex gap-2" action="{{ route('homepage.booking.addBuktiPembayaran') }}"
-                    method="post" enctype="multipart/form-data">
+                <h1 class="fs-5 fw-bold mb-3">Upload Bukti Pembayaran</h1>
+
+                <form action="{{ route('homepage.booking.addBuktiPembayaran') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="{{ $booking->id }}">
 
-                    <div>
-                        <select class="form-select" name="metode">
-                            <option selected disabled>Metode</option>
-                            <option value="transfer">Transfer Bank</option>
-                            <option value="scan">Scan QR</option>
-                        </select>
+                    <select class="form-select" name="metode">
+                        <option selected disabled>Pilih Metode</option>
+                        <option value="transfer">Transfer Bank</option>
+                        <option value="scan">Scan QR</option>
+                    </select>
 
-                        <div class="input-group mt-2">
-                            <input class="form-control h-100" type="file" name="bukti_pembayaran"
-                                id="bukti_pembayaran" accept="image/*,.pdf">
-                            <button class="input-group-text d-none " type="button" data-id-target="bukti_pembayaran">
-                                <i class=" fa-regular fa-eye"></i>
-                            </button>
-                        </div>
+                    <div class="input-group mt-1">
+                        <input class="form-control" type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept="image/*,.pdf">
+                        <button class="input-group-text d-none" type="button" data-id-target="bukti_pembayaran">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
                     </div>
-
-
-                    <button class="btn btn-primary my-md-0" data-bs-toggle="modal"
-                        data-bs-target="#addBuktiModal">
+                    <button class="btn btn-primary w-100 mt-1" data-bs-toggle="modal" data-bs-target="#addBuktiModal">
                         Upload
                     </button>
                 </form>
-
                 @endif
 
-                <h1 class="fs-5 fw-bold mt-3 mt-sm-0">Riwayat Pembayaran</h1>
+                <h1 class="fs-5 fw-bold mt-3">Riwayat Pembayaran</h1>
                 @if (count($pembayaran) > 0)
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover align-middle bg-white">
@@ -331,10 +324,15 @@
     <div class="row">
         <div class="col-12 col-md-4">
             @if ($booking->status_booking <=3)
-                <a type="submit" class="btn btn-warning w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Booking</a>
+                <a type="submit" class="btn btn-danger w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Booking</a>
                 @endif
         </div>
-        <div class="col-12 col-md-4"></div>
+        <div class="col-12 col-md-4">
+            @if ($booking->status_booking <=3)
+                <a type="submit" class="btn btn-info w-100 fw-bold mt-3"
+                href="{{ route('homepage.booking.detail', ['id' => $booking->id]) }}">Kembali</a>
+                @endif
+        </div>
         <div class="col-12 col-md-4 text-end">
             @if ($booking->status_booking >= 4)
             <a type="submit" class="btn btn-success w-100 fw-bold mt-3" href="{{ route('dashboard.tiket', ['id' => $booking->id]) }}">Lihat Tiket</a>

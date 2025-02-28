@@ -72,8 +72,6 @@ class profile extends Controller
         }
         $request['nomor_telepon'] = $request->telp_country . ' ' . $request->nomor_telepon;
 
-
-
         $upload = new uploadFileControlller();
 
         // cek apakah sudah ada bio atau belum
@@ -82,6 +80,7 @@ class profile extends Controller
             $bio = bio_pendaki::find($user->id_bio);
 
             if (!$bio->verified_at) {
+                // jika belum pernah di verifikasi
                 $bioUseNik = bio_pendaki::where('nik', $request->nik)->where('verified', 'verified')->first();
 
                 if ($bioUseNik) {

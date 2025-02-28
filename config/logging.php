@@ -130,7 +130,12 @@ return [
         // log khusus
         'admin' => [
             'driver' => 'single',
-            'path' => storage_path('logs/admin_costum.log'), // File log aktivitas admin
+            'path' => storage_path('logs/admin.log'), // File log aktivitas admin
+            'level' => 'info',
+        ],
+        'pengguna' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/pengguna.log'), // File log aktivitas admin
             'level' => 'info',
         ],
 

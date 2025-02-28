@@ -521,7 +521,7 @@ class booking extends Controller
     {
 
         $booking = $this->getBookingByUser($id, 3);
-        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
+        $booking->load(['gateMasuk', 'gateKeluar', 'gktiket', 'pendakis']);
 
         return view('homepage.booking.bookingDetail', [
             'booking' => $booking,

@@ -34,21 +34,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -62,6 +52,20 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(bio_pendaki::class, 'id', 'id_bio',);
     }
+
+    public function booking()
+    {
+        return $this->hasManyThrough(
+            gk_booking::class,  // Model Booking (C)
+            gk_pendaki::class,  // Model Pendaki (B)
+            'id_bio',           // Foreign key di tabel Pendaki ke Biodata (bio_pendakis.id)
+            'id',               // Primary key di tabel Booking (id)
+            'id_bio',           // Foreign key di tabel User ke Biodata (bio_pendakis.id)
+            'booking_id'        // Foreign key di tabel Pendaki ke Booking (gk_bookings.id)
+        );
+    }
+
+
 
     // Relasi many-to-many dengan Destinasi
     public function destinasis(): BelongsToMany
