@@ -17,6 +17,7 @@ class gk_tiket_pendaki extends Model
         'harga_kemah',
         'harga_traking',
         'harga_ansuransi',
+        'masa_ansuransi',
     ];
 
     public function paket_tiket()

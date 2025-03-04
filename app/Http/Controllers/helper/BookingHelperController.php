@@ -9,9 +9,6 @@ use App\Models\gk_tiket_pendaki;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
-use Illuminate\Http\Request;
-use PhpParser\Node\Expr\FuncCall;
-
 class BookingHelperController extends Controller
 {
 
@@ -40,6 +37,7 @@ class BookingHelperController extends Controller
     public function getDetailTagihan($pendaki)
     {
         $booking = gk_booking::find($pendaki->booking_id);
+
         $idtiket = $booking->id_tiket;
         if ($pendaki->biodata->kenegaraan == 'ID') {
             $pendakiNegara = 'wni';
@@ -59,8 +57,10 @@ class BookingHelperController extends Controller
         $tagihanTraking = $tiket->harga_traking;
 
         $totalDays = $hari->getData()->weekends + $hari->getData()->weekdays;
-        $insuranceCostPerPeriod = $tiket->harga_ansuransi; // Misalnya, Rp 50,000 per tiga hari
-        $insurancePeriods = ceil($totalDays / 3); // Pembulatan ke atas
+        $insuranceCostPerPeriod = $tiket->harga_ansuransi;
+        $insurancePeriods = ceil($totalDays / $tiket->masa_ansuransi);
+        // Calculate the total insurance cost for the entire period
+
         $tagihanAsuransi = $insurancePeriods * $insuranceCostPerPeriod;
 
         return [
@@ -74,23 +74,17 @@ class BookingHelperController extends Controller
 
     function countWeekdaysAndWeekends($dateStart, $dateEnd)
     {
-        // Convert string dates to Carbon instances
         $start = Carbon::createFromFormat(
-            // 'd-m-Y',
             'Y-m-d',
             $dateStart,
         );
-        // return $dateStart;
         $end = Carbon::createFromFormat('Y-m-d', $dateEnd);
 
-        // Create a CarbonPeriod instance
         $period = CarbonPeriod::create($start, $end);
 
-        // Initialize counters
         $weekdays = 0;
         $weekends = 0;
 
-        // Iterate through each date in the period
         foreach ($period as $date) {
             if ($date->isWeekend()) {
                 $weekends++;
@@ -104,15 +98,16 @@ class BookingHelperController extends Controller
             'weekends' => $weekends,
         ]);
     }
-    function countWniWna($idbooking)
+    function countWniWna(gk_booking $booking)
     {
-        $booking = gk_booking::with(['pendakis', 'pendakis.biodata'])->where('id', $idbooking)->first();
+
+        $booking->load('pendakis.biodata');
 
         $wni = 0;
         $wna = 0;
 
         foreach ($booking->pendakis as $pendaki) {
-            if ($pendaki->biodata->kenegaraan === 'wni') {
+            if ($pendaki->biodata->kenegaraan === 'ID') {
                 $wni++;
             } else {
                 $wna++;
@@ -142,9 +137,10 @@ class BookingHelperController extends Controller
         ])->where('id', $idbooking)->first();
 
         $wkwd = $this->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
-        $wniwna = $this->countWniWna($booking->id);
+        $wniwna = $this->countWniWna($booking);
         $booking->wkwd = (object) $wkwd->getData(true);
         $booking->wniwna = (object) $wniwna->getData(true);
+        unset($booking->dataStruk);
         return $booking;
     }
 }

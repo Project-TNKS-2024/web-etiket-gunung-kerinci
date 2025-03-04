@@ -126,7 +126,7 @@
    <div class="card-footer">
       <form method="post" id="btnVerify" class="d-flex align-items-center w-100" action="{{ route('admin.destinasi.booking.payment.update') }}">
          @csrf
-         <input type="text" name="keterangan" class="form-control me-3" placeholder="Masukkan keterangan">
+         <input type="text" name="keterangan" class="form-control me-3" placeholder="Masukkan keterangan" required>
          <input type="hidden" name="id_booking" id="updateIdBooking" value="{{$booking->id}}">
          <button type="submit" name="verified" class="btn btn-primary" value="yes">Setujui</button>
          <button type="submit" name="verified" class="btn btn-warning ms-1" value="no">Tolak</button>

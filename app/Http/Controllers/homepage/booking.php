@@ -503,6 +503,11 @@ class booking extends Controller
                 'barangWajib.p3k_standart' => 'required|boolean',
                 'barangWajib.survival_kit_standart' => 'required|boolean',
             ]);
+
+            // buat data Struk
+            $dataStruk = $this->helper->getDataStruk($booking->id);
+            $booking->dataStruk = $dataStruk;
+
             // update total pendaki dan total pembayaran booking
             $booking->total_pendaki_wni = $wni;
             $booking->total_pendaki_wna = $wna;
@@ -532,9 +537,14 @@ class booking extends Controller
     public function bookingEdit($id)
     {
         $booking = $this->getBookingByUser($id, 3);
-        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
+        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis', 'pembayaran']);
 
         $booking->status_booking = 2;
+        // hapus semua pembayaran
+        $pembayaran = pembayaran::where('id_booking', $id)->get();
+        foreach ($pembayaran as $p) {
+            $p->delete();
+        }
         $booking->save();
 
         return redirect()->route('homepage.booking', ['id' => $id]);
@@ -644,6 +654,8 @@ class booking extends Controller
         } else {
             $booking = $this->helper->getDataStruk($booking->id);
         }
+
+        // return $booking;
 
         return view('homepage.booking.bookingStruk', [
             'data' => $booking,

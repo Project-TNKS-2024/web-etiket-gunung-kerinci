@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('harga_kemah');
             $table->integer('harga_traking');
             $table->integer('harga_ansuransi');
+            $table->integer('masa_ansuransi')->default(1);
             $table->timestamps();
 
             // Foreign key constraint for id_destinasi if needed

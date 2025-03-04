@@ -75,6 +75,10 @@
                <label class="form-label">Harga Asuransi</label>
                <input type="number" name="harga_asuransi_{{ $kategori }}" class="form-control" value="{{ $harga_tiket->harga_ansuransi ?? '' }}">
             </div>
+            <div class="col-md-6 mb-3">
+               <label class="form-label">Masa Ansuransi (hari)</label>
+               <input type="number" name="masa_asuransi_{{ $kategori }}" class="form-control" value="{{ $harga_tiket->masa_ansuransi ?? '' }}">
+            </div>
          </div>
          @endforeach
 

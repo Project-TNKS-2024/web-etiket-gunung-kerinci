@@ -119,6 +119,7 @@ class tiketController extends AdminController
             'harga_kemah_wni' => 'required|numeric|min:0',
             'harga_tracking_wni' => 'required|numeric|min:0',
             'harga_asuransi_wni' => 'required|numeric|min:0',
+            'masa_asuransi_wni' => 'required|numeric|min:0',
 
             // Tiket WNA
             'id_tiket_wna' => 'required|integer',
@@ -127,6 +128,7 @@ class tiketController extends AdminController
             'harga_kemah_wna' => 'required|numeric|min:0',
             'harga_tracking_wna' => 'required|numeric|min:0',
             'harga_asuransi_wna' => 'required|numeric|min:0',
+            'masa_asuransi_wna' => 'required|numeric|min:0',
         ]);
 
         $paket = ModelPaketTiket::findOrFail($validateData['id_tiket']);
@@ -143,6 +145,7 @@ class tiketController extends AdminController
             'harga_kemah' => $validateData['harga_kemah_wni'],
             'harga_traking' => $validateData['harga_tracking_wni'],
             'harga_ansuransi' => $validateData['harga_asuransi_wni'],
+            'masa_asuransi' => $validateData['masa_asuransi_wni'],
         ]);
         $tiketWNA = ModelTiket::findOrFail($validateData['id_tiket_wna']);
         $tiketWNA->update([
@@ -151,6 +154,7 @@ class tiketController extends AdminController
             'harga_kemah' => $validateData['harga_kemah_wna'],
             'harga_traking' => $validateData['harga_tracking_wna'],
             'harga_ansuransi' => $validateData['harga_asuransi_wna'],
+            'masa_asuransi' => $validateData['masa_asuransi_wna'],
         ]);
         return back()->with('success', 'Berhasil Update tiket');
     }

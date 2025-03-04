@@ -205,17 +205,20 @@
          </form>
          <div>
             <button type="button" class="btn btn-warning btn-aksi btn-batal-pendakian" data-target="batal-checkbox" data-name="1">Batal Pendakian</button>
-            <button type="button" class="btn btn-primary btn-aksi btn-cekin" data-target="cekin-checkbox" data-name="2">Cek in</button>
-            <button type="button" class="btn btn-primary btn-aksi btn-cekout" data-target="cekout-checkbox" data-name="3">Cek out</button>
-            <button type="button" class="btn btn-danger btn-batal d-none">Batal</button>
-            <form method="POST" action="{{route('admin.destinasi.booking.updateStatus')}}" class="d-inline">
-               @if ($booking->status_booking == 7)
-               @csrf
-               <input type="hidden" name="id" value="{{$booking->id}}">
-               <input type="hidden" name="status" value="8">
-               <button type="submit" class="btn btn-success">Selesai</button>
+            @if ($booking->tanggal_masuk < now())
+               <button type="button" class="btn btn-primary btn-aksi btn-cekin" data-target="cekin-checkbox" data-name="2">Cek in</button>
+               <button type="button" class="btn btn-primary btn-aksi btn-cekout" data-target="cekout-checkbox" data-name="3">Cek out</button>
                @endif
-            </form>
+
+               <button type="button" class="btn btn-danger btn-batal d-none">Batal</button>
+               <form method="POST" action="{{route('admin.destinasi.booking.updateStatus')}}" class="d-inline">
+                  @if ($booking->status_booking == 7)
+                  @csrf
+                  <input type="hidden" name="id" value="{{$booking->id}}">
+                  <input type="hidden" name="status" value="8">
+                  <button type="submit" class="btn btn-success">Selesai</button>
+                  @endif
+               </form>
          </div>
       </div>
    </div>

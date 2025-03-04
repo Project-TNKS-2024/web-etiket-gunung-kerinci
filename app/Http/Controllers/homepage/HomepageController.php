@@ -5,8 +5,6 @@ namespace App\Http\Controllers\homepage;
 use App\Http\Controllers\Controller;
 use App\Models\destinasi;
 use App\Models\gk_booking;
-use App\Models\gk_pendaki;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 

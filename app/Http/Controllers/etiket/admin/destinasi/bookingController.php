@@ -109,17 +109,48 @@ class bookingController extends AdminController
             abort(404);
         }
 
+        if ($booking->status_booking > 4) {
+            return redirect()->back()->withErrors('Bookingan sudah melakukan pendakian');
+        }
+
+        // Perbarui keterangan pembayaran terakhir
+        if ($booking->pembayaran->isNotEmpty()) {
+            $pembayaranPending = $booking->pembayaran->where('status', 'pending');
+            foreach ($pembayaranPending as  $p) {
+                $p->update([
+                    'status' => $request->verified === 'yes' ? 'success' : 'failed',
+                ]);
+            }
+            $lastPembayaran = $booking->pembayaran->last();
+            $lastPembayaran->update([
+                'status' => $request->verified === 'yes' ? 'success' : 'failed',
+                'keterangan' => $request->keterangan,
+            ]);
+        } else {
+            return redirect()->back()->withErrors('Pembayaran tidak ditemukan');
+        }
+
         if ($request->verified === 'yes') {
             $booking->update([
                 'unique_code' =>  $this->helper->generateCode(10),
                 'status_booking' =>  4,
                 'status_pembayaran' =>  1,
             ]);
-            $struk = $this->helper->getDataStruk($booking->id);
+
+            // update struk
+            $booking->load('pembayaran');
+            $dataStruk = json_decode($booking->dataStruk);
+
+            $dataStruk->status_booking = 4;
+            $dataStruk->status_pembayaran = 1;
+            $dataStruk->unique_code = $booking->unique_code;
+            $dataStruk->pembayaran = $booking->pembayaran;
+
             $booking->update([
-                'dataStruk' => $struk,
+                'dataStruk' => json_encode($dataStruk),
             ]);
 
+            // Kirim email ke user
             $order = [
                 'name' => $userBooking->biodata->first_name . ' ' . $userBooking->biodata->last_name,
                 'booking_code' => $booking->unique_code,
@@ -141,33 +172,11 @@ class bookingController extends AdminController
                 );
             }
         } else {
-            if ($booking->status_booking > 4) {
-                return redirect()->back()->withErrors('Bookingan sudah melakukan pendakian');
-            }
             $booking->update([
                 'unique_code' => null,
                 'status_booking' =>  3,
                 'status_pembayaran' =>  0,
-                'dataStruk' => null,
             ]);
-        }
-
-
-        if ($booking->pembayaran->isNotEmpty()) {
-            // Perbarui keterangan pembayaran terakhir
-            $pembayaranPending = $booking->pembayaran->where('status', 'pending');
-            foreach ($pembayaranPending as  $p) {
-                $p->update([
-                    'status' => $request->verified === 'yes' ? 'success' : 'failed',
-                ]);
-            }
-            $lastPembayaran = $booking->pembayaran->last();
-            $lastPembayaran->update([
-                'status' => $request->verified === 'yes' ? 'success' : 'failed',
-                'keterangan' => $request->keterangan,
-            ]);
-        } else {
-            return redirect()->back()->withErrors('Pembayaran tidak ditemukan');
         }
 
         return redirect()->back()->with('success', 'Pengajuan berhasil diperbarui');
@@ -382,8 +391,7 @@ class bookingController extends AdminController
             }
         }
 
-        // Cek jika semua pendaki dalam booking memiliki status terakhir 3 (Cek Out) atau 1 (Batal Mendaki)
-        // refresh data bookimh
+
         $booking->refresh();
         $semuaSelesai = $booking->pendakis->every(function ($pendaki) {
             $lastStatus = $pendaki->getStatus->last();

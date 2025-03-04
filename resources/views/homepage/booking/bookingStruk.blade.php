@@ -56,7 +56,7 @@
             <address>
                Balai Besar Taman Nasional Kerinci Seblat<br>
                Jambi, Indonesia<br>
-               NPWP: 031.783.862.1-086.000
+               NPWP: 000.000.000.0-000.000
             </address>
          </div>
          <div class="col-sm-6 text-end">
@@ -107,8 +107,7 @@
                <tbody>
                   @if($data->wniwna->wni > 0)
                   @php
-                  $tiket = collect($data->gktiket->tiket_pendaki)
-                  ->first(fn($item) => $item->kategori_pendaki === 'wni');
+                  $tiket = collect($data->gktiket->tiket_pendaki)->first(fn($item) => $item->kategori_pendaki === 'wni');
                   @endphp
                   <tr>
                      <td>
@@ -124,28 +123,26 @@
                         <br>
                         Tiket pendakian ({{$tiket->harga_traking ?? '0'}}) +
                         <br>
-                        Asuransi ({{$tiket->harga_ansuransi ?? '0'}})
+                        Asuransi({{$tiket->masa_ansuransi}}hari) ({{$tiket->harga_ansuransi ?? '0'}}) x {{ceil($data->total_hari/$tiket->masa_ansuransi)}}
                      </td>
-                     <td class="text-end text-nowrap">
-                        Rp. {{ number_format(($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) + 
-                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) + 
-                        ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) + 
-                        ($tiket->harga_traking ?? 0) + 
-                        ($tiket->harga_ansuransi ?? 0), 0, ',', '.') }}
+                     <td class="text-end text-nowrap text-center">
+                        @php
+                        $harga = ($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) +
+                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) +
+                        ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) +
+                        ($tiket->harga_traking ?? 0) +
+                        ($tiket->harga_ansuransi ?? 0) * ceil($data->total_hari/$tiket->masa_ansuransi)
+                        @endphp
+                        Rp. {{ number_format($harga, 0, ',', '.') }}
                      </td>
                      <td>
                         {{$data->wniwna->wni ?? 0}}
                      </td>
-                     <td class="text-end text-nowrap">
+                     <td class="text-end text-nowrap text-center">
                         @php
-                        $harga = (($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) +
-                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) +
-                        ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) +
-                        ($tiket->harga_traking ?? 0) +
-                        ($tiket->harga_ansuransi ?? 0)) * ($data->wniwna->wni ?? 0);
-                        $totalHarga += $harga;
+                        $totalHarga += $harga* $data->wniwna->wni;
                         @endphp
-                        Rp. {{ number_format($harga, 0, ',', '.') }}
+                        Rp. {{ number_format(($harga * $data->wniwna->wni), 0, ',', '.') }}
                      </td>
                   </tr>
                   @endif
@@ -159,34 +156,36 @@
                      <td>
                         <b>Tiket Kategori {{$data->gktiket->nama}} WNI</b>
                         <br>
-                        Tiket masuk ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd->weekdays ?? '0'}} +
+                        Tiket masuk weekday ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd->weekdays ?? '0'}} hari +
                         @if ($data->wkwd->weekends > 0)
-                        Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd->weekends ?? '0'}} +
+                        <br>
+                        Tiket masuk weekend ({{$tiket->harga_masuk_wk ?? '0'}}) x {{$data->wkwd->weekends ?? '0'}} hari +
                         @endif
-                        Tiket kemah ({{$tiket->harga_kemah ?? '0'}}) x {{$data->total_hari -1}} +
+                        <br>
+                        Tiket kemah ({{$tiket->harga_kemah ?? '0'}}) x {{$data->total_hari -1}} malam +
+                        <br>
                         Tiket pendakian ({{$tiket->harga_traking ?? '0'}}) +
-                        Asuransi ({{$tiket->harga_ansuransi ?? '0'}})
-                     </td>
-                     <td class="text-end text-nowrap">
-                        Rp. {{ number_format(($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) + 
-                        ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) + 
-                        ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) + 
-                        ($tiket->harga_traking ?? 0) + 
-                        ($tiket->harga_ansuransi ?? 0), 0, ',', '.') }}
-                     </td>
-                     <td>
-                        {{$data->wniwna->wni ?? 0}}
+                        <br>
+                        Asuransi({{$tiket->masa_ansuransi}}hari) ({{$tiket->harga_ansuransi ?? '0'}}) x {{ceil($data->total_hari/$tiket->masa_ansuransi)}}
                      </td>
                      <td class="text-end text-nowrap">
                         @php
-                        $harga = (($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) +
+                        $harga = ($tiket->harga_masuk_wd ?? 0) * ($data->wkwd->weekdays ?? 0) +
                         ($tiket->harga_masuk_wk ?? 0) * ($data->wkwd->weekends ?? 0) +
                         ($tiket->harga_kemah ?? 0) * ($data->total_hari -1) +
                         ($tiket->harga_traking ?? 0) +
-                        ($tiket->harga_ansuransi ?? 0)) * ($data->wniwna->wna ?? 0);
-                        $totalHarga += $harga;
+                        ($tiket->harga_ansuransi ?? 0) * ceil($data->total_hari/$tiket->masa_ansuransi)
                         @endphp
                         Rp. {{ number_format($harga, 0, ',', '.') }}
+                     </td>
+                     <td>
+                        {{$data->wniwna->wna ?? 0}}
+                     </td>
+                     <td class="text-end text-nowrap">
+                        @php
+                        $totalHarga += $harga* $data->wniwna->wna;
+                        @endphp
+                        Rp. {{ number_format(($harga * $data->wniwna->wni), 0, ',', '.') }}
                      </td>
                   </tr>
                   @endif
