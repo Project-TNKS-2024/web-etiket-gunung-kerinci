@@ -7,11 +7,15 @@ use App\Http\Controllers\helper\BookingHelperController;
 use App\Mail\BookingPayment;
 use App\Models\destinasi;
 use App\Models\gk_booking;
+use App\Models\statusPendaki;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+
+use function PHPUnit\Framework\isEmpty;
 
 class bookingController extends AdminController
 {
@@ -171,18 +175,35 @@ class bookingController extends AdminController
 
     public function showBooking($id)
     {
-        // $booking = gk_booking::with('pendakis', 'pendakis.biodata', 'gateMasuk', 'gateKeluar', 'gkTiket', 'pendakis')->find($id_booking);
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'destinasi'])->where('id', $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'pendakis.getStatus', 'destinasi'])->where('id', $id)->first();
 
-        // return $booking->pendakis[0];
+        $listStatusPendakian = $booking->pendakis->flatMap(function ($pendaki) {
+            return collect($pendaki->getStatus)->map(function ($status) use ($pendaki) {
+                return (object) [
+                    'id' => $status->id,
+                    'status' => $status->status,
+                    'statusName' => $status->statusName(),
+                    'id_pendaki' => $status->id_pendaki,
+                    'detail' => $status->detail,
+                    'tanggal' => Carbon::parse($status->created_at)->format('Y-m-d'), // Format tanggal
+                    'jam' => Carbon::parse($status->created_at)->format('H:i:s'), // Format jam
+                    'fullName' => $pendaki->fullName, // Menambahkan nama pendaki
+                ];
+            });
+        });
+
+
+        // return $listStatusPendakian[0];
         return view('etiket.admin.destinasi.booking.showBooking', [
-            'booking' => $booking
+            'booking' => $booking,
+            'listStatusPendakian' => $listStatusPendakian,
         ]);
     }
 
     public function showTiket($id)
     {
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'destinasi'])->where('id', $id)->first();
+
         return view('etiket.admin.destinasi.booking.showTiket', [
             'booking' => $booking
         ]);
@@ -190,19 +211,195 @@ class bookingController extends AdminController
 
     public function updateStatus(Request $request)
     {
-        return $request;
-    }
-    // public function updateStatus(Request $request)
-    // {
-    //     $booking = gk_booking::find($request['id']);
-    //     if ($booking->status_booking < $request['status']) {
-    //         $booking->update([
-    //             'status_booking' => $request['status']
-    //         ]);
-    //     }
+        $request->validate([
+            'booking_id' => 'required|uuid|exists:gk_bookings,id',
+            'name' => 'required|integer|in:0,1,2,3',
+            'pendakis' => 'nullable|array',
+            'pendakis.*' => 'nullable|in:0,1'
+        ]);
 
-    //     return redirect()->back()->with('success', 'Status booking berhasil diperbarui');
-    // }
+        // return $request;
+
+        // cek status booking >= 4
+        $booking = gk_booking::find($request->booking_id);
+        if ($booking->status_booking < 4 and $booking->status_booking > 8) {
+            return redirect()->back()->withErrors('Bookingan belum menyelesaikan pembayaran');
+        }
+
+        $message = [];
+
+        // jika tanggal masuk < hari ini, cuma bisa memberi konfirmasi batal pendakian
+        if ($booking->tanggal_masuk > date('Y-m-d')) {
+            if ($request->name != 0) {
+                return redirect()->back()->withErrors('Tidak bisa mengubah status booking');
+            }
+            $message += $this->pendakiCancel($booking, $request->pendakis);
+        } else {
+            switch ($request->name) {
+                case '1':
+                    $message += $this->pendakiCancel($booking, $request->pendakis);
+                    break;
+                case '2':
+                    $message += $this->pendakiCekIn($booking, $request->pendakis);
+                    break;
+                case '3':
+                    $message += $this->pendakiCekOut($booking, $request->pendakis);
+                    break;
+                case '4':
+                    $this->bookingSelesai($booking);
+                    break;
+
+                default:
+                    return redirect()->back()->withErrors('Tidak bisa mengubah status booking');
+                    break;
+            }
+        }
+
+
+        return redirect()->back()->with($message);
+    }
+
+    private function bookingSelesai($booking)
+    {
+        $booking->load('pendakis.getStatus');
+        // Cek jika semua pendaki dalam booking memiliki status terakhir 3 (Cek Out) atau 1 (Batal Mendaki)
+        $semuaSelesai = $booking->pendakis->every(function ($pendaki) {
+            $lastStatus = $pendaki->getStatus->last();
+            return $lastStatus && in_array($lastStatus->status, [1, 3]);
+        });
+
+        // Jika semua pendaki sudah selesai (Cek Out atau Batal), update status booking menjadi 7
+        if ($semuaSelesai) {
+            $booking->update(['status_booking' => 7]);
+        }
+    }
+
+    private function pendakiCancel($booking, $pendakis)
+    {
+        $booking->load('pendakis.getStatus');
+        $messages = [];
+        foreach ($pendakis as $idPendaki => $statusPendaki) {
+            $pendaki = $booking->pendakis->where('id', $idPendaki)->first();
+            $lastStatus = $pendaki->getStatus->last();
+            if (empty($lastStatus)) {
+                if ($statusPendaki == 1) {
+                    statusPendaki::create([
+                        'id_pendaki' => $pendaki->id,
+                        'status' => 1,
+                        'detail' => 'Batal melakukan pendakian',
+                    ]);
+                    $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' dibatalkan';
+                }
+            } elseif ($lastStatus->status == 1) {
+                if ($statusPendaki == 0) {
+                    $lastStatus->delete();
+                }
+                $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
+            } elseif ($lastStatus->status > 1) {
+                if ($statusPendaki == 1) {
+                    $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' tidak dapat dibatalkan, karna sudah ' . $lastStatus->statusName();
+                }
+            }
+        }
+
+        if ($booking->status_booking == 4) {
+            $booking->update([
+                'status_booking' => 5
+            ]);
+        }
+
+        return $messages;
+    }
+    private function pendakiCekIn($booking, $pendakis)
+    {
+        $booking->load('pendakis.getStatus');
+        $messages = [];
+        foreach ($pendakis as $idPendaki => $statusPendaki) {
+            $pendaki = $booking->pendakis->where('id', $idPendaki)->first();
+            $lastStatus = $pendaki->getStatus->last();
+
+            if (empty($lastStatus)) {
+                if ($statusPendaki == 1) {
+                    statusPendaki::create([
+                        'id_pendaki' => $pendaki->id,
+                        'status' => 2,
+                        'detail' => 'Melakukan pendakian',
+                    ]);
+                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
+                }
+            } elseif ($lastStatus->status == 1) {
+                $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' sudah dibatalkan';
+            } elseif ($lastStatus->status == 2) {
+                if ($statusPendaki == 0) {
+                    $lastStatus->delete();
+                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil dihapus';
+                }
+            } elseif ($lastStatus->status == 3) {
+                if ($statusPendaki == 0) {
+                    $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' tidak dapat diterima, karna sudah ' . $lastStatus->statusName();
+                }
+            }
+        }
+
+        if ($booking->status_booking <= 5) {
+            $booking->update([
+                'status_booking' => 6
+            ]);
+        }
+
+        return $messages;
+    }
+    private function pendakiCekOut($booking, $pendakis)
+    {
+        $booking->load('pendakis.getStatus');
+        $messages = [];
+        foreach ($pendakis as $idPendaki => $statusPendaki) {
+            $pendaki = $booking->pendakis->where('id', $idPendaki)->first();
+            $lastStatus = $pendaki->getStatus->last();
+
+            if (empty($lastStatus)) {
+                if ($statusPendaki == 1) {
+                    $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' gagal diupdate';
+                }
+            } elseif ($lastStatus->status == 1) {
+                $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' tidak dapat diterima, karna sudah ' . $lastStatus->statusName();
+            } elseif ($lastStatus->status == 2) {
+                if ($statusPendaki == 1) {
+                    statusPendaki::create([
+                        'id_pendaki' => $pendaki->id,
+                        'status' => 3,
+                        'detail' => 'Melakukan pendakian',
+                    ]);
+                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
+                }
+            } elseif ($lastStatus->status == 3) {
+                if ($statusPendaki == 0) {
+                    $lastStatus->delete();
+                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil dihapus';
+                } else {
+                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' sudah ' . $lastStatus->statusName();
+                }
+            }
+        }
+
+        // Cek jika semua pendaki dalam booking memiliki status terakhir 3 (Cek Out) atau 1 (Batal Mendaki)
+        // refresh data bookimh
+        $booking->refresh();
+        $semuaSelesai = $booking->pendakis->every(function ($pendaki) {
+            $lastStatus = $pendaki->getStatus->last();
+            return $lastStatus && in_array($lastStatus->status, [1, 3]);
+        });
+
+        // Jika semua pendaki sudah selesai (Cek Out atau Batal), update status booking menjadi 7
+        if ($semuaSelesai) {
+            $booking->update(['status_booking' => 7]);
+        } else {
+            $booking->update(['status_booking' => 6]);
+        }
+
+        return $messages;
+    }
+
 
     public function showStruk($id)
     {

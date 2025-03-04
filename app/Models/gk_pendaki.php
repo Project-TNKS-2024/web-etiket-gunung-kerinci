@@ -19,7 +19,6 @@ class gk_pendaki extends Model
         'booking_id',
         'tagihan',
         'id_bio',
-        'status',
         'usia',
         // input lampiran
         'lampiran_surat_izin_ortu',
@@ -58,28 +57,11 @@ class gk_pendaki extends Model
         return $this->belongsTo(bio_pendaki::class, 'id_bio');
     }
 
-    public function getStatus($value = null)
+
+
+    public function getStatus()
     {
-        if (isEmpty($value)) {
-            $value = $this->status;
-        }
-        switch ($value) {
-            case 0:
-                return 'Batal';
-                break;
-            case 1:
-                return 'Konfirmasi';
-                break;
-            case 2:
-                return 'Check In';
-                break;
-            case 3:
-                return 'Check Out';
-                break;
-            default:
-                return 'Tidak Diketahui';
-                break;
-        }
+        return $this->hasMany(statusPendaki::class, 'id_pendaki');
     }
 
     public function getFirstNameAttribute()

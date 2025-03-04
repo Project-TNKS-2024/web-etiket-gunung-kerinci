@@ -134,14 +134,6 @@
          <a href="{{route('admin.destinasi.booking.struk.show', ['id' => $booking->id])}}" class="btn btn-warning">Ubah Tanggal Pendakian</a>
          <a href="{{route('admin.destinasi.booking.payment.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Pembelian</a>
          <a href="{{route('admin.destinasi.booking.tiket.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Tiket</a>
-         <form method="POST" action="{{route('admin.destinasi.booking.updateStatus')}}" class="d-inline">
-            @if ($booking->status_booking == 7)
-            @csrf
-            <input type="hidden" name="id" value="{{$booking->id}}">
-            <input type="hidden" name="status" value="8">
-            <button type="submit" class="btn btn-success">Selesai</button>
-            @endif
-         </form>
       </div>
    </div>
 </div>
@@ -177,17 +169,17 @@
                   <td>{{$pendaki->biodata->jenis_kelamin=='l' ? 'Laki - laki' : 'Perempuan' }}</td>
                   <td>
                      <div class="form-check">
-                        <input class="form-check-input batal-checkbox" type="checkbox" data-id="{{$pendaki->id}}">
+                        <input class="form-check-input batal-checkbox" {{ optional($pendaki->getStatus->last())->status == 1 ? 'checked' : '' }} type="checkbox" data-id="{{$pendaki->id}}" disabled>
                      </div>
                   </td>
                   <td>
                      <div class="form-check">
-                        <input class="form-check-input cekin-checkbox" type="checkbox" data-id="{{$pendaki->id}}">
+                        <input class="form-check-input cekin-checkbox" {{ optional($pendaki->getStatus->last())->status >= 2 ? 'checked' : '' }} type="checkbox" data-id="{{$pendaki->id}}" disabled>
                      </div>
                   </td>
                   <td>
                      <div class="form-check">
-                        <input class="form-check-input cekout-checkbox" type="checkbox" data-id="{{$pendaki->id}}">
+                        <input class="form-check-input cekout-checkbox" {{ optional($pendaki->getStatus->last())->status == 3 ? 'checked' : '' }} type="checkbox" data-id="{{$pendaki->id}}" disabled>
                      </div>
                   </td>
                   <td>
@@ -212,11 +204,62 @@
             <button type="submit" class="btn btn-success btn-simpan d-none">Simpan Perubahan</button>
          </form>
          <div>
-            <button type="button" class="btn btn-warning btn-aksi btn-batal-pendakian" data-target="batal-checkbox" data-name="batal booking">Batal Pendakian</button>
-            <button type="button" class="btn btn-primary btn-aksi btn-cekin" data-target="cekin-checkbox" data-name="cekin">Cek in</button>
-            <button type="button" class="btn btn-primary btn-aksi btn-cekout" data-target="cekout-checkbox" data-name="cekout">Cek out</button>
+            <button type="button" class="btn btn-warning btn-aksi btn-batal-pendakian" data-target="batal-checkbox" data-name="1">Batal Pendakian</button>
+            <button type="button" class="btn btn-primary btn-aksi btn-cekin" data-target="cekin-checkbox" data-name="2">Cek in</button>
+            <button type="button" class="btn btn-primary btn-aksi btn-cekout" data-target="cekout-checkbox" data-name="3">Cek out</button>
             <button type="button" class="btn btn-danger btn-batal d-none">Batal</button>
+            <form method="POST" action="{{route('admin.destinasi.booking.updateStatus')}}" class="d-inline">
+               @if ($booking->status_booking == 7)
+               @csrf
+               <input type="hidden" name="id" value="{{$booking->id}}">
+               <input type="hidden" name="status" value="8">
+               <button type="submit" class="btn btn-success">Selesai</button>
+               @endif
+            </form>
          </div>
+      </div>
+   </div>
+</div>
+
+<div class="card">
+   <div class="card-header">
+      <h5><b>Riwayat Pendakian</b></h5>
+   </div>
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-bordered">
+            <thead class="bg-dark text-white">
+               <tr>
+                  <td>Status</td>
+                  <td>Tanggal</td>
+                  <td>Jam</td>
+                  <td>Nama</td>
+                  <td>Keterangan</td>
+               </tr>
+            </thead>
+            <tbody class="table-group-divider">
+               @foreach ($listStatusPendakian as $status)
+               <tr>
+                  <td>
+                     @php
+                     $badgeClass = match($status->status) {
+                     1 => 'text-bg-danger', // Merah untuk status 1
+                     2 => 'text-bg-primary', // Biru untuk status 2
+                     3 => 'text-bg-success', // Hijau untuk status 3
+                     default => 'text-bg-secondary', // Warna default jika tidak ada yang cocok
+                     };
+                     @endphp
+                     <span class="badge rounded-pill {{ $badgeClass }}">{{ $status->statusName }}</span>
+                  </td>
+
+                  <td>{{$status->tanggal}}</td>
+                  <td>{{$status->jam}}</td>
+                  <td>{{$status->fullName}}</td>
+                  <td>{{$status->detail}}</td>
+               </tr>
+               @endforeach
+            </tbody>
+         </table>
       </div>
    </div>
 </div>

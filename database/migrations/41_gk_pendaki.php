@@ -19,7 +19,6 @@ return new class extends Migration
             $table->uuid('id_bio');
 
             $table->integer('usia');
-            $table->integer('status')->nullable();
             //  0 = batal, 1, konfrimasi, 2 = cek in, 3 = cek out
 
             $table->string('lampiran_surat_izin_ortu')->nullable();
