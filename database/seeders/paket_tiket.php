@@ -30,7 +30,8 @@ class paket_tiket extends Seeder
             'keterangan' => 'paket untuk kalangan umum',
         ]);
 
-
+        // @bbtn_kerinciseblatofficial 24-okt-2024
+        // @bbtn_kerinciseblatofficial 16-jann-2025
         gk_tiket_pendaki::create([
             'id_paket_tiket' => 1,
             'kategori_pendaki' => 'wni',
@@ -39,6 +40,7 @@ class paket_tiket extends Seeder
             'harga_kemah' => 5000,
             'harga_traking' => 20000,
             'harga_ansuransi' => 2500,
+            'masa_ansuransi' => 3,
         ]);
         gk_tiket_pendaki::create([
             'id_paket_tiket' => 1,
@@ -48,6 +50,7 @@ class paket_tiket extends Seeder
             'harga_kemah' => 5000,
             'harga_traking' => 20000,
             'harga_ansuransi' => 2500,
+            'masa_ansuransi' => 3,
         ]);
 
 
@@ -59,6 +62,7 @@ class paket_tiket extends Seeder
             'harga_kemah' => 5000,
             'harga_traking' => 20000,
             'harga_ansuransi' => 2500,
+            'masa_ansuransi' => 3,
         ]);
         gk_tiket_pendaki::create([
             'id_paket_tiket' => 2,
@@ -67,7 +71,8 @@ class paket_tiket extends Seeder
             'harga_masuk_wd' => 150000,
             'harga_kemah' => 5000,
             'harga_traking' => 20000,
-            'harga_ansuransi' => 50000,
+            'harga_ansuransi' => 2500,
+            'masa_ansuransi' => 3,
         ]);
     }
 }
