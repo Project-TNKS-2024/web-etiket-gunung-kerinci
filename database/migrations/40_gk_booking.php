@@ -15,7 +15,6 @@ return new class extends Migration
             $table->unsignedBigInteger('id_tiket');
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar');
-            $table->enum('kategori_hari', ['wk', 'wd']); //==================
             $table->integer('total_hari');
             $table->integer('total_pendaki_wni');
             $table->integer('total_pendaki_wna');
