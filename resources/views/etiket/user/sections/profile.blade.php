@@ -100,6 +100,7 @@
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold">Kewarganegaraan</label>
                         <select class="form-control border-secondary" name="kewarganegaraan" id="kewarganegaraan">
+                            <option value="" disabled selected> -- Pilih Negara -- </option>
                             @foreach ($negara as $n)
                             <option value="{{$n->code}}" {{ old('kewarganegaraan', isset($user->biodata->kenegaraan) && $user->biodata->kenegaraan == $n->code ? 'selected' : '') }}>{{ $n->name}}</option>
                             @endforeach
