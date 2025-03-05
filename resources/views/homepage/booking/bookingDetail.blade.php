@@ -185,12 +185,12 @@
                                 <td>{{$pendaki->biodata->jenis_kelamin == 'l' ? 'Laki-laki' : 'Perempuan'}}</td>
                             </tr>
                             <tr>
-                                <td>No. Telepon</td>
+                                <td>No. Telp</td>
                                 <td> : </td>
                                 <td>{{$pendaki->biodata->no_hp}}</td>
                             </tr>
                             <tr>
-                                <td>No. Telepon Darurat</td>
+                                <td>No. Telp Darurat</td>
                                 <td> : </td>
                                 <td>{{$pendaki->biodata->no_hp_darurat}}</td>
                             </tr>
