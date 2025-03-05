@@ -81,7 +81,6 @@
 
     .table td:first-child {
         width: 200px;
-        font-weight: bold;
     }
 </style>
 @endsection
@@ -186,12 +185,12 @@
                                 <td>{{$pendaki->biodata->jenis_kelamin == 'l' ? 'Laki-laki' : 'Perempuan'}}</td>
                             </tr>
                             <tr>
-                                <td>No Telepon</td>
+                                <td>No. Telepon</td>
                                 <td> : </td>
                                 <td>{{$pendaki->biodata->no_hp}}</td>
                             </tr>
                             <tr>
-                                <td>No Telepon Darurat</td>
+                                <td>No. Telepon Darurat</td>
                                 <td> : </td>
                                 <td>{{$pendaki->biodata->no_hp_darurat}}</td>
                             </tr>
