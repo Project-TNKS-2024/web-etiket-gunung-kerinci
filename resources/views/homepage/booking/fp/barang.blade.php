@@ -12,7 +12,7 @@
       <div class="form-check">
          <input class="form-check-input" type="checkbox" name="barangWajib[trash_bag]" value="1" id="trash_bag" {{ old('barangWajib.trash_bag') ? 'checked' : '' }}>
          <label class="form-check-label" for="trash_bag">
-            Trash Bag
+            Plastik Sampah
          </label>
       </div>
 

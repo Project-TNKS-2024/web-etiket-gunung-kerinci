@@ -342,10 +342,10 @@
                 console.log('tanggal pendakian valid');
             }
 
-            const days = new Date(formBooking['date_end'].value) - new Date(formBooking['date_start'].value);
-            document.getElementById('countDays').textContent = days / (1000 * 3600 * 24) + 1;
-            document.getElementById('countNights').textContent = days / (1000 * 3600 * 24);
-            formBooking['days_traking'].value = days / (1000 * 3600 * 24);
+            const days = (new Date(formBooking['date_end'].value) - new Date(formBooking['date_start'].value)) / (1000 * 3600 * 24);
+            document.getElementById('countDays').textContent = days + 1;
+            document.getElementById('countNights').textContent = days;
+            formBooking['days_traking'].value = days;
         } else {
             console.log('tanggal pendakian belum dipilih');
         }
