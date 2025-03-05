@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="my-3 col-12">
-            <h5 class="mb-3 fw-bold">Pilih Jenis Paket {{ $gunung->nama }}</h5>
+            <h5 class="mb-3 fw-bold">Paket Wisata Pendakian {{ $gunung->nama }}</h5>
 
             <div class="row g-3">
                 @foreach ($paket as $p)
