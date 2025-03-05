@@ -144,8 +144,22 @@
                         </div>
                     </div>
                     <a href="{{route('homepage.booking.struk', ['id' => $booking->id] )}}" class="btn btn-primary w-100 mt-3 w-0">Lihat Detail Pemesanan</a>
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            @if ($booking->status_booking <=3)
+                                <a type="submit" class="btn btn-danger w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Pemesanan</a>
+                                @endif
+                        </div>
+                        <div class="col-12 col-md-6">
+                            @if ($booking->status_booking <=3)
+                                <a type="submit" class="btn btn-warning w-100 fw-bold mt-3"
+                                href="{{ route('homepage.booking.detail', ['id' => $booking->id]) }}">Kembali</a>
+                                @endif
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="col-12 col-md-6">
                 <h1 class="fs-5 fw-bold mt-3 mt-sm-0">Metode Pembayaran</h1>
 
@@ -324,23 +338,6 @@
                 <a type="submit" class="btn btn-success w-100 fw-bold mt-3" href="{{ route('dashboard.tiket', ['id' => $booking->id]) }}">Lihat Tiket</a>
                 @endif
             </div>
-
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 col-md-3">
-            @if ($booking->status_booking <=3)
-                <a type="submit" class="btn btn-danger w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Pemesanan</a>
-                @endif
-        </div>
-        <div class="col-12 col-md-3">
-            @if ($booking->status_booking <=3)
-                <a type="submit" class="btn btn-info w-100 fw-bold mt-3"
-                href="{{ route('homepage.booking.detail', ['id' => $booking->id]) }}">Kembali</a>
-                @endif
-        </div>
-        <div class="col-12 col-md-4 text-end">
 
         </div>
     </div>
