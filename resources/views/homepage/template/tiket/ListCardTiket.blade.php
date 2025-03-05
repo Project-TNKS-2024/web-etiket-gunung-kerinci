@@ -43,8 +43,8 @@
                 <td>{{ $booking->gateKeluar->nama }}</td>
              </tr>
              <tr class="fw-bold">
-                <td>Check In</td>
-                <td>Check Out</td>
+                <td>Tanggal Masuk</td>
+                <td>Tanggal Keluar</td>
              </tr>
              <tr>
                 <td>{{ $booking->tanggal_masuk }}</td>
