@@ -228,7 +228,7 @@
                                 <p class="mb-0">Cara Pembayaran</p>
                                 <ul>
                                     <li>Buka aplikasi m-banking atau dompet digital (OVO, GoPay, DANA, ShopeePay, dll.).</li>
-                                    <li>Pilih menu <strong>"QRIS"</strong>/ dan arahkan kamera ke QRIS yang tertera.</li>
+                                    <li>Pilih menu <strong>"QRIS"</strong> dan arahkan kamera ke QRIS yang tertera.</li>
                                     <li>Pastikan nama penerima adalah <i>nama yang terteri di barcode di atas</i>.</li>
                                     <li>Masukkan jumlah pembayaran yang sesuai.</li>
                                     <li>Konfirmasi dan selesaikan pembayaran.</li>
