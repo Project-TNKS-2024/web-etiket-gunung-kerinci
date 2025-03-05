@@ -123,7 +123,7 @@
                         <br>
                         Tiket pendakian ({{$tiket->harga_traking ?? '0'}}) +
                         <br>
-                        Asuransi({{$tiket->masa_ansuransi}}hari) ({{$tiket->harga_ansuransi ?? '0'}}) x {{ceil($data->total_hari/$tiket->masa_ansuransi)}}
+                        Asuransi ({{$tiket->masa_ansuransi}}hari) ({{$tiket->harga_ansuransi ?? '0'}}) x {{ceil($data->total_hari/$tiket->masa_ansuransi)}}
                      </td>
                      <td class="text-end text-nowrap text-center">
                         @php
