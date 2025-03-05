@@ -245,6 +245,7 @@
                             <i class="fa-regular fa-eye"></i>
                         </button>
                     </div>
+                    <p style="font-size: 12px;" class="mb-0">Max. 1MB</p>
                     <button class="btn btn-primary w-100 mt-1" data-bs-toggle="modal" data-bs-target="#addBuktiModal">
                         Upload
                     </button>
