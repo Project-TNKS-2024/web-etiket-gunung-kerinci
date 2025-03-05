@@ -201,7 +201,7 @@
                             <button class="accordion-button collapsed fw-semibold" type="button"
                                 data-bs-toggle="collapse" data-bs-target="#qrScanCollapse" aria-expanded="false"
                                 aria-controls="qrScanCollapse">
-                                Scan QRIS
+                                QRIS
                             </button>
                         </h2>
                         <div id="qrScanCollapse" class="accordion-collapse collapse" aria-labelledby="qrScanHeading"
@@ -214,7 +214,7 @@
                                 <p class="mb-0">Cara Pembayaran</p>
                                 <ul>
                                     <li>Buka aplikasi m-banking atau dompet digital (OVO, GoPay, DANA, ShopeePay, dll.).</li>
-                                    <li>Pilih menu <strong>"QRIS"</strong> dan arahkan kamera ke QRIS yang tertera.</li>
+                                    <li>Pilih menu <strong>"QRIS"</strong>/ dan arahkan kamera ke QRIS yang tertera.</li>
                                     <li>Pastikan nama penerima adalah <i>nama yang terteri di barcode di atas</i>.</li>
                                     <li>Masukkan jumlah pembayaran yang sesuai.</li>
                                     <li>Konfirmasi dan selesaikan pembayaran.</li>
@@ -236,7 +236,7 @@
                     <select class="form-select" name="metode">
                         <option selected disabled>Pilih Metode</option>
                         <option value="transfer">Transfer Bank</option>
-                        <option value="scan">Scan Qris</option>
+                        <option value="scan">QRIS</option>
                     </select>
 
                     <div class="input-group mt-1">
