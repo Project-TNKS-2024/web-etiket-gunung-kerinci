@@ -124,7 +124,7 @@
                             <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
+                            <label for="password" class="form-label">Kata Sandi</label>
                             <div class="input-group">
                                 <input type="password" class="form-control" id="password" name="password" required>
                                 <span class="input-group-text btn-visibility" data-target='password'><i class="fa-solid fa-eye"></i> </i></span>
@@ -132,7 +132,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">Ulangi Password</label>
+                            <label for="password_confirmation" class="form-label">Ulangi Kata Sandi</label>
                             <div class="input-group">
                                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                                 <span class="input-group-text btn-visibility" data-target='password_confirmation'><i class="fa-solid fa-eye"></i> </i></span>
@@ -148,13 +148,13 @@
                             </a>
                         </div>
                         <div class="form-group mb-3 text-center">
-                            <p>Sudah Punya Akun? <a href="{{ route('login') }}">Log in</a></p>
+                            <p>Sudah Punya Akun? <a href="{{ route('login') }}">Masuk</a></p>
                         </div>
                     </form>
                 </div>
             </div>
             <footer class="text-center mt-auto">
-                <p class="index-t2">© Taman Nasional Kerinci Seblat 2024</p>
+                <p class="index-t2">© Taman Nasional Kerinci Seblat 2025</p>
             </footer>
         </div>
     </div>

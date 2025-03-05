@@ -10,7 +10,7 @@
         @csrf
         <input type="hidden" name="token" value="{{ $token }}">
         <div class="form-group mb-3">
-            <label for="password" class="form-label ">Password</label>
+            <label for="password" class="form-label ">Kata Sandi</label>
             <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
                 name="password" required autocomplete="current-password">
             @error('password')
@@ -20,11 +20,11 @@
             @enderror
         </div>
         <div class="form-group mb-3">
-            <label for="password_confirmation" class="form-label">Ulangi Password</label>
+            <label for="password_confirmation" class="form-label">Ulangi Kata Sandi</label>
             <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
                 required>
         </div>
-    
+
         <div class="form-group mb-3">
             <button type="submit" class="btn btn-primary w-100">Atur Ulang Kata Sandi</button>
         </div>
