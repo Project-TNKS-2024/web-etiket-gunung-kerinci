@@ -29,20 +29,20 @@ $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->
                     <a href="{{ route('homepage.beranda') }}" class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('homepage.panduan') }}" class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2">Panduan Booking</a>
+                    <a href="{{ route('homepage.panduan') }}" class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2">Panduan Pemesanan</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('homepage.booking.destinasi.list') }}" class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2" data-route="[{{ implode(',', $bookingRoutes) }}]">Booking Online</a>
+                    <a href="{{ route('homepage.booking.destinasi.list') }}" class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2" data-route="[{{ implode(',', $bookingRoutes) }}]">Pesan Tiket</a>
                 </li>
             </ul>
 
             <ul class="navbar-nav d-flex align-items-center">
                 @guest
                 <li class="nav-item">
-                    <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3" href="{{ route('register') }}">Register</a>
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3" href="{{ route('register') }}">Daftar</a>
                 </li>
                 <li class="nav-item ms-md-3">
-                    <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3" href="{{ route('login') }}">Login</a>
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3" href="{{ route('login') }}">Masuk</a>
                 </li>
                 @endguest
 
@@ -57,7 +57,7 @@ $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->
                 <form action="{{ route('etiket.auth.logout') }}" method="post" class="mb-0 w-100 px-3">
                     @csrf
                     <button class="nav-link text-white py-2 bg-danger align-items-center w-100" type="submit">
-                        Logout
+                        Keluar
                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     </button>
                 </form>

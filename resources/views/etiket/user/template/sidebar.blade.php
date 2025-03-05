@@ -24,18 +24,18 @@
         <a href="{{ route('user.dashboard.profile') }}" id="dashboard-profile"
             class="dashboard-sidebar-btn rounded-lg">Profile</a>
         <a href="{{ route('user.dashboard.reiwayat') }}" id="dashboard-profile"
-            class="dashboard-sidebar-btn rounded-lg">Riwayat Booking</a>
+            class="dashboard-sidebar-btn rounded-lg">Riwayat Pemesanan</a>
 
         @if (auth()->user()->gauth_type == 'manual')
         <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
-            class="dashboard-sidebar-btn rounded-lg">Ubah Password</a>
+            class="dashboard-sidebar-btn rounded-lg">Ubah Kata Sandi</a>
         @endif
 
         <!-- Bagian Logout -->
         <form action="{{ route('etiket.auth.logout') }}" class="mt-auto" method="post">
             @csrf
             <button type="submit"
-                class="btn close rounded-lg w-100 bg-linear-gradient-danger py-2">Logout</button>
+                class="btn close rounded-lg w-100 bg-linear-gradient-danger py-2">Keluar</button>
         </form>
     </div>
 </div>
