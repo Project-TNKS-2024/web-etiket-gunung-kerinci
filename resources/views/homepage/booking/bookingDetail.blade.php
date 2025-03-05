@@ -103,7 +103,7 @@
                                 <td>{{ $formulirPendakis[0]->first_name . ' ' . $formulirPendakis[0]->last_name }}</td>
                             </tr>
                             <tr>
-                                <td>Tnaggal Masuk</td>
+                                <td>Tanggal Masuk</td>
                                 <td> : </td>
                                 <td>{{ \Carbon\Carbon::parse($booking->tanggal_masuk)->isoFormat('D MMMM Y') }}</td>
                             </tr>
