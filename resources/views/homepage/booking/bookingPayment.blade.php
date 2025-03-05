@@ -341,9 +341,7 @@
                 @endif
         </div>
         <div class="col-12 col-md-4 text-end">
-            @if ($booking->status_booking >= 4)
-            <a type="submit" class="btn btn-success w-100 fw-bold mt-3" href="{{ route('dashboard.tiket', ['id' => $booking->id]) }}">Lihat Tiket</a>
-            @endif
+
         </div>
     </div>
 </div>
