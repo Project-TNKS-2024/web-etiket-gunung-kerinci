@@ -50,7 +50,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold">{{ strtoupper($p->nama) }}</h5>
-                            <p class="card-text">{{ $p->keterangan }}</p>
+                            <p class="card-text"> {{ $p->keterangan }} (minimal {{ $p->min_pendaki}} pendaki) </p>
                             <a href="{{ route('homepage.booking.destinasi.paket.tiket', ['id' => $p->id]) }}"
                                 style="display: table;"
                                 class="btn btn-primary gk-bg-primary300 border-0 gk-text-primary900 fw-semibold px-4 ms-auto">Pesan</a>
