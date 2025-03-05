@@ -19,7 +19,7 @@
       <div class="form-check">
          <input class="form-check-input" type="checkbox" name="barangWajib[p3k_standart]" value="1" id="p3k_standart" {{ old('barangWajib.p3k_standart') ? 'checked' : '' }}>
          <label class="form-check-label" for="p3k_standart">
-            P3K Standart
+            P3K Standar
          </label>
       </div>
 
