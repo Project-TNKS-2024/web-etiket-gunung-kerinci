@@ -198,7 +198,7 @@
                             <tr>
                                 <td>Usia</td>
                                 <td> : </td>
-                                <td>{{$pendaki->usia}}</td>
+                                <td>{{$pendaki->usia}} tahun</td>
                             </tr>
                         </table>
                     </div>
@@ -215,8 +215,7 @@
                             <embed src="{{asset($pendaki->lampiran_surat_izin_ortu)}}" type="application/pdf" width="100%" height="280px">
                             @endif
                         </div>
-                        @else
-                        <p class="fw-bold text-center fst-italic">Tidak ada lampiran</p>
+
                         @endif
 
                     </div>
