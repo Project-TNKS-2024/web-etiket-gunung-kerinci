@@ -127,7 +127,7 @@
                         <div class="d-flex gap-2">
                             <div class="dropdown custom-dropdown-item dropdown-notelp">
                                 <button class="h-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center" id="dropdown-country" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    {{ old('telp_country', isset($user->biodata->telp_country) ? $user->biodata->telp_country : null) }}
+                                    {{ old('telp_country', isset($user->biodata->telp_country) ? $user->biodata->telp_country : '+62') }}
                                 </button>
 
                                 <div class="dropdown-menu">
@@ -138,7 +138,7 @@
                                 </div>
                             </div>
                             <input value="{{ old('nomor_telepon', isset($user->biodata->no_hp) ? $user->biodata->no_hp : null) }}" type="text" class="form-control border-secondary" id="nomor-telepon" name="nomor_telepon" placeholder="Nomor Telepon">
-                            <input type="hidden" name="telp_country" value="{{ old('telp_country', isset($user->biodata->telp_country) ? $user->biodata->telp_country : null) }}" id="telp_country">
+                            <input type="hidden" name="telp_country" value="{{ old('telp_country', isset($user->biodata->telp_country) ? $user->biodata->telp_country : '+62') }}" id="telp_country">
                         </div>
                     </div>
 
