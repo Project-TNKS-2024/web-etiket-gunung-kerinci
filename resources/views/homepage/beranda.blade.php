@@ -267,6 +267,13 @@
                         class="judul fw-bold @if ($loop->index != 0)  @endif"
                         style="color: rgba(43, 43, 43, 1); position: absolute; top: {{ $loop->index * 120 }}px;">
                         {{ $item['nama'] }}
+                        @if ($item['status'] == 1)
+                        <span class="ms-2 badge fs-6 gk-bg-primary400">Open</span>
+                        @elseif ($item['status'] == 2)
+                        <span class="ms-2 badge fs-6 gk-bg-primary400">Open Booking</span>
+                        @elseif ($item['status'] == 0)
+                        <span class="ms-2 badge fs-6 gk-bg-error200">Close</span>
+                        @endif
                     </h1>
                     @endforeach
                 </div>
@@ -275,14 +282,15 @@
                     <section style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 15;">
                         {!! $item['detail'] !!}
                     </section>
-                    @if ($item->id == 1)
                     <section class="mt-3">
+                        @if ($item->id == 1)
                         <a href="https://gunungkerinci.tnkerinciseblat.com/"
                             class="btn btn-primary gk-bg-primary600 border-0 text-white rounded-pill">Explore
                             Rute Pendakian
                         </a>
+                        @endif
+
                     </section>
-                    @endif
                 </article>
                 @endforeach
 
@@ -331,36 +339,7 @@
     </div>
 </div>
 
-<div class="container my-5">
-    <header class="">
-        <h4 class="text-center font-semibold">Destinasi Jelajah Taman Nasional Kerinci Seblat</h4>
-    </header>
-    <div class="row mt-3">
-        @foreach ($destinasi as $item)
-        <div class="col-12 col-md-6 col-lg-4 mb-3">
-            <div class="card h-100">
-                <img src="{{ $item->gambar_destinasi[0]->src ?? asset('assets/img/cover/kerinci.png') }} "
-                    class="card-img-top" alt="Jalur Pendakian Kersik Tuo"
-                    style="object-fit: cover    ; height: 300px;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ $item['nama'] }}
-                        @if ($item['status'] == 1)
-                        <span class="ms-2 badge gk-bg-primary400">Open</span>
-                        @elseif ($item['status'] == 2)
-                        <span class="ms-2 badge gk-bg-primary400">Open Booking</span>
-                        @elseif ($item['status'] == 0)
-                        <span class="ms-2 badge gk-bg-error200">Close</span>
-                        @endif
-                    </h5>
-                    <div class="card-text index-text-cardDestinasi">
-                        {!! $item['detail'] !!}
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endforeach
-    </div>
-</div>
+
 @endsection
 
 @section('js')
