@@ -12,7 +12,7 @@
       <div class="form-check">
          <input class="form-check-input" type="checkbox" name="barangWajib[trash_bag]" value="1" id="trash_bag" {{ old('barangWajib.trash_bag') ? 'checked' : '' }}>
          <label class="form-check-label" for="trash_bag">
-            Plastik Sampah
+            Kantong Sampah
          </label>
       </div>
 
@@ -26,7 +26,7 @@
       <div class="form-check">
          <input class="form-check-input" type="checkbox" name="barangWajib[survival_kit_standart]" value="1" id="survival_kit_standart" {{ old('barangWajib.survival_kit_standart') ? 'checked' : '' }}>
          <label class="form-check-label" for="survival_kit_standart">
-            Survival Kit Standart
+            Survival Kit Standar
          </label>
       </div>
 
