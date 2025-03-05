@@ -78,6 +78,11 @@
         margin-right: 10px;
         border: 1px solid #9adbdb;
     }
+
+    .table td:first-child {
+        width: 200px;
+        font-weight: bold;
+    }
 </style>
 @endsection
 
