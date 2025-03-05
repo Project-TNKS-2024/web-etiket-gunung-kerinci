@@ -80,7 +80,7 @@
                             <p class="mb-0">Email : {{ $booking->user->email }}</p>
                             <p class="mb-0">Nama : {{ $booking->user->biodata->fullName }}</p>
 
-
+                            <br>
                             <h1 class="fs-6 fw-bold ">Detail Pemesanan Tiket</h1>
                             <table class="table table-borderless table-des">
                                 <tr>
