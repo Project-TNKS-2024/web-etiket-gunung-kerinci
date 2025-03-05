@@ -55,7 +55,7 @@
     <div id="booking-detail">
         <p class=" text-center">
             <span class="fs-4 fw-bold">
-                Pembayaran Pemesanan
+                Pembayaran Pesanan
             </span>
 
         </p>
@@ -236,7 +236,7 @@
                     <select class="form-select" name="metode">
                         <option selected disabled>Pilih Metode</option>
                         <option value="transfer">Transfer Bank</option>
-                        <option value="scan">Scan QR</option>
+                        <option value="scan">Scan Qris</option>
                     </select>
 
                     <div class="input-group mt-1">
