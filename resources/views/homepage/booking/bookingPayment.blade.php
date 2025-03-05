@@ -147,13 +147,13 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             @if ($booking->status_booking <=3)
-                                <a type="submit" class="btn btn-danger w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Pemesanan</a>
+                                <a type="submit" class="btn btn-info w-100 fw-bold mt-3"
+                                href="{{ route('homepage.booking.detail', ['id' => $booking->id]) }}">Kembali</a>
                                 @endif
                         </div>
                         <div class="col-12 col-md-6">
                             @if ($booking->status_booking <=3)
-                                <a type="submit" class="btn btn-warning w-100 fw-bold mt-3"
-                                href="{{ route('homepage.booking.detail', ['id' => $booking->id]) }}">Kembali</a>
+                                <a type="submit" class="btn btn-danger w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Pemesanan</a>
                                 @endif
                         </div>
                     </div>
