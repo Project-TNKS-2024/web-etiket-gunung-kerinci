@@ -263,7 +263,9 @@
                                 <th scope="col">Status</th>
                                 <th scope="col">Keterangan</th>
                                 <th scope="col">Bukti</th>
-                                <th scope="col">Aksi</th>
+                                @if ($booking->status_booking <=3)
+                                    <th scope="col">Aksi</th>
+                                    @endif
                             </tr>
                         </thead>
                         <tbody>
