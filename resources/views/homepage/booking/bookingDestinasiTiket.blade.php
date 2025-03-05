@@ -101,7 +101,6 @@
                                 hari
                                 <span id="countNights">0</span>
                                 malam
-                                (<span class="countDays">2</span>D<span class="countNights">1</span>N)
                             </p>
                         </div>
                         <div class="col-md-6">
@@ -329,8 +328,12 @@
                     priceWna += wnaCount * harga[1].harga_kemah;
                 }
                 // Harga kemah - sehari 
-                priceWni -= wniCount * harga[0].harga_kemah;
-                priceWna -= wnaCount * harga[1].harga_kemah;
+                priceWni += wniCount * harga[0].harga_kemah;
+                priceWna += wnaCount * harga[1].harga_kemah;
+
+                // hitung harga ansuransi
+                // priceWni += wniCount * (harga[0].harga_ansuransi * (days / (1000 * 3600 * 24)));
+                // priceWni += wniCount * harga[1].harga_ansuransi;
 
                 // Harga tracking dan asuransi (hanya dihitung sekali per pendaki)
                 priceWni += wniCount * (harga[0].harga_traking + harga[0].harga_ansuransi);
