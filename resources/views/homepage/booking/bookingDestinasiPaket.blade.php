@@ -9,7 +9,7 @@
 
 @section('main')
 @include('homepage.template.header', [
-'title' => 'Pendakian '.$gunung->nama,
+'title' => 'Wisata Pendakian '.$gunung->nama,
 'caption' => '',
 ])
 <div class="container my-5">

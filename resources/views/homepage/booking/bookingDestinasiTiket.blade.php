@@ -12,7 +12,7 @@
 
 @section('main')
 @include('homepage.template.header', [
-'title' => 'Pendakian '.$destinasi->nama,
+'title' => 'Wisata Pendakian '.$destinasi->nama,
 'caption' => "Paket ".$paket->nama,
 ])
 
