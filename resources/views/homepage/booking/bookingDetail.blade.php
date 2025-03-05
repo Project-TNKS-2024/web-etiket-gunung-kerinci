@@ -124,7 +124,7 @@
                             <tr>
                                 <td>Nama Destinasi</td>
                                 <td> : </td>
-                                <td>{{ $formulirPendakis[0]->first_name . ' ' . $formulirPendakis[0]->last_name }}</td>
+                                <td>{{ $booking->gatemasuk->destinasi->nama }}</td>
                             </tr>
                             <tr>
                                 <td>Paket Pendakian</td>
