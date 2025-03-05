@@ -209,12 +209,12 @@
                             <div class="accordion-body">
                                 <div class="qr-container bg-light p-4 rounded-3 text-center mb-2">
                                     <img src="{{ asset($qris) }}" class="img-fluid shadow-sm rounded-3"
-                                        alt="bukti pembayaran" style="max-width: 100%" />
+                                        alt="Qris pembayaran" style="max-width: 100%" />
                                 </div>
                                 <p class="mb-0">Cara Pembayaran</p>
                                 <ul>
                                     <li>Buka aplikasi m-banking atau dompet digital (OVO, GoPay, DANA, ShopeePay, dll.).</li>
-                                    <li>Pilih menu <strong>"Scan QR"</strong> dan arahkan kamera ke QRIS yang tertera.</li>
+                                    <li>Pilih menu <strong>"Qris"</strong> dan arahkan kamera ke QRIS yang tertera.</li>
                                     <li>Pastikan nama penerima adalah <i>nama yang terteri di barcode di atas</i>.</li>
                                     <li>Masukkan jumlah pembayaran yang sesuai.</li>
                                     <li>Konfirmasi dan selesaikan pembayaran.</li>
