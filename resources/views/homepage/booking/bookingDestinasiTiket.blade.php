@@ -157,7 +157,7 @@
                                 <th scope="col">Masuk Hari Kerja</th>
                                 <th scope="col">Masuk Hari Libur</th>
                                 <th scope="col">Kemah</th>
-                                <th scope="col">Traking</th>
+                                <th scope="col">Pendakian</th>
                                 <th scope="col">Ansuransi</th>
                             </tr>
                         </thead>
@@ -165,7 +165,7 @@
                             @foreach ($tiket as $key => $t)
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
-                                <td> {{$t->kategori_pendaki}} </td>
+                                <td> {{strtoupper($t->kategori_pendaki)}} </td>
                                 <td> Rp. {{ number_format($t->harga_masuk_wd, 0, ',', '.') }} </td>
                                 <td> Rp. {{ number_format($t->harga_masuk_wk, 0, ',', '.') }} </td>
                                 <td> Rp. {{ number_format($t->harga_kemah, 0, ',', '.') }} </td>
@@ -176,14 +176,14 @@
                         </tbody>
                     </table>
                     <p class="mb-0"><strong>Catatan:</strong></p>
-                    <p class="mb-1">Harga tiket dihitung berdasarkan komponen berikut:</p>
+                    <p class="mb-1">Tarif tiket dihitung berdasarkan komponen berikut:</p>
                     <ul>
-                        <li><strong>Harga tiket masuk:</strong> Dikalikan dengan jumlah hari pendakian</li>
-                        <li><strong>Harga kemah:</strong> Dikalikan dengan jumlah malam pendakian</li>
-                        <li><strong>Harga pendakian:</strong> Biaya tambahan untuk pendakian</li>
-                        <li><strong>Harga asuransi:</strong> Biaya perlindungan selama pendakian</li>
+                        <li><strong>Tarif tiket masuk:</strong> Dikalikan dengan jumlah hari pendakian</li>
+                        <li><strong>Tarif kemah:</strong> Dikalikan dengan jumlah malam pendakian</li>
+                        <li><strong>Tarif pendakian:</strong> Biaya tambahan untuk pendakian</li>
+                        <li><strong>Tarif asuransi:</strong> Biaya perlindungan selama pendakian</li>
                     </ul>
-                    <p><strong>Total harga tiket</strong> = (Harga tiket masuk × jumlah hari) + (Harga kemah × jumlah malam) + Harga pendakian + Harga asuransi</p>
+                    <p><strong>Total tarif tiket</strong> = (Tarif tiket masuk × jumlah hari) + (Tarif kemah × jumlah malam) + Tarif pendakian + Tarif asuransi</p>
                     <p><i>Pastikan untuk menghitung dengan benar sesuai dengan durasi pendakian dan fasilitas yang dipilih.</i></p>
 
                 </div>
@@ -340,8 +340,8 @@
             }
 
             const days = new Date(formBooking['date_end'].value) - new Date(formBooking['date_start'].value);
-            document.getElementById('countDays').textContent = days / (1000 * 3600 * 24);
-            document.getElementById('countNights').textContent = days / (1000 * 3600 * 24) - 1;
+            document.getElementById('countDays').textContent = days / (1000 * 3600 * 24) + 1;
+            document.getElementById('countNights').textContent = days / (1000 * 3600 * 24);
             formBooking['days_traking'].value = days / (1000 * 3600 * 24);
         } else {
             console.log('tanggal pendakian belum dipilih');
