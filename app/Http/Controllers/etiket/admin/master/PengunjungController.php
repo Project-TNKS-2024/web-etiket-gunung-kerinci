@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\etiket\admin\master;
 
 use App\Http\Controllers\AdminController;
+use App\Mail\BiodataVerifiedMail;
 use App\Models\bio_pendaki;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PengunjungController extends AdminController
 {
@@ -47,6 +51,18 @@ class PengunjungController extends AdminController
             if ($request->verified == 'verified') {
                 $biodata->verified = 'verified';
                 $biodata->verified_at = now();
+                try {
+                    Mail::to($biodata->user->email)->send(new BiodataVerifiedMail($biodata));
+                } catch (\Exception $e) {
+                    Log::channel('admin')->error(
+                        'Terjadi kesalahan pada proses booking kirim email pembelian booking ke ' . $biodata->user->email,
+                        [
+                            'admin' => Auth::user(),
+                            'pengguna' => $biodata->user,
+                            'error' => $e->getMessage()
+                        ]
+                    );
+                }
             } elseif ($request->verified == 'unverified') {
                 $biodata->verified = 'unverified';
             }
