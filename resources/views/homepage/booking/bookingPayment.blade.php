@@ -90,17 +90,17 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Gate Masuk</td>
+                                    <td>Gerbang Masuk</td>
                                     <td> : </td>
                                     <td>{{ $booking->gateMasuk->nama }} </td>
                                 </tr>
                                 <tr>
-                                    <td>Gate Keluar</td>
+                                    <td>Gerbang Keluar</td>
                                     <td> : </td>
                                     <td>{{ $booking->gateKeluar->nama }} </td>
                                 </tr>
                                 <tr>
-                                    <td>Tanggal Pendakian</td>
+                                    <td>Tanggal Masuk</td>
                                     <td> : </td>
                                     <td>{{ $booking->tanggal_masuk }} </td>
                                 </tr>
