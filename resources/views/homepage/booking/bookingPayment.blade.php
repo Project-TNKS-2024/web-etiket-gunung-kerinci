@@ -90,16 +90,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Gerbang Masuk</td>
-                                    <td> : </td>
-                                    <td>{{ $booking->gateMasuk->nama }} </td>
-                                </tr>
-                                <tr>
-                                    <td>Gerbang Keluar</td>
-                                    <td> : </td>
-                                    <td>{{ $booking->gateKeluar->nama }} </td>
-                                </tr>
-                                <tr>
                                     <td>Tanggal Masuk</td>
                                     <td> : </td>
                                     <td>{{ $booking->tanggal_masuk }} </td>
@@ -108,6 +98,16 @@
                                     <td>Tanggal Keluar</td>
                                     <td> : </td>
                                     <td>{{ $booking->tanggal_keluar }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Gerbang Masuk</td>
+                                    <td> : </td>
+                                    <td>{{ $booking->gateMasuk->nama }} </td>
+                                </tr>
+                                <tr>
+                                    <td>Gerbang Keluar</td>
+                                    <td> : </td>
+                                    <td>{{ $booking->gateKeluar->nama }} </td>
                                 </tr>
                                 <tr>
                                     <td>Total Pendaki</td>
