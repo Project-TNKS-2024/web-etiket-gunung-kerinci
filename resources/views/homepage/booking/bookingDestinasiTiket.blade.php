@@ -46,7 +46,7 @@
         <div class="col-12 col-sm-12 col-lg-5 mt-3 mt-lg-0">
             <form method="post" action="{{ route('homepage.booking.destinasi.paket.tiket.action') }}" id="form-booking">
                 @csrf
-                <p class="mb-2 fs-5 fw-bold">Booking Tiket Pendakian {{$destinasi->nama}}</p>
+                <p class="mb-2 fs-5 fw-bold">Booking Tiket Wisata Pendakian {{$destinasi->nama}}</p>
                 <input type="hidden" value="{{$paket->id}}" id="jenis-tiket-value" name="jenis_tiket" required />
 
                 <div class="mb-2">
