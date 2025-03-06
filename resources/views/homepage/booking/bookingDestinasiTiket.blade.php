@@ -311,9 +311,14 @@
         let priceWni = 0;
         let priceWna = 0;
 
+        let days = 0;
+
         if (dateStart && dateEnd) {
             if (dateStart < dateEnd) {
-                console.log('tanggal pendakian falid');
+                console.log('tanggal pendakian Valid');
+
+                // Hitung selisih hari antara tanggal mulai dan tanggal selesai
+                days = (new Date(dateEnd) - new Date(dateStart)) / (1000 * 3600 * 24);
 
                 // Iterasi melalui rentang tanggal
                 for (let currentDate = new Date(dateStart); currentDate <= new Date(dateEnd); currentDate.setDate(currentDate.getDate() + 1)) {
@@ -323,26 +328,27 @@
                     priceWni += wniCount * (isWeekend ? harga[0].harga_masuk_wk : harga[0].harga_masuk_wd);
                     priceWna += wnaCount * (isWeekend ? harga[1].harga_masuk_wk : harga[1].harga_masuk_wd);
 
-                    // Harga kemah
-                    priceWni += wniCount * harga[0].harga_kemah;
-                    priceWna += wnaCount * harga[1].harga_kemah;
                 }
+                console.log(priceWni);
+
                 // Harga kemah - sehari 
-                priceWni += wniCount * harga[0].harga_kemah;
-                priceWna += wnaCount * harga[1].harga_kemah;
+                priceWni += wniCount * (harga[0].harga_kemah * days);
+                priceWna += wnaCount * (harga[1].harga_kemah * days);
+                console.log(priceWni);
 
                 // hitung harga ansuransi
-                // priceWni += wniCount * (harga[0].harga_ansuransi * (days / (1000 * 3600 * 24)));
-                // priceWni += wniCount * harga[1].harga_ansuransi;
+                priceWni += wniCount * (harga[0].harga_ansuransi * Math.ceil((days + 1) / harga[0].masa_ansuransi));
+                priceWna += wnaCount * (harga[1].harga_ansuransi * Math.ceil((days + 1) / harga[1].masa_ansuransi));
+                console.log(priceWni);
 
                 // Harga tracking dan asuransi (hanya dihitung sekali per pendaki)
-                priceWni += wniCount * (harga[0].harga_traking + harga[0].harga_ansuransi);
-                priceWna += wnaCount * (harga[1].harga_traking + harga[1].harga_ansuransi);
+                priceWni += wniCount * (harga[0].harga_traking);
+                priceWna += wnaCount * (harga[1].harga_traking);
             } else {
                 console.log('tanggal pendakian valid');
+                return;
             }
 
-            const days = (new Date(formBooking['date_end'].value) - new Date(formBooking['date_start'].value)) / (1000 * 3600 * 24);
             document.getElementById('countDays').textContent = days + 1;
             document.getElementById('countNights').textContent = days;
             formBooking['days_traking'].value = days;

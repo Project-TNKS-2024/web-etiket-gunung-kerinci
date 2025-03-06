@@ -5,6 +5,7 @@ namespace App\Http\Controllers\etiket\admin\destinasi;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\helper\BookingHelperController;
 use App\Mail\BookingPayment;
+use App\Mail\BookingPaymentFailed;
 use App\Models\destinasi;
 use App\Models\gk_booking;
 use App\Models\statusPendaki;
@@ -177,6 +178,28 @@ class bookingController extends AdminController
                 'status_booking' =>  3,
                 'status_pembayaran' =>  0,
             ]);
+
+            // Kirim email untuk pembayaran gagal
+            $failedOrder = [
+                'name' => $userBooking->biodata->first_name . ' ' . $userBooking->biodata->last_name,
+                'booking_code' => $booking->id,
+                'amount' => $booking->total_pembayaran,
+                'payment_status' => 'Failed',
+                'email' => $userBooking->email,
+            ];
+
+            try {
+                Mail::to($userBooking->email)->send(new BookingPaymentFailed($failedOrder));
+            } catch (\Exception $e) {
+                Log::channel('admin')->error(
+                    'Terjadi kesalahan saat mengirim email pembayaran gagal ke ' . $userBooking->email,
+                    [
+                        'admin' => Auth::user(),
+                        'pengguna' => $userBooking,
+                        'error' => $e->getMessage()
+                    ]
+                );
+            }
         }
 
         return redirect()->back()->with('success', 'Pengajuan berhasil diperbarui');

@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isEmpty;
-use function PHPUnit\Framework\isNull;
 
 class booking extends Controller
 {
@@ -62,6 +61,56 @@ class booking extends Controller
 
         return $query->get();
     }
+
+    private function getBookingByUser($id, $status = null)
+    {
+        $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $id)->first();
+        if (!$booking) {
+            abort(404);
+        }
+
+        // Cek status booking
+        if (isset($status) && (is_array($status) ? !in_array($booking->status_booking, $status) : $booking->status_booking !== $status)) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
+
+        // Cek apakah booking sudah expired
+        if ($booking->status_booking == 3 && Carbon::now()->diffInHours($booking->updated_at) >= 24) {
+            $booking->load('pembayaran');
+            $pembayaranTerakhir = $booking->pembayaran()->latest()->first();
+
+            if (optional($pembayaranTerakhir)->status !== 'pending' || !$pembayaranTerakhir) {
+                // Hapus semua pembayaran dan ubah status booking
+                $booking->pembayaran()->delete();
+                $booking->update(['status_booking' => 2]);
+
+                return redirect()->route('homepage.booking', ['id' => $id]);
+            }
+        }
+
+        return $booking;
+    }
+
+    private function getbookingByDate($startDate, $endDate, $idBio)
+    {
+        return gk_booking::whereHas('pendakis', function ($query) use ($idBio) {
+            $query->where('id_bio', $idBio);
+        })
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->where(function ($q) use ($startDate, $endDate) {
+                    $q->where('tanggal_masuk', '>=', $startDate)
+                        ->where('tanggal_masuk', '<=', $endDate);
+                })
+                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                        $q->where('tanggal_masuk', '<=', $startDate)
+                            ->where('tanggal_keluar', '>=', $startDate);
+                    });
+            })
+            ->with('pendakis')
+            ->get();
+    }
+
+    // public function booking
 
     public function destinasiPaket($id)
     {
@@ -159,6 +208,12 @@ class booking extends Controller
             return back()->with('error', 'Error: Umur tidak mencukupi. Minimal 17 tahun');
         }
 
+        // cek booking di tanggal rencana pendakian
+        $pendakiHaveBooking = $this->getbookingByDate($request->date_start, $request->date_end, $user->biodata->id);
+        if (!isEmpty($pendakiHaveBooking)) {
+            return back()->withErrors(['code' => 'Anda sudah melakukan booking di tanggal tersebut']);
+        }
+
         // cari booking terakhir yang blm di verifikasi
         $booking = gk_booking::where('id_user', Auth::user()->id)
             ->where('status_booking', '<', 4)
@@ -225,46 +280,6 @@ class booking extends Controller
                 ->route('homepage.booking.snk', ['id' => $newBooking->id])
                 ->with('success', 'Create Booking');
         }
-    }
-
-    private function getBookingByUser($id, $status = null): gk_booking
-    {
-        $booking = gk_booking::where('id_user', Auth::user()->id)->where('id', $id)->first();
-        if (!$booking) {
-            abort(404);
-        }
-
-        if (isset($status)) {
-            if (is_array($status)) {
-                if (!in_array($booking->status_booking, $status)) {
-                    return redirect(route('homepage.booking', ['id' => $id]))->send();
-                }
-            } else {
-                if ($booking->status_booking !== $status) {
-                    return redirect(route('homepage.booking', ['id' => $id]))->send();
-                }
-            }
-        }
-
-        // cek booking sudah expired atau belum
-        if ($booking->status_booking == 3 && $booking->updated_at->diffInHours(Carbon::now()) >= 24) {
-
-            $booking->load('pembayaran');
-            $pembayaranTerakhir = $booking->pembayaran()->latest()->first();
-
-            // Jika pembayaran terakhir ada dan statusnya bukan "pending"
-            if (($pembayaranTerakhir && $pembayaranTerakhir->status !== 'pending') or isEmpty($pembayaranTerakhir)) {
-                // hapus semua pembayaran
-                $booking->pembayaran()->delete();
-
-                $booking->status_booking = 2;
-                $booking->save();
-
-                return redirect(route('homepage.booking', ['id' => $id]))->send();
-            }
-        }
-
-        return $booking;
     }
 
     public function bookingId($id)
@@ -360,15 +375,11 @@ class booking extends Controller
         if ($bioPendaki == null) {
             return back()->withErrors(['code' => 'Kode tidak ditemukan']);
         }
-        // cek pendaki dalam bookingan
-        $pendaki = gk_pendaki::with('booking')
-            ->where('id_bio', $bioPendaki->id)
-            ->whereHas('booking', function ($query) {
-                $query->where('status_booking', '<', 7);
-            })
-            ->first();
-        if ($pendaki) {
-            return back()->withErrors(['code' => 'Kode sudah terdaftar dalam pendakian lain dan belum menyelesaikannya']);
+
+        // cek booking pendaki
+        $pendakiHaveBooking = $this->getbookingByDate($booking->tanggal_masuk, $booking->tanggal_keluar, $bioPendaki->id);
+        if (!isEmpty($pendakiHaveBooking)) {
+            return back()->withErrors(['code' => 'Pendaki sudah terdaftar dalam pendakian lain di tanggal booking ini']);
         }
 
         // tambahkan pendaki
