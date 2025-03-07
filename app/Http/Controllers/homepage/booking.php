@@ -176,6 +176,9 @@ class booking extends Controller
         $dateStart = Carbon::createFromFormat('Y-m-d', $request->date_start);
         $dateEnd = Carbon::createFromFormat('Y-m-d', $request->date_end);
         $totalDays = $dateStart->diffInDays($dateEnd) + 1;
+        if ($dateStart < now()) {
+            return back()->with('error', 'Error: Tanggal masuk tidak boleh kurang dari tanggal sekarang');
+        }
         if ($dateStart > $dateEnd) {
             return back()->with('error', 'Error: Tanggal tidak sesuai');
         }
@@ -210,10 +213,11 @@ class booking extends Controller
 
         // cek booking di tanggal rencana pendakian
         $pendakiHaveBooking = $this->getbookingByDate($request->date_start, $request->date_end, $user->biodata->id);
-        if (!isEmpty($pendakiHaveBooking)) {
+        if ($pendakiHaveBooking) {
             return back()->withErrors(['code' => 'Anda sudah melakukan booking di tanggal tersebut']);
         }
-
+        return $pendakiHaveBooking;
+        return "gagal";
 
         // cari booking terakhir yang blm di verifikasi
         $booking = gk_booking::where('id_user', Auth::user()->id)
