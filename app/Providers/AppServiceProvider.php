@@ -36,11 +36,18 @@ class AppServiceProvider extends ServiceProvider
             $finstagram = setting::where('id', '0000instagram')->first();
             $fyoutube = setting::where('id', '0000youtube')->first();
             $fweb = setting::where('id', '0000website')->first();
+            $alamat = setting::where('id', '0000alamat')->first();
+            $tutorial = setting::where('id', '0000tutorial')->first();
+            $telp = setting::where('id', '0000telp')->first();
+
             $view->with([
                 'ffacebook' => $ffacabook,
                 'finstagram' => $finstagram,
                 'fyoutube' => $fyoutube,
-                'fweb' => $fweb
+                'fweb' => $fweb,
+                'falamat' => $alamat,
+                'ftutorial' => $tutorial,
+                'ftelp' => $telp
             ]);
         });
 

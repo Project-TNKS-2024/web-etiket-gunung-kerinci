@@ -186,9 +186,9 @@ class booking extends Controller
         }
 
         // cek jumlah min pendaki
-        $tiket = gk_tiket_pendaki::where('id', $request->jenis_tiket)->with('paket_tiket')->first();
-        if ($request->wni + $request->wna < $tiket->paket_tiket->min_pendaki) {
-            return back()->with('error', 'Error: Jumlah pendaki tidak mencukupi. Minimal ' . $tiket->paket_tiket->min_pendaki . ' orang');
+        $tiket = gk_paket_tiket::where('id', $request->jenis_tiket)->first();
+        if ($request->wni + $request->wna < $tiket->min_pendaki) {
+            return back()->with('error', 'Error: Jumlah pendaki tidak mencukupi. Minimal ' . $tiket->min_pendaki . ' orang');
         }
 
         // cek kapasitas gate
@@ -213,6 +213,7 @@ class booking extends Controller
         if (!isEmpty($pendakiHaveBooking)) {
             return back()->withErrors(['code' => 'Anda sudah melakukan booking di tanggal tersebut']);
         }
+
 
         // cari booking terakhir yang blm di verifikasi
         $booking = gk_booking::where('id_user', Auth::user()->id)

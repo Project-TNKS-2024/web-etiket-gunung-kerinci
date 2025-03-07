@@ -15,8 +15,8 @@
                 <h5 class="fw-bold text-uppercase">Informasi</h5>
                 <ul class="list-unstyled">
                     <li><a href="{{ $fweb->text1 ?? '#' }}" class="text-black text-decoration-none d-block py-1">Tentang Kami</a></li>
-                    <li><a href="#" class="text-black text-decoration-none d-block py-1">Alamat</a></li>
-                    <li><a href="#" class="text-black text-decoration-none d-block py-1">Email</a></li>
+                    <li><a href="#" class="text-black text-decoration-none d-block py-1">Alamat :</a></li>
+                    <li><a href="#" class="text-secondary text-decoration-none d-block py-1 small">{{ $falamat->text1 }}</a></li>
                 </ul>
             </div>
 
@@ -24,7 +24,7 @@
             <div class="col-6 col-md-2 text-center text-md-start">
                 <h5 class="fw-bold text-uppercase">Bantuan</h5>
                 <ul class="list-unstyled">
-                    <li><a href="{{route('homepage.faq')}}" class="text-black text-decoration-none d-block py-1">FAQ</a></li>
+                    <li><a href="{{ $ftutorial->text1 }}" class="text-black text-decoration-none d-block py-1">Video Tutorial</a></li>
                     <li><a href="{{route('homepage.snk')}}" class="text-black text-decoration-none d-block py-1">Syarat & Ketentuan</a></li>
                 </ul>
             </div>

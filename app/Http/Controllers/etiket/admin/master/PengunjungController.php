@@ -49,6 +49,13 @@ class PengunjungController extends AdminController
         // return $biodata;
         if ($biodata->verified == 'pending') {
             if ($request->verified == 'verified') {
+                // cek nik sudsha disunakan atau belm
+                $bioUseNik = bio_pendaki::where('nik', $biodata->nik)->where('verified', 'verified')->first();
+                if ($bioUseNik && $bioUseNik->id != $user->id_bio) {
+                    return redirect()->back()->with('error', 'NIK sudah digunakan di akun lain');
+                }
+
+                // verifikasi
                 $biodata->verified = 'verified';
                 $biodata->verified_at = now();
                 try {

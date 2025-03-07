@@ -24,7 +24,6 @@ class HomepageController extends Controller
                 'Terjadi kesalahan pada proses pengambilan cuaca dari api  ',
                 [
                     'api' => $apiWeatherUrl,
-                    'respon' => $weatherResponse,
                     'error' => $e->getMessage()
                 ]
             );
