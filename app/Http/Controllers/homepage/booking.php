@@ -213,11 +213,12 @@ class booking extends Controller
 
         // cek booking di tanggal rencana pendakian
         $pendakiHaveBooking = $this->getbookingByDate($request->date_start, $request->date_end, $user->biodata->id);
-        if ($pendakiHaveBooking) {
+        if (!isEmpty($pendakiHaveBooking)) {
+            // if ($pendakiHaveBooking) {
+            // return "gagal";
             return back()->withErrors(['code' => 'Anda sudah melakukan booking di tanggal tersebut']);
         }
-        return $pendakiHaveBooking;
-        return "gagal";
+        // return $pendakiHaveBooking;
 
         // cari booking terakhir yang blm di verifikasi
         $booking = gk_booking::where('id_user', Auth::user()->id)

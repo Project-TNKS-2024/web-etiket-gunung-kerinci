@@ -104,7 +104,7 @@
                   <span>
                      <i class="fa-solid fa-file-lines"></i>
                   </span>
-                  <span class="hide-menu">Account Pengunjung</span>
+                  <span class="hide-menu">Akun Pengunjung</span>
                </a>
             </li>
             @endcan
@@ -114,7 +114,7 @@
                   <span>
                      <i class="fa-solid fa-file-lines"></i>
                   </span>
-                  <span class="hide-menu">Account Admin</span>
+                  <span class="hide-menu">Akun Admin</span>
                </a>
             </li>
             @endcan
@@ -124,7 +124,7 @@
                   <span>
                      <i class="fa-solid fa-file-lines"></i>
                   </span>
-                  <span class="hide-menu">Role Permision</span>
+                  <span class="hide-menu">Kelola Role</span>
                </a>
             </li>
             @endcan
