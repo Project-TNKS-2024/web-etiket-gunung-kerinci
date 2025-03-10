@@ -18,7 +18,7 @@ class login extends Controller
         // Validate input
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required',  // Ensure password is required
+            'password' => 'required',
         ]);
 
         // Get credentials
@@ -37,7 +37,7 @@ class login extends Controller
 
         // If authentication fails, return with error message
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Email atau password salah.',
         ]);
     }
 

@@ -1,14 +1,18 @@
 <x-mail::message>
    # Halo, {{ $nama }}
 
-   Selamat! Biodata Anda telah berhasil diverifikasi pada **{{ $tanggalVerifikasi }}**.
-
-   Terima kasih telah menggunakan layanan kami.
+   @if ($status == 'verified')
+   **Selamat!** Biodata Anda telah berhasil diverifikasi pada **{{ $tanggalVerifikasi }}**.
+   Anda sekarang dapat mengakses layanan kami sepenuhnya.
+   @else
+   **Maaf,** biodata Anda tidak dapat diverifikasi pada **{{ $tanggalVerifikasi }}**.
+   **Alasan:** {{ $keterangan }}
+   @endif
 
    <x-mail::button :url="$url">
       Lihat Detail
    </x-mail::button>
 
-   Salam,<br>
+   Terima kasih,<br>
    **{{ config('app.name') }}**
 </x-mail::message>

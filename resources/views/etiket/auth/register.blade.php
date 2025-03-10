@@ -110,7 +110,7 @@
             <div class="mt-3">
                 <a class="mx-auto nav-logo" href="{{ route('homepage.beranda') }}">
                     <img src="{{ asset('assets/icon/tnks.png') }}" alt="logo">
-                    Taman nasional Kerinci Seblat
+                    Taman Nasional Kerinci Seblat
                 </a>
             </div>
             <div class="card border border-0 w-100">

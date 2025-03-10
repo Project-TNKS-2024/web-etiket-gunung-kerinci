@@ -40,6 +40,19 @@ class AppServiceProvider extends ServiceProvider
             $tutorial = setting::where('id', '0000tutorial')->first();
             $telp = setting::where('id', '0000telp')->first();
 
+            // Perbaiki format nomor telepon
+            if ($telp && $telp->text1) {
+                $nomor = preg_replace('/\s+/', '', $telp->text1); // Hapus spasi
+
+                if (preg_match('/^0824/', $nomor)) {
+                    $nomor = '62' . substr($nomor, 1); // Ubah 0824 menjadi 62824
+                } elseif (preg_match('/^\+62\s?824/', $nomor)) {
+                    $nomor = '62' . substr($nomor, 3); // Ubah +62 824 menjadi 62824
+                }
+
+                $telp->text2 = $nomor;
+            }
+
             $view->with([
                 'ffacebook' => $ffacabook,
                 'finstagram' => $finstagram,

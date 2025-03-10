@@ -14,14 +14,16 @@ class BiodataVerifiedMail extends Mailable
     use Queueable, SerializesModels;
 
     public $biodata;
+    public $status;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($biodata)
+    public function __construct($biodata, $status)
     {
         $this->biodata = $biodata;
+        $this->status = $status;
     }
-
 
     /**
      * Get the message envelope.
@@ -29,16 +31,18 @@ class BiodataVerifiedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Biodata Verified Mail',
+            subject: 'Status Verifikasi Biodata - ' . config('app.name'),
         );
     }
 
     public function build()
     {
-        return $this->subject('Biodata Anda Telah Diverifikasi- ' . config('app.name'))
+        return $this->subject('Status Verifikasi Biodata Anda - ' . config('app.name'))
             ->markdown('email.BioValidasi', [
                 'nama' => $this->biodata->fullName,
                 'tanggalVerifikasi' => $this->biodata->verified_at->format('d M Y H:i'),
+                'status' => $this->status,
+                'keterangan' => $this->biodata->keterangan ?? '-',
                 'url' => route('user.dashboard.profile'),
             ]);
     }

@@ -8,8 +8,7 @@ use App\Http\Controllers\etiket\auth\register;
 use App\Http\Controllers\etiket\auth\lupapassword;
 use App\Http\Controllers\etiket\auth\OauthController;
 use App\Http\Controllers\etiket\auth\resetpassword;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
+
 
 Route::middleware('guest')->group(function () {
    // login

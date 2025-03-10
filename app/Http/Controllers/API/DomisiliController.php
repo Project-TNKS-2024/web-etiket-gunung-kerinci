@@ -1,36 +1,39 @@
 <?php
 
-namespace App\Http\Controllers\helper;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\d_Provinsi;
-use App\Models\d_Kabupaten;
-use App\Models\d_Kecamatan;
-use App\Models\d_Kelurahan;
+use Illuminate\Support\Facades\Cache;
 
 class DomisiliController extends Controller
 {
-    public $profinsi;
+    public $provinsi;
     public $kabupaten;
     public $kecamatan;
     public $kelurahan;
 
     public function __construct()
     {
-        $this->profinsi = file_get_contents(public_path('assets/json/provinsi.json'));
-        $this->profinsi = json_decode($this->profinsi, true);
-        $this->kabupaten = file_get_contents(public_path('assets/json/kabupaten.json'));
-        $this->kabupaten = json_decode($this->kabupaten, true);
-        $this->kecamatan = file_get_contents(public_path('assets/json/kecamatan.json'));
-        $this->kecamatan = json_decode($this->kecamatan, true);
-        $this->kelurahan = file_get_contents(public_path('assets/json/kelurahan.json'));
-        $this->kelurahan = json_decode($this->kelurahan, true);
+        $this->provinsi = Cache::rememberForever('provinsi_data', function () {
+            return json_decode(file_get_contents(public_path('assets/json/provinsi.json')), true);
+        });
+
+        $this->kabupaten = Cache::rememberForever('kabupaten_data', function () {
+            return json_decode(file_get_contents(public_path('assets/json/kabupaten.json')), true);
+        });
+
+        $this->kecamatan = Cache::rememberForever('kecamatan_data', function () {
+            return json_decode(file_get_contents(public_path('assets/json/kecamatan.json')), true);
+        });
+
+        $this->kelurahan = Cache::rememberForever('kelurahan_data', function () {
+            return json_decode(file_get_contents(public_path('assets/json/kelurahan.json')), true);
+        });
     }
-    // get list profinsi
+    // get list provinsi
     public function getProvinsi()
     {
-        $data = $this->profinsi;
+        $data = $this->provinsi;
         if ($data) {
             return response()->json([
                 'status' => 200,
@@ -115,7 +118,7 @@ class DomisiliController extends Controller
     // get detail provinsi by id
     public function getProvinsiById($id)
     {
-        $data = $this->profinsi;
+        $data = $this->provinsi;
         $data = array_filter($data, function ($item) use ($id) {
             return $item['id'] == $id;
         });

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 //user
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
 use App\Http\Controllers\etiket\user\profile as profileUser;
-use App\Http\Controllers\etiket\user\gantipassword as resetPasswordUser;
+use App\Http\Controllers\etiket\user\gantipassword;
 
 
 // User routes
@@ -19,6 +19,6 @@ Route::middleware(['check.role:user', 'verified'])->group(function () {
 
 
    //reset password
-   Route::get('dashboard/ganti-password', [resetPasswordUser::class, 'index'])->name('user.dashboard.reset-password');
-   Route::post('dashboard/reset-password', [resetPasswordUser::class, 'resetAction'])->name('user.dashboard.reset-password-action');
+   Route::get('dashboard/ganti-password', [gantipassword::class, 'index'])->name('user.dashboard.reset-password');
+   Route::post('dashboard/reset-password', [gantipassword::class, 'resetAction'])->name('user.dashboard.reset-password-action');
 });

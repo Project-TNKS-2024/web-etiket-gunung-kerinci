@@ -27,7 +27,7 @@
 </div>
 <div>
     <h5>Selamat Datang</h5>
-    <h3><b>{{$user->biodata ? ($user->biodata->verified == 'verified' ? $user->biodata->first_name . ' ' . $user->biodata->last_name : 'Pendaki Handal') : 'Pendaki Handal'}}</b></h3>
+    <h3><b>{{$user->biodata ? ($user->biodata->verified == 'verified' ? $user->biodata->first_name . ' ' . $user->biodata->last_name : 'Pendaki Handal') : 'Pengunjung Taman Nasional Kerinci Seblat'}}</b></h3>
 </div>
 
 

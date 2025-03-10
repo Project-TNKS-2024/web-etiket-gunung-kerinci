@@ -28,9 +28,6 @@ class PengunjungController extends AdminController
     public function biodata($id)
     {
         $user = User::with('booking.destinasi', 'booking.pendakis', 'biodata')->where('role', 'user')->find($id);
-
-        // return $user;
-        // return $user->biodata->dataDesa->name;
         return view('etiket.admin.master.akunUsers.biodata', compact('user'));
     }
     public function verificationBiodata(Request $request)
@@ -58,27 +55,30 @@ class PengunjungController extends AdminController
                 // verifikasi
                 $biodata->verified = 'verified';
                 $biodata->verified_at = now();
-                try {
-                    Mail::to($biodata->user->email)->send(new BiodataVerifiedMail($biodata));
-                } catch (\Exception $e) {
-                    Log::channel('admin')->error(
-                        'Terjadi kesalahan pada proses booking kirim email pembelian booking ke ' . $biodata->user->email,
-                        [
-                            'admin' => Auth::user(),
-                            'pengguna' => $biodata->user,
-                            'error' => $e->getMessage()
-                        ]
-                    );
-                }
+                $status = 'verified';
             } elseif ($request->verified == 'unverified') {
                 $biodata->verified = 'unverified';
+                $status = 'unverified';
             }
             $biodata->keterangan = $request->keterangan;
             $biodata->save();
-        } else {
-            return redirect()->back()->with('error', 'Data tidak valid');
-        }
 
-        return redirect()->back()->with('success', 'Data berhasil diubah');
+            // Kirim email ke user
+            try {
+                Mail::to($biodata->user->email)->send(new BiodataVerifiedMail($biodata, $status));
+            } catch (\Exception $e) {
+                Log::channel('admin')->error(
+                    'Gagal mengirim email verifikasi biodata ke ' . $biodata->user->email,
+                    [
+                        'admin' => Auth::user(),
+                        'pengguna' => $biodata->user,
+                        'status' => $status,
+                        'error' => $e->getMessage()
+                    ]
+                );
+            }
+            return redirect()->back()->with('success', 'Data berhasil diubah');
+        }
+        return redirect()->back()->with('error', 'Data tidak valid');
     }
 }
