@@ -20,14 +20,14 @@ class paket_tiket extends Seeder
             'nama' => 'Umum',
             'min_pendaki' => 2,
             'penugasan' => null,
-            'keterangan' => 'paket untuk kalangan umum',
+            'keterangan' => 'Paket ini dirancang untuk individu atau kelompok kecil yang ingin menikmati pengalaman mendaki Gunung Kerinci. Minimal 2 pendaki.',
         ]);
         gk_paket_tiket::create([
             'id_destinasi' => 1,
             'nama' => 'Rombongan pelajar/mahasiswa',
             'min_pendaki' => 10,
             'penugasan' => 'Surat Pengantar',
-            'keterangan' => 'paket untuk kalangan pelajar/mahasiswa',
+            'keterangan' => 'Paket ini dirancang khusus untuk kelompok besar pelajar atau mahasiswa yang ingin melakukan kegiatan pendakian sebagai bagian dari kegiatan sekolah, kampus, atau organisasi. Minimal 10 pendaki.',
         ]);
 
         // @bbtn_kerinciseblatofficial 24-okt-2024
