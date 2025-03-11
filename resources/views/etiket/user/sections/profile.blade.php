@@ -110,7 +110,7 @@
                     <!-- NIK/Passport -->
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold" for="id-pendaftar">NIK/Passport</label>
-                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport">
+                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport" maxlength="16">
                     </div>
 
                     <!-- Email -->
