@@ -80,7 +80,7 @@
                                 <i class=" fa-regular fa-eye"></i>
                             </button>
                         </div>
-                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP, Max 500kb</span>
+                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor, Max 500kb</span>
                     </div>
                     @if (isset($user->biodata) and ($user->biodata->verified !== 'unverified'))
                     <div class="form-group col-12 iptFile-label">
@@ -92,7 +92,7 @@
                                 <i class=" fa-regular fa-eye"></i>
                             </button>
                         </div>
-                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP, Max 500kb</span>
+                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor, Max 500kb</span>
                     </div>
                     @endif
 
@@ -109,7 +109,7 @@
 
                     <!-- NIK/Passport -->
                     <div class="form-group col-12 col-md-6">
-                        <label class="mandatory font-semibold" for="id-pendaftar">NIK/Passport</label>
+                        <label class="mandatory font-semibold" for="id-pendaftar">NIK / Paspor</label>
                         <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport" maxlength="16">
                     </div>
 
@@ -158,48 +158,52 @@
                         <input type="date" class="form-control border-secondary" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user->biodata->tanggal_lahir) ? Carbon\Carbon::parse($user->biodata->tanggal_lahir)->format('Y-m-d') : null) }}">
                     </div>
                 </div>
+                @if (isset($user->biodata) and ($user->biodata->verified !== 'unverified' and $user->biodata->kenegaraan == 'ID'))
+                <div id="selectDomisili" style="display: none;">
+                    <div class="row">
+                        <label class="font-semibold mandatory">Alamat Domisili</label>
+                    </div>
 
-                <div class="row">
-                    <label class="font-semibold mandatory">Alamat Domisili</label>
-                </div>
-
-                <div class="row mb-3">
-                    <!-- Province and City -->
-                    <div class="col-12 col-md-6">
-                        <div class="row">
-                            <div class="form-group col-12 col-md-6">
-                                <label for="provinsi" class="w-100">Provinsi</label>
-                                <select class="form-control ipt-provinsi border-secondary" name="provinsi" id="provinsi" data-index="1">
-                                    <option value="{{ old('provinsi', isset($user->biodata->provinsi) ? $user->biodata->provinsi : 0) }}" selected>Pilih Provinsi</option>
-                                </select>
+                    <div class="row mb-3">
+                        <!-- Province and City -->
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="provinsi" class="w-100">Provinsi</label>
+                                    <select class="form-control ipt-provinsi border-secondary" name="provinsi" id="provinsi" data-index="1">
+                                        <option value="{{ old('provinsi', isset($user->biodata->provinsi) ? $user->biodata->provinsi : 0) }}" selected>Pilih Provinsi</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="kabupaten_kota" class="w-100">Kabupaten/Kota</label>
+                                    <select class="form-control border-secondary ipt-kabupaten-kota" name="kabupaten_kota" id="kabupaten_kota" data-index="1">
+                                        <option value="{{ old('kabupaten_kota', isset($user->biodata->kabupaten) ? $user->biodata->kabupaten : 0) }}" selected>Pilih Kabupaten/Kota</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="form-group col-12 col-md-6">
-                                <label for="kabupaten_kota" class="w-100">Kabupaten/Kota</label>
-                                <select class="form-control border-secondary ipt-kabupaten-kota" name="kabupaten_kota" id="kabupaten_kota" data-index="1">
-                                    <option value="{{ old('kabupaten_kota', isset($user->biodata->kabupaten) ? $user->biodata->kabupaten : 0) }}" selected>Pilih Kabupaten/Kota</option>
-                                </select>
+                        </div>
+
+                        <!-- Subdistrict and Village -->
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="kecamatan" class="w-100">Kecamatan</label>
+                                    <select class="form-control border-secondary ipt-kecamatan" name="kecamatan" id="kecamatan" data-index="1">
+                                        <option value="{{ old('kecamatan', isset($user->biodata->kec) ? $user->biodata->kec : 0) }}" selected disabled>Pilih Kecamatan</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-12 col-md-6">
+                                    <label for="desa_kelurahan" class="w-100">Desa/Kelurahan</label>
+                                    <select class="form-control border-secondary ipt-desa-kelurahan" name="desa_kelurahan" id="desa_kelurahan" data-index="1">
+                                        <option value="{{ old('desa_kelurahan', isset($user->biodata->desa) ? $user->biodata->desa : 0) }}" selected>Pilih Desa/Kelurahan</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Subdistrict and Village -->
-                    <div class="col-12 col-md-6">
-                        <div class="row">
-                            <div class="form-group col-12 col-md-6">
-                                <label for="kecamatan" class="w-100">Kecamatan</label>
-                                <select class="form-control border-secondary ipt-kecamatan" name="kecamatan" id="kecamatan" data-index="1">
-                                    <option value="{{ old('kecamatan', isset($user->biodata->kec) ? $user->biodata->kec : 0) }}" selected disabled>Pilih Kecamatan</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-12 col-md-6">
-                                <label for="desa_kelurahan" class="w-100">Desa/Kelurahan</label>
-                                <select class="form-control border-secondary ipt-desa-kelurahan" name="desa_kelurahan" id="desa_kelurahan" data-index="1">
-                                    <option value="{{ old('desa_kelurahan', isset($user->biodata->desa) ? $user->biodata->desa : 0) }}" selected>Pilih Desa/Kelurahan</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                @endif
+
                 <!-- Submit Button -->
                 <div class="row mb-2">
                     <div class="col d-flex justify-content-end">
@@ -321,6 +325,19 @@
             return button;
         }
 
+    });
+</script>
+
+<!-- select country domisili -->
+<script>
+    const selectKenegaraan = document.getElementById('kewarganegaraan');
+    selectKenegaraan.addEventListener('change', function() {
+        const selectDomisili = document.getElementById('selectDomisili');
+        if (selectKenegaraan.value === 'ID') {
+            selectDomisili.style.display = 'block';
+        } else {
+            selectDomisili.style.display = 'none';
+        }
     });
 </script>
 
