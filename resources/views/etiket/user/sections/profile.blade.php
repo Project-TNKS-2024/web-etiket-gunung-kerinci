@@ -158,7 +158,7 @@
                         <input type="date" class="form-control border-secondary" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user->biodata->tanggal_lahir) ? Carbon\Carbon::parse($user->biodata->tanggal_lahir)->format('Y-m-d') : null) }}">
                     </div>
                 </div>
-                <div id="selectDomisili" {{ isset($user->biodata) and $user->biodata->kenegaraan != 'ID' ? 'style=display:none' : '' }}>
+                <div id="selectDomisili" {{ isset($user->biodata) and $user->biodata->kenegaraan != 'ID' ? 'style="display:none"' : '9' }}>
                     <div class="row">
                         <label class="font-semibold mandatory">Alamat Domisili</label>
                     </div>
