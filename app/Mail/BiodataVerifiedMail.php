@@ -40,7 +40,7 @@ class BiodataVerifiedMail extends Mailable
         return $this->subject('Status Verifikasi Biodata Anda - ' . config('app.name'))
             ->markdown('email.BioValidasi', [
                 'nama' => $this->biodata->fullName,
-                'tanggalVerifikasi' => $this->biodata->verified_at->format('d M Y H:i'),
+                'tanggalVerifikasi' => now()->format('d F Y'),
                 'status' => $this->status,
                 'keterangan' => $this->biodata->keterangan ?? '-',
                 'url' => route('user.dashboard.profile'),
