@@ -26,10 +26,10 @@ return new class extends Migration
             $table->enum('jenis_kelamin', ['l', 'p']);
             $table->date('tanggal_lahir');
 
-            $table->string('provinsi');
-            $table->string('kabupaten');
-            $table->string('kec');
-            $table->string('desa');
+            $table->string('provinsi')->nullable();
+            $table->string('kabupaten')->nullable();
+            $table->string('kec')->nullable();
+            $table->string('desa')->nullable();
 
             $table->string('keterangan')->nullable();
             $table->enum('verified', ['unverified', 'pending', 'verified'])->default("unverified");
