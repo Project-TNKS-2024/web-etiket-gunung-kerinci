@@ -389,7 +389,7 @@ class booking extends Controller
 
         // cek booking pendaki
         $pendakiHaveBooking = $this->getbookingByDate($booking->tanggal_masuk, $booking->tanggal_keluar, $bioPendaki->id);
-        if (!isEmpty($pendakiHaveBooking)) {
+        if (count($pendakiHaveBooking) > 0) {
             return back()->withErrors(['code' => 'Pendaki sudah terdaftar dalam pendakian lain di tanggal booking ini']);
         }
 
