@@ -261,7 +261,7 @@
                     </div>
                     <p style="font-size: 12px;" class="mb-0">PDF, JPG, JPEG, PNG. Max. 1MB</p>
                     <button class="btn btn-primary w-100 mt-1" data-bs-toggle="modal" data-bs-target="#addBuktiModal">
-                        Upload
+                        Unggah Bukti
                     </button>
                 </form>
                 @endif
@@ -289,7 +289,7 @@
                                 <td>{{ $item->created_at->format('d M Y H:i') }}</td>
                                 <td class="text-center">
                                     @if ($item->status == 'pending')
-                                    <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
+                                    <span class="badge bg-warning text-dark px-3 py-2">Menunggu</span>
                                     @elseif($item->status == 'success')
                                     <span class="badge bg-success px-3 py-2">Disetujui</span>
                                     @else
