@@ -155,10 +155,10 @@ class profile extends Controller
             'telp_country' => 'required|string|max:5',
             'jenis_kelamin' => 'required|in:l,p',
             'tanggal_lahir' => 'required|date|before:today',
-            'provinsi' => 'required|numeric',
-            'kabupaten_kota' => 'required|numeric',
-            'kecamatan' => 'required|numeric',
-            'desa_kelurahan' => 'required|numeric',
+            'provinsi' => 'numeric',
+            'kabupaten_kota' => 'numeric',
+            'kecamatan' => 'numeric',
+            'desa_kelurahan' => 'numeric',
         ]);
 
         // Format nomor telepon
