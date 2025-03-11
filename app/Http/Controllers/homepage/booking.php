@@ -222,7 +222,7 @@ class booking extends Controller
             // return "gagal";
             return back()->withErrors(['code' => 'Anda sudah melakukan booking di tanggal tersebut']);
         }
-        // return $pendakiHaveBooking;
+        return $pendakiHaveBooking;
 
         // cari booking terakhir yang blm di verifikasi
         $booking = gk_booking::where('id_user', Auth::user()->id)
