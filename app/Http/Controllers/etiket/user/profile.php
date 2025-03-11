@@ -150,7 +150,7 @@ class profile extends Controller
             'lastName' => 'string|max:255|nullable',
             'lampiran_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:548',
             'kewarganegaraan' => 'required|string',
-            'nik' => 'required|string|min:8|max:16|alpha_num',
+            'nik' => 'required|string|min:6|max:16|alpha_num',
             'nomor_telepon' => 'required|numeric',
             'telp_country' => 'required|string|max:5',
             'jenis_kelamin' => 'required|in:l,p',
