@@ -2,17 +2,17 @@
    # Halo, {{ $nama }}
 
    @if ($status == 'verified')
-   <strong>Selamat!</strong> Biodata Anda telah berhasil diverifikasi pada <strong>{{ $tanggalVerifikasi }}</strong>.
+   {!! '<b>Selamat!</b>' !!} Biodata Anda telah berhasil diverifikasi pada {!! '<b>' . $tanggalVerifikasi . '</b>' !!}.
    Anda sekarang dapat mengakses layanan kami sepenuhnya.
    @else
-   <strong>Maaf,</strong> biodata Anda tidak dapat diverifikasi pada <strong>{{ $tanggalVerifikasi }}</strong>.
-   <strong>Alasan:</strong> {{ $keterangan }}
+   {!! '<b>Maaf,</b>' !!} biodata Anda tidak dapat diverifikasi pada {!! '<b>' . $tanggalVerifikasi . '</b>' !!}.
+   {!! '<b>Alasan:</b>' !!} {{ $keterangan }}
    @endif
 
    <x-mail::button :url="$url">
       Lihat Detail
    </x-mail::button>
 
-   Terima kasih,<br>
-   **{{ config('app.name') }}**
+   Terima kasih,
+   {!! '<b>' . config('app.name') . '</b>' !!}
 </x-mail::message>
