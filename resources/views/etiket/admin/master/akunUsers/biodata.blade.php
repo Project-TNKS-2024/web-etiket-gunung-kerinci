@@ -32,6 +32,11 @@
             <h5><b>Biodata</b></h5>
             <table id="biodataTable">
                <tr>
+                  <td>Id</td>
+                  <td>:</td>
+                  <td>{{$user->biodata->id}}</td>
+               </tr>
+               <tr>
                   <td>NIK/Passport</td>
                   <td>:</td>
                   <td>{{$user->biodata->nik}}</td>
