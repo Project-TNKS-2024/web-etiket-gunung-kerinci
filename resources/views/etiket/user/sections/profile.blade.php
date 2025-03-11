@@ -159,7 +159,7 @@
                     </div>
                 </div>
                 @if (isset($user->biodata) and ($user->biodata->verified !== 'unverified' and $user->biodata->kenegaraan == 'ID'))
-                <div id="selectDomisili" style="display: none;">
+                <div id="selectDomisili">
                     <div class="row">
                         <label class="font-semibold mandatory">Alamat Domisili</label>
                     </div>
