@@ -158,7 +158,6 @@
                         <input type="date" class="form-control border-secondary" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user->biodata->tanggal_lahir) ? Carbon\Carbon::parse($user->biodata->tanggal_lahir)->format('Y-m-d') : null) }}">
                     </div>
                 </div>
-                @if (isset($user->biodata) and ($user->biodata->verified !== 'unverified' and $user->biodata->kenegaraan == 'ID'))
                 <div id="selectDomisili">
                     <div class="row">
                         <label class="font-semibold mandatory">Alamat Domisili</label>
@@ -202,7 +201,6 @@
                         </div>
                     </div>
                 </div>
-                @endif
 
                 <!-- Submit Button -->
                 <div class="row mb-2">
