@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
             if ($telp && $telp->text1) {
                 $nomor = preg_replace('/\s+/', '', $telp->text1); // Hapus spasi
 
-                if (preg_match('/^0824/', $nomor)) {
+                if (preg_match('/^08/', $nomor)) {
                     $nomor = '62' . substr($nomor, 1); // Ubah 0824 menjadi 62824
                 } elseif (preg_match('/^\+62\s?824/', $nomor)) {
                     $nomor = '62' . substr($nomor, 3); // Ubah +62 824 menjadi 62824
