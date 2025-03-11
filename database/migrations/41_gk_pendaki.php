@@ -18,6 +18,8 @@ return new class extends Migration
             // $table->string('nik');
             $table->uuid('id_bio');
 
+            // $table->boolean('pemandu')->default(false);
+
             $table->integer('usia');
             //  0 = batal, 1, konfrimasi, 2 = cek in, 3 = cek out
 

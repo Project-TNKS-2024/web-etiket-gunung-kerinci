@@ -19,6 +19,7 @@ class gk_pendaki extends Model
         'booking_id',
         'tagihan',
         'id_bio',
+        // 'pemandu',
         'usia',
         // input lampiran
         'lampiran_surat_izin_ortu',

@@ -183,6 +183,10 @@ class booking extends Controller
             return back()->with('error', 'Error: Tanggal tidak sesuai');
         }
 
+        // tambah kolom pendkasi.pemandu
+        // pengecekan pemanadu harus ada di dlam bookinh
+        // pengecekan pemandu harus wni
+
         // cek jarak booking max 2 bulan
         if (Date::now()->addMonths(1) < $dateStart) {
             return back()->with('error', 'Error: Jarak booking tidak boleh lebih dari 1 bulan sekarang');
