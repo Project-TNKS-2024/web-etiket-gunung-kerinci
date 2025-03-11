@@ -18,7 +18,7 @@ class paket_tiket extends Seeder
         gk_paket_tiket::create([
             'id_destinasi' => 1,
             'nama' => 'Umum',
-            'min_pendaki' => null,
+            'min_pendaki' => 2,
             'penugasan' => null,
             'keterangan' => 'paket untuk kalangan umum',
         ]);
@@ -27,7 +27,7 @@ class paket_tiket extends Seeder
             'nama' => 'Rombongan pelajar/mahasiswa',
             'min_pendaki' => 10,
             'penugasan' => 'Surat Pengantar',
-            'keterangan' => 'paket untuk kalangan umum',
+            'keterangan' => 'paket untuk kalangan pelajar/mahasiswa',
         ]);
 
         // @bbtn_kerinciseblatofficial 24-okt-2024
