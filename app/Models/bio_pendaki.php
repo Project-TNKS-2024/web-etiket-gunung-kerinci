@@ -94,18 +94,18 @@ class bio_pendaki extends Model
     }
     public function getDataProvinsiAttribute()
     {
-        return Provinsi::getByCode($this->provinsi);
+        return $this->provinsi ? Provinsi::getByCode($this->provinsi) : '';
     }
     public function getDataKabupatenAttribute()
     {
-        return Kabupaten::getByCode($this->kabupaten);
+        return $this->kabupaten ? Kabupaten::getByCode($this->kabupaten) : '';
     }
     public function getDataKecamatanAttribute()
     {
-        return Kecamatan::getByCode($this->kec);
+        return $this->kec ? Kecamatan::getByCode($this->kec) : '';
     }
     public function getDataDesaAttribute()
     {
-        return Desa::getByCode($this->desa);
+        return $this->desa ? Desa::getByCode($this->desa) : '';
     }
 }
