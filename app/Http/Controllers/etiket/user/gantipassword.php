@@ -13,6 +13,9 @@ class gantipassword extends Controller
     public function index()
     {
         return view('etiket.user.sections.ganti-password');
+        if (Auth::user()->gauth_type !== 'manual') {
+            return redirect()->route('user.dashboard')->with('error', 'Anda tidak memiliki akses untuk mengakses halaman ini.');
+        }
     }
     public function __construct()
     {
