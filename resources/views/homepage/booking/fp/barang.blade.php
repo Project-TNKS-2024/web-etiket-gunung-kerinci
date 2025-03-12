@@ -1,6 +1,14 @@
 <div class="row mb-3">
    <div class="col-12">
-      <label class="w-100 fw-bold mandatory">Barang Bawaan Wajib</label>
+      <label class="w-100 fw-bold mandatory">Barang Bawaan Wajib individu</label>
+      <ul>
+         <li>KTP</li>
+         <li>Surat Keterangan Sehat</li>
+         <li>Surat izin Orang/Wali untuk usia <17 tahun</li>
+      </ul>
+   </div>
+   <div class="col-12">
+      <label class="w-100 fw-bold mandatory">Barang Bawaan Wajib Tim</label>
       <ul>
          <li>KTP</li>
          <li>Perlengkapan Standar Pendakian Gunung</li>
