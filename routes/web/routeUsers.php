@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\etiket\user\dashboard as dasUser;
 use App\Http\Controllers\etiket\user\profile as profileUser;
 use App\Http\Controllers\etiket\user\gantipassword;
+use App\Http\Controllers\etiket\user\konfigurasiAkun;
 
 
 // User routes
@@ -17,6 +18,9 @@ Route::middleware(['check.role:user', 'verified'])->group(function () {
    // riwayat booking
    Route::get('dashboard/riwayat', [dasUser::class, 'riwayat'])->name('user.dashboard.reiwayat');
 
+   // konfigurasi akun
+   Route::get('dashboard/akun', [konfigurasiAkun::class, 'index'])->name('user.dashboard.akun');
+   Route::post('dashboard/akun/action', [konfigurasiAkun::class, 'action'])->name('user.dashboard.akun.action');
 
    //reset password
    Route::get('dashboard/ganti-password', [gantipassword::class, 'index'])->name('user.dashboard.reset-password');

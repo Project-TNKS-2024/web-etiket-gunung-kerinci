@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
-     * 
+     *
      */
     protected $table = 'users';
     protected $fillable = [
@@ -32,6 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'token',
         'nik_verified_at',
         'email_verified_at',
+        'avatar'
     ];
 
     protected $hidden = [
