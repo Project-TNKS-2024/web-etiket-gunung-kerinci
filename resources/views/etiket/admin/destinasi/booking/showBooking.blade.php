@@ -41,7 +41,6 @@
 <div class="card">
    <div class="card-header">
       <h5><b>Detail Booking</b></h5>
-      <span class="badge bg-primary">Cek in</span>
    </div>
    <div class="card-body">
       <div class="row">
@@ -105,6 +104,7 @@
          <div class="col-12 col-lg-4">
             <h6 class="text-center"><b>Progres booking</b></h6>
             <div class="progress my-1" style="height: 25px;">
+
                <div class="progress-bar bg-success" role="progressbar"
                   style="width: {{ ($booking->status_booking / 8) * 100 }}%;"
                   aria-valuenow="{{ $booking->status_booking }}"
@@ -192,7 +192,7 @@
             </tbody>
          </table>
       </div>
-
+      @if ($booking->status_booking >= 4)
       <div class="mt-1 d-flex justify-content-between align-items-center">
          <form id="statusForm" action="{{ route('admin.destinasi.booking.updateStatus') }}" method="POST">
             @csrf
@@ -221,9 +221,12 @@
                </form>
          </div>
       </div>
+      @endif
+
    </div>
 </div>
 
+@if ($booking->status_booking >= 4)
 <div class="card">
    <div class="card-header">
       <h5><b>Riwayat Pendakian</b></h5>
@@ -266,7 +269,27 @@
       </div>
    </div>
 </div>
+@endif
 
+
+@endsection
+
+@section('js')
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+   const qrcodes = document.querySelectorAll('.qrcode_kodebooking');
+   qrcodes.forEach(e => {
+      qr = e.dataset['qr'];
+      new QRCode(e, {
+         text: qr,
+         width: 200,
+         height: 200
+      });
+   });
+</script>
+
+@if ($booking->status_booking >= 4)
+<!-- JavaScript untuk mengatur tampilan checkbox -->
 <script>
    document.addEventListener("DOMContentLoaded", function() {
       let simpanBtn = document.querySelector(".btn-simpan");
@@ -341,27 +364,5 @@
       });
    });
 </script>
-
-
-
-
-
-
-
-
-@endsection
-
-@section('js')
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-<script>
-   const qrcodes = document.querySelectorAll('.qrcode_kodebooking');
-   qrcodes.forEach(e => {
-      qr = e.dataset['qr'];
-      new QRCode(e, {
-         text: qr,
-         width: 200,
-         height: 200
-      });
-   });
-</script>
+@endif
 @endsection

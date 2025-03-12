@@ -2,13 +2,11 @@
    # Halo, {{ $nama }}
 
    @if ($status == 'verified')
-   ## Selamat!
-   Biodata Anda telah berhasil diverifikasi pada ** {{ $tanggalVerifikasi }} **.
+   **Selamat!** Biodata Anda telah berhasil diverifikasi pada **{{ $tanggalVerifikasi }}**.
    Anda sekarang dapat mengakses layanan kami sepenuhnya.
    @else
-   ## Maaf,
-   biodata Anda tidak dapat diverifikasi pada ** {{ $tanggalVerifikasi }} **.
-   ** Alasan: ** {{ $keterangan }}
+   **Maaf,** biodata Anda tidak dapat diverifikasi pada **{{ $tanggalVerifikasi }}**.
+   **Alasan:** {{ $keterangan }}
    @endif
 
    <x-mail::button :url="$url">

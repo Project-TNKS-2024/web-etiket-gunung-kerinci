@@ -240,32 +240,6 @@
                     </div>
                 </div>
 
-                @if ($booking->status_booking ==3)
-                <h1 class="fs-5 fw-bold mb-3">Upload Bukti Pembayaran</h1>
-
-                <form action="{{ route('homepage.booking.addBuktiPembayaran') }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="id" value="{{ $booking->id }}">
-
-                    <select class="form-select" name="metode">
-                        <option selected disabled>Pilih Metode</option>
-                        <option value="transfer">Transfer Bank</option>
-                        <option value="scan">QRIS</option>
-                    </select>
-
-                    <div class="input-group mt-1">
-                        <input class="form-control" type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept="image/*,.pdf">
-                        <button class="input-group-text d-none" type="button" data-id-target="bukti_pembayaran">
-                            <i class="fa-regular fa-eye"></i>
-                        </button>
-                    </div>
-                    <p style="font-size: 12px;" class="mb-0">PDF, JPG, JPEG, PNG. Max. 1MB</p>
-                    <button class="btn btn-primary w-100 mt-1" data-bs-toggle="modal" data-bs-target="#addBuktiModal">
-                        Unggah Bukti
-                    </button>
-                </form>
-                @endif
-
                 <h1 class="fs-5 fw-bold mt-3">Riwayat Pembayaran</h1>
                 @if (count($pembayaran) > 0)
                 <div class="table-responsive">
@@ -332,6 +306,32 @@
                 </div>
                 @else
                 <p class="text-muted">Belum ada riwayat pengajuan</p>
+                @endif
+
+                @if ($booking->status_booking ==3)
+                <h1 class="fs-5 fw-bold mb-3">Upload Bukti Pembayaran</h1>
+
+                <form action="{{ route('homepage.booking.addBuktiPembayaran') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $booking->id }}">
+
+                    <select class="form-select" name="metode">
+                        <option selected disabled>Pilih Metode</option>
+                        <option value="transfer">Transfer Bank</option>
+                        <option value="scan">QRIS</option>
+                    </select>
+
+                    <div class="input-group mt-1">
+                        <input class="form-control" type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept="image/*,.pdf">
+                        <button class="input-group-text d-none" type="button" data-id-target="bukti_pembayaran">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <p style="font-size: 12px;" class="mb-0">PDF, JPG, JPEG, PNG. Max. 1MB</p>
+                    <button class="btn btn-primary w-100 mt-1" data-bs-toggle="modal" data-bs-target="#addBuktiModal">
+                        Unggah Bukti
+                    </button>
+                </form>
                 @endif
 
                 @if ($booking->status_booking >= 4)

@@ -36,31 +36,81 @@ class booking extends Controller
         $this->upload = $upload;
     }
 
-    private function GateCapacity($idTiket, $startDate, $endDate = null, $idGate = null)
+    private function GateCapacity($idDestinasi, $startDate, $endDate = null, $idGate = null)
     {
-        if (!$endDate) {
-            $endDate = Carbon::parse($startDate)->addMonths(2)->format('Y-m-d');
-        }
+        // Jika $endDate tidak diberikan, set default menjadi 2 bulan dari $startDate
+        $endDate = $endDate ?? Carbon::parse($startDate)->addMonths(2)->format('Y-m-d');
 
-        $query = gk_booking::where('id_tiket', $idTiket)
-            ->with('gateMasuk')
+        // Ambil data booking dalam rentang tanggal yang sesuai
+        $bookings = gk_booking::with(['gktiket', 'gateMasuk', 'gateMasuk'])
+            ->whereHas('gktiket', function ($q) use ($idDestinasi) {
+                $q->where('id_destinasi', $idDestinasi);
+            })
             ->where('status_booking', '>=', 4)
-            ->whereBetween('tanggal_masuk', [$startDate, $endDate])
-            ->select(
-                'tanggal_masuk',
-                'gate_masuk',
-                DB::raw('SUM(total_pendaki_wni + total_pendaki_wna) as jumlah_pendaki')
-            )
-            ->groupBy('tanggal_masuk', 'gate_masuk')
-            ->orderBy('tanggal_masuk', 'asc');
+            ->where(function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('tanggal_masuk', [$startDate, $endDate])
+                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                        $q->where('tanggal_masuk', '<=', $startDate)
+                            ->where('tanggal_keluar', '>=', $startDate);
+                    });
+            });
 
-        // Filter berdasarkan ID Gate jika diberikan
+        // Jika ID Gate diberikan, filter berdasarkan gate_masuk
         if (!is_null($idGate)) {
-            $query->where('gate_masuk', $idGate);
+            $bookings->where('gate_masuk', $idGate);
         }
 
-        return $query->get();
+        $bookings = $bookings->get();
+
+        // Buat array untuk menyimpan hasil berdasarkan tanggal dan gate_masuk
+        $result = [];
+
+        foreach ($bookings as $booking) {
+            // Loop dari tanggal_masuk hingga tanggal_keluar
+            $currentDate = Carbon::parse($booking->tanggal_masuk);
+            $exitDate = Carbon::parse($booking->tanggal_keluar);
+
+            // Ambil data gate dari relasi
+            $gateMasuk = $booking->gateMasuk; // Relasi gateMasuk
+            $idGate = $gateMasuk->id ?? null; // Ambil ID gate
+
+            if ($idGate === null) {
+                continue; // Lewati jika tidak ada gate
+            }
+
+            while ($currentDate <= $exitDate) {
+                $dateStr = $currentDate->format('Y-m-d');
+
+                // Jika tanggal dan id_gate belum ada di array, inisialisasi
+                if (!isset($result[$dateStr][$idGate])) {
+                    $result[$dateStr][$idGate] = [
+                        'tanggal' => $dateStr,
+                        'id_gate' => $idGate, // ID Gate untuk pengecekan
+                        'gate_masuk' => $gateMasuk ?? 'Unknown', // Ambil nama gate jika ada
+                        'jumlah_pendaki' => 0,
+                    ];
+                }
+
+                // Tambahkan jumlah pendaki ke tanggal dan id_gate yang sesuai
+                $result[$dateStr][$idGate]['jumlah_pendaki'] += ($booking->total_pendaki_wni + $booking->total_pendaki_wna);
+
+                // Pindah ke tanggal berikutnya
+                $currentDate->addDay();
+            }
+        }
+
+
+        // Konversi hasil menjadi array numerik
+        $finalResult = [];
+        foreach ($result as $dates) {
+            foreach ($dates as $data) {
+                $finalResult[] = $data;
+            }
+        }
+
+        return $finalResult;
     }
+
 
     private function getBookingByUser($id, $status = null)
     {
@@ -136,8 +186,10 @@ class booking extends Controller
         $gambar_destinasi = gambar_destinasi::where('id_destinasi', $id_destinasi)->get();
 
         // ambil jumlah pendaki perhari selama 2 bulan kedepan dihitung dari tanggal_masuk, dan booking->verivied==verified
-        $bookingBulanan = $this->GateCapacity($id, now());
+        $bookingBulanan = $this->GateCapacity($id_destinasi, now());
 
+        // return $id_destinasi;
+        // return $bookingBulanan;
         // ambil data tiket
         $tiket = gk_tiket_pendaki::where('id_paket_tiket', $id)
             ->with(['paket_tiket'])
@@ -176,7 +228,8 @@ class booking extends Controller
         $dateStart = Carbon::createFromFormat('Y-m-d', $request->date_start);
         $dateEnd = Carbon::createFromFormat('Y-m-d', $request->date_end);
         $totalDays = $dateStart->diffInDays($dateEnd) + 1;
-        if ($dateStart < now()) {
+
+        if ($dateStart->toDateString() < now()->toDateString()) {
             return back()->with('error', 'Error: Tanggal masuk tidak boleh kurang dari tanggal sekarang');
         }
         if ($dateStart > $dateEnd) {
@@ -200,7 +253,8 @@ class booking extends Controller
 
         // cek kapasitas gate
         $gates = gk_gates::where('id', $request->gerbang_masuk)->first();
-        $kapasitas = collect($this->GateCapacity($request->jenis_tiket, $request->date_start, $request->date_start, $request->gerbang_masuk));
+
+        $kapasitas = collect($this->GateCapacity($tiket->id_destinasi, $request->date_start, $request->date_start, $request->gerbang_masuk));
 
         if (!$kapasitas->isEmpty()) {
             if ($gates->max_pendaki_hari < $kapasitas->first()->jumlah_pendaki + $request->wni + $request->wna) {
@@ -483,7 +537,7 @@ class booking extends Controller
 
         if ($request->action == 'next') {
             // cek kelengkapan bio pendaki
-            $booking->load(['pendakis.biodata']);
+            $booking->load(['pendakis.biodata', 'gkTiket']);
 
             foreach ($booking->pendakis as $p) {
                 // Cek apakah biodata ada
@@ -511,19 +565,18 @@ class booking extends Controller
             }
 
             // cek kapasitas pendaki
-            $kapasitas = collect($this->GateCapacity($booking->id_tiket, $booking->tanggal_masuk, $booking->tanggal_masuk, $booking->gerbang_masuk));
+            $kapasitas = collect($this->GateCapacity($booking->gkTiket->id_destinasi, $booking->tanggal_masuk, $booking->tanggal_masuk, $booking->gerbang_masuk));
             if (!$kapasitas->isEmpty()) {
                 if ($booking->gateMasuk->max_pendaki_hari < $kapasitas->first()->jumlah_pendaki + $wni + $wna) {
                     return back()->with('error', 'Error: Kapasitas penuh');
                 }
             }
 
+            // return $request;
+
             // cek persetujuan barang bawaan
             $request->validate([
-                'barangWajib.perlengkapan_gunung_standar' => 'required|boolean',
-                'barangWajib.trash_bag' => 'required|boolean',
-                'barangWajib.p3k_standart' => 'required|boolean',
-                'barangWajib.survival_kit_standart' => 'required|boolean',
+                'barangWajib' => 'required|boolean',
             ]);
 
             // buat data Struk

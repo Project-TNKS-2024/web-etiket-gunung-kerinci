@@ -202,10 +202,10 @@ class profile extends Controller
                 'no_hp_darurat' => null,
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'tanggal_lahir' => $request->tanggal_lahir,
-                'provinsi' => $request->provinsi,
-                'kabupaten' => $request->kabupaten_kota,
-                'kec' => $request->kecamatan,
-                'desa' => $request->desa_kelurahan,
+                'provinsi' => $request->kewarganegaraan == 'ID' ? $request->provinsi : null,
+                'kabupaten' => $request->kewarganegaraan == 'ID' ? $request->kabupaten_kota : null,
+                'kec' => $request->kewarganegaraan == 'ID' ? $request->kecamatan : null,
+                'desa' => $request->kewarganegaraan == 'ID' ? $request->desa_kelurahan : null,
                 'verified' => 'pending',
             ]);
         } else {
@@ -220,10 +220,10 @@ class profile extends Controller
                 'no_hp_darurat' => "",
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'tanggal_lahir' => $request->tanggal_lahir,
-                'provinsi' => $request->provinsi,
-                'kabupaten' => $request->kabupaten_kota,
-                'kec' => $request->kecamatan,
-                'desa' => $request->desa_kelurahan,
+                'provinsi' =>  $request->kewarganegaraan == 'ID' ? $request->provinsi : null,
+                'kabupaten' => $request->kewarganegaraan == 'ID' ? $request->kabupaten_kota : null,
+                'kec' => $request->kewarganegaraan == 'ID' ? $request->kecamatan : null,
+                'desa' => $request->kewarganegaraan == 'ID' ? $request->desa_kelurahan : null,
                 'verified' => 'pending',
             ]);
         }

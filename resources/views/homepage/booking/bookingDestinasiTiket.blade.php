@@ -249,7 +249,7 @@
     // Mengubah dataBulanan menjadi format FullCalendar
     var eventsData = dataBulanan.map(item => ({
         title: `${item.gate_masuk.nama}: ${item.jumlah_pendaki} / ${item.gate_masuk.max_pendaki_hari}`,
-        start: item.tanggal_masuk,
+        start: item.tanggal,
         allDay: true
     }));
 
@@ -275,6 +275,7 @@
     });
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // Data harga tiket
@@ -314,9 +315,7 @@
         let days = 0;
 
         if (dateStart && dateEnd) {
-            if (dateStart < dateEnd) {
-                console.log('tanggal pendakian Valid');
-
+            if (dateStart <= dateEnd) {
                 // Hitung selisih hari antara tanggal mulai dan tanggal selesai
                 days = (new Date(dateEnd) - new Date(dateStart)) / (1000 * 3600 * 24);
 
@@ -329,23 +328,24 @@
                     priceWna += wnaCount * (isWeekend ? harga[1].harga_masuk_wk : harga[1].harga_masuk_wd);
 
                 }
-                console.log(priceWni);
 
                 // Harga kemah - sehari 
                 priceWni += wniCount * (harga[0].harga_kemah * days);
                 priceWna += wnaCount * (harga[1].harga_kemah * days);
-                console.log(priceWni);
 
                 // hitung harga ansuransi
                 priceWni += wniCount * (harga[0].harga_ansuransi * Math.ceil((days + 1) / harga[0].masa_ansuransi));
                 priceWna += wnaCount * (harga[1].harga_ansuransi * Math.ceil((days + 1) / harga[1].masa_ansuransi));
-                console.log(priceWni);
 
                 // Harga tracking dan asuransi (hanya dihitung sekali per pendaki)
                 priceWni += wniCount * (harga[0].harga_traking);
                 priceWna += wnaCount * (harga[1].harga_traking);
             } else {
-                console.log('tanggal pendakian valid');
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Tanggal pendakian tidak falid",
+                });
                 return;
             }
 
@@ -382,8 +382,14 @@
     formBooking.date_start.addEventListener('change', function() {
         const dateStart = new Date(this.value);
         const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        console.log(dateStart, today);
         if (dateStart < today) {
-            alert('Tanggal mulai tidak boleh sebelum hari ini!');
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Tidak boleh memilih tanggal yang sudah lewat!",
+            });
             this.value = '';
         }
         updatePrice();
@@ -392,8 +398,13 @@
     formBooking.date_end.addEventListener('change', function() {
         const dateEnd = new Date(this.value);
         const dateStart = new Date(formBooking.date_start.value);
-        if (dateEnd <= dateStart) {
-            alert('Tanggal selesai harus setelah tanggal mulai!');
+        console.log(dateStart, dateEnd);
+        if (dateEnd < dateStart) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Tanggal selesai harus lebih besar dari tanggal mulai!",
+            });
             this.value = '';
         }
         updatePrice();

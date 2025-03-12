@@ -60,11 +60,23 @@
                   <td class="">{{ $item->gateMasuk['nama'] }}</td>
                   <td class="">{{ $item->pendakis->count() }} orang</td>
                   <td class="">{{ $item->getStatusBooking()}}</td>
+                  @php
+                  $colorStatus = 'info';
+                  if($item->pembayaran->last()->status == 'pending'){
+                  $colorStatus = 'warning';
+                  }else if($item->pembayaran->last()->status == 'success'){
+                  $colorStatus = 'success';
+                  }else if($item->pembayaran->last()->status == 'failed'){
+                  $colorStatus = 'danger';
+                  }else{
+                  $colorStatus = 'info';
+                  }
+                  @endphp
                   <td class="">
                      <a href="{{route('admin.destinasi.booking.show', ['id' => $item->id])}}" class="btn btn-sm btn-info">
                         <i class="fa-solid fa-circle-info"></i>
                      </a>
-                     <a href="{{route('admin.destinasi.booking.payment.show', ['id' => $item->id])}}" class="btn btn-sm btn-info mt-sm-1 mt-md-0">
+                     <a href="{{route('admin.destinasi.booking.payment.show', ['id' => $item->id])}}" class="btn btn-sm btn-{{$colorStatus}} mt-sm-1 mt-md-0">
                         <i class="fa-solid fa-money-bill-wave"></i>
                      </a>
                   </td>
@@ -85,5 +97,7 @@
 @endsection
 
 @section('js')
-
+<script>
+   const data = @json($data)
+</script>
 @endsection

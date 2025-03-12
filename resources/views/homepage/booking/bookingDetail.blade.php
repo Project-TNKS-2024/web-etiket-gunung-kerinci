@@ -154,11 +154,7 @@
             @foreach ($formulirPendakis as $key => $pendaki)
             <div class=" mt-4">
                 <h1 class="fs-5 fw-bold">
-                    @if ($key === 0)
-                    Biodata Ketua
-                    @else
-                    Biodata Pendaki {{ $key }}
-                    @endif
+                    Biodata Pendaki {{ $key + 1}}
                 </h1>
                 <div class="row">
                     <div class="col-12 col-lg-6">
@@ -226,44 +222,7 @@
                 </div>
             </div>
             @endforeach
-            <hr>
-            <div class="mt-3">
-                <h1 class="fs-5 fw-bold">Barang Bawaan Wajib</h1>
-                <fieldset disabled>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="barangWajib[perlengkapan_gunung_standar]"
-                            value="1" checked readonly>
-                        <label class="form-check-label" for="perle_gunung">
-                            Perlengkapan Standar Pendaki Gunung
-                        </label>
-                    </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="barangWajib[trash_bag]" value="1"
-                            id="trash_bag" checked readonly>
-                        <label class="form-check-label" for="trash_bag">
-                            Trash Bag
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="barangWajib[p3k_standart]" value="1"
-                            id="p3k_standart" checked readonly>
-                        <label class="form-check-label" for="p3k_standart">
-                            P3K Standart
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="barangWajib[survival_kit_standart]"
-                            value="1" id="survival_kit_standart" checked readonly>
-                        <label class="form-check-label" for="survival_kit_standart">
-                            Survival Kit Standart
-                        </label>
-                    </div>
-                </fieldset>
-
-            </div>
         </div>
     </div>
 
