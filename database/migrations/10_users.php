@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('role')->default('user');
+            $table->string('avatar')->nullable();
 
             $table->uuid('id_bio')->unique()->nullable();
 
