@@ -21,6 +21,7 @@ class konfigurasiAkun extends Controller
 
     public function action(Request $request)
     {
+        // dd($request->file('avatar'));
         $auth = Auth::user();
 
         // return $user;
