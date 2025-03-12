@@ -19,12 +19,13 @@ class konfigurasiAkun extends Controller
         return view('etiket.user.sections.akun');
     }
 
-    public function action(Request $request) {
+    public function action(Request $request)
+    {
         $auth = Auth::user();
 
         // return $user;
         $request->validate([
-            'avatar' => 'required|file|mimes:jpg,jpeg,png,pdf|max:548',
+            'avatar' => 'required|file|mimes:jpg,jpeg,png|max:548',
         ]);
 
         //ganti foto profile
@@ -44,7 +45,6 @@ class konfigurasiAkun extends Controller
             ]);
 
             return redirect()->back()->with('success', "$filename");
-
         }
 
         return redirect()->back()->with('error', 'Gagal melakukan perubahan');

@@ -10,10 +10,10 @@
         </div>
         <div class="py-0 my-0 px-4 w-100 text-center">
             @if (isset(auth()->user()->biodata) and auth()->user()->biodata->verified == 'verified')
-                <h5 class="fw-semibold ">{{ auth()->user()->biodata->first_name }}</h5>
-                <h6 class="fw-light ">Id : {{ auth()->user()->biodata->id }}</h6>
+            <h5 class="fw-semibold ">{{ auth()->user()->biodata->first_name }}</h5>
+            <h6 class="fw-light ">Id : {{ auth()->user()->biodata->id }}</h6>
             @else
-                <h6 class="fw-light ">{{ auth()->user()->email }}</h6>
+            <h6 class="fw-light ">{{ auth()->user()->email }}</h6>
             @endif
         </div>
     </div>
@@ -29,8 +29,8 @@
             class="dashboard-sidebar-btn rounded-lg">Akun</a>
 
         @if (auth()->user()->gauth_type == 'manual')
-            <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
-                class="dashboard-sidebar-btn rounded-lg">Ubah Kata Sandi</a>
+        <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
+            class="dashboard-sidebar-btn rounded-lg">Ubah Kata Sandi</a>
         @endif
 
         <!-- Bagian Logout -->
