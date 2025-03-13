@@ -66,9 +66,6 @@
     </div>
 </div>
 
-<script>
-    console.log(@json(auth()))
-</script>
 @endsection
 
 @section('js')

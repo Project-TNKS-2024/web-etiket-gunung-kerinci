@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\homepage;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\homepageHelperController;
 use App\Models\destinasi;
 use App\Models\gk_booking;
 use Illuminate\Support\Facades\DB;
@@ -13,48 +14,23 @@ class HomepageController extends Controller
     public function Beranda()
     {
         // ambil data cuaca 
-        try {
-            $apiWeatherKey = 'a2e80ea3991444f38a015609251802';
-            $laLongitude = '-1.6955471535960556,101.26376495341809'; // gunung kerinci
-            $apiWeatherUrl = 'https://api.weatherapi.com/v1/current.json?key=' . $apiWeatherKey . '&q=' . $laLongitude . '&aqi=no';
-            $weatherResponse = file_get_contents($apiWeatherUrl);
-            $weatherData = json_decode($weatherResponse, true);
-        } catch (\Exception $e) {
-            Log::channel('admin')->error(
-                'Terjadi kesalahan pada proses pengambilan cuaca dari api  ',
-                [
-                    'api' => $apiWeatherUrl,
-                    'error' => $e->getMessage()
-                ]
-            );
-            $weatherData = null;
-        }
-        // $weatherData = null;
+        $homeHelper = new homepageHelperController();
+        $weatherData = $homeHelper->get_cuaca();
 
         $destinasi = destinasi::all();
 
-        // ambil data pendakian gunung kerinci yang sudah cekin 
-        $Bkerinci = gk_booking::whereHas('destinasi', function ($query) {
-            $query->where('destinasis.id', 1);
-        })->where('status_booking', '>=', 6);
+        $pendaki = $homeHelper->getPendaki();
 
-        $total_pendaki_wna = $Bkerinci->sum('total_pendaki_wna');
-        $total_pendaki_wni = $Bkerinci->sum('total_pendaki_wni');
-        $total_pendaki = $total_pendaki_wna + $total_pendaki_wni;
-        $total_sedang_cekin = (clone $Bkerinci)
-            ->where(function ($query) {
-                $query->Where('tanggal_keluar', date('Y-m-d'));
-            })
-            ->sum(DB::raw('total_pendaki_wna + total_pendaki_wni'));
+        // return $pendaki;
 
-        // return $weatherData->current;
-        // return $destinasi;
         return view('homepage.beranda', [
             'destinasi' => $destinasi,
-            'total_mendaki' => $total_sedang_cekin,
-            'total_pendaki' => $total_pendaki,
-            'total_pendaki_wna' => $total_pendaki_wna,
-            'total_pendaki_wni' => $total_pendaki_wni,
+
+            'total_mendaki' => $pendaki['total_sedang_cekin'],
+            'total_pendaki' => $pendaki['total_pendaki'],
+            'total_pendaki_wna' => $pendaki['total_pendaki_wna'],
+            'total_pendaki_wni' => $pendaki['total_pendaki_wni'],
+
             'weatherData' => $weatherData,
         ]);
     }
