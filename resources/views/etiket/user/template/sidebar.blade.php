@@ -3,17 +3,35 @@
 
     <!-- Bagian Profile Picture dan Nama -->
     <div class="d-flex flex-column align-items-center gap-2" style="margin-top: -50px;">
-        <div class="gk-bg-neutrals200"
+        <div class="gk-bg-neutrals200 position-relative"
             style="border-radius: 100%; width: 100px; height: 100px; filter: drop-shadow(0px 0px 3px var(--neutrals600));">
             <img src="{{ auth()->user()->avatar == null ? asset('assets/icon/user.svg') : asset(auth()->user()->avatar) }}"
                 width="100" height="100" style="object-fit: cover;" class="rounded-pill" />
+
+            <!-- Pencil icon for editing -->
+            <form action="{{ route('user.dashboard.akun.action') }}" method="post" id="form-profile-sidebar"
+                enctype="multipart/form-data"
+                class="{{ isset($user->biodata) && $user->biodata->verified !== 'unverified' ? 'input-none' : '' }}">
+                @csrf
+
+                <label href="#" for="avatar-sidebar"
+                    class="btn btn-primary border-0 bg-white  position-absolute bottom-0 end-0 rounded-circle p-1 "
+                    style=" display: flex; align-items: center; justify-content: center; box-shadow: 0 0 5px rgba(0,0,0,0.2); ">
+                    <i class="fas fa-pencil-alt"
+                        style="cursor: pointer; color: var(--primary700);font-size: 20px; padding: 5px;"></i>
+                </label>
+
+                <input class="form-control border-secondary d-none" type="file" name="avatar" id="avatar-sidebar"
+                    accept="image/*">
+            </form>
         </div>
+
         <div class="py-0 my-0 px-4 w-100 text-center">
             @if (isset(auth()->user()->biodata) and auth()->user()->biodata->verified == 'verified')
-            <h5 class="fw-semibold ">{{ auth()->user()->biodata->first_name }}</h5>
-            <h6 class="fw-light ">Id : {{ auth()->user()->biodata->id }}</h6>
+                <h5 class="fw-semibold ">{{ auth()->user()->biodata->first_name }}</h5>
+                <h6 class="fw-light ">Id : {{ auth()->user()->biodata->id }}</h6>
             @else
-            <h6 class="fw-light ">{{ auth()->user()->email }}</h6>
+                <h6 class="fw-light ">{{ auth()->user()->email }}</h6>
             @endif
         </div>
     </div>
@@ -29,8 +47,8 @@
             class="dashboard-sidebar-btn rounded-lg">Akun</a>
 
         @if (auth()->user()->gauth_type == 'manual')
-        <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
-            class="dashboard-sidebar-btn rounded-lg">Ubah Kata Sandi</a>
+            <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
+                class="dashboard-sidebar-btn rounded-lg">Ubah Kata Sandi</a>
         @endif
 
         <!-- Bagian Logout -->
