@@ -64,7 +64,7 @@ class AccountAdminController extends AdminController
         // kirim email verifikasi
         $user->sendEmailVerificationNotification();
 
-        return redirect()->route('admins.akun.index')->with('success', 'Admin berhasil ditambahkan.');
+        return redirect()->route('admins.akun.index')->with('success', 'Admin berhasil ditambahkan. Password default: "password123". Harap segera mengganti password.');
     }
 
 

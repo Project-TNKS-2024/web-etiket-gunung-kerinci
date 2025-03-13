@@ -1,12 +1,40 @@
 @php
-    $destinasi = App\Models\destinasi::all();
-    $bookingRoutes = [];
+$destinasi = App\Models\destinasi::all();
+$bookingRoutes = [];
 
-    foreach ($destinasi as $d) {
-        $bookingRoutes[] = route('homepage.booking.destinasi.paket', ['id' => $d->id]);
-        $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->id]);
-    }
+foreach ($destinasi as $d) {
+$bookingRoutes[] = route('homepage.booking.destinasi.paket', ['id' => $d->id]);
+$bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->id]);
+}
 @endphp
+
+@if (config('app.debug'))
+<style>
+    .debug-alert {
+        background-color: #ffcc00;
+        color: #000;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .navbar {
+        margin-top: 40px;
+        /* Sesuaikan dengan tinggi alert */
+    }
+</style>
+
+<div class="debug-alert">
+    Situs ini masih dalam tahap uji coba. Terima kasih atas kesabaran Anda!
+</div>
+@endif
+
+
 
 <nav class="navbar navbar-expand-sm gk-bg-primary700 index-navbar py-0" style="font-size: 14px">
     <div class="w-100 index-nav-ats gk-bg-neutrals-base-white py-2">
@@ -44,33 +72,33 @@
 
             <ul class="navbar-nav d-flex align-items-center">
                 @guest
-                    <li class="nav-item">
-                        <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3"
-                            href="{{ route('register') }}">Daftar</a>
-                    </li>
-                    <li class="nav-item ms-md-3">
-                        <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3"
-                            href="{{ route('login') }}">Masuk</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3"
+                        href="{{ route('register') }}">Daftar</a>
+                </li>
+                <li class="nav-item ms-md-3">
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3"
+                        href="{{ route('login') }}">Masuk</a>
+                </li>
                 @endguest
 
                 @auth
-                    <li class="nav-item">
-                        @if (Auth::user()->role == 'user')
-                            <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2"
-                                href="{{ route('user.dashboard') }}">Dashboard</a>
-                        @elseif (Auth::user()->role == 'admin')
-                            <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2 text-nowrap "
-                                href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
-                        @endif
-                    </li>
-                    <form action="{{ route('etiket.auth.logout') }}" method="post" class="mb-0 w-100 px-3">
-                        @csrf
-                        <button class="nav-link text-white py-2 bg-danger align-items-center w-100" type="submit">
-                            Keluar
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        </button>
-                    </form>
+                <li class="nav-item">
+                    @if (Auth::user()->role == 'user')
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2"
+                        href="{{ route('user.dashboard') }}">Dashboard</a>
+                    @elseif (Auth::user()->role == 'admin')
+                    <a class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2 text-nowrap "
+                        href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
+                    @endif
+                </li>
+                <form action="{{ route('etiket.auth.logout') }}" method="post" class="mb-0 w-100 px-3">
+                    @csrf
+                    <button class="nav-link text-white py-2 bg-danger align-items-center w-100" type="submit">
+                        Keluar
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                </form>
 
 
                 @endauth

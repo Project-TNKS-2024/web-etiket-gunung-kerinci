@@ -18,7 +18,7 @@
 
 @section('main')
 
-<a class="btn btn-primary w-fit text-start mb-3" href="{{ route('admin.destinasi.detail', ['id' => $destinasi->id]) }}">
+<a class="btn btn-secondary w-fit text-start mb-3" href="{{ route('admin.destinasi.detail', ['id' => $destinasi->id]) }}">
    <i class="ti ti-arrow-left"></i>
    Kembali
 </a>

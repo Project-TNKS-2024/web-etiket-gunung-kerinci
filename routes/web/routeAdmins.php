@@ -15,6 +15,7 @@ use App\Http\Controllers\etiket\admin\fitur\Scan;
 use App\Http\Controllers\etiket\admin\master\AccountAdminController;
 use App\Http\Controllers\etiket\admin\master\PengunjungController;
 use App\Http\Controllers\etiket\admin\master\RolePermissionController;
+use App\Http\Controllers\etiket\admin\ProfileController;
 // admin master
 use App\Http\Controllers\etiket\admin\settingController;
 
@@ -59,9 +60,6 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/destinasi/booking/{id}/tiket', [bookingController::class, 'showTiket'])->name('admin.destinasi.booking.tiket.show');
     Route::get('admin/destinasi/booking/{id}/struk', [bookingController::class, 'showStruk'])->name('admin.destinasi.booking.struk.show');
 
-    // Destinasi - pendaki
-
-
     // Master - Destinasi
     Route::get('admin/master/destinasi', [destinasisController::class, 'index'])->name('admin.master.destinasi');
     Route::get('admin/master/destinasi/add', [destinasisController::class, 'add'])->name('admin.master.destinasi.add');
@@ -89,6 +87,10 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('/roles/updateAction', [RolePermissionController::class, 'rolesUpdateAction'])->name('roles.updateAction');
     Route::post('/roles/deleteAction', [RolePermissionController::class, 'roleDeleteAction'])->name('roles.deleteAction');
 
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile');
+    Route::get('/profile/reset-password', [ProfileController::class, 'resetPassword'])->name('admin.profile.resetPassword');
+    Route::post('/profile/reset-password', [ProfileController::class, 'resetPasswordAction'])->name('admin.profile.resetPassword.action');
 
 
 
