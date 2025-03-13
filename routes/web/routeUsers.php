@@ -14,13 +14,10 @@ Route::middleware(['check.role:user', 'verified'])->group(function () {
    Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
    Route::get('dashboard/profile', [profileUser::class, 'index'])->name('user.dashboard.profile');
    Route::post('dashboard/profile/', [profileUser::class, 'action'])->name('user.dashboard.action');
+   Route::post('dashboard/avatar', [profileUser::class, 'avatarAction'])->name('user.dashboard.avatar.action');
 
    // riwayat booking
    Route::get('dashboard/riwayat', [dasUser::class, 'riwayat'])->name('user.dashboard.reiwayat');
-
-   // konfigurasi akun
-   Route::get('dashboard/akun', [konfigurasiAkun::class, 'index'])->name('user.dashboard.akun');
-   Route::post('dashboard/akun/action', [konfigurasiAkun::class, 'action'])->name('user.dashboard.akun.action');
 
    //reset password
    Route::get('dashboard/ganti-password', [gantipassword::class, 'index'])->name('user.dashboard.reset-password');

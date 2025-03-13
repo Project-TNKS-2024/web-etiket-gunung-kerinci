@@ -233,4 +233,35 @@ class profile extends Controller
 
         return back()->with('success', 'Berhasil mengubah data');
     }
+    public function avatarAction(Request $request)
+    {
+        // dd($request->file('avatar'));
+        $auth = Auth::user();
+
+        // return $user;
+        $request->validate([
+            'avatar' => 'required|file|mimes:jpg,jpeg,png|max:548',
+        ]);
+
+        //ganti foto profile
+        $upload = new uploadFileControlller();
+
+        if ($request->file('avatar')) {
+            $filename = $auth->avatar;
+
+            if ($filename == null) {
+                $filename = $upload->create($auth->id, 'avatar', $request->file('avatar'));
+            } else {
+                $filename = $upload->upadate($auth->avatar, $request->file('avatar'));
+            }
+
+            $auth->update([
+                'avatar' => $filename,
+            ]);
+
+            return redirect()->back()->with('success', "$filename");
+        }
+
+        return redirect()->back()->with('error', 'Gagal melakukan perubahan');
+    }
 }

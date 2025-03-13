@@ -9,7 +9,7 @@
                 width="100" height="100" style="object-fit: cover;" class="rounded-pill" />
 
             <!-- Pencil icon for editing -->
-            <form action="{{ route('user.dashboard.akun.action') }}" method="post" id="form-profile-sidebar"
+            <form action="{{ route('user.dashboard.avatar.action') }}" method="post" id="form-profile-sidebar"
                 enctype="multipart/form-data"
                 class="{{ isset($user->biodata) && $user->biodata->verified !== 'unverified' ? 'input-none' : '' }}">
                 @csrf
@@ -28,10 +28,10 @@
 
         <div class="py-0 my-0 px-4 w-100 text-center">
             @if (isset(auth()->user()->biodata) and auth()->user()->biodata->verified == 'verified')
-                <h5 class="fw-semibold ">{{ auth()->user()->biodata->first_name }}</h5>
-                <h6 class="fw-light ">Id : {{ auth()->user()->biodata->id }}</h6>
+            <h5 class="fw-semibold ">{{ auth()->user()->biodata->first_name }}</h5>
+            <h6 class="fw-light ">Id : {{ auth()->user()->biodata->id }}</h6>
             @else
-                <h6 class="fw-light ">{{ auth()->user()->email }}</h6>
+            <h6 class="fw-light ">{{ auth()->user()->email }}</h6>
             @endif
         </div>
     </div>
@@ -43,12 +43,10 @@
             class="dashboard-sidebar-btn rounded-lg">Profile</a>
         <a href="{{ route('user.dashboard.reiwayat') }}" id="dashboard-profile"
             class="dashboard-sidebar-btn rounded-lg">Riwayat Pemesanan</a>
-        <a href="{{ route('user.dashboard.akun') }}" id="dashboard-profile"
-            class="dashboard-sidebar-btn rounded-lg">Akun</a>
 
         @if (auth()->user()->gauth_type == 'manual')
-            <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
-                class="dashboard-sidebar-btn rounded-lg">Ubah Kata Sandi</a>
+        <a href="{{ route('user.dashboard.reset-password') }}" id="dashboard-password"
+            class="dashboard-sidebar-btn rounded-lg">Ubah Kata Sandi</a>
         @endif
 
         <!-- Bagian Logout -->
