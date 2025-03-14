@@ -134,7 +134,7 @@
                         <li>Lampiran Identitas (KTP / Passpor / KTM / Kartu Pelajar).</li>
                         <li>Jenis Kelamin.</li>
                         <li>Tanggal lahir.</li>
-                        <li>Alamat Domisili (khusu WNI).</li>
+                        <li>Alamat Domisili (khusus WNI).</li>
                         </li>
                     </ul>
                 </dd>
