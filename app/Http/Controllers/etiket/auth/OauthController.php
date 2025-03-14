@@ -45,8 +45,7 @@ class OauthController extends Controller
                 return redirect('/dashboard');
             }
         } catch (Exception $e) {
-            dd("agagl");
-            dd($e->getMessage());
+            return redirect()->back()->with('errror', $e->getMessage());
         }
     }
 }
