@@ -99,58 +99,45 @@
                     <li>Klik Tombol Daftar</li>
                 </dt>
                 <dd>
-                    Langkah pertama adalah membuka situs https://eticket.tnkerinciseblat.com/ dan memilih menu Registrasi Akun atau tombol
-                    Daftar untuk memulai proses pendaftaran.
+                    Langkah pertama yang dilakukan untuk memiliki akun pada website E-tiket TNKS adalah dengan mengakses laman e-tiket TNKS, lalu klik tombol Daftar untuk memulai proses pendaftaran.
                 </dd>
             </dl>
             <dl>
                 <dt>
                     <li>Masukkan Email dan Password</li>
                 </dt>
-                <dd>Isi alamat email yang aktif dan buat kata sandi untuk akun Anda. Pastikan menggunakan email yang
-                    valid karena proses verifikasi akan dilakukan melalui email tersebut.</dd>
-            </dl>
-            <dl>
-                <dt>
-                    <li>Verifikasi Email</li>
-                </dt>
-                <dd>Setelah mengisi email dan password, Anda akan menerima email konfirmasi berisi tautan khusus
-                    (one-link). Klik tautan tersebut untuk memverifikasi akun Anda dan melanjutkan ke langkah
-                    berikutnya.</dd>
+                <dd>
+                    <ul>
+                        <li>Daftar Akun pada sistem E-tiket TNKS Isi alamat email yang aktif dan buat kata sandi untuk akun Anda. Pastikan menggunakan email yang dimasukan valid karena proses verifikasi akan dilakukan melalui email tersebut. Selanjutnya lakukan konfirmasi akun dengan mengklik tautan khusus (one-link) yang dikirimkan ke email yang Anda daftarkan. Masuk ke sistem menggunakan email dan kata sandi yang telah didaftarkan.</li>
+                        <li>Daftar dengan Akun Google
+                            Klik tombol "Daftar dengan Akun Google", setelah itu masukkan email dan kata sandi Akun Google Anda. Setelah itu Anda akan langsung memperoleh halaman akun pada website e-tiket TNKS.</li>
+                    </ul>
+                </dd>
             </dl>
             <dl>
                 <dt>
                     <li>Isi Biodata Lengkap</li>
                 </dt>
                 <dd>
-                    Setelah verifikasi email berhasil, lengkapi biodata Anda di formulir pendaftaran. Informasi yang
-                    perlu diisi meliputi:
+                    Setelah Anda berhasil masuk, Anda wajib melengkapi profil biodata Anda. Informasi yang perlu diisi meliputi:
                     <ul>
                         <li>Nama lengkap sesuai identitas.</li>
-                        <li>Nomor KTP.</li>
+                        <li>Kewarganegaraan.</li>
+                        <li>Nomor Identitas.</li>
+
+                        <li>Lampiran Identitas (KTP / Passpor / KTM / Kartu Pelajar).</li>
+                        <li>Jenis Kelamin.</li>
                         <li>Tanggal lahir.</li>
-                        <li>Alamat lengkap.</li>
-                        <li>Surat keterangan sehat yang diunggah dalam format digital.</li>
-                        <li>Suratizin orang tua, khusus bagi pendaki di bawah usia 18 tahun, yang juga harus diunggah.
+                        <li>Alamat Domisili (khusu WNI).</li>
                         </li>
                     </ul>
                 </dd>
+                <dd>
+                    Setelah semua biodata dan dokumen diisi serta diunggah, kirim formulir dengan mengklik tombol Verifikasi Profil. Selanjutnya Admin akan memeriksa data Anda untuk memastikan kelengkapan dan keabsahan dokumen sebelum akun Anda dapat digunakan.
+                    Setelah biodata terverifikasi, Anda akan menerima email pemberitahuan bahwa akun Anda telah aktif dan siap digunakan untuk proses pemesanan tiket.
+                </dd>
             </dl>
-            <dl>
-                <dt>
-                    <li>Kirim dan Tunggu Verifikasi</li>
-                </dt>
-                <dd>Setelah semua biodata dan dokumen diisi serta diunggah, kirim formulir dengan mengklik tombol
-                    Submit. Admin akan memeriksa data Anda untuk memastikan kelengkapan dan keabsahan dokumen sebelum
-                    akun Anda dapat digunakan.</dd>
-            </dl>
-            <dl>
-                <dt>
-                    <li>Setelah biodata terverifikasi, akun Anda akan aktif dan siap digunakan untuk proses pemesanan
-                        tiket.</li>
-                </dt>
-                <dd></dd>
-            </dl>
+
         </ol>
 
     </section>
