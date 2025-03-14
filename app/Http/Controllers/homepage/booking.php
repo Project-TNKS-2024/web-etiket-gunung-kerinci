@@ -256,6 +256,8 @@ class booking extends Controller
 
         $kapasitas = collect($this->GateCapacity($tiket->id_destinasi, $request->date_start, $request->date_start, $request->gerbang_masuk));
 
+        return $kapasitas;
+
         if (!$kapasitas->isEmpty()) {
             if ($gates->max_pendaki_hari < $kapasitas->first()->jumlah_pendaki + $request->wni + $request->wna) {
                 return back()->with('error', 'Error: Kapasitas penuh');
