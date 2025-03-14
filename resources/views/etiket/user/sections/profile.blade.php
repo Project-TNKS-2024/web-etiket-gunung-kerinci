@@ -69,6 +69,23 @@
                         <input value="{{ old('lastName', isset($user->biodata->last_name) ? $user->biodata->last_name : null) }}" type="text" class="form-control border-secondary" id="nama-belakang" name="lastName" placeholder="Nama Belakang">
                     </div>
 
+                    <!-- Nationality -->
+                    <div class="form-group col-12 col-md-6">
+                        <label class="mandatory font-semibold">Kewarganegaraan</label>
+                        <select class="form-control border-secondary" name="kewarganegaraan" id="kewarganegaraan">
+                            <option value="" disabled selected> -- Pilih Negara -- </option>
+                            @foreach ($negara as $n)
+                            <option value="{{$n->code}}" {{ old('kewarganegaraan', isset($user->biodata->kenegaraan) && $user->biodata->kenegaraan == $n->code ? 'selected' : '') }}>{{ $n->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- NIK/Passport -->
+                    <div class="form-group col-12 col-md-6">
+                        <label class="mandatory font-semibold" for="id-pendaftar">Nomor Identitas (NIK, Pasport, No.KTM)</label>
+                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport" maxlength="16">
+                    </div>
+
                     <div class="form-group col-12 iptFile-input">
                         <label for="lampiran_identitas" class="w-100 fw-bold mandatory">Lampiran Identitas</label>
                         <div class="input-group flex-nowrap">
@@ -95,23 +112,6 @@
                         <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor / Kartu Pelajar, Max 500kb</span>
                     </div>
                     @endif
-
-                    <!-- Nationality -->
-                    <div class="form-group col-12 col-md-6">
-                        <label class="mandatory font-semibold">Kewarganegaraan</label>
-                        <select class="form-control border-secondary" name="kewarganegaraan" id="kewarganegaraan">
-                            <option value="" disabled selected> -- Pilih Negara -- </option>
-                            @foreach ($negara as $n)
-                            <option value="{{$n->code}}" {{ old('kewarganegaraan', isset($user->biodata->kenegaraan) && $user->biodata->kenegaraan == $n->code ? 'selected' : '') }}>{{ $n->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- NIK/Passport -->
-                    <div class="form-group col-12 col-md-6">
-                        <label class="mandatory font-semibold" for="id-pendaftar">Nomor Identitas (NIK, Pasport, No.KTM)</label>
-                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport" maxlength="16">
-                    </div>
 
                     <!-- Email -->
                     <div class="form-group col-12 col-md-6">
