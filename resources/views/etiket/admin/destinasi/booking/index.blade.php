@@ -62,6 +62,7 @@
                   <td class="">{{ $item->getStatusBooking()}}</td>
                   @php
                   $colorStatus = 'info';
+                  if($item->pembayaran && $item->pembayaran->count() > 0) {
                   if($item->pembayaran->last()->status == 'pending'){
                   $colorStatus = 'warning';
                   }else if($item->pembayaran->last()->status == 'success'){
@@ -71,7 +72,7 @@
                   }else{
                   $colorStatus = 'info';
                   }
-                  @endphp
+                  } @endphp
                   <td class="">
                      <a href="{{route('admin.destinasi.booking.show', ['id' => $item->id])}}" class="btn btn-sm btn-info">
                         <i class="fa-solid fa-circle-info"></i>
