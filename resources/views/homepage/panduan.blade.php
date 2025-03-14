@@ -104,13 +104,19 @@
             </dl>
             <dl>
                 <dt>
-                    <li>Masukkan Email dan Password</li>
+                    <li>Pilih Cara Pendfartaran Akun</li>
                 </dt>
                 <dd>
                     <ul>
-                        <li>Daftar Akun pada sistem E-tiket TNKS Isi alamat email yang aktif dan buat kata sandi untuk akun Anda. Pastikan menggunakan email yang dimasukan valid karena proses verifikasi akan dilakukan melalui email tersebut. Selanjutnya lakukan konfirmasi akun dengan mengklik tautan khusus (one-link) yang dikirimkan ke email yang Anda daftarkan. Masuk ke sistem menggunakan email dan kata sandi yang telah didaftarkan.</li>
-                        <li>Daftar dengan Akun Google
-                            Klik tombol "Daftar dengan Akun Google", setelah itu masukkan email dan kata sandi Akun Google Anda. Setelah itu Anda akan langsung memperoleh halaman akun pada website e-tiket TNKS.</li>
+                        <li><b>Daftar Akun pada sistem E-tiket TNKS</b>.
+                            Isi alamat email yang aktif dan buat kata sandi untuk akun Anda.
+                            Pastikan anda menggunakan email yang valid karena proses verifikasi akan dilakukan melalui email tersebut.
+                            Selanjutnya lakukan konfirmasi akun dengan mengklik tautan khusus (one-link) yang dikirimkan ke email yang Anda daftarkan.
+                            Masuk ke sistem menggunakan email dan kata sandi yang telah didaftarkan.</li>
+                        <li><b>Daftar dengan Akun Google</b>.
+                            Klik tombol "Daftar dengan Akun Google", setelah itu masukkan email dan kata sandi Akun Google Anda.
+                            Setelah itu Anda akan langsung memperoleh halaman akun pada website e-tiket TNKS.
+                        </li>
                     </ul>
                 </dd>
             </dl>
