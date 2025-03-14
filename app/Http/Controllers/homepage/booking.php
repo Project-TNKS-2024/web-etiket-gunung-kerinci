@@ -256,10 +256,8 @@ class booking extends Controller
 
         $kapasitas = collect($this->GateCapacity($tiket->id_destinasi, $request->date_start, $request->date_start, $request->gerbang_masuk));
 
-        // return $kapasitas;
         if (!$kapasitas->isEmpty()) {
             foreach ($kapasitas as $value) {
-                // return $value['jumlah_pendaki'];
                 if ($gates->max_pendaki_hari < $value['jumlah_pendaki'] + $request->wni + $request->wna) {
                     return back()->with('error', 'Error: Kapasitas penuh');
                 }
@@ -574,8 +572,10 @@ class booking extends Controller
             // cek kapasitas pendaki
             $kapasitas = collect($this->GateCapacity($booking->gkTiket->id_destinasi, $booking->tanggal_masuk, $booking->tanggal_masuk, $booking->gerbang_masuk));
             if (!$kapasitas->isEmpty()) {
-                if ($booking->gateMasuk->max_pendaki_hari < $kapasitas->first()->jumlah_pendaki + $wni + $wna) {
-                    return back()->with('error', 'Error: Kapasitas penuh');
+                foreach ($kapasitas as $value) {
+                    if ($gates->max_pendaki_hari < $value['jumlah_pendaki'] + $request->wni + $request->wna) {
+                        return back()->with('error', 'Error: Kapasitas penuh');
+                    }
                 }
             }
 
