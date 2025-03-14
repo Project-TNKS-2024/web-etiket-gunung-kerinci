@@ -35,7 +35,7 @@
 <div class="card shadow">
     <div class="card-body">
         <div class="container-fluid">
-            <h4 class="font-semibold">Profile</h4>
+            <h4 class="font-semibold">Profil</h4>
             <!-- biodata->verified = unverified, peding, verified -->
             <form action="{{ route('user.dashboard.action') }}" method="post" id="form-profile" enctype="multipart/form-data" class="{{ isset($user->biodata) && $user->biodata->verified !== 'unverified' ? 'input-none' : '' }}">
 
@@ -80,7 +80,7 @@
                                 <i class=" fa-regular fa-eye"></i>
                             </button>
                         </div>
-                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor, Max 500kb</span>
+                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor / Kartu Pelajar, Max 500kb</span>
                     </div>
                     @if (isset($user->biodata) and ($user->biodata->verified !== 'unverified'))
                     <div class="form-group col-12 iptFile-label">
@@ -92,7 +92,7 @@
                                 <i class=" fa-regular fa-eye"></i>
                             </button>
                         </div>
-                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor, Max 500kb</span>
+                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor / Kartu Pelajar, Max 500kb</span>
                     </div>
                     @endif
 
@@ -109,7 +109,7 @@
 
                     <!-- NIK/Passport -->
                     <div class="form-group col-12 col-md-6">
-                        <label class="mandatory font-semibold" for="id-pendaftar">NIK / Paspor</label>
+                        <label class="mandatory font-semibold" for="id-pendaftar">Nomor Identitas (NIK, Pasport, No.KTM)</label>
                         <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport" maxlength="16">
                     </div>
 
@@ -206,11 +206,11 @@
                 <div class="row mb-2">
                     <div class="col d-flex justify-content-end">
                         @if ((!isset($user->biodata))or (isset($user->biodata) and ($user->biodata->verified == 'unverified')) )
-                        <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="verifikasi">Verifikasi Profile</button>
+                        <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="verifikasi">Verifikasi Profil</button>
                         @elseif(isset($user->biodata) and $user->biodata->verified == 'verified')
-                        <button type="button" class="btn border-0 bg-linear-gradient-primary" name="action" onclick="updateProfile(this)">Update Profile</button>
+                        <button type="button" class="btn border-0 bg-linear-gradient-primary" name="action" onclick="updateProfile(this)">Update Profil</button>
                         <div id="button-update" class="d-none">
-                            <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="update">Verifikasi Profile</button>
+                            <button type="submit" class="btn border-0 bg-linear-gradient-primary" name="action" value="update">Verifikasi Profil</button>
                             <button type="button" id="button-cancel" class="btn border-0 bg-linear-gradient-danger" name="action">Batal</button>
                         </div>
                         @endif
