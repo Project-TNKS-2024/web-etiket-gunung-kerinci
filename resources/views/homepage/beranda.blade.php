@@ -263,7 +263,7 @@
             <div class="" style="padding: 50px 20px;">
                 <div class="" style="max-height: 100px; height: 50px; overflow-y: hidden; position: relative;">
                     @foreach ($destinasi as $item)
-                    <h1 data-id="{{ $item['id'] }}" id="judul-destinasi-{{ $loop->index }}"
+                    <h1 data-id="{{ $item['id'] }}" id="judul-destinasi-{{ $item['id'] }}"
                         class="judul fw-bold @if ($loop->index != 0)  @endif"
                         style="color: rgba(43, 43, 43, 1); position: absolute; top: {{ $loop->index * 120 }}px;">
                         {{ $item['nama'] }}
@@ -278,7 +278,7 @@
                     @endforeach
                 </div>
                 @foreach ($destinasi as $item)
-                <article data-id="{{ $item['id'] }}" id="detail-destinasi-{{ $loop->index }}" class="mt-0 @if ($loop->index != 0) d-none @endif">
+                <article data-id="{{ $item['id'] }}" id="detail-destinasi-{{ $item['id'] }}" class="mt-0 @if ($loop->index != 0) d-none @endif">
                     <section style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 15;">
                         {!! $item['detail'] !!}
                     </section>
@@ -370,11 +370,11 @@
                 img.style.transform = "scale(1)"; // Reset scale
             });
 
-            idDestinasi = parseInt(element.getAttribute('data-id')) - 1;
+            idDestinasi = parseInt(element.getAttribute('data-id'));
 
             judul.forEach(j => {
-                j.style.transform = `translateY(-${idDestinasi*120}px)`
-                judulDestinasi = parseInt(j.getAttribute('data-id')) - 1;
+                j.style.transform = `translateY(-${(idDestinasi-1)*120}px)`
+                judulDestinasi = parseInt(j.getAttribute('data-id'));
                 detailDestinasi = document.getElementById('detail-destinasi-' + judulDestinasi);
                 if (judulDestinasi == idDestinasi) {
                     detailDestinasi.classList.remove('d-none');
