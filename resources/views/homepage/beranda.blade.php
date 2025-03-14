@@ -373,7 +373,7 @@
             idDestinasi = parseInt(element.getAttribute('data-id'));
 
             judul.forEach(j => {
-                j.style.transform = `translateY(-${(idDestinasi-1)*120}px)`
+                j.style.transform = `translateY(-${(idDestinasi)*120}px)`
                 judulDestinasi = parseInt(j.getAttribute('data-id'));
                 detailDestinasi = document.getElementById('detail-destinasi-' + judulDestinasi);
                 if (judulDestinasi == idDestinasi) {
