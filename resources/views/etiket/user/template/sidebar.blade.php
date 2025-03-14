@@ -40,7 +40,7 @@
     <div class="d-flex flex-column gap-2 px-4 w-100 h-100 pb-4 mt-3">
         <a href="{{ route('user.dashboard') }}" id="dashboard" class="dashboard-sidebar-btn rounded-lg">Dashboard</a>
         <a href="{{ route('user.dashboard.profile') }}" id="dashboard-profile"
-            class="dashboard-sidebar-btn rounded-lg">Profile</a>
+            class="dashboard-sidebar-btn rounded-lg">Profil</a>
         <a href="{{ route('user.dashboard.reiwayat') }}" id="dashboard-profile"
             class="dashboard-sidebar-btn rounded-lg">Riwayat Pemesanan</a>
 
