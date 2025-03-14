@@ -45,7 +45,7 @@ class OauthController extends Controller
                 return redirect('/dashboard');
             }
         } catch (Exception $e) {
-            return redirect(route('login'))->withErrors('Gagal login dengan Google');
+            return redirect(route('login'))->withErrors('Gagal masuk dengan akun Google');
         }
     }
 }
