@@ -25,7 +25,7 @@
                 <h5 class="fw-bold text-uppercase">Bantuan</h5>
                 <ul class="list-unstyled">
                     <li><a href="{{ $ftutorial->text1 }}" class="text-black text-decoration-none d-block py-1">Video Tutorial</a></li>
-                    <li><a href="{{route('homepage.snk')}}" class="text-black text-decoration-none d-block py-1">Syarat & Ketentuan</a></li>
+                    <!-- <li><a href="{{route('homepage.snk')}}" class="text-black text-decoration-none d-block py-1">Syarat & Ketentuan</a></li> -->
                 </ul>
             </div>
 

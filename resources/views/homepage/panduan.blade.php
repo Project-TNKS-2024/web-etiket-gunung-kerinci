@@ -9,15 +9,15 @@
 
 @section('main')
 @include('homepage.template.header', [
-'title' => 'Alur Booking Online Tiket Wisata Pendakian Gunung Kerinci',
-'caption' => 'Pendakian Gunung Kerinci Di Taman Nasional Kerinci Seblat',
+'title' => 'Alur Pemesanan Tiket Wisata',
+'caption' => 'Taman Nasional Kerinci Seblat',
 ])
 
 <div class="container my-5" style="padding:  50px;">
     <header class="">
         <div class="d-flex my-0 py-0" style="gap: 40px;">
             <section class="header-nav selected-nav" id="alur-booking" style="cursor:pointer" onclick="showContent(0)">
-                Alur Booking
+                Alur Pemesanan Tiket
             </section>
             <section class="header-nav" id="alur-akun" style="cursor:pointer" onclick="showContent(1)">
                 Pendaftaran dan Verifikasi Akun
@@ -46,46 +46,48 @@
                     <li>Registrasi Akun</li>
                 </dt>
                 <dd>
-                    Akses laman website e-tiket TNKS melaui etikettnks.gov.id, lalu lakukan pendaftaran akun dan isi
-                    biodata lengkap Anda. Selanjutnya Admin akan melakukan pengecekan terhadap biodata akun yang baru
-                    terdaftar untuk memastikan data lengkap dan sesuai dengan kartu identitas yang diunggah.
+                    Akses laman website e-tiket TNKS, lalu lakukan pendaftaran akun dan isi biodata Anda dengan lengkap. Selanjutnya Admin akan melakukan pengecekan terhadap biodata akun yang baru Anda daftarkan untuk memastikan data lengkap dan sesuai dengan kartu identitas yang diunggah.
                 </dd>
             </dl>
             <dl>
                 <dt>
-                    <li>Booking Online</li>
+                    <li>Pesan Tiket</li>
                 </dt>
-                <dd>Login pada website e-tiket TNKS, lalu lakukan pemesanan tiket dengan memilih menu Booking Online,
-                    selanjutnya pilih Destinasi Wisata Pendakian Gunung Kerinci. Masukan tanggal, jumlah pendaki, dan
-                    jalur pendakian yang ingin anda tuju, serta cek kuota yang tersedia untuk memastikan kuota pendakian
-                    masih ada pada tanggal yang Anda pilih.</dd>
+                <dd>
+                    Masuk pada website e-tiket TNKS menggunakan akun yang Anda miliki, lalu lakukan pemesanan tiket dengan memilih menu Pesan Tiket. Selanjutnya pilih Destinasi Wisata Pendakian Gunung Kerinci, asukan tanggal, jumlah pendaki, dan jalur pendakian yang ingin anda tuju, serta cek kuota yang tersedia untuk memastikan kuota pendakian masih ada pada tanggal yang Anda pilih.
+
+                </dd>
             </dl>
             <dl>
                 <dt>
                     <li>Isi Formulir Pendaftaran</li>
                 </dt>
-                <dd>Lengkapi formulir pendaftaran dengan memasukan kode pendaki yang akan melakukan pendakian. Pastikan
-                    pendaki yang akan melakukan pendakian telah memiliki akun yang tervalidasi sebelumnya.</dd>
+                <dd>Lengkapi formulir pendaftaran dengan memasukan kode pendaki yang akan melakukan pendakian. Pastikan pendaki yang akan melakukan pendakian telah memiliki akun yang tervalidasi sebelumnya.
+                </dd>
             </dl>
             <dl>
                 <dt>
                     <li>Setujui Syarat dan Ketentuan</li>
                 </dt>
-                <dd>Baca dan setujui syarat serta ketentuan yang berlaku sesuai SOP pendakian Gunung Kerinci.</dd>
+                <dd>Baca dan setujui syarat serta ketentuan yang berlaku sesuai SOP pendakian Gunung Kerinci.
+                </dd>
             </dl>
             <dl>
                 <dt>
-                    <li>Lakukan pembayaran dan unggah bukti pembayaran, kemudian tunggu validasi pembayaran oleh admin
+                    <li>Proses Pembayaran
                     </li>
                 </dt>
-                <dd>Lakukan pembayaran dan unggah bukti pembayaran, kemudian tunggu validasi pembayaran oleh admin.</dd>
+                <dd>
+                    Pastikan tidak ada kesalahan pada data pendaki dan rincian pemesanan tiket yang Anda pesan, lalu pilih metode pembayaran yang Anda inginkan dan lakukan pembayaran sesuai dengan metode pembayaran yang Anda pilih. Selanjutnya, unggah bukti pembayaran dan kemudian tunggu validasi pembayaran oleh admin.
+                </dd>
             </dl>
             <dl>
                 <dt>
                     <li>Gunakan QR Tiket</li>
                 </dt>
-                <dd>Setelah pembayaran berhasil divalidasi, anda akan mendapatkan kode QR tiket. Scan kode QR tersebut
-                    di pintu masuk untuk memulai pendakian.</dd>
+                <dd>
+                    Setelah pembayaran berhasil divalidasi, anda akan mendapatkan kode QR tiket untuk masuk ke wilayah pendakian Gunung Kerinci. Scan kode QR tersebut di pintu masuk untuk memulai pendakian.
+                </dd>
             </dl>
         </ol>
 
@@ -97,7 +99,7 @@
                     <li>Klik Tombol Daftar</li>
                 </dt>
                 <dd>
-                    Langkah pertama adalah membuka situs etikettnks.gov.id dan memilih menu Registrasi Akun atau tombol
+                    Langkah pertama adalah membuka situs https://eticket.tnkerinciseblat.com/ dan memilih menu Registrasi Akun atau tombol
                     Daftar untuk memulai proses pendaftaran.
                 </dd>
             </dl>
