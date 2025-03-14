@@ -658,7 +658,7 @@ class booking extends Controller
     public function bookingPayment($id)
     {
         $booking = $this->getBookingByUser($id, [3, 4, 5, 6, 7, 8]);
-        $booking->load(['gateMasuk', 'gateKeluar', 'gateMasuk.destinasi', 'pendakis']);
+        $booking->load(['gateMasuk', 'gateKeluar', 'gateMasuk.destinasi', 'pendakis.biodata']);
 
         $pembayaran = pembayaran::where('id_booking', $id)->get();
         $qris = gk_gates::where('id', $booking->gate_masuk)->first()->qris;

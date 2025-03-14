@@ -126,7 +126,7 @@
                                 @foreach ($booking->pendakis as $pendaki)
                                 <tr>
                                     <td>
-                                        <div>{{ $pendaki->first_name . ' ' . $pendaki->last_name }}</div>
+                                        <div>{{ $pendaki->first_name . ' ' . $pendaki->last_name }} ({{$pendaki->biodata->kenegaraan == 'ID' ? 'WNI' : 'WNA'}})</div>
                                     </td>
                                     <td class="text-end">
                                         <div>Rp.

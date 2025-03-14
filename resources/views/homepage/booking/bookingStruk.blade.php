@@ -154,7 +154,7 @@
                   @endphp
                   <tr>
                      <td>
-                        <b>Tiket Kategori {{$data->gktiket->nama}} WNI</b>
+                        <b>Tiket Kategori {{$data->gktiket->nama}} WNA</b>
                         <br>
                         Tiket masuk weekday ({{$tiket->harga_masuk_wd ?? '0'}}) x {{$data->wkwd->weekdays ?? '0'}} hari +
                         @if ($data->wkwd->weekends > 0)
@@ -185,7 +185,7 @@
                         @php
                         $totalHarga += $harga* $data->wniwna->wna;
                         @endphp
-                        Rp. {{ number_format(($harga * $data->wniwna->wni), 0, ',', '.') }}
+                        Rp. {{ number_format(($harga * $data->wniwna->wna), 0, ',', '.') }}
                      </td>
                   </tr>
                   @endif
