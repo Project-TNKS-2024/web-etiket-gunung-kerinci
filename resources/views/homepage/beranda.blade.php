@@ -250,7 +250,7 @@
                     style="gap: 0px; padding: 50px 0; padding-left: 0px; user-select: none;">
 
                     @foreach ($destinasi as $item)
-                    <img data-id="{{ $item['id'] }}" draggable="false" id="gambar-destinasi-{{ $item['id'] }}"
+                    <img data-id="{{ $loop->index }}" draggable="false" id="gambar-destinasi-{{ $loop->index }}"
                         src="{{ $item->gambar_destinasi[0]->src ?? asset('assets/img/sampel/sampel 2.png') }}"
                         class="shadow card-img-top"
                         style="@if ($loop->index == 0) margin-left: 150px; transform: scale(1.1); @elseif ($loop->last) @endif border-radius: 20px; max-width: 300px; height: 400px; object-fit: cover; user-select: none; margin: 0 15px;">
@@ -263,7 +263,7 @@
             <div class="" style="padding: 50px 20px;">
                 <div class="" style="max-height: 100px; height: 50px; overflow-y: hidden; position: relative;">
                     @foreach ($destinasi as $item)
-                    <h1 data-id="{{ $item['id'] }}" id="judul-destinasi-{{ $item['id'] }}"
+                    <h1 data-id="{{ $loop->index }}" id="judul-destinasi-{{ $loop->index }}"
                         class="judul fw-bold @if ($loop->index != 0)  @endif"
                         style="color: rgba(43, 43, 43, 1); position: absolute; top: {{ $loop->index * 120 }}px;">
                         {{ $item['nama'] }}
@@ -278,7 +278,7 @@
                     @endforeach
                 </div>
                 @foreach ($destinasi as $item)
-                <article data-id="{{ $item['id'] }}" id="detail-destinasi-{{ $item['id'] }}" class="mt-0 @if ($loop->index != 0) d-none @endif">
+                <article data-id="{{ $loop->index }}" id="detail-destinasi-{{ $loop->index }}" class="mt-0 @if ($loop->index != 0) d-none @endif">
                     <section style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 15;">
                         {!! $item['detail'] !!}
                     </section>
