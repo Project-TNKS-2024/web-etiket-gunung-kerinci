@@ -45,7 +45,6 @@ class OauthController extends Controller
                 return redirect('/dashboard');
             }
         } catch (Exception $e) {
-            return redirect()->back()->with('errror', $e->getMessage());
-        }
+            return redirect()->back()->withErrors($e->getMessage());
     }
 }
