@@ -82,8 +82,8 @@
 
                     <!-- NIK/Passport -->
                     <div class="form-group col-12 col-md-6">
-                        <label class="mandatory font-semibold" for="id-pendaftar">Nomor Identitas (NIK, Pasport, No.KTM)</label>
-                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK/Pasport" maxlength="16">
+                        <label class="mandatory font-semibold" for="id-pendaftar">Nomor Identitas</label>
+                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK / Paspor / No.KTM" maxlength="16">
                     </div>
 
                     <div class="form-group col-12 iptFile-input">
