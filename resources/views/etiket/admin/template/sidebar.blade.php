@@ -12,7 +12,6 @@
       <!-- Sidebar navigation-->
       <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
          <ul id="sidebarnav">
-            @can('admin.dashboard')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admin.dashboard')}}" aria-expanded="false">
                   <span>
@@ -21,7 +20,6 @@
                   <span class="hide-menu">Dashboard</span>
                </a>
             </li>
-            @endcan
 
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -38,7 +36,7 @@
                </a>
                <div class="collapse lis-collapse-destinasi" id="collapseDestinasi{{$itemDestinasi->id}}">
                   <ul class="list-unstyled">
-                     @can('admin.destinasi.detail')
+                     @can('view-destinasi')
                      <li class="sidebar-item">
                         <a class="sidebar-link" href="{{ route('admin.destinasi.detail', ['id' => $itemDestinasi->id]) }}" aria-expanded="false">
                            <span>
@@ -48,7 +46,7 @@
                         </a>
                      </li>
                      @endcan
-                     @can('admin.destinasi.tiket')
+                     @can('view-tiket')
                      <li class="sidebar-item">
                         <a class="sidebar-link" href="{{route('admin.destinasi.tiket', ['id' => $itemDestinasi->id])}}" aria-expanded="false">
                            <span>
@@ -58,7 +56,7 @@
                         </a>
                      </li>
                      @endcan
-                     @can('admin.destinasi.booking')
+                     @can('view-booking')
                      <li class="sidebar-item">
                         <a class="sidebar-link" href="{{ route('admin.destinasi.booking',  ['id' => $itemDestinasi->id] )}}" aria-expanded="false">
                            <span>
@@ -69,14 +67,14 @@
                      </li>
                      @endcan
 
-                     <li class="sidebar-item">
+                     <!-- <li class="sidebar-item">
                         <a class="sidebar-link" href="#" aria-expanded="false">
                            <span>
                               <i class="fa-solid fa-file-lines"></i>
                            </span>
                            <span class="hide-menu">Data Pendaki</span>
                         </a>
-                     </li>
+                     </li> -->
 
                   </ul>
                </div>
@@ -88,7 +86,7 @@
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                <span class="hide-menu">Master Data</span>
             </li>
-            @can('admin.master.destinasi')
+            @can('view-master-destinasi')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{ route('admin.master.destinasi') }}" aria-expanded="false">
                   <span>
@@ -98,7 +96,7 @@
                </a>
             </li>
             @endcan
-            @can('admin.master.pengunjung')
+            @can('view-master-pengunjung')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{ route('admin.master.pengunjung')}}" aria-expanded="false">
                   <span>
@@ -108,7 +106,7 @@
                </a>
             </li>
             @endcan
-            @can('admins.akun.index')
+            @can('view-master-admin')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admins.akun.index')}}" aria-expanded="false">
                   <span>
@@ -118,7 +116,7 @@
                </a>
             </li>
             @endcan
-            @can('roles.index')
+            @can('view-master-roles')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('roles.index')}}" aria-expanded="false">
                   <span>
@@ -129,11 +127,10 @@
             </li>
             @endcan
 
-            <li class="nav-small-cap">
+            <!-- <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                <span class="hide-menu">Traking</span>
             </li>
-            @can('admin.tracking')
             <li class="sidebar-item">
                <a class="sidebar-link" href="#" aria-expanded="false">
                   <span>
@@ -141,14 +138,13 @@
                   </span>
                   <span class="hide-menu">Climber Tracking</span>
                </a>
-            </li>
-            @endcan
+            </li> -->
 
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                <span class="hide-menu">Fitur</span>
             </li>
-            @can('admin.fitur.scanTiket')
+            @can('scan-tiket')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admin.fitur.scanTiket')}}" aria-expanded="false">
                   <span>
@@ -159,7 +155,7 @@
             </li>
             @endcan
             <hr>
-            @can('admin.setting')
+            @can('view-setting')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admin.setting')}}" aria-expanded="false">
                   <span>
