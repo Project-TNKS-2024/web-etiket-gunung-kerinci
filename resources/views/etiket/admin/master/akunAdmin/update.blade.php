@@ -22,6 +22,7 @@
             <div class="col">
                <label class="form-label">Role:</label>
                <select name="role" class="form-control" required>
+
                   @foreach ($roles as $role)
                   <option value="{{ $role->name }}" {{ isset($admin) && $admin->hasRole($role->name) ? 'selected' : '' }}>
                      {{ ucfirst($role->name) }}

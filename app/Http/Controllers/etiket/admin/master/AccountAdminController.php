@@ -77,8 +77,6 @@ class AccountAdminController extends AdminController
         $roles = Role::all();
         $destinasis = destinasi::all();
 
-        // return $admin;
-        // return $admin->destinasis->pluck('id')->toArray();
 
         return view('etiket.admin.master.akunAdmin.update', [
             'admin' => $admin,

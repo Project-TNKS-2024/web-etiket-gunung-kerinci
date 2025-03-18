@@ -89,6 +89,7 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile')->middleware('permission:view-profile');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('admin.profile.action')->middleware('permission:view-profile');
     Route::get('/profile/reset-password', [ProfileController::class, 'resetPassword'])->name('admin.profile.resetPassword')->middleware('permission:reset-password');
     Route::post('/profile/reset-password', [ProfileController::class, 'resetPasswordAction'])->name('admin.profile.resetPassword.action')->middleware('permission:reset-password');
 

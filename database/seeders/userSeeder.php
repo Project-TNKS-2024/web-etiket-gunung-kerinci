@@ -17,44 +17,7 @@ class userSeeder extends Seeder
      */
     public function run(): void
     {
-        // ===================================================== Permision
-        // $routes = collect(Route::getRoutes())->filter(function ($route) {
-        //     return in_array('check.role:admin', $route->middleware()) && $route->getName();
-        // })->map(function ($route) {
-        //     return $route->getName();
-        // })->unique();
 
-        // $permissions = [];
-        // foreach ($routes as $routeName) {
-        //     $permissions[] = Permission::firstOrCreate(['name' => $routeName])->id;
-        // }
-
-        // $this->command->info('Permissions successfully seeded from admin routes!');
-
-        $routes = collect(Route::getRoutes())->filter(function ($route) {
-            // Mengambil semua route yang memiliki middleware terkait permission
-            return collect($route->middleware())->contains(fn($middleware) => str_starts_with($middleware, 'permission:')) && $route->getName();
-        })->map(function ($route) {
-            // Mengambil nama permission dari middleware
-            return collect($route->middleware())->first(fn($middleware) => str_starts_with($middleware, 'permission:'));
-        })->map(function ($middleware) {
-            // Membersihkan prefix 'permission:' untuk mendapatkan nama permission
-            return str_replace('permission:', '', $middleware);
-        })->unique();
-
-        $permissions = [];
-        foreach ($routes as $permissionName) {
-            $permissions[] = Permission::firstOrCreate(['name' => $permissionName])->id;
-        }
-
-        $this->command->info('Permissions successfully seeded from middleware routes!');
-
-
-
-        // ===================================================== Role
-        // mebuat role
-        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
-        $superAdminRole->syncPermissions($permissions);
 
 
         // ===================================================== User dan Biodata
@@ -68,7 +31,6 @@ class userSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        $admin->assignRole($superAdminRole);
 
         // Create Admin
         User::create([

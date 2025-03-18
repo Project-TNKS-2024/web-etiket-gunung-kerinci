@@ -59,9 +59,12 @@
       inputFiles.forEach(function(input) {
          // ambil id 
          const idInput = input.getAttribute('id');
+         const inputMaxSize = input.getAttribute('data-size');
          const buttonShow = document.querySelector(`button[data-id-target="${idInput}"]`);
          const fileExist = document.querySelector(`input[id="${idInput}_existing"]`);
+         const labelExist = document.querySelector(`label[id="label_${idInput}_existing"]`)
          const filePreview = document.getElementById('filePreview');
+
 
          // cek file ada atau tidak
          if (fileExist && fileExist.value) {
@@ -71,7 +74,8 @@
          // beri event change
          input.addEventListener('change', function() {
             const file = input.files[0];
-            const maxSize = 5 * 1024 * 1024; // 1MB
+            const maxSize = inputMaxSize * 1024 * 1024; // 1MB
+            console.log(maxSize);
 
             if (file) {
                // Cek tipe file
@@ -90,6 +94,7 @@
                   return;
                } else {
                   console.log('File valid.');
+                  labelExist.classList.add('d-none');
                   buttonShow.classList.remove('d-none');
                   if (fileExist) {
                      fileExist.value = null;
