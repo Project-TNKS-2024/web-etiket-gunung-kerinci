@@ -50,7 +50,7 @@
                 <input type="hidden" value="{{$paket->id}}" id="jenis-tiket-value" name="jenis_tiket" required />
 
                 <div class="mb-2">
-                    <label class="fw-semibold">Pilih tanggal check-in dan check-out</label>
+                    <label class="fw-semibold">Pilih tanggal masuk dan keluar</label>
                     <div class="row" id="iptdatevol">
                         <div class="col-md-6">
                             <label for="date_start" class="form-label">Tanggal Mulai</label>
@@ -134,7 +134,7 @@
                 </div>
 
                 <div class="form-group mt-3">
-                    <button type="submit" class="btn btn-primary gk-bg-primary700 w-100">Lanjut Booking</button>
+                    <button type="submit" class="btn btn-primary gk-bg-primary700 w-100">Lanjut Pesan</button>
                 </div>
 
             </form>

@@ -61,31 +61,31 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/destinasi/booking/{id}/struk', [bookingController::class, 'showStruk'])->name('admin.destinasi.booking.struk.show')->middleware('permission:view-struk');
 
     // Master - Destinasi
-    Route::get('admin/master/destinasi', [destinasisController::class, 'index'])->name('admin.master.destinasi')->middleware('permission:view-master-destinasi');
-    Route::get('admin/master/destinasi/add', [destinasisController::class, 'add'])->name('admin.master.destinasi.add')->middleware('permission:create-master-destinasi');
-    Route::post('admin/master/destinasi/add', [destinasisController::class, 'addAction'])->name('admin.master.destinasi.addAction')->middleware('permission:create-master-destinasi');
-    Route::post('admin/master/destinasi/delete', [destinasisController::class, 'deleteAction'])->name('admin.master.destinasi.deleteAction')->middleware('permission:delete-master-destinasi');
+    Route::get('admin/master/destinasi', [destinasisController::class, 'index'])->name('admin.master.destinasi')->middleware('permission:master-view-destinasi');
+    Route::get('admin/master/destinasi/add', [destinasisController::class, 'add'])->name('admin.master.destinasi.add')->middleware('permission:master-create-destinasi');
+    Route::post('admin/master/destinasi/add', [destinasisController::class, 'addAction'])->name('admin.master.destinasi.addAction')->middleware('permission:master-create-destinasi');
+    Route::post('admin/master/destinasi/delete', [destinasisController::class, 'deleteAction'])->name('admin.master.destinasi.deleteAction')->middleware('permission:master-delete-destinasi');
 
     // Master - Pengunjung
-    Route::get('admin/master/pengujung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung')->middleware('permission:view-master-akunpengunjung');
+    Route::get('admin/master/pengujung', [PengunjungController::class, 'index'])->name('admin.master.pengunjung')->middleware('permission:master-view-akunpengunjung');
     Route::get('admin/master/pengujung/{id}/biodata', [PengunjungController::class, 'biodata'])->name('admin.master.pengunjung.biodata')->middleware('permission:view-pengunjung');
     Route::post('admin/master/pengujung/biodata/verified', [PengunjungController::class, 'verificationBiodata'])->name('admin.master.pengunjung.biodata.verified')->middleware('permission:verify-akunpengunjung');
 
     // Master - Admin
-    Route::get('/admins/akun', [AccountAdminController::class, 'index'])->name('admins.akun.index')->middleware('permission:view-master-admin');
-    Route::get('/admins/akun/create', [AccountAdminController::class, 'create'])->name('admins.akun.create')->middleware('permission:create-master-admin');
-    Route::post('/admins/akun/store', [AccountAdminController::class, 'store'])->name('admins.akun.store')->middleware('permission:create-master-admin');
-    Route::get('/admins/akun/edit/{id}', [AccountAdminController::class, 'edit'])->name('admins.akun.edit')->middleware('permission:edit-master-admin');
-    Route::post('/admins/akun/update/{id}', [AccountAdminController::class, 'update'])->name('admins.akun.update')->middleware('permission:edit-master-admin');
-    Route::post('/admins/akun/delete', [AccountAdminController::class, 'destroy'])->name('admins.akun.delete')->middleware('permission:delete-master-admin');
+    Route::get('/admins/akun', [AccountAdminController::class, 'index'])->name('admins.akun.index')->middleware('permission:master-view-admin');
+    Route::get('/admins/akun/create', [AccountAdminController::class, 'create'])->name('admins.akun.create')->middleware('permission:master-create-admin');
+    Route::post('/admins/akun/store', [AccountAdminController::class, 'store'])->name('admins.akun.store')->middleware('permission:master-create-admin');
+    Route::get('/admins/akun/edit/{id}', [AccountAdminController::class, 'edit'])->name('admins.akun.edit')->middleware('permission:master-edit-admin');
+    Route::post('/admins/akun/update/{id}', [AccountAdminController::class, 'update'])->name('admins.akun.update')->middleware('permission:master-edit-admin');
+    Route::post('/admins/akun/delete', [AccountAdminController::class, 'destroy'])->name('admins.akun.delete')->middleware('permission:master-delete-admin');
 
     //  Master - Role & User
-    Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index')->middleware('permission:view-master-roles');
-    Route::post('/roles/add', [RolePermissionController::class, 'roleAddAction'])->name('roles.addAction')->middleware('permission:create-master-roles');
-    Route::post('/permissions/add', [RolePermissionController::class, 'permissionAddAction'])->name('permissions.addAction')->middleware('permission:create-permissions');
-    Route::get('/roles/{id}/update', [RolePermissionController::class, 'rolesUpdate'])->name('roles.update')->middleware('permission:edit-master-roles');
-    Route::post('/roles/updateAction', [RolePermissionController::class, 'rolesUpdateAction'])->name('roles.updateAction')->middleware('permission:edit-master-roles');
-    Route::post('/roles/deleteAction', [RolePermissionController::class, 'roleDeleteAction'])->name('roles.deleteAction')->middleware('permission:delete-master-roles');
+    Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index')->middleware('permission:master-view-roles');
+    Route::post('/roles/add', [RolePermissionController::class, 'roleAddAction'])->name('roles.addAction')->middleware('permission:master-create-roles');
+    Route::post('/permissions/add', [RolePermissionController::class, 'permissionAddAction'])->name('permissions.addAction')->middleware('permission:master-create-permissions');
+    Route::get('/roles/{id}/update', [RolePermissionController::class, 'rolesUpdate'])->name('roles.update')->middleware('permission:master-edit-roles');
+    Route::post('/roles/updateAction', [RolePermissionController::class, 'rolesUpdateAction'])->name('roles.updateAction')->middleware('permission:master-edit-roles');
+    Route::post('/roles/deleteAction', [RolePermissionController::class, 'roleDeleteAction'])->name('roles.deleteAction')->middleware('permission:master-delete-roles');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile')->middleware('permission:view-profile');

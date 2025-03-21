@@ -86,7 +86,7 @@
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                <span class="hide-menu">Master Data</span>
             </li>
-            @can('view-master-destinasi')
+            @can('master-view-destinasi')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{ route('admin.master.destinasi') }}" aria-expanded="false">
                   <span>
@@ -96,7 +96,7 @@
                </a>
             </li>
             @endcan
-            @can('view-master-pengunjung')
+            @can('master-view-akunpengunjung')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{ route('admin.master.pengunjung')}}" aria-expanded="false">
                   <span>
@@ -106,7 +106,7 @@
                </a>
             </li>
             @endcan
-            @can('view-master-admin')
+            @can('master-view-admin')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admins.akun.index')}}" aria-expanded="false">
                   <span>
@@ -116,7 +116,7 @@
                </a>
             </li>
             @endcan
-            @can('view-master-roles')
+            @can('master-view-roles')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('roles.index')}}" aria-expanded="false">
                   <span>

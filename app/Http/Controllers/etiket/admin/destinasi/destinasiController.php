@@ -70,8 +70,7 @@ class destinasiController extends AdminController
         ) {
             return back()->withErrors(['database', 'Terjadi kesalahan saat mengubah destinasi']);
         }
-
-        return back()->with('success', 'Berhasil memperbarui tiket');
+        return redirect(route('admin.destinasi.detail', ['id' => $request->id]))->with('success', 'Berhasil memperbarui detail destinasi');
     }
     public function pictureAddAction(Request $request)
     {
@@ -102,7 +101,6 @@ class destinasiController extends AdminController
                 return back()->withErrors(['foto' => 'File tidak ditemukan.']);
             }
         } catch (Exception $e) {
-            // Log::error('Error uploading file: ' . $e->getMessage());
             return back()->withErrors('Terjadi kesalahan saat mengupload gambar: ' . $e->getMessage());
         }
     }
@@ -181,8 +179,6 @@ class destinasiController extends AdminController
             'qris' => 'nullable|image|mimes:jpg,png,jpeg|max:1048', // Make QRIS optional
         ]);
 
-        // return $request;
-        // Find the gate
         $gate = ModelGates::find($request->id_gate);
 
         $dataUpdate = [
@@ -209,8 +205,7 @@ class destinasiController extends AdminController
         $gate->update($dataUpdate);
 
 
-        // Redirect with success message
-        return back()->with('success', 'Berhasil update gate');
+        return redirect(route('admin.destinasi.detail', ['id' => $gate->id_destinasi]))->with('success', 'Berhasil memperbarui detail gate');
     }
 
     public function gatesDeleteAction(Request $request)

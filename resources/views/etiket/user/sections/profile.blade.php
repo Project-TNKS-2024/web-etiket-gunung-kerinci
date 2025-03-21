@@ -97,8 +97,9 @@
                                 <i class=" fa-regular fa-eye"></i>
                             </button>
                         </div>
-                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor / Kartu Pelajar, Max 500kb</span>
+                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / KK / Paspor, Max 500kb</span>
                     </div>
+
                     @if (isset($user->biodata) and ($user->biodata->verified !== 'unverified'))
                     <div class="form-group col-12 iptFile-label">
                         <label for="lampiran_save" class="w-100 fw-bold mandatory">Lampiran Identitas</label>
@@ -109,7 +110,7 @@
                                 <i class=" fa-regular fa-eye"></i>
                             </button>
                         </div>
-                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / Paspor / Kartu Pelajar, Max 500kb</span>
+                        <span class="keterangan" style="font-size: 12px;">Lampiran KTP / KK / Paspor, Max 500kb</span>
                     </div>
                     @endif
 

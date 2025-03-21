@@ -279,17 +279,11 @@
                 </div>
                 @foreach ($destinasi as $item)
                 <article data-id="{{ $loop->index }}" id="detail-destinasi-{{ $loop->index }}" class="mt-0 @if ($loop->index != 0) d-none @endif">
-                    <section style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 15;">
+                    <section style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 10;">
                         {!! $item['detail'] !!}
                     </section>
                     <section class="mt-3">
-                        @if ($item->id == 1)
-                        <a href="https://gunungkerinci.tnkerinciseblat.com/"
-                            class="btn btn-primary gk-bg-primary600 border-0 text-white rounded-pill">Explore
-                            Rute Pendakian
-                        </a>
-                        @endif
-
+                        <a href="{{route('homepage.booking.destinasi.paket', ['id' => $item->id])}}" class="btn btn-primary">Lebih detail</a>
                     </section>
                 </article>
                 @endforeach
