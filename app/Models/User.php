@@ -49,9 +49,18 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($booking) {
+            $booking->biodata()->delete();
+        });
+    }
+
     public function biodata()
     {
-        return $this->hasOne(bio_pendaki::class, 'id', 'id_bio',)->onDelete('cascade');
+        return $this->hasOne(bio_pendaki::class, 'id', 'id_bio',);
     }
 
     public function booking()
