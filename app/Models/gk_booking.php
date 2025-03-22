@@ -43,6 +43,11 @@ class gk_booking extends Model
                 $model->id = (string) Str::uuid(); // Generate UUID when creating a new record
             }
         });
+
+        static::deleting(function ($booking) {
+            $booking->pendakis()->delete();
+            $booking->pembayaran()->delete();
+        });
     }
     /**
      * Get the user that owns the booking.
@@ -110,13 +115,13 @@ class gk_booking extends Model
 
     public function pendakis()
     {
-        return $this->hasMany(gk_pendaki::class, 'booking_id')->onDelete('cascade');
+        return $this->hasMany(gk_pendaki::class, 'booking_id');
     }
 
 
 
     public function pembayaran()
     {
-        return $this->hasMany(pembayaran::class, 'id_booking')->onDelete('cascade');
+        return $this->hasMany(pembayaran::class, 'id_booking');
     }
 }
