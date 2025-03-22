@@ -59,13 +59,17 @@
       inputFiles.forEach(function(input) {
          // ambil id 
          const idInput = input.getAttribute('id');
-         const inputMaxSize = input.getAttribute('data-size');
+         let inputMaxSize = input.getAttribute('data-size');
          const buttonShow = document.querySelector(`button[data-id-target="${idInput}"]`);
          const fileExist = document.querySelector(`input[id="${idInput}_existing"]`);
          const labelExist = document.querySelector(`label[id="label_${idInput}_existing"]`)
          const filePreview = document.getElementById('filePreview');
 
-
+         // cek data-size ada atau tidak
+         if (!inputMaxSize) {
+            console.log('data-size tidak ada');
+            inputMaxSize = 1;
+         }
          // cek file ada atau tidak
          if (fileExist && fileExist.value) {
             buttonShow.classList.remove('d-none');
@@ -81,16 +85,14 @@
                // Cek tipe file
                const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
                if (!validTypes.includes(file.type)) {
-                  // error = 'Hanya file gambar (JPEG, PNG, GIF) dan PDF yang diizinkan.';
-                  // panggil  notif error
-                  console.log('Hanya file gambar (JPEG, PNG, GIF) dan PDF yang diizinkan.');
                   input.value = ''; // Reset input file
+                  console.log(file.type)
+                  alert('Hanya file gambar (JPEG, PNG, GIF) dan PDF yang diizinkan.')
                   return;
                } else if (file.size > maxSize) {
-                  // error = 'Ukuran file tidak boleh lebih dari 1MB.';
-                  // panggil  notif error
-                  console.log('Ukuran file tidak boleh lebih dari 1MB.');
                   input.value = ''; // Reset input file
+                  console.log(file.size)
+                  alert('Ukuran file tidak boleh lebih dari 1MB.');
                   return;
                } else {
                   console.log('File valid.');
