@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             File::deleteDirectory($path);
         }
         $this->call([
-            userSeeder::class,
+            UsersAdminSeeder::class,
             destinasi_gate::class,
             paket_tiket::class,
             settingSeeder::class,

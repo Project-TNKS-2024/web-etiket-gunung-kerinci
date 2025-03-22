@@ -51,7 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function biodata()
     {
-        return $this->hasOne(bio_pendaki::class, 'id', 'id_bio',);
+        return $this->hasOne(bio_pendaki::class, 'id', 'id_bio',)->onDelete('cascade');
     }
 
     public function booking()

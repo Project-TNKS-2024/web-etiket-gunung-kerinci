@@ -110,13 +110,13 @@ class gk_booking extends Model
 
     public function pendakis()
     {
-        return $this->hasMany(gk_pendaki::class, 'booking_id');
+        return $this->hasMany(gk_pendaki::class, 'booking_id')->onDelete('cascade');
     }
 
 
 
     public function pembayaran()
     {
-        return $this->hasMany(pembayaran::class, 'id_booking');
+        return $this->hasMany(pembayaran::class, 'id_booking')->onDelete('cascade');
     }
 }

@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\gk_pendaki;
+use App\Models\User;
+use Illuminate\Console\Command;
+
+class SampleUserCommand extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'sampel:user {action}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Membuat atau menghapus user sampel';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        $action = $this->argument('action');
+
+        if ($action === 'create') {
+            $this->createSampleUsers();
+        } elseif ($action === 'delete') {
+            $this->deleteSampleUsers();
+        } else {
+            $this->error("Perintah tidak valid. Gunakan 'create' atau 'delete'.");
+        }
+    }
+    private function createSampleUsers()
+    {
+        $this->call('db:seed', [
+            '--class' => 'UserSampelSeeder',
+        ]);
+        $this->info('User sampel berhasil dibuat.');
+    }
+    private function deleteSampleUsers()
+    {
+        $userSampel = User::where('email', 'LIKE', 'user%@example.com')->get();
+
+        foreach ($userSampel as $user) {
+            $bookingSampel = gk_pendaki::where('id_bio', $user->id_bio)->get();
+            foreach ($bookingSampel as $booking) {
+                $booking->delete();
+            }
+            $user->delete();
+        }
+
+        $this->info('User sampel berhasil dihapus.');
+    }
+}
