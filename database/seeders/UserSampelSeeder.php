@@ -96,7 +96,7 @@ class UserSampelSeeder extends Seeder
 
 
 
-        for ($i = 1; $i <= 30; $i++) {
+        for ($i = 1; $i <= 50; $i++) {
             $email = 'user' . $i . '@example.com';
             if (User::where('email', $email)->exists()) {
                 continue;
