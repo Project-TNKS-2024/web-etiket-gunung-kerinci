@@ -120,8 +120,11 @@ class booking extends Controller
         }
 
         // Cek status booking
-        if (isset($status) && (is_array($status) ? !in_array($booking->status_booking, $status) : $booking->status_booking !== $status)) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
+        if (isset($status)) {
+            if (is_array($status) ? !in_array($booking->status_booking, $status) : $booking->status_booking !== $status) {
+                return null;
+                // return redirect()->route('homepage.booking', ['id' => $id]);
+            }
         }
 
         // Cek apakah booking sudah expired
@@ -134,7 +137,8 @@ class booking extends Controller
                 $booking->pembayaran()->delete();
                 $booking->update(['status_booking' => 2]);
 
-                return redirect()->route('homepage.booking', ['id' => $id]);
+                return null;
+                // return redirect()->route('homepage.booking', ['id' => $id]);
             }
         }
 
@@ -386,6 +390,9 @@ class booking extends Controller
     public function bookingSnk($id)
     {
         $booking = $this->getBookingByUser($id, [0, 1, 2]);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load('gktiket');
 
 
@@ -405,7 +412,9 @@ class booking extends Controller
         ]);
 
         $booking = $this->getBookingByUser($request->id, [0, 1, 2]);
-
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->update(['status_booking' => 2]);
         return redirect()->route('homepage.booking.formulir', ['id' => $request->id]);
     }
@@ -413,6 +422,9 @@ class booking extends Controller
     public function bookingFP($id)
     {
         $booking = $this->getBookingByUser($id, [1, 2]);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'gktiket']);
 
         // ================================ cek ketua pendaki ============================================
@@ -436,6 +448,9 @@ class booking extends Controller
         ]);
 
         $booking = $this->getBookingByUser($request->booking, 2);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
         // cek id biodata
@@ -491,6 +506,9 @@ class booking extends Controller
         ]);
 
         $booking = $this->getBookingByUser($request->id_booking, 2);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
         $totalTagihan = 0;
@@ -608,6 +626,9 @@ class booking extends Controller
     {
 
         $booking = $this->getBookingByUser($id, 3);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load(['gateMasuk', 'gateKeluar', 'gktiket', 'pendakis']);
 
         return view('homepage.booking.bookingDetail', [
@@ -635,6 +656,9 @@ class booking extends Controller
     public function bookingCancel($id)
     {
         $booking = $this->getBookingByUser($id, [0, 1, 2, 3]);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
         // hapus pembayaran
@@ -658,6 +682,9 @@ class booking extends Controller
     public function bookingPayment($id)
     {
         $booking = $this->getBookingByUser($id, [3, 4, 5, 6, 7, 8]);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load(['gateMasuk', 'gateKeluar', 'gateMasuk.destinasi', 'pendakis.biodata']);
 
         $pembayaran = pembayaran::where('id_booking', $id)->get();
@@ -683,6 +710,9 @@ class booking extends Controller
         ]);
 
         $booking = $this->getBookingByUser($request->id, 3);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
         $path = $this->upload->create($request->id, 'booking', $request->bukti_pembayaran);
@@ -715,7 +745,9 @@ class booking extends Controller
         ]);
 
         $this->getBookingByUser($request->id, 3);
-
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $pembayaran = pembayaran::find($request->id_pembayaran);
         if (!$pembayaran) {
             return redirect()->back()->with('error', 'Pembayaran tidak ditemukan');
@@ -730,7 +762,9 @@ class booking extends Controller
     public function struk($id)
     {
         $booking = $this->getBookingByUser($id, [3, 4, 5, 6, 7, 8]);
-
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         if ($booking->status_pembayaran) {
             $booking = json_decode($booking->dataStruk);
         } else {

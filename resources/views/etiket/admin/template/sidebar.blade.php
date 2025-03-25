@@ -161,7 +161,7 @@
                   <span>
                      <i class="fa-solid fa-gear"></i>
                   </span>
-                  <span class="hide-menu">Setting</span>
+                  <span class="hide-menu">Pengaturan</span>
                </a>
             </li>
             @endcan

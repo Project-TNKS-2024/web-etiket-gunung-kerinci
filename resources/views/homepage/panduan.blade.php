@@ -131,7 +131,7 @@
                         <li>Kewarganegaraan.</li>
                         <li>Nomor Identitas.</li>
 
-                        <li>Lampiran Identitas (KTP / Passpor / KTM / Kartu Pelajar).</li>
+                        <li>Lampiran Identitas (KTP / KK / Passpor ).</li>
                         <li>Jenis Kelamin.</li>
                         <li>Tanggal lahir.</li>
                         <li>Alamat Domisili (khusus WNI).</li>

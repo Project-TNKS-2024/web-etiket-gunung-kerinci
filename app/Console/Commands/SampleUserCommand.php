@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\gk_booking;
 use App\Models\gk_pendaki;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -49,9 +50,9 @@ class SampleUserCommand extends Command
         $userSampel = User::where('email', 'LIKE', 'user%@example.com')->get();
 
         foreach ($userSampel as $user) {
-            $bookingSampel = gk_pendaki::where('id_bio', $user->id_bio)->get();
-            foreach ($bookingSampel as $booking) {
-                $booking->delete();
+            $pendakiSampel = gk_pendaki::where('id_bio', $user->id_bio)->get();
+            foreach ($pendakiSampel as $pendaki) {
+                gk_booking::where('id', $pendaki->booking_id)->delete();
             }
             $user->delete();
         }

@@ -30,7 +30,7 @@ $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->
 </style>
 
 <div class="debug-alert">
-    Situs ini masih dalam tahap uji coba. Terima kasih atas kesabaran Anda!
+    Situs ini masih dalam tahap pengembangan. Data akan direset saat peluncuran resmi. Terima kasih atas pengertian Anda!
 </div>
 @endif
 
