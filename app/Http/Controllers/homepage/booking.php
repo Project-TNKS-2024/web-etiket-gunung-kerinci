@@ -413,7 +413,7 @@ class booking extends Controller
 
         $booking = $this->getBookingByUser($request->id, [0, 1, 2]);
         if ($booking == null) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
+            return redirect()->route('homepage.booking', ['id' => $request->id]);
         }
         $booking->update(['status_booking' => 2]);
         return redirect()->route('homepage.booking.formulir', ['id' => $request->id]);
@@ -449,7 +449,7 @@ class booking extends Controller
 
         $booking = $this->getBookingByUser($request->booking, 2);
         if ($booking == null) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
+            return redirect()->route('homepage.booking', ['id' => $request->booking]);
         }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
@@ -507,7 +507,7 @@ class booking extends Controller
 
         $booking = $this->getBookingByUser($request->id_booking, 2);
         if ($booking == null) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
+            return redirect()->route('homepage.booking', ['id' => $request->id_booking]);
         }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
@@ -711,7 +711,7 @@ class booking extends Controller
 
         $booking = $this->getBookingByUser($request->id, 3);
         if ($booking == null) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
+            return redirect()->route('homepage.booking', ['id' => $request->id]);
         }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
 
@@ -744,9 +744,9 @@ class booking extends Controller
             'id_pembayaran' => 'required|string',
         ]);
 
-        $this->getBookingByUser($request->id, 3);
+        $booking = $this->getBookingByUser($request->id, 3);
         if ($booking == null) {
-            return redirect()->route('homepage.booking', ['id' => $id]);
+            return redirect()->route('homepage.booking', ['id' => $request->id]);
         }
         $pembayaran = pembayaran::find($request->id_pembayaran);
         if (!$pembayaran) {
