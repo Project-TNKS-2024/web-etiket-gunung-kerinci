@@ -10,6 +10,7 @@ use App\Http\Controllers\etiket\admin\destinasi\tiketController;
 use App\Http\Controllers\etiket\admin\master\destinasisController;
 use App\Http\Controllers\etiket\admin\destinasi\bookingController;
 use App\Http\Controllers\etiket\admin\destinasi\pembayaranController;
+use App\Http\Controllers\etiket\admin\fitur\LogController;
 // admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
 use App\Http\Controllers\etiket\admin\master\AccountAdminController;
@@ -96,6 +97,9 @@ Route::middleware(['check.role:admin'])->group(function () {
     // fitur - scan tiket
     Route::get('admin/fitur/scanTiket', [Scan::class, 'index'])->name('admin.fitur.scanTiket')->middleware('permission:scan-tiket');
     Route::get('admin/fitur/scanTiketAction/{uq}', [Scan::class, 'scanTiketAction'])->name('admin.fitur.scanTiketAction')->middleware('permission:scan-tiket');
+
+    // fitur - log
+    Route::get('admin/fitur/log', [LogController::class, 'index'])->name('admin.fitur.log')->middleware('permission:view-log');
 
     // setting
     Route::get('admin/setting', [settingController::class, 'index'])->name('admin.setting')->middleware('permission:view-setting');

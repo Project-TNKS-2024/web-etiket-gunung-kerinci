@@ -16,12 +16,16 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string $roles): Response
     {
+        // Jika belum login, arahkan ke halaman login
         if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        // Jika role pengguna tidak sesuai, abort 403
+        if (Auth::user()->role !== $roles) {
             abort(403, 'Unauthorized action.');
         }
-        if ($roles == Auth::user()->role) {
-            return $next($request);
-        }
-        abort(403, 'Unauthorized action.');
+
+        return $next($request);
     }
 }

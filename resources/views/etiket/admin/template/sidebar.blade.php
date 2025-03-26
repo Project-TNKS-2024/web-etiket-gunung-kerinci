@@ -154,6 +154,17 @@
                </a>
             </li>
             @endcan
+
+            @can('view-log')
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="{{route('admin.fitur.log')}}" aria-expanded="false">
+                  <span>
+                     <i class="fa-solid fa-bug"></i>
+                  </span>
+                  <span class="hide-menu">Log Laravel</span>
+               </a>
+            </li>
+            @endcan
             <hr>
             @can('view-setting')
             <li class="sidebar-item">
