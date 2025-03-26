@@ -9,7 +9,7 @@ use App\Http\Controllers\etiket\user\konfigurasiAkun;
 
 
 // User routes
-Route::middleware(['check.role:user', 'verified'])->group(function () {
+Route::middleware(['check.role:user', 'verified', 'logger'])->group(function () {
 
    Route::get('dashboard', [dasUser::class, 'index'])->name('user.dashboard');
    Route::get('dashboard/profile', [profileUser::class, 'index'])->name('user.dashboard.profile');
