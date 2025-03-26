@@ -163,14 +163,14 @@ class bookingController extends AdminController
             try {
                 Mail::to($userBooking->email)->send(new BookingPayment($order));
             } catch (\Exception $e) {
-                Log::channel('admin')->error(
-                    'Terjadi kesalahan pada proses booking kirim email pembelian booking ke ' . $userBooking->email,
-                    [
-                        'admin' => Auth::user(),
-                        'pengguna' => $userBooking,
-                        'error' => $e->getMessage()
-                    ]
-                );
+                Log::channel('admin')->error('Gagal mengirim email konfirmasi pembayaran.', [
+                    'error' => $e->getMessage(),
+                    'user_email' => $userBooking->email,
+                    'booking_code' => $booking->unique_code,
+                    'amount' => $booking->total_pembayaran,
+                    'payment_date' => $booking->pembayaran->last()->created_at,
+                    'invoice_url' => route('homepage.booking.struk', $booking->id),
+                ]);
             }
         } else {
             $booking->update([
@@ -191,14 +191,13 @@ class bookingController extends AdminController
             try {
                 Mail::to($userBooking->email)->send(new BookingPaymentFailed($failedOrder));
             } catch (\Exception $e) {
-                Log::channel('admin')->error(
-                    'Terjadi kesalahan saat mengirim email pembayaran gagal ke ' . $userBooking->email,
-                    [
-                        'admin' => Auth::user(),
-                        'pengguna' => $userBooking,
-                        'error' => $e->getMessage()
-                    ]
-                );
+                Log::channel('admin')->error('Gagal mengirim email pembayaran gagal.', [
+                    'error' => $e->getMessage(),
+                    'user_email' => $userBooking->email,
+                    'booking_code' => $booking->id,
+                    'amount' => $booking->total_pembayaran,
+                    'payment_status' => 'Failed',
+                ]);
             }
         }
 

@@ -9,23 +9,13 @@ use Illuminate\Console\Command;
 
 class SampleUserCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'sampel:user {action}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Membuat atau menghapus user sampel';
 
-    /**
-     * Execute the console command.
-     */
+
     public function handle()
     {
         $action = $this->argument('action');
@@ -51,6 +41,7 @@ class SampleUserCommand extends Command
 
         foreach ($userSampel as $user) {
             $pendakiSampel = gk_pendaki::where('id_bio', $user->id_bio)->get();
+            
             foreach ($pendakiSampel as $pendaki) {
                 gk_booking::where('id', $pendaki->booking_id)->delete();
             }

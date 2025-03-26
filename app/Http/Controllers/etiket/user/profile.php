@@ -65,6 +65,7 @@ class profile extends Controller
             'desa_kelurahan' => 'numeric',
         ]);
 
+
         // Format nomor telepon
         if ($request->nomor_telepon[0] == 0) {
             $request['nomor_telepon'] = substr($request->nomor_telepon, 1);

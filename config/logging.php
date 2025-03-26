@@ -60,14 +60,14 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/laravel-' . date('M-Y') . '.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/laravel-' . date('M-Y') . '.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
@@ -130,17 +130,15 @@ return [
         // log khusus
         'admin' => [
             'driver' => 'single',
-            'path' => storage_path('logs/admin.log'), // File log aktivitas admin
+            'path' => storage_path('logs/admin-' . date('M-Y') . '.log'),
             'level' => 'info',
         ],
+
         'pengguna' => [
             'driver' => 'single',
-            'path' => storage_path('logs/pengguna.log'), // File log aktivitas admin
-            'level' => 'info',
+            'path' => storage_path('logs/userError-' . date('M-Y') . '.log'),
+            'level' => 'debug',
         ],
-
-
-
     ],
 
 ];

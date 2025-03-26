@@ -16,7 +16,8 @@ class LogController extends Controller
 
     public function index(Request $request)
     {
-        $filename = $request->query('file', 'laravel.log');
+        // jika file tidak ada, default itu file pertama dari logfiles
+        $filename = $request->query('file', basename($this->logFiles[0] ?? 'laravel.log'));
         $filename = basename($filename);
 
         if (!str_ends_with($filename, '.log')) {
@@ -88,25 +89,18 @@ class LogController extends Controller
                     'stack_trace' => [] // Siapkan array untuk stack trace
                 ];
             }
-            // Deteksi "[previous exception] [object] (Error..."
+            // Deteksi "[previous exception] [object] (Error...)" dan masukkan ke stack_trace
             elseif (preg_match('/^\[previous exception\] \[object\] \(([^)]+)\): (.*)/i', $line, $matches)) {
                 if ($currentEntry) {
-                    $logEntries[] = $currentEntry; // Simpan entry sebelumnya
+                    $currentEntry['stack_trace'][] = "Previous Exception ({$matches[1]}): " . trim($matches[2]);
                 }
-
-                $currentEntry = [
-                    'time' => $logEntries ? end($logEntries)['time'] : '',      // Ambil waktu terakhir
-                    'channel' => $logEntries ? end($logEntries)['channel'] : '',   // Ambil channel terakhir
-                    'level' => $logEntries ? end($logEntries)['level'] : '',     // Ambil level terakhir
-                    'message' => "Previous Exception ({$matches[1]}): " . trim($matches[2]),  // Format baru untuk previous exception
-                    'stack_trace' => [] // Kosongkan stack trace (akan ditambahkan jika ada)
-                ];
             }
             // Deteksi stack trace yang diawali dengan "#"
             elseif ($currentEntry && preg_match('/^#\d+\s+/', $line)) {
                 $currentEntry['stack_trace'][] = $line; // Tambahkan stack trace ke dalam array
             }
         }
+
 
         // Simpan entry terakhir jika ada
         if ($currentEntry) {

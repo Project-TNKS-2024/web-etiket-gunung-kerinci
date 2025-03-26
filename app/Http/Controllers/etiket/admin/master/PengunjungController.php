@@ -67,15 +67,14 @@ class PengunjungController extends AdminController
             try {
                 Mail::to($biodata->user->email)->send(new BiodataVerifiedMail($biodata, $status));
             } catch (\Exception $e) {
-                Log::channel('admin')->error(
-                    'Gagal mengirim email verifikasi biodata ke ' . $biodata->user->email,
-                    [
-                        'admin' => Auth::user(),
-                        'pengguna' => $biodata->user,
-                        'status' => $status,
-                        'error' => $e->getMessage()
-                    ]
-                );
+                Log::channel('admin')->error('Gagal mengirim email verifikasi biodata.', [
+                    'error' => $e->getMessage(),
+                    'user_email' => $biodata->user->email,
+                    'user_id' => $biodata->user->id,
+                    'biodata_id' => $biodata->id,
+                    'nik' => $biodata->nik,
+                    'status' => $status,
+                ]);
             }
             return redirect()->back()->with('success', 'Data berhasil diubah');
         }

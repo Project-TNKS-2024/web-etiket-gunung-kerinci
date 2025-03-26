@@ -15,21 +15,37 @@ class homepageHelperController extends Controller
     {
         try {
             $apiWeatherKey = 'a2e80ea3991444f38a015609251802';
-            $laLongitude = '-1.6955471535960556,101.26376495341809'; // gunung kerinci
-            $apiWeatherUrl = 'https://api.weatherapi.com/v1/current.json?key=' . $apiWeatherKey . '&q=' . $laLongitude . '&aqi=no';
-            $weatherResponse = file_get_contents($apiWeatherUrl);
+            $laLongitude = '-1.6955471535960556,101.26376495341809'; // Gunung Kerinci
+            $apiWeatherUrl = "https://api.weatherapi.com/v1/current.json?key={$apiWeatherKey}&q={$laLongitude}&aqi=no";
+
+            // Gunakan cURL untuk pengambilan data lebih aman
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $apiWeatherUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout 10 detik
+            $weatherResponse = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode !== 200 || empty($weatherResponse)) {
+                throw new \Exception("Gagal mengambil data cuaca. HTTP Code: {$httpCode} | cURL Error: {$curlError}");
+            }
+
             $weatherData = json_decode($weatherResponse, true);
+            if (!$weatherData) {
+                throw new \Exception('JSON decode gagal. Data tidak valid.');
+            }
+
+            return $weatherData;
         } catch (\Exception $e) {
-            Log::channel('admin')->error(
-                'Terjadi kesalahan pada proses pengambilan cuaca dari api  ',
-                [
-                    'api' => $apiWeatherUrl,
-                    'error' => $e->getMessage()
-                ]
-            );
-            $weatherData = null;
+            // Logging menggunakan channel default (laravel.log)
+            Log::error("Terjadi kesalahan saat mengambil data cuaca dari API: {$apiWeatherUrl}", [
+                'error' => $e->getMessage(),
+            ]);
+
+            return null;
         }
-        return $weatherData;
     }
     public function getPendaki()
     {

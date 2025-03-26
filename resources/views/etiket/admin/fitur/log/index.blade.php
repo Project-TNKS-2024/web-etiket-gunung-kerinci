@@ -22,7 +22,6 @@
          max-height: 1.5em;
          overflow: hidden;
          transition: max-height 0.3s ease-in-out;
-         cursor: pointer;
       }
 
       /* Saat dibuka, tinggi akan menyesuaikan konten */
@@ -47,20 +46,16 @@
          display: none;
       }
 
-      /* Mengatur background tabel menjadi transparan */
       .dataTable {
          background-color: #ffffff99 !important;
       }
 
-      /* Header dan sel data juga dibuat transparan */
       .dataTable thead th,
       .dataTable tbody td {
          background-color: #ffffff99 !important;
          border-color: rgba(255, 255, 255, 0.5);
-         /* Agar border tetap terlihat */
       }
 
-      /* Untuk mengubah warna hover */
       .dataTable tbody tr:hover {
          background-color: rgba(255, 255, 255, 0.5) !important;
       }
@@ -112,6 +107,7 @@
                      <th scope="col" style="width: 1%;">Channel</th>
                      <th scope="col" style="width: 1%;">Level</th>
                      <th scope="col">Deskripsi</th>
+                     <th></th>
                   </tr>
                </thead>
                <tbody>
@@ -125,9 +121,17 @@
                         </span>
                      </td>
                      <td class="text-wrap" style="white-space: normal; word-break: break-word; min-width: 400px;">
-                        <div class="log-message" id="log-message-{{ $index }}" onclick="toggleDetails({{ $index }})">
+                        <div class="log-message" id="log-message-{{ $index }}">
                            {{ $log['message'] }} <i class="fas fa-angle-down"></i>
+                           <div style="background-color: #000000d1; color: #fff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                              {!! is_array($log['stack_trace'])
+                              ? implode('', array_map(fn($line) => "<p>$line</p>", $log['stack_trace']))
+                              : "<p>{$log['stack_trace']}</p>" !!}
+                           </div>
                         </div>
+                     </td>
+                     <td>
+                        <button type="" onclick="toggleDetails({{ $index }})" class="btn p-0"> <i class="fa-solid fa-eye"></i></button>
                      </td>
                   </tr>
                   @endforeach

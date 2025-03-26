@@ -7,23 +7,11 @@ use Illuminate\Console\Command;
 
 class SampleBookingCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'sampel:booking {action}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Kelola sampel booking';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $action = $this->argument('action');
@@ -34,7 +22,7 @@ class SampleBookingCommand extends Command
                 break;
 
             default:
-                $this->error("Perintah tidak valid. Gunakan.");
+                $this->error("Perintah tidak valid. Gunakan. Gunakan 'deleteAll' untuk menghapus semua booking sampel.");
                 break;
         }
     }
