@@ -15,7 +15,7 @@ Route::get('/', function () {
 
 Route::get('beranda', [HomepageController::class, 'beranda'])->name('homepage.beranda');
 Route::get('panduan', [HomepageController::class, 'panduan'])->name('homepage.panduan');
-Route::get('faq', [HomepageController::class, 'faq'])->name('homepage.faq');
+// Route::get('faq', [HomepageController::class, 'faq'])->name('homepage.faq');
 Route::get('sarat-dan-ketentuan', [HomepageController::class, 'snk'])->name('homepage.snk');
 // vr
 // Route::get('virtualTour/{id}', [HomepageController::class, 'vr'])->name('homepage.vr');
