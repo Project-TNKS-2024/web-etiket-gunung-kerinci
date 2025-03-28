@@ -11,8 +11,8 @@
    <style>
       #bg-body {
          background: linear-gradient(65deg, #e9eef3 50%, #333 50%);
-         height: 100vh;
-         width: 100vw;
+         height: 100%;
+         width: 100%;
          position: fixed;
          z-index: -1;
       }
@@ -65,7 +65,7 @@
 <body>
    <div id="bg-body"></div>
    <div class="d-flex">
-      <div class="w-25 border-right p-4" style="max-width: 380px;">
+      <div class=" border-right p-4">
          <h1 class="h5 fw-bold text-dark mb-3">Log Viewer</h1>
          <a href="{{route('admin.dashboard')}}" class="text-secondary mt-1">
             <i class="fas fa-arrow-left"></i> Back to Admin
