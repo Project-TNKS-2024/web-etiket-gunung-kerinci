@@ -4,6 +4,7 @@
 /public/hot
 /public/storage
 /public/upload
+/public/backup
 /storage/*.key
 /vendor
 /app/public/upload

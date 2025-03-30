@@ -65,15 +65,38 @@ class bookingController extends AdminController
 
         $query->where('status_booking', '>=', 3);
 
+        $query->orderByRaw("
+                CASE 
+                    WHEN EXISTS (
+                        SELECT 1 FROM pembayarans 
+                        WHERE pembayarans.id_booking = gk_bookings.id 
+                        AND pembayarans.status = 'pending'
+                    ) THEN 0 
+                    -- Jika ada pembayaran pending, letakkan paling atas
 
-        // Tambahkan pengurutan berdasarkan created_at dari relasi pembayaran
-        $query->orderByDesc(function ($subQuery) {
-            $subQuery->select('created_at')
-                ->from('pembayarans')
-                ->whereColumn('pembayarans.id_booking', 'gk_bookings.id')
-                ->latest()
-                ->take(1);
-        });
+                    WHEN gk_bookings.tanggal_keluar <= CURDATE() AND gk_bookings.status_booking < 8 THEN 2
+                    -- Prioritas 2: Booking yang sudah melewati tanggal_keluar tetapi belum selesai
+
+                    ELSE 3
+                END
+            ")
+            ->orderByRaw("  
+                CASE 
+                    WHEN tanggal_masuk = CURDATE() THEN 1   
+                    WHEN tanggal_masuk > CURDATE() THEN 2  
+                    ELSE 3  
+                END
+            ")
+            ->orderBy('tanggal_masuk', 'asc')
+            ->orderByDesc(function ($subQuery) {
+                $subQuery->select('created_at')
+                    ->from('pembayarans')
+                    ->whereColumn('pembayarans.id_booking', 'gk_bookings.id')
+                    ->latest()
+                    ->take(1);
+            });
+
+
         // Ambil data dengan paginasi
         $data = $query->paginate(10);
 

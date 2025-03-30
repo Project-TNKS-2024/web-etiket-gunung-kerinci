@@ -101,7 +101,7 @@
                   <tr>
                      <td>{{ $loop->iteration }}</td>
                      <td>{{ $b->destinasi->nama ?? '-' }}</td>
-                     <td>{{ \Carbon\Carbon::parse($b->tanggal)->format('d M Y') }}</td>
+                     <td>{{ \Carbon\Carbon::parse($b->tanggal_masuk)->format('d M Y') }}</td>
                      <td>
                         @if ($b->status_booking < 4)
                            <span class="badge bg-secondary">{{$b->getStatusBooking()}}</span>

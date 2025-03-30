@@ -13,18 +13,31 @@ use Illuminate\Support\Facades\Mail;
 
 class PengunjungController extends AdminController
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dataUser = User::where('role', 'user')
+        $query = User::where('role', 'user')
             ->join('biodatas', 'users.id_bio', '=', 'biodatas.id')
             ->orderByRaw("FIELD(biodatas.verified, 'pending', 'verified', 'unverified')")
             ->orderBy('biodatas.first_name')
             ->select('users.*')
-            ->with('biodata')
-            ->paginate(50);
+            ->with('biodata');
+
+        // Cek jika ada pencarian
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('users.email', 'like', "%$search%")
+                    ->orWhere('biodatas.first_name', 'like', "%$search%")
+                    ->orWhere('biodatas.last_name', 'like', "%$search%")
+                    ->orWhere('biodatas.id', 'like', "%$search%");
+            });
+        }
+
+        $dataUser = $query->paginate(50);
 
         return view('etiket.admin.master.akunUsers.index', compact('dataUser'));
     }
+
     public function biodata($id)
     {
         $user = User::with('booking.destinasi', 'booking.pendakis', 'biodata')->where('role', 'user')->find($id);

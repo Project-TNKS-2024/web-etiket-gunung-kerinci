@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -80,15 +81,31 @@ class gk_booking extends Model
         if (isEmpty($id)) {
             $id = $this->status_booking;
         }
+        // Konversi tanggal untuk perbandingan
+        $today = Carbon::today();
+        $tanggalMasuk = Carbon::parse($this->tanggal_masuk);
+        $tanggalKeluar = Carbon::parse($this->tanggal_keluar);
+
+        // Atur status berdasarkan tanggal
+        if ($id >= 4 && $id < 6 && $tanggalMasuk->lessThanOrEqualTo($today)) {
+            $id = 41;
+        }
+        if ($id == 6 && $tanggalKeluar->lessThanOrEqualTo($today)) {
+            $id = 61;
+        }
+
+        // Daftar status booking
         $status = [
-            1 => 'Menyetujui SNK',
-            2 => 'Mengisi Formulir',
-            3 => 'Menunggu Pembayaran',
-            4 => 'Sudah  Bayar',
-            5 => 'Konfiirmasi Pendakian',
-            6 => 'Check in',
-            7 => 'Check Out',
-            8 => 'Selesai',
+            1  => 'Menyetujui SNK',
+            2  => 'Mengisi Formulir',
+            3  => 'Menunggu Pembayaran',
+            4  => 'Sudah Bayar',
+            41 => 'Perlu Konfirmasi Check-in',
+            5  => 'Konfirmasi Pendakian',
+            6  => 'Check-in',
+            61 => 'Perlu Konfirmasi Check-out',
+            7  => 'Check-out',
+            8  => 'Selesai',
         ];
         return $status[$id];
     }

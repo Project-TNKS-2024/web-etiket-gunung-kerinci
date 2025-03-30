@@ -107,4 +107,5 @@ class bio_pendaki extends Model
     public function getDataDesaAttribute()
     {
         return $this->desa ? Desa::getByCode($this->desa) : (object)['id' => 0, 'name' => ''];
-    }}
+    }
+}
