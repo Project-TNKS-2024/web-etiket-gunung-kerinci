@@ -22,16 +22,13 @@
             <input type="text" name="search" class="form-control" placeholder="Cari email/nama..." value="{{ request('search') }}" style="width: auto; max-width: 200px;">
 
             <!-- Filter Status -->
-            <select name="filter" class="form-select" style="width: auto; max-width: 150px;">
-               <option value="">Semua Status</option>
-               <option value="pending" {{ request('filter') == 'pending' ? 'selected' : '' }}>Pending</option>
-               <option value="success" {{ request('filter') == 'success' ? 'selected' : '' }}>Success</option>
-               <option value="failed" {{ request('filter') == 'failed' ? 'selected' : '' }}>Failed</option>
+            <select name="filter-waktu" class="form-select" style="width: auto; max-width: 150px;">
+               <option value="dalam_booking" {{ request('filter-waktu') == 'dalam_booking' ? 'selected' : '' }}>Dalam Booking</option>
+               <option value="sudah_selesai" {{ request('filter-waktu') == 'sudah_selesai' ? 'selected' : '' }}>Sudah Selesai</option>
+               <option value="akan_datang" {{ request('filter-waktu') == 'akan_datang' ? 'selected' : '' }}>Akan Datang</option>
+               <option value="" {{ request('filter-waktu') == '' ? 'selected' : '' }}>Semua</option>
             </select>
 
-            <!-- Filter Tanggal -->
-            <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}" style="width: auto; max-width: 150px;">
-            <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}" style="width: auto; max-width: 150px;">
 
             <!-- Tombol Filter -->
             <button type="submit" class="btn btn-primary">Filter</button>
@@ -61,8 +58,9 @@
                   <td class="">{{ $item->pendakis->count() }} orang</td>
                   <td class="">{{ $item->getStatusBooking()}}</td>
                   @php
-                  $colorStatus = 'info';
+                  $colorStatus = 'outline-info';
                   if($item->pembayaran && $item->pembayaran->count() > 0) {
+
                   if($item->pembayaran->last()->status == 'pending'){
                   $colorStatus = 'warning';
                   }else if($item->pembayaran->last()->status == 'success'){
@@ -72,6 +70,7 @@
                   }else{
                   $colorStatus = 'info';
                   }
+
                   } @endphp
                   <td class="">
                      <a href="{{route('admin.destinasi.booking.show', ['id' => $item->id])}}" class="btn btn-sm btn-info">

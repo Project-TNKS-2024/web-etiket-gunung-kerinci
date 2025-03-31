@@ -31,18 +31,42 @@ class bookingController extends AdminController
     {
         $destinasi = destinasi::find($id);
 
-        $query = gk_booking::with('pembayaran', 'pendakis', 'pendakis.biodata', 'user', 'destinasi')
+        // Query utama
+        $query = gk_booking::where('gk_bookings.status_booking', '>=', 3)
             ->whereHas('destinasi', function ($q) use ($destinasi) {
                 $q->where('destinasis.id', $destinasi->id);
             });
 
-        // Filter berdasarkan status
-        if ($request->filled('filter')) {
-            $query->whereHas('pembayaran', function ($q) use ($request) {
-                $q->where('status', $request->filter);
-            });
+        // 🔹 **Filter berdasarkan status waktu booking**
+        if ($request->filled('filter-waktu')) {
+            if ($request->input('filter-waktu') === 'dalam_booking') {
+                $query->where(function ($q) {
+                    $q->where(function ($q1) {
+                        // ✅ Kondisi 1: Status booking antara 4 dan 7 & tanggal masuk sudah lewat
+                        $q1->whereBetween('gk_bookings.status_booking', [4, 7])
+                            ->whereDate('gk_bookings.tanggal_masuk', '<', now());
+                    })->orWhere(function ($q2) {
+                        // ✅ Kondisi 2: Status booking = 3 & pembayaran terbaru masih pending
+                        $q2->where('gk_bookings.status_booking', 3)
+                            ->whereHas('pembayaran', function ($q3) {
+                                $q3->where('status', 'pending')
+                                    ->orderByDesc('created_at') // Ambil pembayaran terbaru
+                                    ->limit(1);
+                            });
+                    });
+                });
+            } elseif ($request->input('filter-waktu') === 'sudah_selesai') {
+                $query->where('gk_bookings.status_booking', '=', 8);
+            } elseif ($request->input('filter-waktu') === 'akan_datang') {
+                $query->whereDate('gk_bookings.tanggal_masuk', '>', now())
+                    ->whereDoesntHave('pembayaran', function ($q) {
+                        $q->where('status', 'pending')->orderByDesc('created_at')->limit(1);
+                    }); // Pastikan tidak ada pembayaran pending
+            }
         }
 
+
+        // 🔹 **Filter berdasarkan pencarian (Nama atau Email)**
         if ($request->filled('search')) {
             $query->whereHas('pendakis.biodata', function ($q) use ($request) {
                 $q->where('first_name', 'like', '%' . $request->search . '%')
@@ -54,17 +78,7 @@ class bookingController extends AdminController
                 ->orWhereDoesntHave('pendakis'); // Menyertakan booking tanpa pendakis
         }
 
-        // Filter berdasarkan rentang tanggal created_at
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
-        } elseif ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
-        } elseif ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
-        }
-
-        $query->where('status_booking', '>=', 3);
-
+        // 🔹 **Optimasi Urutan Data**
         $query->orderByRaw("
                 CASE 
                     WHEN EXISTS (
@@ -98,7 +112,7 @@ class bookingController extends AdminController
 
 
         // Ambil data dengan paginasi
-        $data = $query->paginate(10);
+        $data = $query->paginate(20);
 
 
         return view('etiket.admin.destinasi.booking.index', [

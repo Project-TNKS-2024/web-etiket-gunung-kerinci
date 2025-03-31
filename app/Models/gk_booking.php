@@ -87,6 +87,9 @@ class gk_booking extends Model
         $tanggalKeluar = Carbon::parse($this->tanggal_keluar);
 
         // Atur status berdasarkan tanggal
+        if ($id == 4 && $tanggalKeluar->lessThan($today)) {
+            $id = 42;
+        }
         if ($id >= 4 && $id < 6 && $tanggalMasuk->lessThanOrEqualTo($today)) {
             $id = 41;
         }
@@ -101,6 +104,7 @@ class gk_booking extends Model
             3  => 'Menunggu Pembayaran',
             4  => 'Sudah Bayar',
             41 => 'Perlu Konfirmasi Check-in',
+            42 => 'Kadarluarsa',
             5  => 'Konfirmasi Pendakian',
             6  => 'Check-in',
             61 => 'Perlu Konfirmasi Check-out',
