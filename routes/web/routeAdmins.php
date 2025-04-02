@@ -10,6 +10,7 @@ use App\Http\Controllers\etiket\admin\destinasi\tiketController;
 use App\Http\Controllers\etiket\admin\master\destinasisController;
 use App\Http\Controllers\etiket\admin\destinasi\bookingController;
 use App\Http\Controllers\etiket\admin\destinasi\pembayaranController;
+use App\Http\Controllers\etiket\admin\fitur\KalenderController;
 use App\Http\Controllers\etiket\admin\fitur\LogController;
 // admin fitur
 use App\Http\Controllers\etiket\admin\fitur\Scan;
@@ -100,6 +101,14 @@ Route::middleware(['check.role:admin'])->group(function () {
 
     // fitur - log
     Route::get('admin/fitur/log', [LogController::class, 'index'])->name('admin.fitur.log')->middleware('permission:view-log');
+
+    // fitur - kelender
+    Route::get('admin/fitur/kalender', [KalenderController::class, 'index'])->name('admin.fitur.kalender')->middleware('permission:view-kalender');
+    Route::post('/admin/fitur/kalender/events', [KalenderController::class, 'storeEvent'])->name('admin.fitur.kalender.storeEvent')->middleware('permission:create-kalender');
+    Route::post('/admin/fitur/kalender/events/json', [KalenderController::class, 'storjsonEvent'])->name('admin.fitur.kalender.storejsonEvent')->middleware('permission:create-kalender');
+    Route::post('/admin/fitur/kalender/events/delete', [KalenderController::class, 'destroyEvent'])->name('admin.fitur.kalender.destroyEvent')->middleware('permission:delete-kalender');
+
+
 
     // setting
     Route::get('admin/setting', [settingController::class, 'index'])->name('admin.setting')->middleware('permission:view-setting');

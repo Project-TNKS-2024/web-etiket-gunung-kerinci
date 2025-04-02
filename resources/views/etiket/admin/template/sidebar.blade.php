@@ -165,6 +165,19 @@
                </a>
             </li>
             @endcan
+
+            @can('view-kalender')
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="{{route('admin.fitur.kalender')}}" aria-expanded="false">
+                  <span>
+                     <i class="fa-solid fa-calendar-xmark"></i>
+                  </span>
+                  <span class="hide-menu">Kalender</span>
+               </a>
+            </li>
+            @endcan
+
+
             <hr>
             @can('view-setting')
             <li class="sidebar-item">

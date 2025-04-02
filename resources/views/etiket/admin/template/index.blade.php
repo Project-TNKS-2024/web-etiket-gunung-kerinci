@@ -137,22 +137,22 @@
     </div>
     <script src="{{ asset('modernize/libs/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('modernize/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="{{ asset('modernize/js/sidebarmenu.js') }}"></script>
     <script src="{{ asset('modernize/js/app.min.js') }}"></script>
 
     <!-- Enable popovers  -->
-    <script>
+    <!-- <script>
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-    </script>
+    </script> -->
 
     @yield('js')
 
 
     @include('etiket.admin.template.modal-notif')
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 
