@@ -6,6 +6,26 @@
       width: 15px;
       display: inline-block;
    }
+
+   .fc-day a {
+      color: black;
+   }
+
+   .fc-day.cal-weekend {
+      background-color: rgba(255, 0, 0, 0.1);
+   }
+
+   .fc-day.cal-weekend a {
+      color: red;
+   }
+
+   .fc-day:has(.holiday-dot) {
+      background-color: rgba(255, 0, 0, 0.1);
+   }
+
+   .fc-day:has(.holiday-dot) a {
+      color: red;
+   }
 </style>
 @endsection
 
@@ -19,7 +39,7 @@
    @endphp
 
    <div class="card-header d-flex justify-content-between align-items-center">
-      <h3><b>Kalender {{ __($monthName) }}</b></h3>
+      <h3><b>Kalender</b></h3>
       <div>
          <a href="{{ route('admin.fitur.kalender', ['b' => $prevMonth]) }}" class="btn btn-sm btn-light me-2">
             <i class="fa-solid fa-chevron-left" style="color:#5d87ff"></i>
@@ -32,16 +52,26 @@
 
    <div class="card-body">
       <div class="row">
-         <div class="col-12 col-md-8">
-            <div id="calendar"></div>
+         <div class="col-12 col-lg-6 col-md-8">
+            <!-- <div class="row">
+               <div class="col-12 col-lg-6">
+                  <div id="calendar1"></div>
+               </div>
+               <div class="col-12 col-lg-6">
+                  <div id="calendar2"></div>
+               </div>
+            </div> -->
+            <div id="calendar1"></div>
+            <br>
+            <div id="calendar2"></div>
          </div>
-         <div class="col-12 col-md-4 d-flex flex-column">
+         <div class="col-12 col-lg-6 col-md-4 d-flex flex-column">
             <h5>Tanggal: <span id="selected-date">-</span></h5>
-            <ul class="list-group" id="event-list">
+            <ul class="list-group mb-2" id="event-list">
                <li class="list-group-item bg-body-secondary">Pilih tanggal untuk melihat event.</li>
             </ul>
             <!-- Tombol "Tambah Event" sejajar dengan kalender -->
-            <div class="d-flex justify-content-between mt-auto">
+            <div class="d-flex justify-content-between mt-auto ">
                <button class="btn btn-primary flex-grow-1 me-2" onclick="addEvent()">Tambah Event</button>
                <button class="btn btn-secondary btn-sm" onclick="addJson()">
                   <i class="fa-solid fa-file-code"></i>
@@ -123,6 +153,7 @@
 </div>
 
 
+
 <div class="d-none">
    <form method="post" id="formDelete" action="{{ route('admin.fitur.kalender.destroyEvent') }}">
       @csrf
@@ -135,7 +166,8 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 <script>
    // document.addEventListener('DOMContentLoaded', function() {
-   const calendarEl = document.getElementById('calendar');
+   const calendarEl1 = document.getElementById('calendar1');
+   const calendarEl2 = document.getElementById('calendar2');
    const eventList = document.getElementById('event-list');
    const selectedDateSpan = document.getElementById('selected-date');
 
@@ -143,13 +175,23 @@
    const deleteForm = document.getElementById('formDelete');
 
    const dataEvents = JSON.parse('@json($events)');
-   const dataBulan = JSON.parse('@json($bulan)'); // Format "m-Y"
+   const dataBulan = JSON.parse('@json($bulan)');
 
    // Pecah bulan & tahun dari format "m-Y"
-   const [month, year] = dataBulan.split('-');
+   let [month, year] = dataBulan.split('-');
+   month = parseInt(month, 10);
+   year = parseInt(year, 10);
+   const initialDate1 = `${year}-${String(month).padStart(2, '0')}-01`;
 
-   // Pastikan format tanggal awal sesuai FullCalendar
-   const initialDate = `${year}-${month.padStart(2, '0')}-01`;
+   // Hitung bulan selanjutnya
+   let nextMonth = month + 1;
+   let nextYear = year;
+   if (nextMonth > 12) {
+      nextMonth = 1;
+      nextYear += 1;
+   }
+   const initialDate2 = `${nextYear}-${String(nextMonth).padStart(2, '0')}-01`;
+
 
    // Format event agar sesuai dengan FullCalendar
    let eventsData = dataEvents.map(event => ({
@@ -157,39 +199,58 @@
       title: event.title,
       start: event.start_date,
       end: event.end_date,
+      is_holiday: event.is_holiday,
       color: event.is_holiday ? '#ff4d4d' : '#3788d8',
    }));
 
-   const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      themeSystem: 'bootstrap5',
-      initialDate: initialDate,
-      headerToolbar: false,
-      events: eventsData,
-      eventContent: function(info) {
-         // Membuat event sebagai titik kecil
-         const dot = document.createElement('div');
-         dot.style.width = '10px';
-         dot.style.height = '10px';
-         dot.style.backgroundColor = info.event.extendedProps.color;
-         dot.style.borderRadius = '50%';
-         dot.style.margin = '0';
 
-         const eventWrapper = document.createElement('div');
-         eventWrapper.appendChild(dot);
-         return {
-            domNodes: [eventWrapper]
-         };
-      },
-      dateClick: function(info) {
-         selectedDateSpan.textContent = info.dateStr;
-         // reset value eventForm
-         eventForm.reset();
-         displayEventList(info.dateStr);
-      },
-   });
+   function createCalendar(calendarEl, initialDate) {
+      return new FullCalendar.Calendar(calendarEl, {
+         initialView: 'dayGridMonth',
+         aspectRatio: 1.5,
+         height: 'auto',
+         locale: 'id',
+         themeSystem: 'bootstrap5',
+         initialDate: initialDate,
+         headerToolbar: {
+            left: 'title',
+            center: false,
+            right: false
+         },
+         events: eventsData,
+         eventContent: function(info) {
+            const dot = document.createElement('div');
+            dot.style.width = '10px';
+            dot.style.height = '10px';
+            if (info.event.extendedProps.is_holiday) {
+               dot.classList.add('holiday-dot');
+            }
+            dot.style.backgroundColor = info.event.extendedProps.color;
+            return {
+               domNodes: [dot]
+            };
+         },
+         dayCellDidMount: function(info) {
+            const day = info.date.getDay();
 
-   calendar.render();
+            if (day === 0 || day === 6) {
+               info.el.classList.add('cal-weekend');
+            }
+         },
+         dateClick: function(info) {
+            selectedDateSpan.textContent = info.dateStr;
+            eventForm.reset();
+            displayEventList(info.dateStr);
+         },
+      });
+   }
+
+   // Render kedua kalender
+   const calendar1 = createCalendar(calendarEl1, initialDate1);
+   const calendar2 = createCalendar(calendarEl2, initialDate2);
+
+   calendar1.render();
+   calendar2.render();
 
    function addEvent() {
       eventForm.reset();

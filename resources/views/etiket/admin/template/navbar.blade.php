@@ -1,4 +1,4 @@
-<header class="app-header bg-primary">
+<header class="app-header border-bottom" style="border-color: #d3d6df;">
    <nav class="navbar navbar-expand-lg navbar-light">
       <ul class="navbar-nav">
          <li class="nav-item d-block d-xl-none">

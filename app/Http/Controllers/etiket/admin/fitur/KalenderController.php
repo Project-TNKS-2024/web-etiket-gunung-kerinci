@@ -18,9 +18,27 @@ class KalenderController extends Controller
             abort(400, 'Format bulan tidak valid'); // Handle error jika format salah
         }
 
-        $events = Event::whereYear('start_date', $date->format('Y'))
-            ->whereMonth('start_date', $date->format('m'))
-            ->get();
+        // Ambil bulan & tahun sekarang
+        $startYear = $date->format('Y');
+        $startMonth = $date->format('m');
+
+        // Hitung bulan berikutnya
+        $nextMonth = (int) $startMonth + 1;
+        $nextYear = $startYear;
+
+        if ($nextMonth > 12) {
+            $nextMonth = 1; // Jika bulan Desember, lompat ke Januari
+            $nextYear += 1;
+        }
+
+        // Format ulang bulan berikutnya agar selalu 2 digit
+        $nextMonth = str_pad($nextMonth, 2, '0', STR_PAD_LEFT);
+
+        // Ambil event dengan rentang 2 bulan dari `start_date`
+        $events = Event::whereBetween('start_date', [
+            "$startYear-$startMonth-01",
+            "$nextYear-$nextMonth-31"
+        ])->get();
 
         return view('etiket.admin.fitur.kalender.index', [
             'events' => $events,
