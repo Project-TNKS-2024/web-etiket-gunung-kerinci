@@ -112,13 +112,13 @@
                   <td>{{ \Carbon\Carbon::parse($b->tanggal_masuk)->format('d M Y') }}</td>
                   <td>
                      @if ($b->status_booking < 4)
-                        <span class="badge bg-secondary">{{$b->getStatusBooking()}}</span>
+                        <span class="badge bg-secondary">{{$b->getStatusBooking()->status}}</span>
                         @elseif ($b->status_booking < 6)
-                           <span class="badge bg-primary">{{$b->getStatusBooking()}}</span>
+                           <span class="badge bg-primary">{{$b->getStatusBooking()->status}}</span>
                            @elseif ($b->status_booking == 6)
-                           <span class="badge bg-warning">{{$b->getStatusBooking()}}</span>
+                           <span class="badge bg-warning">{{$b->getStatusBooking()->status}}</span>
                            @elseif ($b->status_booking > 6)
-                           <span class="badge bg-success">{{$b->getStatusBooking()}}</span>
+                           <span class="badge bg-success">{{$b->getStatusBooking()->status}}</span>
                            @else
                            <span class="badge bg-secondary">Tidak Diketahui {{$b->status_booking}}</span>
                            @endif

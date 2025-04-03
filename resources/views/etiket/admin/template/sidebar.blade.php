@@ -58,7 +58,7 @@
                      @endcan
                      @can('view-booking')
                      <li class="sidebar-item">
-                        <a class="sidebar-link" href="{{ route('admin.destinasi.booking',  ['id' => $itemDestinasi->id] )}}" aria-expanded="false">
+                        <a class="sidebar-link" href="{{ route('admin.destinasi.booking',  ['id' => $itemDestinasi->id, 'filter-waktu' => 'dalam_booking'] )}}" aria-expanded="false">
                            <span>
                               <i class="fa-solid fa-tachograph-digital"></i>
                            </span>

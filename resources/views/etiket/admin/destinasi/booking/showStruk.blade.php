@@ -12,15 +12,12 @@
 @endsection
 
 @section('main')
+<a class="btn btn-secondary w-fit text-start mb-3" href="{{ route('admin.destinasi.booking.show', ['id' => $data->id]) }}">
+   <i class="ti ti-arrow-left"></i>
+   Kembali
+</a>
 
-<div class="card">
-   <div class="card-header">
-      <h5><b>Struk Booking</b></h5>
-   </div>
-   <div class="card-body">
-
-   </div>
-</div>
+@include('homepage.template.tiket.cardStruk', ['data' => $data])
 
 
 @endsection

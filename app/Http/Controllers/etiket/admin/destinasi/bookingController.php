@@ -243,22 +243,10 @@ class bookingController extends AdminController
 
     public function showBooking($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'pendakis.getStatus', 'destinasi'])->where('id', $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'pendakis.getStatus',  'destinasi'])->where('id', $id)->first();
 
-        $listStatusPendakian = $booking->pendakis->flatMap(function ($pendaki) {
-            return collect($pendaki->getStatus)->map(function ($status) use ($pendaki) {
-                return (object) [
-                    'id' => $status->id,
-                    'status' => $status->status,
-                    'statusName' => $status->statusName(),
-                    'id_pendaki' => $status->id_pendaki,
-                    'detail' => $status->detail,
-                    'tanggal' => Carbon::parse($status->created_at)->format('Y-m-d'), // Format tanggal
-                    'jam' => Carbon::parse($status->created_at)->format('H:i:s'), // Format jam
-                    'fullName' => $pendaki->fullName, // Menambahkan nama pendaki
-                ];
-            });
-        });
+
+        $listStatusPendakian = $booking->riwayatPendakian();
 
 
         // return $listStatusPendakian[0];
@@ -268,6 +256,34 @@ class bookingController extends AdminController
         ]);
     }
 
+    public function gantiTanggal(Request $request)
+    {
+        $request->validate([
+            'id_booking' => 'required|uuid|exists:gk_bookings,id',
+            'totalHari' => 'required|integer|min:1',
+            'bookinfStartDate' => 'required|date',
+        ]);
+        $booking = gk_booking::where('id', $request->id_booking)
+            ->where('status_booking', '>=', 4)
+            ->first();
+
+        if (!$booking) {
+            return redirect()->back()->withErrors('Booking tidak ditemukan');
+        }
+
+        // cek booking status blm ada pendakian
+        if ($booking->status_booking > 5) {
+            return redirect()->back()->withErrors('Booking sudah ada pendakian');
+        }
+
+        $endDate = Carbon::parse($request->bookinfStartDate)->addDays($booking->total_hari);
+        $booking->update([
+            'tanggal_masuk' => $request->bookinfStartDate,
+            'tanggal_keluar' => $endDate,
+        ]);
+
+        return redirect()->back()->with('success', 'Tanggal berhasil diubah');
+    }
     public function showTiket($id)
     {
         $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'destinasi'])->where('id', $id)->first();
@@ -281,7 +297,7 @@ class bookingController extends AdminController
     {
         $request->validate([
             'booking_id' => 'required|uuid|exists:gk_bookings,id',
-            'name' => 'required|integer|in:0,1,2,3',
+            'name' => 'required|integer|in:0,1,2,3,4',
             'pendakis' => 'nullable|array',
             'pendakis.*' => 'nullable|in:0,1'
         ]);
@@ -314,7 +330,7 @@ class bookingController extends AdminController
                     $message += $this->pendakiCekOut($booking, $request->pendakis);
                     break;
                 case '4':
-                    $this->bookingSelesai($booking);
+                    $message += $this->bookingSelesai($booking);
                     break;
 
                 default:
@@ -338,8 +354,10 @@ class bookingController extends AdminController
 
         // Jika semua pendaki sudah selesai (Cek Out atau Batal), update status booking menjadi 7
         if ($semuaSelesai) {
-            $booking->update(['status_booking' => 7]);
+            $booking->update(['status_booking' => 8]);
+            return ['success' => ['Status booking berhasil diubah menjadi selesai']];
         }
+        return ['error' => ['Tidak semua pendaki selesai']];
     }
 
     private function pendakiCancel($booking, $pendakis)
@@ -482,7 +500,7 @@ class bookingController extends AdminController
         // return $booking;
 
         return view('etiket.admin.destinasi.booking.showStruk', [
-            'booking' => $booking
+            'data' => $booking
         ]);
     }
 }

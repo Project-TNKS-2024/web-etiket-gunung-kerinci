@@ -12,6 +12,11 @@
 
 @section('main')
 
+<a class="btn btn-secondary w-fit text-start mb-3" href="{{ route('admin.destinasi.booking.show', ['id' => $booking]) }}">
+   <i class="ti ti-arrow-left"></i>
+   Kembali
+</a>
+
 <div class="card">
    <div class="card-header">
       <div class="d-flex align-items-center justify-content-between">

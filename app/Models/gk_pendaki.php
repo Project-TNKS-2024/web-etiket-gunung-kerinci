@@ -58,8 +58,6 @@ class gk_pendaki extends Model
         return $this->belongsTo(bio_pendaki::class, 'id_bio');
     }
 
-
-
     public function getStatus()
     {
         return $this->hasMany(statusPendaki::class, 'id_pendaki');

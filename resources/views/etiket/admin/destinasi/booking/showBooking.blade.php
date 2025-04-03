@@ -131,14 +131,47 @@
 <div class="card">
    <div class="card-body py-3">
       <div class="text-end">
-         <a href="{{route('admin.destinasi.booking.struk.show', ['id' => $booking->id])}}" class="btn btn-warning">Ubah Tanggal Pendakian</a>
+         <a href="{{route('admin.destinasi.booking.struk.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Struk</a>
          <a href="{{route('admin.destinasi.booking.payment.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Pembelian</a>
          <a href="{{route('admin.destinasi.booking.tiket.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Tiket</a>
+         <a href="" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalGantiTanggal">Ganti Hari</a>
       </div>
    </div>
 </div>
 
-
+<div class="modal fade" id="modalGantiTanggal" tabindex="-1" aria-labelledby="modalGantiTanggalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="modalGantiTanggalLabel">Ganti Tanggal Pendakian</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form id="bookingGantiForm" method="post" action="{{route('admin.destinasi.booking.gantiTanggal')}}">
+               @csrf
+               <div>
+                  <input type="hidden" name="id_booking" value="{{$booking->id}}">
+                  <input type="hidden" name="totalHari" value="{{$booking->total_hari}}">
+               </div>
+               <div class="mb-3">
+                  <label for="bookinfStartDate" class="form-label">Tanggal Mulai:</label>
+                  <input type="date" id="bookinfStartDate" name="bookinfStartDate" class="form-control" required value="{{$booking->tanggal_masuk}}">
+               </div>
+               <fieldset disabled>
+                  <div class="mb-3">
+                     <label for="bookingEndDate" class="form-label">Tanggal Selesai:</label>
+                     <input type="date" id="bookingEndDate" name="bookingEndDate" class="form-control" value="{{$booking->tanggal_keluar}}">
+                  </div>
+               </fieldset>
+               <div class="d-flex justify-content-end">
+                  <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+                  <button type="submit" class="btn btn-primary">Simpan</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
 
 <div class="card">
    <div class="card-header">
@@ -214,8 +247,8 @@
                <form method="POST" action="{{route('admin.destinasi.booking.updateStatus')}}" class="d-inline">
                   @if ($booking->status_booking == 7)
                   @csrf
-                  <input type="hidden" name="id" value="{{$booking->id}}">
-                  <input type="hidden" name="status" value="8">
+                  <input type="hidden" name="booking_id" value="{{$booking->id}}">
+                  <input type="hidden" name="name" value="4">
                   <button type="submit" class="btn btn-success">Selesai</button>
                   @endif
                </form>
@@ -285,6 +318,23 @@
          width: 200,
          height: 200
       });
+   });
+</script>
+
+<!-- ganti tanggal -->
+<script>
+   const formGantiDate = document.getElementById('bookingGantiForm');
+   const bookingStartDateInput = document.getElementById('bookinfStartDate'); // Pastikan id benar
+   const bookingEndDateInput = document.getElementById('bookingEndDate');
+
+   formGantiDate.addEventListener('change', function() {
+      const selectedDate = new Date(bookingStartDateInput.value);
+      const totalDays = parseInt(formGantiDate.totalHari.value, 10) - 1; // Ambil dari input hidden
+
+      if (!isNaN(totalDays) && selectedDate instanceof Date && !isNaN(selectedDate)) {
+         selectedDate.setDate(selectedDate.getDate() + totalDays); // Tambahkan hari dengan benar
+         bookingEndDateInput.value = selectedDate.toISOString().split('T')[0]; // Format ke YYYY-MM-DD
+      }
    });
 </script>
 

@@ -56,7 +56,7 @@
                   <td class="">{{ $item->tanggal_masuk }}</td>
                   <td class="">{{ $item->gateMasuk['nama'] }}</td>
                   <td class="">{{ $item->pendakis->count() }} orang</td>
-                  <td class="">{{ $item->getStatusBooking()}}</td>
+                  <td class="">{{ $item->getStatusBooking()->status}}</td>
                   @php
                   $colorStatus = 'outline-info';
                   if($item->pembayaran && $item->pembayaran->count() > 0) {
