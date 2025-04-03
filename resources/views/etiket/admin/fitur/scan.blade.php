@@ -35,12 +35,12 @@
          <div class="card-body">
             <h5><b>Cara Scan Tiket</b></h5>
             <ol>
-               <li>Klik <b>Start Scanning</b> jika kamera belum aktif</li>
+               <li>Klik <b>Request Camera Permisions</b> lalu <b>Start Scanning</b> jika kamera belum aktif</li>
                <li>Arahkan kamera ke QR Code tiket</li>
                <li>Pastikan QR Code terlihat jelas di layar</li>
                <li>Tunggu hingga QR Code berhasil terbaca</li>
                <li>Sistem akan memproses hasil scan secara otomatis</li>
-               </ol>
+            </ol>
          </div>
       </div>
    </div>
