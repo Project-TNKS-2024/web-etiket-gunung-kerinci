@@ -7,6 +7,7 @@ use App\Http\Controllers\helper\BookingHelperController;
 use App\Http\Controllers\helper\uploadFileControlller;
 use App\Models\bio_pendaki;
 use App\Models\destinasi;
+use App\Models\Event;
 use App\Models\gk_barang_bawaan;
 use App\Models\gk_booking;
 use App\Models\gk_gates;
@@ -690,6 +691,43 @@ class booking extends Controller
         $pembayaran = pembayaran::where('id_booking', $id)->get();
         $qris = gk_gates::where('id', $booking->gate_masuk)->first()->qris;
         $Bank = setting::where('id', '0000bank')->first();
+
+
+        // =====================================================================================================
+        $bayar = $this->helper->getDetailTagihan($booking->pendakis->last());
+        $hari = $this->helper->countWeekdaysAndWeekends($booking->tanggal_masuk, $booking->tanggal_keluar);
+
+        // $event = Event::where(function ($query) use ($booking) {
+        //     $query->whereBetween('start_date', [$booking->tanggal_masuk, $booking->tanggal_keluar])
+        //         ->orWhere(function ($q) use ($booking) {
+        //             $q->where('start_date', '<=', $booking->tanggal_masuk)
+        //                 ->where('end_date', '>=', $booking->tanggal_masuk);
+        //         });
+        // })->get();
+
+        // $event = Event::where('start_date', '>=', $booking->tanggal_masuk)
+        //     ->where('start_date', '<=', $booking->tanggal_keluar)
+        //     ->get();
+
+        $event = Event::where('is_holiday', 1)
+            ->where(function ($query) use ($booking) {
+                $query->whereBetween('start_date', [$booking->tanggal_masuk, $booking->tanggal_keluar]);
+            })->orWhere(function ($query) use ($booking) {
+                $query->whereDate('start_date', '<=', $booking->tanggal_masuk)
+                    ->where('end_date', '>=', $booking->tanggal_masuk);
+            })->get();
+
+        // =====================================================================================================
+        return [
+            'tanggal' => [
+                'tanggal masul' => $booking->tanggal_masuk,
+                'tanggal keluar' => $booking->tanggal_keluar
+            ],
+            'event' => $event,
+            'hari' => $hari->original,
+            'bayar' => $bayar,
+        ];
+
 
         return view('homepage.booking.bookingPayment', [
             'qris' => $qris,

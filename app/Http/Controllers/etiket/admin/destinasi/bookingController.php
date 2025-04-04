@@ -176,6 +176,7 @@ class bookingController extends AdminController
             ]);
 
             // update struk
+            $dataStruk = 
             $booking->load('pembayaran');
             $dataStruk = json_decode($booking->dataStruk);
 
@@ -492,12 +493,11 @@ class bookingController extends AdminController
 
         if ($booking->status_pembayaran) {
             $booking = json_decode($booking->dataStruk);
-            // return $booking;
         } else {
             $booking = $this->helper->getDataStruk($booking->id);
         }
 
-        // return $booking;
+        // return $booking->gateMasuk;
 
         return view('etiket.admin.destinasi.booking.showStruk', [
             'data' => $booking

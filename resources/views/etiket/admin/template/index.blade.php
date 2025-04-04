@@ -78,11 +78,13 @@
         }
 
         .card .card-header {
-            background-color: var(--bs-primary);
+            /* background-color: var(--bs-primary); */
+            background-color: #a6bdff;
+            border-bottom: 3px solid #d3d6df;
         }
 
         .card .card-header * {
-            color: white;
+            /* color: white; */
             margin-bottom: 0px;
         }
 

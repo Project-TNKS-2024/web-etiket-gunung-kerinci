@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->date('start_date');
-            $table->date('end_date')->nullable();
-            $table->boolean('is_holiday')->default(false); // True jika tanggal merah
+            $table->string('judul');
+            $table->date('tanggal');
+            $table->boolean('libur')->default(false); // True jika tanggal merah
             $table->timestamps();
         });
     }

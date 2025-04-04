@@ -35,7 +35,7 @@ class KalenderController extends Controller
         $nextMonth = str_pad($nextMonth, 2, '0', STR_PAD_LEFT);
 
         // Ambil event dengan rentang 2 bulan dari `start_date`
-        $events = Event::whereBetween('start_date', [
+        $events = Event::whereBetween('tanggal', [
             "$startYear-$startMonth-01",
             "$nextYear-$nextMonth-31"
         ])->get();
@@ -50,17 +50,26 @@ class KalenderController extends Controller
     public function storeEvent(Request $request)
     {
         $request->validate([
-            'eventStartDate' => 'required|date',
-            'eventEndDate' => 'required|date|after_or_equal:eventStartDate',
+            'id' => 'nullable|exists:events,id',
+            'eventDate' => 'required|date',
             'title' => 'required|string',
             'is_holiday' => 'nullable|integer',
         ]);
 
-        $event = Event::create([
-            'title' => $request->title,
-            'start_date' => $request->eventStartDate,
-            'end_date' => $request->eventEndDate,
-            'is_holiday' => $request->is_holiday ?? false,
+        if (isset($request->id)) {
+            Event::where('id', $request->id)
+                ->update([
+                    'judul' => $request->title,
+                    'tanggal' => $request->eventDate,
+                    'libur' => $request->is_holiday ?? false,
+                ]);
+            return redirect()->back()->with('success', 'Event berhasil diupdaye.');
+        }
+
+        Event::create([
+            'judul' => $request->title,
+            'tanggal' => $request->eventDate,
+            'libur' => $request->is_holiday ?? false,
         ]);
 
         return redirect()->back()->with('success', 'Event berhasil ditambahkan.');
@@ -89,16 +98,15 @@ class KalenderController extends Controller
 
         foreach ($events as $eventData) {
             // Pastikan data wajib ada
-            if (!isset($eventData['title'], $eventData['start_date'], $eventData['is_holiday'])) {
+            if (!isset($eventData['title'], $eventData['date'], $eventData['is_holiday'])) {
                 session()->flash('error', 'Format data JSON tidak valid untuk beberapa event.');
                 continue;
             }
 
             Event::create([
-                'title' => $eventData['title'],
-                'start_date' => $eventData['start_date'],
-                'end_date' => $eventData['end_date'] ?? $eventData['start_date'], // Jika end_date kosong, gunakan start_date
-                'is_holiday' => $eventData['is_holiday'],
+                'judul' => $eventData['title'],
+                'tanggal' => $eventData['date'],
+                'libur' => $eventData['is_holiday'],
             ]);
 
             session()->flash('success', 'Event ' . $eventData['title'] . 'berhasil ditambahkan.');

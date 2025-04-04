@@ -60,7 +60,7 @@
          <div class="col-sm-12 mb-3">
             <strong>Deskripsi Pemesanan:</strong><br>
             <span>Destinasi : {{$data->destinasi->nama}}</span><br>
-            <span>Gerbang : {{$data->gate_masuk->nama}} - {{$data->gate_keluar->nama}}</span><br>
+            <span>Gerbang : {{$data->gateMasuk->nama}} - {{$data->gateKeluar->nama}}</span><br>
             <span>Tanggal : {{$data->tanggal_masuk}} - {{$data->tanggal_keluar}}</span>
          </div>
          <div class="col-sm-6">

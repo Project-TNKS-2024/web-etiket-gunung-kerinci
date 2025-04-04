@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\helper;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use App\Models\gk_booking;
 use App\Models\gk_pendaki;
 use App\Models\gk_tiket_pendaki;
@@ -11,7 +12,12 @@ use Carbon\CarbonPeriod;
 
 class BookingHelperController extends Controller
 {
-
+    /**
+     * Menghasilkan kode unik dengan panjang tertentu
+     * 
+     * @param int $length Panjang kode yang diinginkan
+     * @return string Kode unik yang dihasilkan
+     */
     function generateCode($length)
     {
         // Define the character pool
@@ -27,6 +33,12 @@ class BookingHelperController extends Controller
         return $uniqueCode;
     }
 
+    /**
+     * Menghitung total tagihan untuk pendaki dengan menjumlahkan semua komponen getDetailTagihan()
+     * 
+     * @param object $pendaki Objek data pendaki
+     * @return float Hasil penjumlahan dari biaya masuk, biaya berkemah, biaya tracking dan biaya asuransi
+     */
     public function getTagihanPendaki($pendaki)
     {
         $tagihan = $this->getDetailTagihan($pendaki);
@@ -34,6 +46,12 @@ class BookingHelperController extends Controller
         return $tagihan['masuk'] + $tagihan['berkemah'] + $tagihan['tracking'] + $tagihan['asuransi'];
     }
 
+    /**
+     * Mendapatkan rincian tagihan untuk seorang pendaki
+     * 
+     * @param object $pendaki Objek data pendaki
+     * @return array Rincian tagihan berupa biaya masuk, berkemah, tracking, dan asuransi
+     */
     public function getDetailTagihan($pendaki)
     {
         $booking = gk_booking::find($pendaki->booking_id);
@@ -71,7 +89,13 @@ class BookingHelperController extends Controller
         ];
     }
 
-
+    /**
+     * Menghitung jumlah hari kerja dan akhir pekan antara dua tanggal
+     * 
+     * @param string $dateStart Tanggal mulai format Y-m-d
+     * @param string $dateEnd Tanggal selesai format Y-m-d
+     * @return \Illuminate\Http\JsonResponse Jumlah hari kerja dan akhir pekan
+     */
     function countWeekdaysAndWeekends($dateStart, $dateEnd)
     {
         $start = Carbon::createFromFormat(
@@ -82,11 +106,21 @@ class BookingHelperController extends Controller
 
         $period = CarbonPeriod::create($start, $end);
 
+        $event = Event::where('is_holiday', 1)
+            ->where(function ($query) use ($dateStart, $dateEnd) {
+                $query->whereBetween('start_date', [$dateStart, $dateEnd]);
+            })->orWhere(function ($query) use ($dateStart, $dateEnd) {
+                $query->whereDate('start_date', '<=', $dateStart)
+                    ->where('end_date', '>=', $dateStart);
+            })->get();
+
         $weekdays = 0;
         $weekends = 0;
 
         foreach ($period as $date) {
             if ($date->isWeekend()) {
+                $weekends++;
+            } else if ($event->contains('start_date', $date->format('Y-m-d'))) {
                 $weekends++;
             } else {
                 $weekdays++;
@@ -98,9 +132,15 @@ class BookingHelperController extends Controller
             'weekends' => $weekends,
         ]);
     }
+
+    /**
+     * Menghitung jumlah pendaki WNI dan WNA dalam suatu booking
+     * 
+     * @param gk_booking $booking Objek booking yang akan dihitung
+     * @return \Illuminate\Http\JsonResponse Jumlah pendaki WNI dan WNA
+     */
     function countWniWna(gk_booking $booking)
     {
-
         $booking->load('pendakis.biodata');
 
         $wni = 0;
@@ -120,6 +160,12 @@ class BookingHelperController extends Controller
         ]);
     }
 
+    /**
+     * Mendapatkan data lengkap untuk struk booking
+     * 
+     * @param int $idbooking ID booking yang akan diambil datanya
+     * @return object Data lengkap booking beserta informasi terkait
+     */
     function getDataStruk($idbooking)
     {
         $booking = gk_booking::with([
@@ -127,7 +173,6 @@ class BookingHelperController extends Controller
             'gateKeluar',
             'pendakis',
             'pendakis.biodata',
-            'gateMasuk',
             'gktiket',
             'gktiket.tiket_pendaki',
             'pembayaran',

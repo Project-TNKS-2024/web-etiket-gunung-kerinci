@@ -94,17 +94,14 @@
          <div class="modal-body">
             <form id="eventForm" method="post" action="{{ route('admin.fitur.kalender.storeEvent') }}">
                @csrf
+               <input type="hidden" name="id" value="">
                <div class="mb-3">
                   <label for="title" class="form-label">Nama Event:</label>
                   <input type="text" id="title" name="title" class="form-control" required>
                </div>
                <div class="mb-3">
-                  <label for="eventStartDate" class="form-label">Tanggal Mulai:</label>
-                  <input type="date" id="eventStartDate" name="eventStartDate" class="form-control" required>
-               </div>
-               <div class="mb-3">
-                  <label for="eventEndDate" class="form-label">Tanggal Selesai:</label>
-                  <input type="date" id="eventEndDate" name="eventEndDate" class="form-control" required>
+                  <label for="eventDate" class="form-label">Tanggal Event:</label>
+                  <input type="date" id="eventDate" name="eventDate" class="form-control" required>
                </div>
                <div class="form-check mb-3">
                   <input class="form-check-input" type="checkbox" id="is_holiday" name="is_holiday" value="1">
@@ -132,8 +129,7 @@
             <p>Masukkan data event dalam format JSON berikut:</p>
             <pre>{
    "title": "Nama Event",
-   "start_date": "YYYY-MM-DD",
-   "end_date": "YYYY-MM-DD",
+   "date": "YYYY-MM-DD",
    "is_holiday": true/false
 }</pre>
             <form method="post" action="{{ route('admin.fitur.kalender.storejsonEvent') }}" enctype="multipart/form-data">
@@ -196,11 +192,11 @@
    // Format event agar sesuai dengan FullCalendar
    let eventsData = dataEvents.map(event => ({
       id: event.id,
-      title: event.title,
-      start: event.start_date,
-      end: event.end_date,
-      is_holiday: event.is_holiday,
-      color: event.is_holiday ? '#ff4d4d' : '#3788d8',
+      title: event.judul,
+      start: event.tanggal,
+      end: event.tanggal,
+      is_holiday: event.libur,
+      color: event.libur ? '#ff4d4d' : '#3788d8',
    }));
 
 
@@ -255,7 +251,7 @@
    function addEvent() {
       eventForm.reset();
       console.log(selectedDateSpan.textContent);
-      eventForm.eventStartDate.value = selectedDateSpan.textContent;
+      eventForm.eventDate.value = selectedDateSpan.textContent;
       $('#eventModal').modal('show');
    }
 
@@ -284,10 +280,10 @@
 
    function editEvent(id) {
       let data = dataEvents.filter(event => event.id === id);
-      eventForm.title.value = data[0].title;
-      eventForm.eventStartDate.value = data[0].start_date;
-      eventForm.eventEndDate.value = data[0].end_date;
-      eventForm.is_holiday.checked = data[0].is_holiday;
+      eventForm.id.value = data[0].id;
+      eventForm.title.value = data[0].judul;
+      eventForm.eventDate.value = data[0].tanggal;
+      eventForm.is_holiday.checked = data[0].libur;
       // open modal
       $('#eventModal').modal('show');
    }
@@ -309,7 +305,7 @@
             li.innerHTML = `
                <div style="color:${event.color};">
                   <strong >${event.title}</strong> <br>
-                  <small>${event.start} - ${event.end}</small>
+                  <small>${event.start}</small>
                </div>
                <div class="dropdown">
                   <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
