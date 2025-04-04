@@ -106,13 +106,10 @@ class BookingHelperController extends Controller
 
         $period = CarbonPeriod::create($start, $end);
 
-        $event = Event::where('is_holiday', 1)
-            ->where(function ($query) use ($dateStart, $dateEnd) {
-                $query->whereBetween('start_date', [$dateStart, $dateEnd]);
-            })->orWhere(function ($query) use ($dateStart, $dateEnd) {
-                $query->whereDate('start_date', '<=', $dateStart)
-                    ->where('end_date', '>=', $dateStart);
-            })->get();
+        $event = Event::where('libur', 1)
+            ->whereBetween('tanggal', [$dateStart, $dateEnd])
+            ->get();
+
 
         $weekdays = 0;
         $weekends = 0;
@@ -120,7 +117,7 @@ class BookingHelperController extends Controller
         foreach ($period as $date) {
             if ($date->isWeekend()) {
                 $weekends++;
-            } else if ($event->contains('start_date', $date->format('Y-m-d'))) {
+            } else if ($event->contains('tanggal', $date->format('Y-m-d'))) {
                 $weekends++;
             } else {
                 $weekdays++;
