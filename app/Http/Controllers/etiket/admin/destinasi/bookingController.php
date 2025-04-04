@@ -176,9 +176,9 @@ class bookingController extends AdminController
             ]);
 
             // update struk
-            $dataStruk = 
             $booking->load('pembayaran');
             $dataStruk = json_decode($booking->dataStruk);
+            // return $dataStruk;
 
             $dataStruk->status_booking = 4;
             $dataStruk->status_pembayaran = 1;
@@ -491,13 +491,18 @@ class bookingController extends AdminController
     {
         $booking = gk_booking::where('id', $id)->first();
 
-        if ($booking->status_pembayaran) {
-            $booking = json_decode($booking->dataStruk);
-        } else {
-            $booking = $this->helper->getDataStruk($booking->id);
-        }
+        // if ($booking->status_pembayaran) {
+        //     $booking = json_decode($booking->dataStruk);
+        //     return "ok 1";
+        // } else {
+        //     $booking = $this->helper->getDataStruk($booking->id);
+        //     return "ok ";
+        // }
 
-        // return $booking->gateMasuk;
+        $booking = json_decode($booking->dataStruk);
+        if (!isset($booking)) {
+            abort(404, 'Data tidak ditemukan');
+        }
 
         return view('etiket.admin.destinasi.booking.showStruk', [
             'data' => $booking

@@ -609,6 +609,8 @@ class booking extends Controller
             $dataStruk = $this->helper->getDataStruk($booking->id);
             $booking->dataStruk = $dataStruk;
 
+            // return $dataStruk;
+
             // update total pendaki dan total pembayaran booking
             $booking->total_pendaki_wni = $wni;
             $booking->total_pendaki_wna = $wna;
