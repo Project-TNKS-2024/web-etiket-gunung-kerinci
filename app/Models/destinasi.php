@@ -92,4 +92,10 @@ class destinasi extends Model
             ->withPivot('is_penanggungjawab')
             ->withTimestamps();
     }
+
+    public function totalPengunjunf($tahun = null)
+    {
+        // jika tahun tidak diisi, gunakan perhitungan 1 tahun terakhir
+        return 3000;
+    }
 }
