@@ -42,8 +42,9 @@
             </div>
         </div>
         <div class="my-3 col-12">
+            @if($paket->count() > 0)
             <h5 class="mb-3 fw-bold">Paket Wisata Pendakian {{ $gunung->nama }}</h5>
-
+            @endif
             <div class="row g-3">
                 @foreach ($paket as $p)
                 <div class="col-12 col-md-6">
@@ -62,13 +63,19 @@
         </div>
     </div>
 
-    <article class="mt-2 mb-5" style="text-align: justify">
+    <article class="mt-2 mb-1" style="text-align: justify">
         {!! $gunung->detail !!}
     </article>
 
-    <div>
-        <!-- maps lokasi -->
-    </div>
+    @if(Str::contains($gunung->lokasi, '<iframe'))
+        <div class="mb-5">
+        <h5 class="fw-bold mb-3">Lokasi</h5>
+        <div class="ratio ratio-16x9 rounded shadow-sm border overflow-hidden">
+            {!! $gunung->lokasi !!}
+        </div>
+</div>
+@endif
+
 </div>
 @endsection
 

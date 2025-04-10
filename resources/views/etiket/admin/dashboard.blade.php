@@ -16,10 +16,7 @@
                </div>
                <div>
                   <select class="form-select">
-                     <option value="1">March 2023</option>
-                     <option value="2">April 2023</option>
-                     <option value="3">May 2023</option>
-                     <option value="4">June 2023</option>
+                     <option value="1">2025</option>
                   </select>
                </div>
             </div>
@@ -36,7 +33,7 @@
                   <h5 class="card-title mb-9 fw-semibold">Yearly Breakup</h5>
                   <div class="row align-items-center">
                      <div class="col-8">
-                        <h4 class="fw-semibold mb-3">${{ $dataBreakup['total'] }}</h4>
+                        <h4 class="fw-semibold mb-3">Rp. {{ $dataBreakup['total'] }}</h4>
                         <div class="d-flex align-items-center mb-3">
                            <span
                               class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
@@ -78,7 +75,7 @@
                   <div class="row align-items-start">
                      <div class="col-8">
                         <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
-                        <h4 class="fw-semibold mb-3">Rp{{ $dataEarning['total'] }}</h4>
+                        <h4 class="fw-semibold mb-3">Rp. {{ $dataEarning['total'] }}</h4>
                         <div class="d-flex align-items-center pb-1">
                            <span class="me-2 rounded-circle 
                   {{ $dataEarning['growth'] >= 0 ? 'bg-light-success' : 'bg-light-danger' }} 

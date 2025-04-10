@@ -51,7 +51,7 @@
         width: 100%;
         height: 40px;
         /* Adjust height as needed */
-        background: linear-gradient(to top, white, rgba(255, 255, 255, 0));
+        /* background: linear-gradient(to top, white, rgba(255, 255, 255, 0)); */
         z-index: 2;
         /* Ensure the gradient stays on top of the overlay */
     }
@@ -242,7 +242,7 @@
 
 
 
-<div class="container">
+<div class="container mt-5">
     <div class="row" style="overflow-x:hidden">
         <div class="col-12 col-lg-6 position-relative" id="">
             <div class="" id="image-container" style="overflow: hidden;">
