@@ -65,6 +65,10 @@
     <article class="mt-2 mb-5" style="text-align: justify">
         {!! $gunung->detail !!}
     </article>
+
+    <div>
+        <!-- maps lokasi -->
+    </div>
 </div>
 @endsection
 

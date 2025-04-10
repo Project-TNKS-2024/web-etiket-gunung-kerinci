@@ -21,6 +21,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
@@ -193,6 +194,22 @@ class booking extends Controller
         // ambil jumlah pendaki perhari selama 2 bulan kedepan dihitung dari tanggal_masuk, dan booking->verivied==verified
         $bookingBulanan = $this->GateCapacity($id_destinasi, now());
 
+        // ambil event
+        $now = Carbon::now();
+        $next = $now->copy()->addMonth();
+
+        $startYear = $now->year;
+        $startMonth = $now->month;
+
+        $nextYear = $next->year;
+        $nextMonth = $next->month;
+
+        // Ambil event dengan rentang 2 bulan dari `start_date`
+        $events = Event::whereBetween('tanggal', [
+            "$startYear-$startMonth-01",
+            "$nextYear-$nextMonth-31"
+        ])->get();
+
         // return $id_destinasi;
         // return $bookingBulanan;
         // ambil data tiket
@@ -206,6 +223,7 @@ class booking extends Controller
             'gambar' => $gambar_destinasi,
             'tiket' => $tiket,
             'bookingBulanan' => $bookingBulanan,
+            'events' => $events
         ]);
     }
 

@@ -203,8 +203,6 @@
    function createCalendar(calendarEl, initialDate) {
       return new FullCalendar.Calendar(calendarEl, {
          initialView: 'dayGridMonth',
-         aspectRatio: 1.5,
-         height: 'auto',
          locale: 'id',
          themeSystem: 'bootstrap5',
          initialDate: initialDate,

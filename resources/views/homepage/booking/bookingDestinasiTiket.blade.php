@@ -7,6 +7,27 @@
         text-decoration: none !important;
         color: inherit;
     }
+
+    .fc-day a {
+        color: black;
+    }
+
+    .fc-day.cal-weekend {
+        background-color: rgba(255, 0, 0, 0.1);
+    }
+
+    .fc-day.cal-weekend a {
+        color: red;
+    }
+
+    .fc-day:has(.holiday-div) {
+        background-color: rgba(255, 0, 0, 0.1);
+    }
+
+    .fc-h-event:has(.holiday-div) {
+        background-color: red;
+        border-color: red;
+    }
 </style>
 @endsection
 
@@ -145,9 +166,19 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mt-2">Tarif PNBP <span style="font-size: 15px;">(Pendapatan Negara Bukan Pajak )</span></h5>
+                    <h5 class="card-title mt-2">Catatan</span></h5>
                 </div>
                 <div class="card-body" style="overflow-x: auto">
+                    <h6><b>Ketentuan</b></h6>
+                    <ul>
+                        <li>Pemesanan tiket tidak diperbolehkan untuk tanggal lebih dari 1 bulan ke depan.</li>
+                        <li>Setiap kegiatan pendakian wajib dilakukan oleh minimal 2 orang.</li>
+                    </ul>
+                    <h6><b>Perhitungan Tarif PNBP (Pendapatan Negara Bukan Pajak)</b></h6>
+                    <p> Perhitungan tarif berdasarkan {....} merupakan akumulasi dari beberapa komponen biaya, yaitu:
+                        tarif masuk dikalikan jumlah hari, tarif kemah dikalikan jumlah malam, tarif pendakian, dan tarif asuransi. Tarif masuk dibedakan menjadi dua kategori,
+                        yakni tarif untuk hari kerja dan tarif untuk hari libur. Perlu diperhatikan bahwa tarif asuransi dihitung berdasarkan kelipatan tiga hari,
+                        di mana setiap 3 hari dihitung sebagai satu tarif asuransi. </p>
                     <table class="table">
                         <thead>
                             <tr>
@@ -157,34 +188,21 @@
                                 <th scope="col">Masuk Hari Libur</th>
                                 <th scope="col">Kemah</th>
                                 <th scope="col">Pendakian</th>
-                                <th scope="col">Ansuransi</th>
+                                <th scope="col">Asuransi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($tiket as $key => $t)
-                            <tr>
+                        <tbody> @foreach ($tiket as $key => $t) <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
-                                <td> {{strtoupper($t->kategori_pendaki)}} </td>
-                                <td> Rp. {{ number_format($t->harga_masuk_wd, 0, ',', '.') }} </td>
-                                <td> Rp. {{ number_format($t->harga_masuk_wk, 0, ',', '.') }} </td>
-                                <td> Rp. {{ number_format($t->harga_kemah, 0, ',', '.') }} </td>
-                                <td> Rp. {{ number_format($t->harga_traking, 0, ',', '.') }} </td>
-                                <td> Rp. {{ number_format($t->harga_ansuransi, 0, ',', '.') }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
+                                <td>{{ strtoupper($t->kategori_pendaki) }}</td>
+                                <td>Rp. {{ number_format($t->harga_masuk_wd, 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($t->harga_masuk_wk, 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($t->harga_kemah, 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($t->harga_traking, 0, ',', '.') }}</td>
+                                <td>Rp. {{ number_format($t->harga_ansuransi, 0, ',', '.') }}</td>
+                            </tr> @endforeach </tbody>
                     </table>
-                    <p class="mb-0"><strong>Catatan:</strong></p>
-                    <p class="mb-1">Tarif tiket dihitung berdasarkan komponen berikut:</p>
-                    <ul>
-                        <li><strong>Tarif tiket masuk:</strong> Dikalikan dengan jumlah hari pendakian</li>
-                        <li><strong>Tarif kemah:</strong> Dikalikan dengan jumlah malam pendakian</li>
-                        <li><strong>Tarif pendakian:</strong> Biaya tambahan untuk pendakian</li>
-                        <li><strong>Tarif asuransi:</strong> Biaya perlindungan selama pendakian</li>
-                    </ul>
-                    <p><strong>Total tarif tiket</strong> = (Tarif tiket masuk × jumlah hari) + (Tarif kemah × jumlah malam) + Tarif pendakian + Tarif asuransi</p>
-                    <p><i>Pastikan untuk menghitung dengan benar sesuai dengan durasi pendakian dan fasilitas yang dipilih.</i></p>
-
+                    <p><strong>Total tarif tiket</strong> = (Tarif masuk × jumlah hari) + (Tarif kemah × jumlah malam) + Tarif pendakian + Tarif asuransi</p>
+                    <p><i>Pastikan untuk menghitung dengan cermat sesuai dengan durasi pendakian dan fasilitas yang digunakan.</i></p>
                 </div>
             </div>
         </div>
@@ -193,7 +211,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mt-2">Pendakian <span style="font-size: 15px;">(Jumlah Pendaki Terdaftar )</span></h5>
+                    <h5 class="card-title mt-2">Kalender Pendakian <span style="font-size: 15px;">(Jumlah Pendaki Terdaftar )</span></h5>
                 </div>
                 <div class="card-body" style="overflow-x: auto">
                     <div class="row">
@@ -240,33 +258,58 @@
     ]
 
     const dataBulanan = JSON.parse('@json($bookingBulanan)');
+    const dataEvents = JSON.parse('@json($events)')
 
     function getDate(index) {
         let today = new Date();
         return new Date(today.getFullYear(), today.getMonth() + index, 1);
     }
 
-    // Mengubah dataBulanan menjadi format FullCalendar
-    var eventsData = dataBulanan.map(item => ({
-        title: `${item.gate_masuk.nama}: ${item.jumlah_pendaki} / ${item.gate_masuk.max_pendaki_hari}`,
-        start: item.tanggal,
-        allDay: true
-    }));
+    // Menggabungkan data booking dan data event ke dalam satu array untuk FullCalendar
+    const eventsData = [
+        ...dataBulanan.map(item => ({
+            title: `${item.gate_masuk.nama}: ${item.jumlah_pendaki} / ${item.gate_masuk.max_pendaki_hari}`,
+            start: item.tanggal,
+            allDay: true,
+            isHoliday: false
+        })),
+        ...dataEvents.map(item => ({
+            title: item.judul,
+            start: item.tanggal,
+            allDay: true,
+            isHoliday: item.libur
+        }))
+    ];
+
+
+    // tambahkan data event ke eventDta
 
     divCalendars.forEach((div, index) => {
         var calendar = new FullCalendar.Calendar(div, {
             initialView: 'dayGridMonth',
             themeSystem: 'bootstrap5',
             headerToolbar: false,
+            locale: 'id',
             initialDate: getDate(index),
             weekNumbers: false,
             dayMaxEvents: false,
             height: 'auto', // Pastikan tinggi menyesuaikan konten
             contentHeight: 'auto',
-            dayMaxEventRows: 9999,
+            dayMaxEventRows: 2,
+            dayCellDidMount: function(info) {
+                const day = info.date.getDay();
+
+                if (day === 0 || day === 6) {
+                    info.el.classList.add('cal-weekend');
+                }
+            },
             eventContent: function(arg) {
+                let divClass = "";
+                if (arg.event.extendedProps.isHoliday) {
+                    divClass = "holiday-div";
+                }
                 return {
-                    html: `<div style="white-space: normal; word-wrap: break-word; font-size: 12px;">${arg.event.title}</div>`
+                    html: `<div style="white-space: normal; word-wrap: break-word; font-size: 11px;" class="${divClass}">${arg.event.title}</div>`
                 };
             },
             events: eventsData,
@@ -333,8 +376,10 @@
                 priceWni += wniCount * (harga[0].harga_kemah * days);
                 priceWna += wnaCount * (harga[1].harga_kemah * days);
 
+
                 // hitung harga ansuransi
                 priceWni += wniCount * (harga[0].harga_ansuransi * Math.ceil((days + 1) / harga[0].masa_ansuransi));
+                console.log(harga[0].harga_ansuransi * Math.ceil((days + 1) / harga[0].masa_ansuransi));
                 priceWna += wnaCount * (harga[1].harga_ansuransi * Math.ceil((days + 1) / harga[1].masa_ansuransi));
 
                 // Harga tracking dan asuransi (hanya dihitung sekali per pendaki)
@@ -346,6 +391,7 @@
                     title: "Oops...",
                     text: "Tanggal pendakian tidak falid",
                 });
+                formBooking['date_end'].value = null;
                 return;
             }
 
@@ -367,7 +413,20 @@
     function checkIfWeekend(dateString) {
         const date = new Date(dateString);
         const day = date.getDay(); // 0 = Minggu, 6 = Sabtu
-        return day === 0 || day === 6;
+
+        // Cek jika hari Sabtu atau Minggu
+        if (day === 0 || day === 6) {
+            return true;
+        }
+
+        // Cek apakah tanggal tersebut termasuk dalam events dengan libur == true
+        const isHoliday = dataEvents.some(e => {
+            const eventDate = new Date(e.tanggal).toISOString().split('T')[0];
+            const checkDate = date.toISOString().split('T')[0];
+            return eventDate === checkDate && e.libur === 1;
+        });
+
+        return isHoliday;
     }
 
     // Fungsi untuk memformat angka ke format Rupiah
