@@ -18,6 +18,7 @@ class pembayaran extends Model
         'bukti_pembayaran', //
         'deadline',
         'keterangan',
+        'validator'
     ];
 
     /**

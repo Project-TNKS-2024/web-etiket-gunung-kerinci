@@ -36,7 +36,8 @@ class bio_pendaki extends Model
         'desa',
 
         'keterangan',
-        'verified'
+        'verified',
+        'validator'
 
     ];
     protected $casts = [

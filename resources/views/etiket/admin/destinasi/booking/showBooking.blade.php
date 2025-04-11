@@ -273,6 +273,7 @@
                   <td>Tanggal</td>
                   <td>Jam</td>
                   <td>Nama</td>
+                  <td>Validator</td>
                   <td>Keterangan</td>
                </tr>
             </thead>
@@ -294,6 +295,7 @@
                   <td>{{$status->tanggal}}</td>
                   <td>{{$status->jam}}</td>
                   <td>{{$status->fullName}}</td>
+                  <td>#{{$status->validator ?? '-'}}</td>
                   <td>{{$status->detail}}</td>
                </tr>
                @endforeach

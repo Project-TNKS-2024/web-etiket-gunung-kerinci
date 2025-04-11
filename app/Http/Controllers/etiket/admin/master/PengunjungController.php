@@ -74,6 +74,7 @@ class PengunjungController extends AdminController
                 $status = 'unverified';
             }
             $biodata->keterangan = $request->keterangan;
+            $biodata->validator =  $this->userAdmin()->id;
             $biodata->save();
 
             // Kirim email ke user

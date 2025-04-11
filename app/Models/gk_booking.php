@@ -29,6 +29,7 @@ class gk_booking extends Model
         'unique_code',
         'keterangan',
         'id_booking_master',
+        'validator'
     ];
 
     public $incrementing = false;
@@ -168,6 +169,7 @@ class gk_booking extends Model
                     'id'          => $status->id,
                     'status'      => $status->status,
                     'statusName'  => $status->statusName(),
+                    'validator' => $status->validator,
                     'id_pendaki'  => $status->id_pendaki,
                     'detail'      => $status->detail,
                     'tanggal'     => Carbon::parse($status->created_at)->format('Y-m-d'),

@@ -157,12 +157,14 @@ class bookingController extends AdminController
             foreach ($pembayaranPending as  $p) {
                 $p->update([
                     'status' => $request->verified === 'yes' ? 'success' : 'failed',
+                    'validator' =>  $this->userAdmin()->id
                 ]);
             }
             $lastPembayaran = $booking->pembayaran->last();
             $lastPembayaran->update([
                 'status' => $request->verified === 'yes' ? 'success' : 'failed',
                 'keterangan' => $request->keterangan,
+                'validator' =>  $this->userAdmin()->id
             ]);
         } else {
             return redirect()->back()->withErrors('Pembayaran tidak ditemukan');
@@ -248,6 +250,8 @@ class bookingController extends AdminController
 
 
         $listStatusPendakian = $booking->riwayatPendakian();
+
+        // return $listStatusPendakian;
 
 
         // return $listStatusPendakian[0];
@@ -355,7 +359,10 @@ class bookingController extends AdminController
 
         // Jika semua pendaki sudah selesai (Cek Out atau Batal), update status booking menjadi 7
         if ($semuaSelesai) {
-            $booking->update(['status_booking' => 8]);
+            $booking->update([
+                'status_booking' => 8,
+                'validator' =>  $this->userAdmin()->id
+            ]);
             return ['success' => ['Status booking berhasil diubah menjadi selesai']];
         }
         return ['error' => ['Tidak semua pendaki selesai']];
@@ -374,6 +381,7 @@ class bookingController extends AdminController
                         'id_pendaki' => $pendaki->id,
                         'status' => 1,
                         'detail' => 'Batal melakukan pendakian',
+                        'validator' =>  $this->userAdmin()->id,
                     ]);
                     $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' dibatalkan';
                 }
@@ -411,6 +419,7 @@ class bookingController extends AdminController
                         'id_pendaki' => $pendaki->id,
                         'status' => 2,
                         'detail' => 'Melakukan pendakian',
+                        'validator' =>  $this->userAdmin()->id,
                     ]);
                     $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
                 }
@@ -456,6 +465,7 @@ class bookingController extends AdminController
                         'id_pendaki' => $pendaki->id,
                         'status' => 3,
                         'detail' => 'Melakukan pendakian',
+                        'validator' =>  $this->userAdmin()->id,
                     ]);
                     $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
                 }

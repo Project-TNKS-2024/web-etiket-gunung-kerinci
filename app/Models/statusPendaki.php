@@ -14,7 +14,8 @@ class statusPendaki extends Model
     protected $fillable = [
         'id_pendaki',
         'status',
-        'detail'
+        'detail',
+        'validator'
     ];
 
     public function statusName($id = null)

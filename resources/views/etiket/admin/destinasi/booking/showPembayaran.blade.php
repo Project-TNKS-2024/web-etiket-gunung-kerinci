@@ -121,6 +121,7 @@
                   <div class="mt-2">
                      <p class="mb-0"><b>Metode Pembayaran : </b> {{$pembayaran->payment_method}}</p>
                      <p class="mb-0"><b>Keterangan : </b> {{$pembayaran->keterangan}}</p>
+                     <p class="mb-0"><b>validator : </b> #{{$pembayaran->validator}}</p>
                   </div>
                </div>
             </div>

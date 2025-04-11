@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    // constructor
-    public function __construct() {}
+
+    public function userAdmin()
+    {
+        return Auth::user();
+    }
 }

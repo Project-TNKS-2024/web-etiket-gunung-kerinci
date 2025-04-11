@@ -14,7 +14,7 @@ return new class extends Migration
             $table->integer('status')->default(1);
             $table->integer('statusGunung')->default(1);
             $table->enum('kategori', ['taman', 'gunung']);
-            $table->string('lokasi');
+            $table->text('lokasi');
             $table->text('detail')->nullable();
             $table->text('sop')->nullable();
             $table->timestamps();

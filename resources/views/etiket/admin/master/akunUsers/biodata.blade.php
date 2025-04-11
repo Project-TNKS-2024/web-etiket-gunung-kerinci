@@ -82,6 +82,11 @@
                   <td>:</td>
                   <td>{{$user->biodata->dataDesa->name ?? '-'}}, {{$user->biodata->dataKecamatan->name ?? '-'}}, {{$user->biodata->dataKabupaten->name ?? '-'}}, {{$user->biodata->dataProvinsi->name ?? '-'}}</td>
                </tr>
+               <tr>
+                  <td>Validator</td>
+                  <td>:</td>
+                  <td>#{{$user->biodata->validator ?? '-'}}</td>
+               </tr>
             </table>
          </div>
          <div class="col-12 col-md-6">
