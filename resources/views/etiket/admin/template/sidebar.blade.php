@@ -67,20 +67,34 @@
                      </li>
                      @endcan
 
-                     <!-- <li class="sidebar-item">
-                        <a class="sidebar-link" href="#" aria-expanded="false">
-                           <span>
-                              <i class="fa-solid fa-file-lines"></i>
-                           </span>
-                           <span class="hide-menu">Data Pendaki</span>
-                        </a>
-                     </li> -->
-
                   </ul>
                </div>
             </li>
             @endCanDestinasi
             @endforeach
+
+
+            <li class="nav-small-cap">
+               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+               <span class="hide-menu">Rekapitulasi</span>
+            </li>
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="{{route('admin.rekap.pendapatan')}}" aria-expanded="false">
+                  <span>
+                     <i class="fa-solid fa-file-lines"></i>
+                  </span>
+                  <span class="hide-menu">Rekap Pendapatan</span>
+               </a>
+            </li>
+            <li class="sidebar-item">
+               <a class="sidebar-link" href="{{route('admin.rekap.pengunjung')}}" aria-expanded="false">
+                  <span>
+                     <i class="fa-solid fa-file-lines"></i>
+                  </span>
+                  <span class="hide-menu">Rekap Pengunjung</span>
+               </a>
+            </li>
+
 
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>

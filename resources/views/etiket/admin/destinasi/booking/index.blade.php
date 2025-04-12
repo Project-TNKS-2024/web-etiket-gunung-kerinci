@@ -39,6 +39,7 @@
          <table class="table table-bordered">
             <thead class="bg-dark text-white ">
                <tr>
+                  <th>Id</th>
                   <th>Ketua</th>
                   <th>Tanggal</th>
                   <th>Gate Masuk</th>
@@ -52,6 +53,7 @@
             <tbody class="table-group-divider">
                @foreach($data as $item)
                <tr>
+                  <td>{{$item->id}}</td>
                   <td class="">{{ $item->pendakis->count() > 0 ? $item->pendakis[0]->biodata->first_name  . ' ' . $item->pendakis[0]->biodata->last_name : '-' }}</td>
                   <td class="">{{ $item->tanggal_masuk }}</td>
                   <td class="">{{ $item->gateMasuk['nama'] }}</td>

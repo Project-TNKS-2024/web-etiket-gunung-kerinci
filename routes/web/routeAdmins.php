@@ -18,6 +18,8 @@ use App\Http\Controllers\etiket\admin\master\AccountAdminController;
 use App\Http\Controllers\etiket\admin\master\PengunjungController;
 use App\Http\Controllers\etiket\admin\master\RolePermissionController;
 use App\Http\Controllers\etiket\admin\ProfileController;
+use App\Http\Controllers\etiket\admin\rekapitulasi\pendapatan;
+use App\Http\Controllers\etiket\admin\rekapitulasi\pengunjung;
 // admin master
 use App\Http\Controllers\etiket\admin\settingController;
 
@@ -89,6 +91,13 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('/roles/{id}/update', [RolePermissionController::class, 'rolesUpdate'])->name('roles.update')->middleware('permission:master-edit-roles');
     Route::post('/roles/updateAction', [RolePermissionController::class, 'rolesUpdateAction'])->name('roles.updateAction')->middleware('permission:master-edit-roles');
     Route::post('/roles/deleteAction', [RolePermissionController::class, 'roleDeleteAction'])->name('roles.deleteAction')->middleware('permission:master-delete-roles');
+
+    // Rekaptulasi
+    Route::get('admin/rekaptulasi/pendapatan', [pendapatan::class, 'index'])->name('admin.rekap.pendapatan');
+    Route::get('admin/rekaptulasi/pendapatan/donwload', [pendapatan::class, 'download'])->name('admin.rekap.pendapatan.download');
+    Route::get('admin/rekaptulasi/pengunjung', [pengunjung::class, 'index'])->name('admin.rekap.pengunjung');
+    Route::get('admin/rekaptulasi/pengunjung/donwload', [pengunjung::class, 'download'])->name('admin.rekap.pengunjung.download');
+
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile')->middleware('permission:view-profile');

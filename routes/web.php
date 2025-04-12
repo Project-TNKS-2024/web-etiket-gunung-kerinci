@@ -29,7 +29,7 @@ Route::get('booking/destinasi/{id}/paket', [booking::class, 'destinasiPaket'])->
 Route::get('booking/destinasi/paket/{id}/tiket', [booking::class, 'destinasiTiket'])->name('homepage.booking.destinasi.paket.tiket');
 
 // booking
-Route::middleware(['auth', 'logger'])->group(function () {
+Route::middleware(['auth', 'check.role:user', 'logger'])->group(function () {
     Route::post('booking/destinasi/paket/tiket', [booking::class, 'destinasiTiketStore'])->name('homepage.booking.destinasi.paket.tiket.action');
 
     Route::get('booking/{id}', [booking::class, 'bookingId'])->name('homepage.booking');
