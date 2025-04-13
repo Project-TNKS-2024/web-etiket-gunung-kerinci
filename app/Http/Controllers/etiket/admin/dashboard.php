@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Models\destinasi;
 use App\Models\gk_booking;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class dashboard extends AdminController
 {
@@ -15,6 +16,7 @@ class dashboard extends AdminController
         $dataBookingOverview = $this->dataBookingOverview($listDestinasi);
         $dataYearlyBreakup = $this->dataYearlyBreakup();
         $dataMonthlyEarnings = $this->dataMonthlyEarnings();
+
         // return $dataMonthlyEarnings;
 
         return view('etiket.admin.dashboard', [
@@ -81,8 +83,11 @@ class dashboard extends AdminController
         $years = [$currentYear, $currentYear - 1, $currentYear - 2];
 
         $earnings = collect($years)->mapWithKeys(function ($year) {
-            return [$year => (float) gk_booking::whereYear('tanggal_masuk', $year)->sum('total_pembayaran')];
+            return [$year => (float) gk_booking::where('status_booking', '>', 3)
+                ->whereYear('tanggal_masuk', $year)->sum('total_pembayaran')];
         });
+
+        // return $earnings;
 
         $currentEarnings = $earnings[$currentYear];
         $lastYearEarnings = $earnings[$currentYear - 1];
@@ -107,15 +112,18 @@ class dashboard extends AdminController
     {
         $currentYear = now()->year;
         $currentMonth = now()->month;
+        $lastMonth = now()->subMonth()->month;
 
         // Ambil pendapatan bulan ini
         $monthlyEarnings = gk_booking::whereYear('tanggal_masuk', $currentYear)
             ->whereMonth('tanggal_masuk', $currentMonth)
+            ->where('status_booking', '>', 3)
             ->sum('total_pembayaran');
 
         // Ambil pendapatan bulan lalu
         $lastMonthEarnings = gk_booking::whereYear('tanggal_masuk', $currentYear)
-            ->whereMonth('tanggal_masuk', now()->subMonth()->month)
+            ->whereMonth('tanggal_masuk', $lastMonth)
+            ->where('status_booking', '>', 3)
             ->sum('total_pembayaran');
 
         // Hitung pertumbuhan
@@ -124,13 +132,21 @@ class dashboard extends AdminController
             : 0;
 
         // Simpan history earnings untuk grafik
-        $monthlyData = gk_booking::selectRaw('MONTH(tanggal_masuk) as bulan, SUM(total_pembayaran) as total')
+        $rawData  = gk_booking::selectRaw('MONTH(tanggal_masuk) as bulan, SUM(total_pembayaran) as total')
             ->whereYear('tanggal_masuk', $currentYear)
+            ->whereIn(DB::raw('MONTH(tanggal_masuk)'), [$lastMonth, $currentMonth])
             ->groupBy('bulan')
             ->orderBy('bulan')
             ->get()
-            ->pluck('total')
+            ->pluck('total', 'bulan') // ambil total dengan key = bulan
             ->toArray();
+
+        $monthlyData = [
+            $currentMonth => $rawData[$currentMonth] ?? 0,
+            $lastMonth => $rawData[$lastMonth] ?? 0,
+        ];
+
+        // return $monthlyData;
 
         return [
             'total' => number_format($monthlyEarnings, 0, ',', '.'),

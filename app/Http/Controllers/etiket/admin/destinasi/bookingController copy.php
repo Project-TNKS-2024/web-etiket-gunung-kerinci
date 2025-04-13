@@ -32,7 +32,7 @@ class bookingController extends AdminController
         $destinasi = destinasi::find($id);
 
         // Query utama
-        $queryUtama = gk_booking::where('gk_bookings.status_booking', '>=', 3)
+        $query = gk_booking::where('gk_bookings.status_booking', '>=', 3)
             ->whereHas('destinasi', function ($q) use ($destinasi) {
                 $q->where('destinasis.id', $destinasi->id);
             });
@@ -40,49 +40,84 @@ class bookingController extends AdminController
         // 🔹 **Filter berdasarkan status waktu booking**
         if ($request->filled('filter-waktu')) {
             if ($request->input('filter-waktu') === 'dalam_booking') {
-                $queryUtama->where(function ($q) {
-                    $q->whereBetween('gk_bookings.status_booking', [4, 7])
-                        ->whereDate('gk_bookings.tanggal_masuk', '<=', now());
+                $query->where(function ($q) {
+                    $q->where(function ($q1) {
+                        // ✅ Kondisi 1: Status booking antara 4 dan 7 & tanggal masuk sudah lewat
+                        $q1->whereBetween('gk_bookings.status_booking', [4, 7])
+                            ->whereDate('gk_bookings.tanggal_masuk', '<', now());
+                    })->orWhere(function ($q2) {
+                        // ✅ Kondisi 2: Status booking = 3 & pembayaran terbaru masih pending
+                        $q2->where('gk_bookings.status_booking', 3)
+                            ->whereHas('pembayaran', function ($q3) {
+                                $q3->where('status', 'pending')
+                                    ->orderByDesc('created_at') // Ambil pembayaran terbaru
+                                    ->limit(1);
+                            });
+                    });
                 });
             } elseif ($request->input('filter-waktu') === 'sudah_selesai') {
-                $queryUtama->where('gk_bookings.status_booking', '=', 8);
+                $query->where('gk_bookings.status_booking', '=', 8);
             } elseif ($request->input('filter-waktu') === 'akan_datang') {
-                $queryUtama->whereDate('gk_bookings.tanggal_masuk', '>', now());
+                $query->whereDate('gk_bookings.tanggal_masuk', '>', now())
+                    ->whereDoesntHave('pembayaran', function ($q) {
+                        $q->where('status', 'pending')->orderByDesc('created_at')->limit(1);
+                    }); // Pastikan tidak ada pembayaran pending
             }
         }
 
+
         // 🔹 **Filter berdasarkan pencarian (Nama atau Email)**
         if ($request->filled('search')) {
-            $queryUtama->whereHas('pendakis.biodata', function ($q) use ($request) {
+            $query->whereHas('pendakis.biodata', function ($q) use ($request) {
                 $q->where('first_name', 'like', '%' . $request->search . '%')
                     ->orWhere('last_name', 'like', '%' . $request->search . '%');
             })
                 ->orWhereHas('user', function ($q) use ($request) {
                     $q->where('email', 'like', '%' . $request->search . '%');
-                });
+                })
+                ->orWhereDoesntHave('pendakis'); // Menyertakan booking tanpa pendakis
         }
 
         // 🔹 **Optimasi Urutan Data**
-        $queryUtama->orderBy('gk_bookings.tanggal_masuk', 'desc');
+        $query->orderByRaw("
+                CASE 
+                    WHEN EXISTS (
+                        SELECT 1 FROM pembayarans 
+                        WHERE pembayarans.id_booking = gk_bookings.id 
+                        AND pembayarans.status = 'pending'
+                    ) THEN 0 
+                    -- Jika ada pembayaran pending, letakkan paling atas
 
-        // Query Prioritas
-        $dataPrioritas = gk_booking::where('gk_bookings.status_booking', '>=', 3)
-            ->whereHas('destinasi', function ($q) use ($destinasi) {
-                $q->where('destinasis.id', $destinasi->id);
-            })
-            ->whereHas('pembayaran', function ($q3) {
-                $q3->where('status', 'pending');
-            })
-            ->get();
+                    WHEN gk_bookings.tanggal_keluar <= CURDATE() AND gk_bookings.status_booking < 8 THEN 2
+                    -- Prioritas 2: Booking yang sudah melewati tanggal_keluar tetapi belum selesai
+
+                    ELSE 3
+                END
+            ")
+            ->orderByRaw("  
+                CASE 
+                    WHEN tanggal_masuk = CURDATE() THEN 1   
+                    WHEN tanggal_masuk > CURDATE() THEN 2  
+                    ELSE 3  
+                END
+            ")
+            ->orderBy('tanggal_masuk', 'asc')
+            ->orderByDesc(function ($subQuery) {
+                $subQuery->select('created_at')
+                    ->from('pembayarans')
+                    ->whereColumn('pembayarans.id_booking', 'gk_bookings.id')
+                    ->latest()
+                    ->take(1);
+            });
+
 
         // Ambil data dengan paginasi
-        $data = $queryUtama->paginate(20);
+        $data = $query->paginate(20);
 
 
         return view('etiket.admin.destinasi.booking.index', [
             'destinasi' => $destinasi,
-            'data' => $data,
-            'dataPrioritas' => $dataPrioritas
+            'data' => $data
         ]);
     }
 

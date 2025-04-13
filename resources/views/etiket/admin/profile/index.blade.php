@@ -72,7 +72,7 @@
 
             <!-- NIK/Passport -->
             <div class="form-group col-12 col-md-6">
-               <label class="mandatory fw-bold" for="id-pendaftar">NIP</label>
+               <label class="mandatory fw-bold" for="id-pendaftar">NIK / NIP</label>
                <fieldset disabled>
                   <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIP" maxlength="16" readonly>
                </fieldset>

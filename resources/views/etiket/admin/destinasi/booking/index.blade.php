@@ -39,6 +39,7 @@
          <table class="table table-bordered">
             <thead class="bg-dark text-white ">
                <tr>
+                  <th>No</th>
                   <th>Id</th>
                   <th>Ketua</th>
                   <th>Tanggal</th>
@@ -51,8 +52,55 @@
 
             </thead>
             <tbody class="table-group-divider">
+
+               @if ($dataPrioritas->count() > 0)
+               <tr>
+                  <td colspan="8" style="padding: 5px 16px; text-align:center; font-style:italic; background:#d6dde5;">Prioritas</td>
+               </tr>
+
+               @foreach($dataPrioritas as $item)
+               <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{$item->id}}</td>
+                  <td class="">{{ $item->pendakis->count() > 0 ? $item->pendakis[0]->biodata->first_name  . ' ' . $item->pendakis[0]->biodata->last_name : '-' }}</td>
+                  <td class="">{{ $item->tanggal_masuk }}</td>
+                  <td class="">{{ $item->gateMasuk['nama'] }}</td>
+                  <td class="">{{ $item->pendakis->count() }} orang</td>
+                  <td class="">{{ $item->getStatusBooking()->status}}</td>
+                  @php
+                  $colorStatus = 'outline-info';
+                  if($item->pembayaran && $item->pembayaran->count() > 0) {
+
+                  if($item->pembayaran->last()->status == 'pending'){
+                  $colorStatus = 'warning';
+                  }else if($item->pembayaran->last()->status == 'success'){
+                  $colorStatus = 'success';
+                  }else if($item->pembayaran->last()->status == 'failed'){
+                  $colorStatus = 'danger';
+                  }else{
+                  $colorStatus = 'info';
+                  }
+
+                  } @endphp
+                  <td class="">
+                     <a href="{{route('admin.destinasi.booking.show', ['id' => $item->id])}}" class="btn btn-sm btn-info">
+                        <i class="fa-solid fa-circle-info"></i>
+                     </a>
+                     <a href="{{route('admin.destinasi.booking.payment.show', ['id' => $item->id])}}" class="btn btn-sm btn-{{$colorStatus}} mt-sm-1 mt-md-0">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                     </a>
+                  </td>
+               </tr>
+               @endforeach
+
+               <tr>
+                  <td colspan="8" style="padding: 5px 16px; text-align:center; font-style:italic; background:#d6dde5;">Booking</td>
+               </tr>
+               @endif
+
                @foreach($data as $item)
                <tr>
+                  <td>{{ $loop->iteration + ($data->currentPage() - 1) * $data->perPage() }}</td>
                   <td>{{$item->id}}</td>
                   <td class="">{{ $item->pendakis->count() > 0 ? $item->pendakis[0]->biodata->first_name  . ' ' . $item->pendakis[0]->biodata->last_name : '-' }}</td>
                   <td class="">{{ $item->tanggal_masuk }}</td>
