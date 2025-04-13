@@ -13,13 +13,25 @@
       <form action="{{ isset($admin) ? route('admins.akun.update', $admin->id) : route('admins.akun.store') }}" method="POST">
          @csrf
          <div class="row mb-3">
-            <div class="col">
+            <div class="col-md-6">
+               <label class="form-label">Nama:</label>
+               <input type="text" name="fullName" class="form-control"
+                  value="{{ isset($admin->biodata) ? $admin->biodata->fullName : old('fullName') }}"
+                  required>
+            </div>
+            <div class="col-md-6">
+               <label class="form-label">NIK / NIP:</label>
+               <input type="nip" name="nip" class="form-control"
+                  value="{{ isset($admin->biodata) ? $admin->biodata->nik : old('nip') }}"
+                  required>
+            </div>
+            <div class="col-md-6">
                <label class="form-label">Email:</label>
                <input type="email" name="email" class="form-control"
                   value="{{ isset($admin) ? $admin->email : old('email') }}"
                   {{ isset($admin) ? 'readonly' : 'required' }}>
             </div>
-            <div class="col">
+            <div class="col-md-6">
                <label class="form-label">Role:</label>
                <select name="role" class="form-control" required>
 

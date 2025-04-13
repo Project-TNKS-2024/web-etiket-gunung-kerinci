@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\etiket\admin\master;
 
 use App\Http\Controllers\AdminController;
+use App\Models\bio_pendaki;
 use App\Models\destinasi;
 use App\Models\DestinasiUser;
 use App\Models\User;
@@ -42,14 +43,36 @@ class AccountAdminController extends AdminController
     public function store(Request $request)
     {
         $request->validate([
+            'fullName' => 'required|string',
+            'nip' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'role' => 'required|exists:roles,name',
             'destination_ids' => 'array|exists:destinasis,id',
         ]);
 
+        // pisah full name menjadi first_name dan last_name
+        $nameParts = explode(' ', $request->fullName);
+        $firstName = $nameParts[0];
+        $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+
+        $biodata = bio_pendaki::create([
+            'nik' => $request->nip,
+            'kenegaraan' => 'ID',
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+
+            'no_hp' => '0000000000000000',
+            'jeniss_kelamin' => 'L',
+            'tempat_lahir' => '-',
+            'tanggal_lahir' => now(),
+            'lampiran_identitas' => '-',
+
+        ]);
+
         $user = User::create([
             'email' => $request->email,
             'role' => 'admin',
+            'id_bio' => $biodata->id,
             'password' => Hash::make('password123'), // Atur default password atau gunakan email verifikasi
         ]);
 
@@ -73,10 +96,11 @@ class AccountAdminController extends AdminController
      */
     public function edit($id)
     {
-        $admin = User::with('destinasis')->findOrFail($id);
+        $admin = User::with('destinasis', 'biodata')->findOrFail($id);
         $roles = Role::all();
         $destinasis = destinasi::all();
 
+        // return $admin;
 
         return view('etiket.admin.master.akunAdmin.update', [
             'admin' => $admin,
@@ -90,15 +114,52 @@ class AccountAdminController extends AdminController
      */
     public function update(Request $request, $id)
     {
-        $admin = User::findOrFail($id);
+        $admin = User::with('biodata')->findOrFail($id);
+
+        // cek id user ada atau tidak
+        if (!$admin) {
+            return redirect()->route('admins.akun.index')->with('error', 'Admin tidak ditemukan.');
+        }
 
         $request->validate([
+            'fullName' => 'required|string',
+            'nip' => 'required|string',
             'role' => 'required|exists:roles,name',
             'destination_ids' => 'array|exists:destinasis,id',
         ]);
 
-        // return $request;
-        // return $admin;
+        // update biodata
+        // pisah full name menjadi first_name dan last_name
+        $nameParts = explode(' ', $request->fullName);
+        $firstName = $nameParts[0];
+        $lastName = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
+
+        if ($admin->biodata) {
+            $admin->biodata->update([
+                'nik' => $request->nip,
+                'kenegaraan' => 'ID',
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+            ]);
+        } else {
+            $biodata = bio_pendaki::create([
+                'nik' => $request->nip,
+                'kenegaraan' => 'ID',
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+
+                'no_hp' => '0000000000000000',
+                'jeniss_kelamin' => 'L',
+                'tempat_lahir' => '-',
+                'tanggal_lahir' => now(),
+                'lampiran_identitas' => '-',
+
+            ]);
+
+            $admin->update([
+                'id_bio' => $biodata->id,
+            ]);
+        }
 
         $admin->syncRoles([$request->role]);
 
@@ -125,6 +186,6 @@ class AccountAdminController extends AdminController
         $admin = User::findOrFail($request->id);
         $admin->delete();
 
-        return redirect()->route('admins.index')->with('success', 'Admin berhasil dihapus.');
+        return redirect()->route('admins.akun.index')->with('success', 'Admin berhasil dihapus.');
     }
 }

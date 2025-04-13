@@ -26,14 +26,18 @@
          <div class="row">
             <!-- First Name -->
             <div class="form-group col-12 col-md-6">
-               <label class="mandatory font-semibold">Nama Depan</label>
-               <input value="{{ old('firstName', isset($user->biodata->first_name) ? $user->biodata->first_name : null) }}" type="text" class="form-control border-secondary" id="nama-depan" name="firstName" placeholder="Nama Depan">
+               <label class="mandatory fw-bold">Nama Depan</label>
+               <fieldset disabled>
+                  <input value="{{ old('firstName', isset($user->biodata->first_name) ? $user->biodata->first_name : null) }}" type="text" class="form-control border-secondary" id="nama-depan" name="firstName" placeholder="Nama Depan" readonly>
+               </fieldset>
             </div>
 
             <!-- Last Name -->
             <div class="form-group col-12 col-md-6">
-               <label class="mandatory font-semibold">Nama Belakang</label>
-               <input value="{{ old('lastName', isset($user->biodata->last_name) ? $user->biodata->last_name : null) }}" type="text" class="form-control border-secondary" id="nama-belakang" name="lastName" placeholder="Nama Belakang">
+               <label class="mandatory fw-bold">Nama Belakang</label>
+               <fieldset disabled>
+                  <input value="{{ old('lastName', isset($user->biodata->last_name) ? $user->biodata->last_name : null) }}" type="text" class="form-control border-secondary" id="nama-belakang" name="lastName" placeholder="Nama Belakang" readonly>
+               </fieldset>
             </div>
 
             <div class="form-group col-12 iptFile-input">
@@ -58,7 +62,7 @@
 
             <!-- Nationality -->
             <div class="form-group col-12 col-md-6">
-               <label class="mandatory font-semibold">Kewarganegaraan</label>
+               <label class="mandatory fw-bold">Kewarganegaraan</label>
                <fieldset disabled>
                   <select class="form-control border-secondary" name="kewarganegaraan" id="kewarganegaraan">
                      <option value="ID">Indonesia</option>
@@ -68,13 +72,15 @@
 
             <!-- NIK/Passport -->
             <div class="form-group col-12 col-md-6">
-               <label class="mandatory font-semibold" for="id-pendaftar">NIP</label>
-               <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIP" maxlength="16">
+               <label class="mandatory fw-bold" for="id-pendaftar">NIP</label>
+               <fieldset disabled>
+                  <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIP" maxlength="16" readonly>
+               </fieldset>
             </div>
 
             <!-- Email -->
             <div class="form-group col-12 col-md-6">
-               <label class="mandatory font-semibold">Email</label>
+               <label class="mandatory fw-bold">Email</label>
                <fieldset disabled>
                   <input value="{{ old('email', isset($user->email) ? $user->email : null) }}" type="text" class="form-control border-secondary" id="email" name="email" readonly>
                </fieldset>
@@ -82,7 +88,7 @@
 
             <!-- Phone Number -->
             <div class="form-group col-12 col-md-6">
-               <label class="mandatory font-semibold">Nomor Telepon</label>
+               <label class="mandatory fw-bold">Nomor Telepon</label>
                <div class="d-flex gap-2">
                   <div class="dropdown custom-dropdown-item dropdown-notelp">
                      <button class="h-100 btn btn-outline-secondary dropdown-toggle d-flex justify-content-between align-items-center" id="dropdown-country" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -103,7 +109,7 @@
 
             <!-- Gender -->
             <div class="form-group col-12 col-md-6">
-               <label class="font-semibold mandatory">Jenis Kelamin</label>
+               <label class="fw-bold mandatory">Jenis Kelamin</label>
                <select class="form-control form-control border-secondary" name="jenis_kelamin" id="jenis_kelamin">
                   <option value="" disabled selected> -- Jenis Kelamin -- </option>
                   <option value="l" {{ old('jenis_kelamin', isset($user->biodata->jenis_kelamin) && $user->biodata->jenis_kelamin == 'l' ? 'selected' : '') }}>Laki-Laki</option>
@@ -113,13 +119,13 @@
 
             <!-- Date of Birth -->
             <div class="form-group col-12 col-md-6">
-               <label for="tanggal_lahir" class="font-semibold">Tanggal Lahir</label>
+               <label for="tanggal_lahir" class="fw-bold">Tanggal Lahir</label>
                <input type="date" class="form-control border-secondary" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user->biodata->tanggal_lahir) ? Carbon\Carbon::parse($user->biodata->tanggal_lahir)->format('Y-m-d') : null) }}">
             </div>
          </div>
          <div id="selectDomisili" {{ (isset($user->biodata) && $user->biodata->kenegaraan != 'ID' )? 'style=display:none' : '9' }}>
             <div class="row">
-               <label class="font-semibold mandatory">Alamat Domisili</label>
+               <label class="fw-bold mandatory">Alamat Domisili</label>
             </div>
 
             <div class="row mb-3">
@@ -163,7 +169,7 @@
          <!-- Submit Button -->
          <div class="row mb-2">
             <div class="col d-flex justify-content-end">
-               <button type="submit" class="btn border-0 btn-primary" name="action" value="verifikasi">Verifikasi Profile</button>
+               <button type="submit" class="btn border-0 btn-primary" name="action" value="verifikasi">Update Profile</button>
             </div>
          </div>
       </form>

@@ -22,7 +22,7 @@
             <tbody>
                @foreach ($admins as $admin)
                <tr>
-                  <td>{{ $admin->biodata ? $admin->biodata->first_name : '-' }}</td>
+                  <td>{{ $admin->biodata ? $admin->biodata->fullName : '-' }}</td>
                   <td>{{ $admin->email }}</td>
                   <td>
                      @foreach ($admin->destinasis as $destinasi)
