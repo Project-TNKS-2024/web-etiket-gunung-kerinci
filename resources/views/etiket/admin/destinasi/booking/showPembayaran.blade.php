@@ -118,11 +118,18 @@
                </div>
                <div class="card-body">
                   <embed src="{{ asset($pembayaran->bukti_pembayaran)}}" type="application/pdf" width="100%" height="280px">
-                  <div class="mt-2">
-                     <p class="mb-0"><b>Metode Pembayaran : </b> {{$pembayaran->payment_method}}</p>
-                     <p class="mb-0"><b>Keterangan : </b> {{$pembayaran->keterangan}}</p>
-                     <p class="mb-0"><b>validator : </b> #{{$pembayaran->validator}}</p>
+                  <div class="row mt-2">
+                     <div class="col-6">
+                        <p class="mb-0"><b>Upload at : </b> {{$pembayaran->created_at}}</p>
+                        <p class="mb-0"><b>Metode Pembayaran : </b> {{$pembayaran->payment_method}}</p>
+                     </div>
+                     <div class="col-6">
+                        <p class="mb-0"><b>Validasi at : </b> {{$pembayaran->updated_at}}</p>
+                        <p class="mb-0"><b>Keterangan : </b> {{$pembayaran->keterangan}}</p>
+                        <p class="mb-0"><b>validator : </b> #{{$pembayaran->validator}}</p>
+                     </div>
                   </div>
+
                </div>
             </div>
             @endforeach

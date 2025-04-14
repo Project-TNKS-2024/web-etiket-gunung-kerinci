@@ -284,6 +284,9 @@
                     </section>
                     <section class="mt-3">
                         <a href="{{route('homepage.booking.destinasi.paket', ['id' => $item->id])}}" class="btn btn-primary">Lebih detail</a>
+                        @if($item->id == 1)
+                        <a href="https://gunungkerinci.tnkerinciseblat.com/" class="btn btn-primary">Panorama</a>
+                        @endif
                     </section>
                 </article>
                 @endforeach
