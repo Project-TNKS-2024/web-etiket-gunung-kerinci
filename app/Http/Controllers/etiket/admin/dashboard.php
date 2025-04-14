@@ -126,7 +126,7 @@ class dashboard extends AdminController
             ->where('status_booking', '>', 3)
             ->sum('total_pembayaran');
 
-        dd($monthlyEarnings);
+        // dd($monthlyEarnings);
 
         // Hitung pertumbuhan
         $monthlyGrowth = $lastMonthEarnings > 0
