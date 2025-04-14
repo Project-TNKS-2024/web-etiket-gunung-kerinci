@@ -193,7 +193,7 @@
             <!-- Bagian Selamat Datang -->
             <div class="col-12 col-md-6 col-lg-8 welcome-text text-lg-start text-center">
                 <header class="top">Selamat Datang di Website Resmi</header>
-                <div class="divider mx-auto"></div>
+                <div class="divider"></div>
                 <header class="bottom">Taman Nasional Kerinci Seblat</header>
                 <a class="btn btn-primary mt-3" href="{{ route('homepage.booking.destinasi.list') }}">
                     Pesan Tiket

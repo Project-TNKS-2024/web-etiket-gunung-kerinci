@@ -6,7 +6,7 @@
 </a>
 
 <div class="card">
-   <div class="card-header bg-primary text-white">
+   <div class="card-header text-white">
       <h5 class="mb-0"><b>{{ isset($admin) ? 'Edit Admin' : 'Tambah Admin' }}</b></h5>
    </div>
    <div class="card-body">

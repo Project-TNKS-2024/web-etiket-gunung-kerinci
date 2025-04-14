@@ -5,6 +5,8 @@
    <title>{{ config('app.name', 'Laravel') }} - Bukti Pembelian</title>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/icon/tnks.png') }}" />
+   <link rel="stylesheet" href="{{ asset('assets/icon/tnks.png') }}" />
    <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.min.css') }}">
 
 </head>
