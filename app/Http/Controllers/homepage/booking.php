@@ -738,7 +738,7 @@ class booking extends Controller
 
         $path = $this->upload->create($request->id, 'booking', $request->bukti_pembayaran);
         if ($request->metode == 'scan') {
-            $metode = 'Scan Qris Gate Mauk';
+            $metode = 'Scan Qris Gate Masuk';
         } elseif ($request->metode == 'transfer') {
             $metode = 'Transfer Bank';
         }
@@ -786,11 +786,12 @@ class booking extends Controller
         if ($booking == null) {
             return redirect()->route('homepage.booking', ['id' => $id]);
         }
-        if ($booking->status_pembayaran) {
-            $booking = json_decode($booking->dataStruk);
-        } else {
-            $booking = $this->helper->getDataStruk($booking->id);
-        }
+
+        // if ($booking->status_pembayaran) {
+        $booking = json_decode($booking->dataStruk);
+        // } else {
+        //     $booking = $this->helper->getDataStruk($booking->id);
+        // }
 
         // return $booking;
 

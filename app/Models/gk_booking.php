@@ -116,6 +116,7 @@ class gk_booking extends Model
         }
         // Daftar status booking
         $status = [
+            0  => 'Menunggu Persetujuan',
             1  => 'Menyetujui SNK',
             2  => 'Mengisi Formulir',
             3  => 'Menunggu Pembayaran',
