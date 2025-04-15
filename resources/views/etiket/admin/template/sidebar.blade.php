@@ -78,6 +78,8 @@
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                <span class="hide-menu">Rekapitulasi</span>
             </li>
+
+            @can('view-rekap-pendapatan')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admin.rekap.pendapatan')}}" aria-expanded="false">
                   <span>
@@ -86,6 +88,9 @@
                   <span class="hide-menu">Rekap Pendapatan</span>
                </a>
             </li>
+            @endcan
+
+            @can('view-rekap-pengunjung')
             <li class="sidebar-item">
                <a class="sidebar-link" href="{{route('admin.rekap.pengunjung')}}" aria-expanded="false">
                   <span>
@@ -94,6 +99,7 @@
                   <span class="hide-menu">Rekap Pengunjung</span>
                </a>
             </li>
+            @endcan
 
 
             <li class="nav-small-cap">
