@@ -19,8 +19,8 @@ return new class extends Migration
             $table->text('keterangan')->nullable();
             $table->date('deadline')->nullable(); // Batas waktu pembayarans
 
-            $table->unsignedBigInteger('validator')->nullable();
-            $table->foreign('validator')->references('id')->on('users');
+            // $table->unsignedBigInteger('validator')->nullable();
+            // $table->foreign('validator')->references('id')->on('users');
 
             $table->timestamps();
         });

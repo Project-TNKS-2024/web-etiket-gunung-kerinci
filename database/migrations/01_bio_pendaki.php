@@ -35,8 +35,8 @@ return new class extends Migration
             $table->enum('verified', ['unverified', 'pending', 'verified'])->default("unverified");
             $table->timestamp('verified_at')->nullable();
 
-            $table->unsignedBigInteger('validator')->nullable();
-            $table->foreign('validator')->references('id')->on('users');
+            // $table->unsignedBigInteger('validator')->nullable();
+            // $table->foreign('validator')->references('id')->on('users');
 
             $table->timestamps();
         });

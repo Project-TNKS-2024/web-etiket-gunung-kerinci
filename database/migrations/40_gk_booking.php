@@ -33,8 +33,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_booking_master')->nullable();
 
 
-            $table->unsignedBigInteger('validator')->nullable();
-            $table->foreign('validator')->references('id')->on('users');
+            // $table->unsignedBigInteger('validator')->nullable();
+            // $table->foreign('validator')->references('id')->on('users');
 
             $table->timestamps();
 
