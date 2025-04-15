@@ -93,11 +93,10 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('/roles/deleteAction', [RolePermissionController::class, 'roleDeleteAction'])->name('roles.deleteAction')->middleware('permission:master-delete-roles');
 
     // Rekaptulasi
-    Route::get('admin/rekaptulasi/pendapatan', [pendapatan::class, 'index'])->name('admin.rekap.pendapatan');
-    Route::get('admin/rekaptulasi/pendapatan/donwload', [pendapatan::class, 'download'])->name('admin.rekap.pendapatan.download');
-    Route::get('admin/rekaptulasi/pengunjung', [pengunjung::class, 'index'])->name('admin.rekap.pengunjung');
-    Route::get('admin/rekaptulasi/pengunjung/donwload', [pengunjung::class, 'download'])->name('admin.rekap.pengunjung.download');
-
+    Route::get('admin/rekaptulasi/pendapatan', [pendapatan::class, 'index'])->name('admin.rekap.pendapatan')->middleware('permission:view-rekap-pendapatan');
+    Route::get('admin/rekaptulasi/pendapatan/donwload', [pendapatan::class, 'download'])->name('admin.rekap.pendapatan.download')->middleware('permission:download-rekap-pendapatan');
+    Route::get('admin/rekaptulasi/pengunjung', [pengunjung::class, 'index'])->name('admin.rekap.pengunjung')->middleware('permission:view-rekap-pengunjung');
+    Route::get('admin/rekaptulasi/pengunjung/donwload', [pengunjung::class, 'download'])->name('admin.rekap.pengunjung.download')->middleware('permission:download-rekap-pengunjung');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile')->middleware('permission:view-profile');
