@@ -2,7 +2,8 @@
    # Halo, {{ $nama }}
 
    @if ($status == 'verified')
-   Selamat!
+
+   **{{ Selamat! }}**
 
    Akun Anda telah berhasil diverifikasi pada {{ $tanggalVerifikasi }}.
    Anda kini mendapatkan ID Pendaki, yang dapat dilihat di halaman Profil dan digunakan untuk pemesanan tiket.
