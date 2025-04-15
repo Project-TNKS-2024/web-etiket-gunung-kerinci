@@ -116,13 +116,18 @@ class dashboard extends AdminController
 
         // Ambil pendapatan bulan ini
         $monthlyEarnings = gk_booking::whereYear('tanggal_masuk', $currentYear)
-            ->whereMonth('tanggal_masuk', $currentMonth)
+            ->whereHas('pembayaran', function ($query) use ($currentMonth) {
+                $query->whereMonth('updated_at', $currentMonth);
+            })
             ->where('status_booking', '>', 3)
             ->sum('total_pembayaran');
 
         // Ambil pendapatan bulan lalu
         $lastMonthEarnings = gk_booking::whereYear('tanggal_masuk', $currentYear)
-            ->whereMonth('tanggal_masuk', $lastMonth)
+            // ->whereMonth('tanggal_masuk', $lastMonth)
+            ->whereHas('pembayaran', function ($query) use ($lastMonth) {
+                $query->whereMonth('updated_at', $lastMonth);
+            })
             ->where('status_booking', '>', 3)
             ->sum('total_pembayaran');
 

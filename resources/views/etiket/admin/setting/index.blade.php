@@ -8,9 +8,11 @@
 @section('main')
 
 <div class="card">
+   <div class="card-header">
+      <h3><b>Setting Web</b></h3>
+   </div>
    <div class="card-body">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-         <label class="text-2xl font-bold gk-text-base-black mb-2">Setting Web</label>
+      <div class="d-flex justify-content-end align-items-center mb-3">
          <a class="btn btn-primary" href="{{route('admin.setting.add')}}">
             <i class="fa-regular fa-square-plus me-1"></i>
             Tambah Variabel

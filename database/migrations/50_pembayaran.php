@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('bukti_pembayaran')->nullable(); // Bukti pembayarans (contoh: gambar atau file)
             $table->text('keterangan')->nullable();
             $table->date('deadline')->nullable(); // Batas waktu pembayarans
+
+            $table->unsignedBigInteger('validator')->nullable();
+            $table->foreign('validator')->references('id')->on('users');
+
             $table->timestamps();
         });
     }

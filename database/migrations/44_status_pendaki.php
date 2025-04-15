@@ -18,6 +18,9 @@ return new class extends Migration
             $table->text('detail')->nullable();
             $table->timestamps();
 
+            $table->unsignedBigInteger('validator')->nullable();
+            $table->foreign('validator')->references('id')->on('users');
+
             $table->foreign('id_pendaki')->references('id')->on('gk_pendakis')->onDelete('cascade');
         });
     }

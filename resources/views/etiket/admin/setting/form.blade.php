@@ -10,8 +10,10 @@
 </a>
 
 <div class="card">
+   <div class="card-header">
+      <h5><b>{{ $title }}</b></h5>
+   </div>
    <div class="card-body">
-      <label class="text-2xl font-bold gk-text-base-black mb-2">{{ $title }}</label>
 
       <!-- Hidden ID -->
 

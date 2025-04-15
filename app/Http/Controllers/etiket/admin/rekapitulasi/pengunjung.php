@@ -37,6 +37,9 @@ class pengunjung extends Controller
          ->orderByDesc('tanggal_masuk')
          ->get();
 
+         // status booking 4 dan rieayar pedakian cekin
+         
+
       $total_wni = $bigData->sum('total_pendaki_wni');
       $total_wna = $bigData->sum('total_pendaki_wna');
       $total_kunjugan = $total_wni + $total_wna;

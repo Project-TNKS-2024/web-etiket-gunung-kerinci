@@ -12,13 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         // menambahkan kolom validator pada tabel bio_pendaki, pembayaran, statusPendaki, gk_booking
-        Schema::table('biodatas', function (Blueprint $table) {
-            $table->unsignedBigInteger('validator')->nullable();
-            $table->foreign('validator')->references('id')->on('users');
-        });
+        Schema::table('biodatas', function (Blueprint $table) {});
         Schema::table('pembayarans', function (Blueprint $table) {
-            $table->unsignedBigInteger('validator')->nullable();
-            $table->foreign('validator')->references('id')->on('users');
+          
         });
         Schema::table('gk_status_pendaki', function (Blueprint $table) {
             $table->unsignedBigInteger('validator')->nullable();
