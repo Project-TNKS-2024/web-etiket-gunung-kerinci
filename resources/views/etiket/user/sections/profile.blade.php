@@ -60,19 +60,19 @@
                     <!-- First Name -->
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold">Nama Depan</label>
-                        <input value="{{ old('firstName', isset($user->biodata->first_name) ? $user->biodata->first_name : null) }}" type="text" class="form-control border-secondary" id="nama-depan" name="firstName" placeholder="Nama Depan">
+                        <input value="{{ old('firstName', isset($user->biodata->first_name) ? $user->biodata->first_name : null) }}" type="text" class="form-control border-secondary" id="nama-depan" name="firstName" placeholder="Nama Depan" required>
                     </div>
 
                     <!-- Last Name -->
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold">Nama Belakang</label>
-                        <input value="{{ old('lastName', isset($user->biodata->last_name) ? $user->biodata->last_name : null) }}" type="text" class="form-control border-secondary" id="nama-belakang" name="lastName" placeholder="Nama Belakang">
+                        <input value="{{ old('lastName', isset($user->biodata->last_name) ? $user->biodata->last_name : null) }}" type="text" class="form-control border-secondary" id="nama-belakang" name="lastName" placeholder="Nama Belakang" required>
                     </div>
 
                     <!-- Nationality -->
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold">Kewarganegaraan</label>
-                        <select class="form-control border-secondary" name="kewarganegaraan" id="kewarganegaraan">
+                        <select class="form-control border-secondary" name="kewarganegaraan" id="kewarganegaraan" required>
                             <option value="" disabled selected> -- Pilih Negara -- </option>
                             @foreach ($negara as $n)
                             <option value="{{$n->code}}" {{ old('kewarganegaraan', isset($user->biodata->kenegaraan) && $user->biodata->kenegaraan == $n->code ? 'selected' : '') }}>{{ $n->name}}</option>
@@ -83,7 +83,7 @@
                     <!-- NIK/Passport -->
                     <div class="form-group col-12 col-md-6">
                         <label class="mandatory font-semibold" for="id-pendaftar">Nomor Identitas</label>
-                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK / Paspor / No.KTM" maxlength="16">
+                        <input value="{{ old('nik', isset($user->biodata->nik) ? $user->biodata->nik : null) }}" type="text" class="form-control border-secondary" id="id-pendaftar" name="nik" placeholder="NIK / Paspor / No.KTM" maxlength="16" required>
                     </div>
 
                     <div class="form-group col-12 iptFile-input">
@@ -138,15 +138,15 @@
                                     <div id="telepon-item" style="overflow-y:auto; max-height: 200px; margin-top:40px;"></div>
                                 </div>
                             </div>
-                            <input value="{{ old('nomor_telepon', isset($user->biodata->no_hp) ? $user->biodata->no_hp : null) }}" type="text" class="form-control border-secondary" id="nomor-telepon" name="nomor_telepon" placeholder="Nomor Telepon">
-                            <input type="hidden" name="telp_country" value="{{ old('telp_country', isset($user->biodata->telp_country) ? $user->biodata->telp_country : '+62') }}" id="telp_country">
+                            <input value="{{ old('nomor_telepon', isset($user->biodata->no_hp) ? $user->biodata->no_hp : null) }}" type="text" class="form-control border-secondary" id="nomor-telepon" name="nomor_telepon" placeholder="Nomor Telepon" required>
+                            <input type="hidden" name="telp_country" value="{{ old('telp_country', isset($user->biodata->telp_country) ? $user->biodata->telp_country : '+62') }}" id="telp_country" required>
                         </div>
                     </div>
 
                     <!-- Gender -->
                     <div class="form-group col-12 col-md-6">
                         <label class="font-semibold mandatory">Jenis Kelamin</label>
-                        <select class="form-control form-control border-secondary" name="jenis_kelamin" id="jenis_kelamin">
+                        <select class="form-control form-control border-secondary" name="jenis_kelamin" id="jenis_kelamin" required>
                             <option value="" disabled selected> -- Jenis Kelamin -- </option>
                             <option value="l" {{ old('jenis_kelamin', isset($user->biodata->jenis_kelamin) && $user->biodata->jenis_kelamin == 'l' ? 'selected' : '') }}>Laki-Laki</option>
                             <option value="p" {{ old('jenis_kelamin', isset($user->biodata->jenis_kelamin) && $user->biodata->jenis_kelamin == 'p' ? 'selected' : '') }}>Perempuan</option>
@@ -156,7 +156,7 @@
                     <!-- Date of Birth -->
                     <div class="form-group col-12 col-md-6">
                         <label for="tanggal_lahir" class="font-semibold">Tanggal Lahir</label>
-                        <input type="date" class="form-control border-secondary" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user->biodata->tanggal_lahir) ? Carbon\Carbon::parse($user->biodata->tanggal_lahir)->format('Y-m-d') : null) }}">
+                        <input type="date" class="form-control border-secondary" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user->biodata->tanggal_lahir) ? Carbon\Carbon::parse($user->biodata->tanggal_lahir)->format('Y-m-d') : null) }}" required>
                     </div>
                 </div>
                 <div id="selectDomisili" {{ (isset($user->biodata) && $user->biodata->kenegaraan != 'ID' )? 'style=display:none' : '9' }}>
@@ -170,13 +170,13 @@
                             <div class="row">
                                 <div class="form-group col-12 col-md-6">
                                     <label for="provinsi" class="w-100">Provinsi</label>
-                                    <select class="form-control ipt-provinsi border-secondary" name="provinsi" id="provinsi" data-index="1">
+                                    <select class="form-control ipt-provinsi border-secondary" name="provinsi" id="provinsi" data-index="1" required>
                                         <option value="{{ old('provinsi', isset($user->biodata->provinsi) ? $user->biodata->provinsi : 0) }}" selected>Pilih Provinsi</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-12 col-md-6">
                                     <label for="kabupaten_kota" class="w-100">Kabupaten/Kota</label>
-                                    <select class="form-control border-secondary ipt-kabupaten-kota" name="kabupaten_kota" id="kabupaten_kota" data-index="1">
+                                    <select class="form-control border-secondary ipt-kabupaten-kota" name="kabupaten_kota" id="kabupaten_kota" data-index="1" required>
                                         <option value="{{ old('kabupaten_kota', isset($user->biodata->kabupaten) ? $user->biodata->kabupaten : 0) }}" selected>Pilih Kabupaten/Kota</option>
                                     </select>
                                 </div>
@@ -188,13 +188,13 @@
                             <div class="row">
                                 <div class="form-group col-12 col-md-6">
                                     <label for="kecamatan" class="w-100">Kecamatan</label>
-                                    <select class="form-control border-secondary ipt-kecamatan" name="kecamatan" id="kecamatan" data-index="1">
+                                    <select class="form-control border-secondary ipt-kecamatan" name="kecamatan" id="kecamatan" data-index="1" required>
                                         <option value="{{ old('kecamatan', isset($user->biodata->kec) ? $user->biodata->kec : 0) }}" selected disabled>Pilih Kecamatan</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-12 col-md-6">
                                     <label for="desa_kelurahan" class="w-100">Desa/Kelurahan</label>
-                                    <select class="form-control border-secondary ipt-desa-kelurahan" name="desa_kelurahan" id="desa_kelurahan" data-index="1">
+                                    <select class="form-control border-secondary ipt-desa-kelurahan" name="desa_kelurahan" id="desa_kelurahan" data-index="1" required>
                                         <option value="{{ old('desa_kelurahan', isset($user->biodata->desa) ? $user->biodata->desa : 0) }}" selected>Pilih Desa/Kelurahan</option>
                                     </select>
                                 </div>
