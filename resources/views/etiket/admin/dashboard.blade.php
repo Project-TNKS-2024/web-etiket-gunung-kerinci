@@ -112,7 +112,7 @@
    <div class="col-sm-6 col-xl-3">
       <div class="card overflow-hidden rounded-2">
          <div class="position-relative">
-            <a href="{{route('admin.destinasi.detail', ['id' => $d->id])}}"><img src="{{asset($d->gambar_destinasi->last()->src)}}" class="card-img-top rounded-0" style="height: 200px;" alt="..."></a>
+            <a href="{{route('admin.destinasi.detail', ['id' => $d->id])}}"><img src="{{$d->gambar_destinasi->last() ? asset($d->gambar_destinasi->last()->src) : asset('images/no-image.jpg')}}" class="card-img-top rounded-0" style="height: 200px;" alt="..."></a>
             <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>
          </div>
          <div class="card-body pt-3 p-4">

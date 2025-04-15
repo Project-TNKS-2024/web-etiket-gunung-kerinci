@@ -69,7 +69,7 @@
                </tr>
             </thead>
             <tbody>
-               @forelse ($data as $d)
+               @foreach ($data as $d)
                <tr>
                   <td>{{ $loop->iteration }}</td>
                   <td><a href="{{route('admin.destinasi.booking.show', ['id' => $d->id])}}">{{ $d->id }}</a></td>
@@ -79,11 +79,7 @@
                   <td class="text-end">{{ number_format($d->total_pembayaran, 0, ',', '.') }}</td>
                   <td>#{{ optional($d->pembayaran->last())->validator ?? '-' }}</td>
                </tr>
-               @empty
-               <tr>
-                  <td colspan="7" class="text-center">Tidak ada data ditemukan.</td>
-               </tr>
-               @endforelse
+               @endforeach
             </tbody>
          </table>
       </div>
