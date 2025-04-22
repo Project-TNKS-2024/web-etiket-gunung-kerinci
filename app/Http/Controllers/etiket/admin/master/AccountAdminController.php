@@ -186,18 +186,23 @@ class AccountAdminController extends AdminController
         $admin = User::findOrFail($request->id);
         $biodata = $admin->biodata;
         $biodata->update([
-            'nik' => null,
-            'kenegaraan' => null,
-            'no_hp' => null,
-            'tempat_lahir' => null,
-            'tanggal_lahir' => null,
-            'lampiran_identitas' => null,
+            'nik' => '-',
+            'kenegaraan' => '-',
+            'no_hp' => '-',
+            'tempat_lahir' => '-',
+            'tanggal_lahir' => '-',
+            'lampiran_identitas' => '-',
         ]);
         $admin->update([
-            'email' => null,
-            'role' => null,
-            'password' => null,
+            'email' => '-',
+            'role' => '-',
+            'password' => '-',
         ]);
+        // hapus permision
+        $admin->syncRoles([]);
+        // hapus destinasi
+        $admin->destinasis()->detach();
+
 
         return redirect()->route('admins.akun.index')->with('success', 'Admin berhasil dihapus.');
     }
