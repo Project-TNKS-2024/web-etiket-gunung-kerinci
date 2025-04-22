@@ -184,7 +184,20 @@ class AccountAdminController extends AdminController
     public function destroy(Request $request)
     {
         $admin = User::findOrFail($request->id);
-        $admin->delete();
+        $biodata = $admin->biodata;
+        $biodata->update([
+            'nik' => null,
+            'kenegaraan' => null,
+            'no_hp' => null,
+            'tempat_lahir' => null,
+            'tanggal_lahir' => null,
+            'lampiran_identitas' => null,
+        ]);
+        $admin->update([
+            'email' => null,
+            'role' => null,
+            'password' => null,
+        ]);
 
         return redirect()->route('admins.akun.index')->with('success', 'Admin berhasil dihapus.');
     }
