@@ -26,12 +26,20 @@ class login extends Controller
 
         // Attempt authentication
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->role == 'admin') {
-                return redirect()
-                    ->intended(route('admin.dashboard'))
-                    ->with('success', ['berhasil login']);
-            } else if (Auth::user()->role == 'user') {
-                return redirect()->intended(route('user.dashboard'));
+            $user = Auth::user();
+
+            switch ($user->role) {
+                case 'admin':
+                    return redirect()->intended(route('admin.dashboard'))
+                        ->with('success', 'Berhasil login sebagai admin.');
+                case 'user':
+                    return redirect()->intended(route('user.dashboard'))
+                        ->with('success', 'Berhasil login sebagai pengguna.');
+                default:
+                    Auth::logout(); // logout jika role tidak dikenali
+                    return redirect()->route('login')->withErrors([
+                        'email' => 'Akun tidak memiliki akses yang valid.',
+                    ]);
             }
         }
 

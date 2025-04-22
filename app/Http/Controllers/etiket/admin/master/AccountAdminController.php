@@ -190,7 +190,7 @@ class AccountAdminController extends AdminController
             'kenegaraan' => '-',
             'no_hp' => '-',
             'tempat_lahir' => '-',
-            'tanggal_lahir' => '-',
+            'tanggal_lahir' => now(),
             'lampiran_identitas' => '-',
         ]);
         $admin->update([
