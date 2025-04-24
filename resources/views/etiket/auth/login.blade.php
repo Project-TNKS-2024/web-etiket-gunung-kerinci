@@ -25,42 +25,55 @@
                 <span class="input-group-text btn-visibility" data-target='password'><i class="fa-solid fa-eye"></i> </i></span>
             </div>
         </div>
+
+        <div class="form-group mb-3">
+            <div class="mb-3 d-flex justify-content-end">
+                {!! htmlFormSnippet([
+                "theme" => "light",
+                "size" => "normal",
+                "tabindex" => "3",
+                "callback" => "callbackFunction",
+                "expired-callback" => "expiredCallbackFunction",
+                "error-callback" => "errorCallbackFunction",
+                ]) !!}
+            </div>
+        </div>
         @error('password')
         <span class="invalid-feedback" role="alert">
             {{ $message }}
         </span>
         @enderror
-</div>
 
-<div class="form-group mb-3">
-    <div class="d-flex justify-content-between">
-        <div>
-            <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-            <label for="remember">Ingat saya</label>
+
+        <div class="form-group mb-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <label for="remember">Ingat saya</label>
+                </div>
+                <div>
+                    <a href="{{ route('lupaPassword') }}">Lupa Kata Sandi?</a>
+                </div>
+            </div>
         </div>
-        <div>
-            <a href="{{ route('lupaPassword') }}">Lupa Kata Sandi?</a>
+
+        <div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary w-100">Masuk</button>
         </div>
-    </div>
-</div>
 
-<div class="form-group mb-3">
-    <button type="submit" class="btn btn-primary w-100">Masuk</button>
-</div>
-
-<div class="form-group mb-3">
-    <a href="{{ route('oauth.google') }}" class="btn w-100 d-flex align-items-center justify-content-center google-btn">
-        <img src="{{ asset('assets/icon/google.png') }}" alt="Google Logo" class="me-2" width="20">
-        Masuk Dengan Akun Google
-    </a>
-</div>
+        <div class="form-group mb-3">
+            <a href="{{ route('oauth.google') }}" class="btn w-100 d-flex align-items-center justify-content-center google-btn">
+                <img src="{{ asset('assets/icon/google.png') }}" alt="Google Logo" class="me-2" width="20">
+                Masuk Dengan Akun Google
+            </a>
+        </div>
 
 
-<div class="form-group mb-3 text-center">
-    <p>Tidak Punya Akun? <a href="{{ route('register') }}">Daftar Sekarang</a>
-    </p>
-</div>
-</form>
+        <div class="form-group mb-3 text-center">
+            <p>Tidak Punya Akun? <a href="{{ route('register') }}">Daftar Sekarang</a>
+            </p>
+        </div>
+    </form>
 </div>
 @endsection
 

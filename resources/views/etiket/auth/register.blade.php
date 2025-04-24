@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/icon/tnks.png') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/icon/tnks.png') }}" />
+
     <title>{{ config('app.name', 'Laravel') }}</title>
+
+    {!! htmlScriptTagJsApi() !!}
 
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('bootstrap-5.3.3-dist/font/bootstrap-icons.min.css') }}">
@@ -137,6 +143,16 @@
                                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                                 <span class="input-group-text btn-visibility" data-target='password_confirmation'><i class="fa-solid fa-eye"></i> </i></span>
                             </div>
+                        </div>
+                        <div class="mb-3 d-flex justify-content-end">
+                            {!! htmlFormSnippet([
+                            "theme" => "light",
+                            "size" => "normal",
+                            "tabindex" => "3",
+                            "callback" => "callbackFunction",
+                            "expired-callback" => "expiredCallbackFunction",
+                            "error-callback" => "errorCallbackFunction",
+                            ]) !!}
                         </div>
                         <div class="form-group mb-3">
                             <button type="submit" class="btn btn-primary w-100">Buat Akun</button>
