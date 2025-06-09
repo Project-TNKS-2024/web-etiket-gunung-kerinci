@@ -29,7 +29,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'gauth_id', // tambahkan ini
         'gauth_type', // tambahkan ini
 
-        'token',
         'nik_verified_at',
         'email_verified_at',
         'avatar'
