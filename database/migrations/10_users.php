@@ -14,17 +14,19 @@ return new class extends Migration
 
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('role')->default('user');
-            $table->string('avatar')->nullable();
+            $table->string('email')->unique();  //v
+            $table->string('password');  //v
+            // $table->string('role')->default('user'); 
+            $table->enum('role', ['user', 'admin'])->default('user');  //v         
+            $table->string('avatar')->nullable();  //v
 
-            $table->uuid('id_bio')->unique()->nullable();
+            $table->uuid('id_bio')->unique()->nullable();  //v
 
-            $table->string('token')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('gauth_id')->nullable();
-            $table->string('gauth_type')->nullable();
+            $table->string('token')->nullable();   //-------------------
+            $table->timestamp('email_verified_at')->nullable();  //v
+            $table->string('gauth_id')->nullable();  //v
+            // $table->string('gauth_type')->nullable(); //v
+            $table->enum('gauth_type', ['manual', 'google'])->default('manual'); //v
             $table->rememberToken();
             $table->timestamps();
 

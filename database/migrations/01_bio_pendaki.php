@@ -15,25 +15,25 @@ return new class extends Migration
             // $table->id();
             $table->uuid('id')->primary();
 
-            $table->string('nik');
-            $table->string('kenegaraan');
+            $table->string('nik');  //v
+            $table->string('kenegaraan'); //v
             $table->string('first_name');
-            $table->string('last_name')->nullable();
-            $table->string('lampiran_identitas');
+            $table->string('last_name')->nullable(); //v
+            $table->string('lampiran_identitas'); //v
 
-            $table->string('no_hp');
-            $table->string('no_hp_darurat')->nullable();
-            $table->enum('jenis_kelamin', ['l', 'p']);
-            $table->date('tanggal_lahir');
+            $table->string('no_hp'); //v
+            $table->string('no_hp_darurat')->nullable(); //v
+            $table->enum('jenis_kelamin', ['l', 'p']); //v
+            $table->date('tanggal_lahir'); //v
 
-            $table->string('provinsi')->nullable();
-            $table->string('kabupaten')->nullable();
-            $table->string('kec')->nullable();
-            $table->string('desa')->nullable();
+            $table->string('provinsi')->nullable(); //v
+            $table->string('kabupaten')->nullable(); //v
+            $table->string('kec')->nullable(); //v
+            $table->string('desa')->nullable(); //v
 
-            $table->string('keterangan')->nullable();
-            $table->enum('verified', ['unverified', 'pending', 'verified'])->default("unverified");
-            $table->timestamp('verified_at')->nullable();
+            $table->string('keterangan')->nullable(); //v
+            $table->enum('verified', ['unverified', 'pending', 'verified'])->default("unverified"); //v
+            $table->timestamp('verified_at')->nullable(); //v
 
             // $table->unsignedBigInteger('validator')->nullable();
             // $table->foreign('validator')->references('id')->on('users');
