@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         }
         $this->call([
             UsersAdminSeeder::class,
+            UserSampelSeeder::class,
             destinasi_gate::class,
             paket_tiket::class,
             settingSeeder::class,

@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->uuid('id_bio')->unique()->nullable();  //v
 
-            $table->string('token')->nullable();   //-------------------
+            // $table->string('token')->nullable();   //-------------------
             $table->timestamp('email_verified_at')->nullable();  //v
             $table->string('gauth_id')->nullable();  //v
             // $table->string('gauth_type')->nullable(); //v

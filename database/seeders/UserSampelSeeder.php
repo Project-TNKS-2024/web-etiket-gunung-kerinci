@@ -87,7 +87,7 @@ class UserSampelSeeder extends Seeder
                     'role' => 'user',
                     'gauth_type' => 'manual',
                     'id_bio' => $biodata->id,
-                    'token' => 'user_token_' . explode('@', $user['email'])[0],
+                    // 'token' => 'user_token_' . explode('@', $user['email'])[0],
                     'email_verified_at' => now(),
                 ]);
             }
@@ -96,7 +96,7 @@ class UserSampelSeeder extends Seeder
 
 
 
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $email = 'user' . $i . '@example.com';
             if (User::where('email', $email)->exists()) {
                 continue;
@@ -125,7 +125,7 @@ class UserSampelSeeder extends Seeder
                 'email' => $email,
                 'password' => Hash::make('password'),
                 'role' => 'user',
-                'token' => 'user_token',
+                // 'token' => 'user_token',
                 'email_verified_at' => now(),
                 'id_bio' => $biodata->id,
             ]);

@@ -23,7 +23,7 @@ class UsersAdminSeeder extends Seeder
             'password' => Hash::make('password'),
             'role' => 'admin',
 
-            'token' => 'superadmin_token',
+            // 'token' => 'superadmin_token',
             'email_verified_at' => now(),
         ]);
     }
