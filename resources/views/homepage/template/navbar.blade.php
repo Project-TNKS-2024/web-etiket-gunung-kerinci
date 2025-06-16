@@ -8,7 +8,7 @@ $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->
 }
 @endphp
 
-@if (config('app.debug'))
+@if (config('app.debug_notice'))
 <style>
     .debug-alert {
         background-color: #ffcc00;
