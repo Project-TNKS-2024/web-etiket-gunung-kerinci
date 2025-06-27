@@ -1,13 +1,3 @@
-@php
-$destinasi = App\Models\destinasi::all();
-$bookingRoutes = [];
-
-foreach ($destinasi as $d) {
-$bookingRoutes[] = route('homepage.booking.destinasi.paket', ['id' => $d->id]);
-$bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->id]);
-}
-@endphp
-
 @if (config('app.debug_notice'))
 <style>
     .debug-alert {
@@ -65,12 +55,11 @@ $bookingRoutes[] = route('homepage.booking.destinasi.paket.tiket', ['id' => $d->
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('homepage.booking.destinasi.list') }}"
-                        class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2"
-                        data-route="[{{ implode(',', $bookingRoutes) }}]">Pesan Tiket</a>
+                        class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2">Pesan Tiket</a>
                 </li>
             </ul>
 
-            <ul class="navbar-nav d-flex align-items-center">
+            <ul class=" navbar-nav d-flex align-items-center">
                 @guest
                 <li class="nav-item">
                     <a class="nav-link py-2 py-sm-0 px-2 text-white gk-bg-primary600 rounded-4 px-3"

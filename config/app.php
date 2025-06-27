@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'debug_notice' => env('APP_DEBUG_NOTIVE', false),
+    'debug_notice' => env('APP_DEBUG_NOTICE', false),
 
 
     /*
