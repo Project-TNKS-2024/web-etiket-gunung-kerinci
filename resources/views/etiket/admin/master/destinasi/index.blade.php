@@ -22,7 +22,7 @@
                   <th class="p-3 gk-bg-base-white font-bold">Status</th>
                   <th class="p-3 gk-bg-base-white font-bold">Nama</th>
                   <th class="p-3 gk-bg-base-white font-bold">Kategori</th>
-                  <th class="p-3 gk-bg-base-white font-bold">Lokasi</th>
+                  <!-- <th class="p-3 gk-bg-base-white font-bold">Lokasi</th> -->
                   <th class="p-3 gk-bg-base-white font-bold">Detail</th>
                   <th class="p-3 gk-bg-base-white font-bold">Aksi</th>
                </tr>
@@ -41,7 +41,7 @@
                   </td>
                   <td class="p-3 ">{{$d->nama}}</td>
                   <td class="p-3 ">{{$d->kategori}}</td>
-                  <td class="p-3 ">{{$d->lokasi}}</td>
+                  <!-- <td class="p-3 ">{{$d->lokasi}}</td> -->
                   <td class="p-3">
                      <div style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 15;">
                         {!!$d->detail!!}
