@@ -43,3 +43,5 @@ Route::get('oauth/google/callback', [OauthController::class, 'handleProviderCall
 Route::middleware('auth')->group(function () {
    Route::post('logout', [login::class, 'logout'])->name('etiket.auth.logout');
 });
+
+// route verifikasi email mobile
