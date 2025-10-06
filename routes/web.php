@@ -59,6 +59,17 @@ include __DIR__ . '/web/routeAdmins.php';
 include __DIR__ . '/web/routeUsers.php';
 
 
+Route::get('/verify-redirect', function (Request $request) {
+    $id = $request->id;
+    $hash = $request->hash;
+
+    // $url = env('MOBILE_HOST') . "verify-email?id={$id}&hash={$hash}";
+    $path = "verify-email?id={$id}&hash={$hash}";
+    $url = mobile($path);
+
+    // View sederhana untuk redirect otomatis pakai JS
+    return response()->view('email.redirect-mobile', compact('url'));
+});
 
 //test
 Route::get('/tes', function () {

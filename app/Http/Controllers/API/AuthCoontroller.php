@@ -68,6 +68,7 @@ class AuthCoontroller extends Controller
         ]);
 
         Mail::to($user->email)->send(new MobileVerifyMail($user));
+
         $token = $user->createToken('api-token')->plainTextToken;
 
         return ApiResponse::success([
@@ -75,6 +76,42 @@ class AuthCoontroller extends Controller
             'token' => $token
         ], 'Registrasi berhasil. Silakan cek email untuk verifikasi.', 201);
     }
+    public function notice(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
+            return ApiResponse::success(null, 'Email sudah diverifikasi.');
+        }
+
+        return ApiResponse::error('Email belum diverifikasi', null, 403);
+    }
+
+    public function resend(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return ApiResponse::success(null, 'Email sudah diverifikasi.');
+        }
+
+        // kirim ulang email verifikasi ke mobile
+        Mail::to($request->user()->email)->send(new MobileVerifyMail($request->user()));
+
+        return ApiResponse::success(null, 'Email verifikasi telah dikirim ulang.');
+    }
+
+    public function verify(EmailVerificationRequest $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return ApiResponse::success(null, 'Email sudah diverifikasi.');
+        }
+
+        if ($request->user()->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+        }
+
+        return ApiResponse::success(null, 'Email berhasil diverifikasi.');
+    }
+
 
     public function sendResetLink(Request $request)
     {
@@ -118,36 +155,6 @@ class AuthCoontroller extends Controller
         DB::table('password_reset_tokens')->where('token', $request->token)->delete();
 
         return ApiResponse::success(null, 'Password berhasil direset, silakan login.');
-    }
-
-    public function notice()
-    {
-        return ApiResponse::error('Email belum diverifikasi', null, 403);
-    }
-
-    public function resend(Request $request)
-    {
-        if ($request->user()->hasVerifiedEmail()) {
-            return ApiResponse::success(null, 'Email sudah diverifikasi.');
-        }
-
-        // kirim ulang email verifikasi ke mobile
-        Mail::to($request->user()->email)->send(new MobileVerifyMail($request->user()));
-
-        return ApiResponse::success(null, 'Email verifikasi telah dikirim ulang.');
-    }
-
-    public function verify(EmailVerificationRequest $request)
-    {
-        if ($request->user()->hasVerifiedEmail()) {
-            return ApiResponse::success(null, 'Email sudah diverifikasi.');
-        }
-
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
-        }
-
-        return ApiResponse::success(null, 'Email berhasil diverifikasi.');
     }
 
     public function redirectToGoogle()

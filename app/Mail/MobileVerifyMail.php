@@ -10,27 +10,27 @@ use Illuminate\Queue\SerializesModels;
 class MobileVerifyMail extends Mailable
 {
     use Queueable, SerializesModels;
+    public $id;
+    public $hash;
+    public $redirectUrl;
 
-    public $url;
-
-    /**
-     * Buat instance baru.
-     */
     public function __construct($user)
     {
-        $hash = sha1($user->getEmailForVerification());
-        // Deep link ke aplikasi mobile
-        $this->url = "tnkas://verify-email?id={$user->getKey()}&hash={$hash}";
+        $this->id = $user->getKey();
+        $this->hash = sha1($user->getEmailForVerification());
+
+        // Buat URL HTTPS redirect (agar tidak diblokir email client)
+        $this->redirectUrl = url("/verify-redirect?id={$this->id}&hash={$this->hash}");
     }
 
-    /**
-     * Build pesan email.
-     */
     public function build()
     {
         return $this->subject('Verifikasi Email Akun Anda')
-            ->markdown('email.mobile_Authverify', [
-                'url' => $this->url,
+            ->markdown('email.mobile_Authverify')
+            ->with([
+                'redirectUrl' => $this->redirectUrl,
+                'id' => $this->id,
+                'hash' => $this->hash,
             ]);
     }
 }
