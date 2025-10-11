@@ -57,6 +57,10 @@
                     <a href="{{ route('homepage.booking.destinasi.list') }}"
                         class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2">Pesan Tiket</a>
                 </li>
+                <li class="nav-item">
+                    <a href="https://vrgkerinci-tnks.fst.unja.ac.id/ "
+                        class="nav-link py-2 py-sm-0 px-2 text-white rounded-4 mx-2">Jelajahi Gunung Kerinci</a>
+                </li>
             </ul>
 
             <ul class=" navbar-nav d-flex align-items-center">
