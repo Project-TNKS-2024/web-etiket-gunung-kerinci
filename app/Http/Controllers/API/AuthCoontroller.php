@@ -52,8 +52,9 @@ class AuthCoontroller extends Controller
 
     public function register(Request $request)
     {
+        // 1️⃣ VALIDASI INPUT
         $validator = Validator::make($request->all(), [
-            'email'    => 'required|string|email|max:255|unique:users',
+            'email'    => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -61,19 +62,39 @@ class AuthCoontroller extends Controller
             return ApiResponse::error('Validasi gagal', $validator->errors(), 422);
         }
 
+        // 2️⃣ CEK MANUAL JIKA EMAIL SUDAH ADA (redundan tapi aman)
+        if (User::where('email', $request->email)->exists()) {
+            return ApiResponse::error('Akun dengan email ini sudah terdaftar.', [], 409);
+        }
+
+        // 3️⃣ BUAT USER BARU
         $user = User::create([
             'email'      => $request->email,
             'gauth_type' => 'manual',
             'password'   => Hash::make($request->password),
         ]);
 
-        Mail::to($user->email)->send(new MobileVerifyMail($user));
 
+        // 4️⃣ KIRIM EMAIL VERIFIKASI
+        try {
+            Mail::to($user->email)->send(new MobileVerifyMail($user));
+        } catch (Exception $mailError) {
+            // Jika gagal kirim email, hapus user agar tidak ada data "gantung"
+            // $user->delete();
+            return ApiResponse::error(
+                'Gagal mengirim email verifikasi. Silakan coba lagi nanti.',
+                ['mail_error' => $mailError->getMessage()],
+                500
+            );
+        }
+
+        // 5️⃣ BUAT TOKEN AUTENTIKASI
         $token = $user->createToken('api-token')->plainTextToken;
 
+        // 6️⃣ RESPONSE BERHASIL
         return ApiResponse::success([
             'user'  => $user,
-            'token' => $token
+            'token' => $token,
         ], 'Registrasi berhasil. Silakan cek email untuk verifikasi.', 201);
     }
     public function notice(Request $request)
