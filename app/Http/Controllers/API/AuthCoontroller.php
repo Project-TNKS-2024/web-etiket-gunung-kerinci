@@ -52,7 +52,7 @@ class AuthCoontroller extends Controller
 
     public function register(Request $request)
     {
-        // 1️⃣ VALIDASI INPUT
+        // VALIDASI INPUT
         $validator = Validator::make($request->all(), [
             'email'    => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
@@ -62,12 +62,12 @@ class AuthCoontroller extends Controller
             return ApiResponse::error('Validasi gagal', $validator->errors(), 422);
         }
 
-        // 2️⃣ CEK MANUAL JIKA EMAIL SUDAH ADA (redundan tapi aman)
+        // CEK MANUAL JIKA EMAIL SUDAH ADA (redundan tapi aman)
         if (User::where('email', $request->email)->exists()) {
             return ApiResponse::error('Akun dengan email ini sudah terdaftar.', [], 409);
         }
 
-        // 3️⃣ BUAT USER BARU
+        // BUAT USER BARU
         $user = User::create([
             'email'      => $request->email,
             'gauth_type' => 'manual',
@@ -75,7 +75,7 @@ class AuthCoontroller extends Controller
         ]);
 
 
-        // 4️⃣ KIRIM EMAIL VERIFIKASI
+        // KIRIM EMAIL VERIFIKASI
         try {
             Mail::to($user->email)->send(new MobileVerifyMail($user));
         } catch (Exception $mailError) {
@@ -88,10 +88,10 @@ class AuthCoontroller extends Controller
             );
         }
 
-        // 5️⃣ BUAT TOKEN AUTENTIKASI
+        // BUAT TOKEN AUTENTIKASI
         $token = $user->createToken('api-token')->plainTextToken;
 
-        // 6️⃣ RESPONSE BERHASIL
+        // RESPONSE BERHASIL
         return ApiResponse::success([
             'user'  => $user,
             'token' => $token,

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\helper\ApiResponse;
 use Illuminate\Support\Facades\Cache;
 
 class DomisiliController extends Controller
 {
+    public $negara;
     public $provinsi;
     public $kabupaten;
     public $kecamatan;
@@ -14,6 +16,9 @@ class DomisiliController extends Controller
 
     public function __construct()
     {
+        $this->negara = Cache::rememberForever('Negara_data', function () {
+            return json_decode(file_get_contents(public_path('assets/json/negara.json')), true);
+        });
         $this->provinsi = Cache::rememberForever('provinsi_data', function () {
             return json_decode(file_get_contents(public_path('assets/json/provinsi.json')), true);
         });
@@ -30,22 +35,24 @@ class DomisiliController extends Controller
             return json_decode(file_get_contents(public_path('assets/json/kelurahan.json')), true);
         });
     }
+    // get list negara
+    public function getNegara()
+    {
+        $data = $this->negara;
+        if ($data) {
+            return ApiResponse::success($data, "Berhasil", 200);
+        } else {
+            return ApiResponse::error('gagal mengambil data negara', '', 500);
+        }
+    }
     // get list provinsi
     public function getProvinsi()
     {
         $data = $this->provinsi;
         if ($data) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'berhasil',
-                'data' => $data
-            ]);
+            return ApiResponse::success($data, "Berhasil", 200);
         } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'gagal mengambil data provinsi',
-                'data' => $data
-            ]);
+            return ApiResponse::error('gagal mengambil data provinsi', '', 500);
         }
     }
 
@@ -57,17 +64,9 @@ class DomisiliController extends Controller
             return $item['provinsi_id'] == $id;
         });
         if ($data) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'berhasil',
-                'data' => $data
-            ]);
+            return ApiResponse::success($data, "Berhasil", 200);
         } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'gagal mengambil data kabupaten',
-                'data' => $data
-            ]);
+            return ApiResponse::error('gagal mengambil data kabupaten', '', 500);
         }
     }
 
@@ -79,17 +78,9 @@ class DomisiliController extends Controller
             return $item['kabupaten_id'] == $id;
         });
         if ($data) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'berhasil',
-                'data' => $data
-            ]);
+            return ApiResponse::success($data, "Berhasil", 200);
         } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'gagal mengambil data kecamatan',
-                'data' => $data
-            ]);
+            return ApiResponse::error('gagal mengambil data kecamatan', '', 500);
         }
     }
 
@@ -101,17 +92,9 @@ class DomisiliController extends Controller
             return $item['kecamatan_id'] == $id;
         });
         if ($data) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'berhasil',
-                'data' => $data
-            ]);
+            return ApiResponse::success($data, "Berhasil", 200);
         } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'gagal mengambil data desa',
-                'data' => $data
-            ]);
+            return ApiResponse::error('gagal mengambil data desa', '', 500);
         }
     }
 
@@ -123,17 +106,9 @@ class DomisiliController extends Controller
             return $item['id'] == $id;
         });
         if ($data) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'berhasil',
-                'data' => $data
-            ]);
+            return ApiResponse::success($data, "Berhasil", 200);
         } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'gagal mengambil data provinsi',
-                'data' => $data
-            ]);
+            return ApiResponse::error('gagal mengambil data provinsi', '', 500);
         }
     }
 
@@ -145,17 +120,9 @@ class DomisiliController extends Controller
             return $item['id'] == $id;
         });
         if ($data) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'berhasil',
-                'data' => $data
-            ]);
+            return ApiResponse::success($data, "Berhasil", 200);
         } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'gagal mengambil data kabupaten',
-                'data' => $data
-            ]);
+            return ApiResponse::error('gagal mengambil data kabupaten', '', 500);
         }
     }
 
@@ -167,17 +134,9 @@ class DomisiliController extends Controller
             return $item['id'] == $id;
         });
         if ($data) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'berhasil',
-                'data' => $data
-            ]);
+            return ApiResponse::success($data, "Berhasil", 200);
         } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'gagal mengambil data kecamatan',
-                'data' => $data
-            ]);
+            return ApiResponse::error('gagal mengambil data kecamatan', '', 500);
         }
     }
 
@@ -188,18 +147,11 @@ class DomisiliController extends Controller
         $data = array_filter($data, function ($item) use ($id) {
             return $item['id'] == $id;
         });
+
         if ($data) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'berhasil',
-                'data' => $data
-            ]);
+            return ApiResponse::success($data, "Berhasil", 200);
         } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'gagal mengambil data desa',
-                'data' => $data
-            ]);
+            return ApiResponse::error('gagal mengambil data desa', '', 500);
         }
     }
 }

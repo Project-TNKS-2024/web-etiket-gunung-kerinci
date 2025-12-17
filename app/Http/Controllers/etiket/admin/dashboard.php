@@ -87,8 +87,6 @@ class dashboard extends AdminController
                 ->whereYear('tanggal_masuk', $year)->sum('total_pembayaran')];
         });
 
-        // return $earnings;
-
         $currentEarnings = $earnings[$currentYear];
         $lastYearEarnings = $earnings[$currentYear - 1];
 

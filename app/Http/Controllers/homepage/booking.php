@@ -120,7 +120,6 @@ class booking extends Controller
         if (!$booking) {
             abort(404);
         }
-
         // Cek status booking
         if (isset($status)) {
             if (is_array($status) ? !in_array($booking->status_booking, $status) : $booking->status_booking !== $status) {
@@ -128,7 +127,6 @@ class booking extends Controller
                 // return redirect()->route('homepage.booking', ['id' => $id]);
             }
         }
-
         // Cek apakah booking sudah expired
         if ($booking->status_booking == 3 && Carbon::now()->diffInHours($booking->updated_at) >= 24) {
             $booking->load('pembayaran');
@@ -138,9 +136,7 @@ class booking extends Controller
                 // Hapus semua pembayaran dan ubah status booking
                 $booking->pembayaran()->delete();
                 $booking->update(['status_booking' => 2]);
-
                 return null;
-                // return redirect()->route('homepage.booking', ['id' => $id]);
             }
         }
 
@@ -286,9 +282,6 @@ class booking extends Controller
                 }
             }
         }
-
-
-
 
         // cek umur ketua min 17 tahun
         $userBio = bio_pendaki::find(Auth::user()->id_bio);
