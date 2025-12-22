@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\api\ProfileController;
+use App\Http\Controllers\API\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -9,9 +9,8 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::post('/profile/updatebiodata', [ProfileController::class, 'updateBiodata'])->name('api.profile.updatebiodata');
    Route::post('/profile/gantipassword', [ProfileController::class, 'gantiPassword'])->name('api.profile.gantipassword');
 
-   // api deomisili
-
    // api destinasi
+
 
    // api mytiket
 
