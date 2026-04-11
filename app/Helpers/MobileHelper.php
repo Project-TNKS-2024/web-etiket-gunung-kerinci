@@ -9,10 +9,10 @@ if (!function_exists('mobile')) {
      */
     function mobile(string $path): string
     {
-        $scheme = env('MOBILE_SCHEME', 'gunungkerinci:');
+        $scheme = env('MOBILE_SCHEME', 'gunungkerinci:/');
 
         // Pastikan tidak ada duplikasi slash
-        $path = ltrim($path, '//');
+        $path = ltrim($path, '/');
 
         return "{$scheme}/{$path}";
     }
