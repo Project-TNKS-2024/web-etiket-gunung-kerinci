@@ -20,6 +20,13 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthCoontroller extends Controller
 {
+    /**
+     * Login dengan email dan password
+     * Memvalidasi kredensial user dan menghasilkan token autentikasi
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -44,12 +51,25 @@ class AuthCoontroller extends Controller
         return ApiResponse::error('Email atau password salah', null, 401);
     }
 
+    /**
+     * Logout dengan menghapus token autentikasi user saat ini
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
         return ApiResponse::success(null, 'Logout berhasil');
     }
 
+    /**
+     * Registrasi user baru dengan email dan password
+     * Membuat user baru, mengirim email verifikasi, dan menghasilkan token autentikasi
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function register(Request $request)
     {
         // VALIDASI INPUT
@@ -97,6 +117,14 @@ class AuthCoontroller extends Controller
             'token' => $token,
         ], 'Registrasi berhasil. Silakan cek email untuk verifikasi.', 201);
     }
+
+    /**
+     * Memeriksa status verifikasi email user
+     * Mengembalikan status apakah email sudah diverifikasi atau belum
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function notice(Request $request)
     {
         $user = $request->user();
@@ -108,6 +136,13 @@ class AuthCoontroller extends Controller
         return ApiResponse::error('Email belum diverifikasi', null, 403);
     }
 
+    /**
+     * Mengirim ulang email verifikasi ke user
+     * Hanya bisa dijalankan jika email belum diverifikasi
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function resend(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
@@ -120,6 +155,13 @@ class AuthCoontroller extends Controller
         return ApiResponse::success(null, 'Email verifikasi telah dikirim ulang.');
     }
 
+    /**
+     * Memverifikasi email user melalui link verifikasi
+     * Menandai email user sebagai terverifikasi jika belum
+     *
+     * @param EmailVerificationRequest $request
+     * @return \Illuminate\Http\Response
+     */
     public function verify(EmailVerificationRequest $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
@@ -133,7 +175,13 @@ class AuthCoontroller extends Controller
         return ApiResponse::success(null, 'Email berhasil diverifikasi.');
     }
 
-
+    /**
+     * Mengirim link reset password ke email user
+     * Membuat token reset password dan mengirimnya via email
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function sendResetLink(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -156,6 +204,13 @@ class AuthCoontroller extends Controller
         return ApiResponse::success(null, 'Link reset password sudah dikirim ke email');
     }
 
+    /**
+     * Reset password user menggunakan token
+     * Memvalidasi token dan password baru, lalu memperbarui password di database
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function reset(Request $request)
     {
         $request->validate([
@@ -178,6 +233,12 @@ class AuthCoontroller extends Controller
         return ApiResponse::success(null, 'Password berhasil direset, silakan login.');
     }
 
+    /**
+     * Redirect user ke halaman login Google
+     * Mengembalikan URL untuk autentikasi dengan Google OAuth
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function redirectToGoogle()
     {
         return ApiResponse::success([
@@ -185,6 +246,12 @@ class AuthCoontroller extends Controller
         ], 'Redirect ke Google');
     }
 
+    /**
+     * Menangani callback dari Google setelah user berhasil autentikasi
+     * Membuat atau memperbarui user di database dan menghasilkan token autentikasi
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function handleGoogleCallback()
     {
         try {
