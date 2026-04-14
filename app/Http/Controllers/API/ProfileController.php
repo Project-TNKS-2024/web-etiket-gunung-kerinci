@@ -27,19 +27,22 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+        $isUpdate = (bool) $user->id_bio;
+        $isIndonesia = $request->input('kewarganegaraan') === 'ID';
+
         $validator = Validator::make($request->all(), [
             'firstName' => 'required|string|max:255',
             'lastName' => 'nullable|string|max:255',
-            'lampiran_identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:548',
+            'lampiran_identitas' => ($isUpdate ? 'nullable' : 'required') . '|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'kewarganegaraan' => 'required|string',
             'nik' => 'required|string|min:6|max:16|alpha_num',
             'nomor_telepon' => 'required|numeric',
             'telp_country' => 'required|string|max:5',
             'jenis_kelamin' => 'required|in:l,p',
             'tanggal_lahir' => 'required|date|before:today',
-            'provinsi' => 'nullable|numeric',
-            'kabupaten_kota' => 'nullable|numeric',
-            'kecamatan' => 'nullable|numeric',
+            'provinsi' => ($isIndonesia ? 'required' : 'nullable') . '|numeric',
+            'kabupaten_kota' => ($isIndonesia ? 'required' : 'nullable') . '|numeric',
+            'kecamatan' => ($isIndonesia ? 'required' : 'nullable') . '|numeric',
             'desa_kelurahan' => 'nullable|numeric',
         ]);
 
@@ -73,10 +76,10 @@ class ProfileController extends Controller
                 $bio->nik = $validated['nik'];
             }
 
-            $filename = $upload->upadate(
-                $bio->lampiran_identitas,
-                $request->file('lampiran_identitas')
-            ) ?? $upload->create($user->id, 'identitas', $request->file('lampiran_identitas'));
+            $filename = $request->hasFile('lampiran_identitas')
+                ? ($upload->upadate($bio->lampiran_identitas, $request->file('lampiran_identitas'))
+                    ?? $upload->create($user->id, 'identitas', $request->file('lampiran_identitas')))
+                : $bio->lampiran_identitas;
 
             $bio->update([
                 'kenegaraan' => $validated['kewarganegaraan'],
@@ -89,7 +92,7 @@ class ProfileController extends Controller
                 'provinsi' => $validated['kewarganegaraan'] == 'ID' ? $validated['provinsi'] : null,
                 'kabupaten' => $validated['kewarganegaraan'] == 'ID' ? $validated['kabupaten_kota'] : null,
                 'kec' => $validated['kewarganegaraan'] == 'ID' ? $validated['kecamatan'] : null,
-                'desa' => $validated['kewarganegaraan'] == 'ID' ? $validated['desa_kelurahan'] : null,
+                'desa' => $validated['kewarganegaraan'] == 'ID' ? ($validated['desa_kelurahan'] ?? null) : null,
                 'verified' => 'pending',
             ]);
         } else {
@@ -107,7 +110,7 @@ class ProfileController extends Controller
                 'provinsi' => $validated['kewarganegaraan'] == 'ID' ? $validated['provinsi'] : null,
                 'kabupaten' => $validated['kewarganegaraan'] == 'ID' ? $validated['kabupaten_kota'] : null,
                 'kec' => $validated['kewarganegaraan'] == 'ID' ? $validated['kecamatan'] : null,
-                'desa' => $validated['kewarganegaraan'] == 'ID' ? $validated['desa_kelurahan'] : null,
+                'desa' => $validated['kewarganegaraan'] == 'ID' ? ($validated['desa_kelurahan'] ?? null) : null,
                 'verified' => 'pending',
             ]);
 
@@ -127,8 +130,8 @@ class ProfileController extends Controller
                 'password_baru' => 'required|string|min:8|confirmed',
             ],
             [
-                'password_baru.required'  => 'Password harus diisi.',
-                'password_baru.min'       => 'Password minimal :min karakter.',
+                'password_baru.required' => 'Password harus diisi.',
+                'password_baru.min' => 'Password minimal :min karakter.',
                 'password_baru.confirmed' => 'Konfirmasi password tidak cocok.',
             ]
         );
@@ -137,7 +140,7 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validasi gagal',
-                'errors'  => $validator->errors(),
+                'errors' => $validator->errors(),
             ], 422);
 
             return ApiResponse::error('Validasi gagal', $validator->error(), 422);
