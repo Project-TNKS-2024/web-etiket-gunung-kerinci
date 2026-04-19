@@ -134,11 +134,11 @@ class ProfileController extends Controller
         );
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal',
-                'errors'  => $validator->errors(),
-            ], 422);
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Validasi gagal',
+            //     'errors'  => $validator->errors(),
+            // ], 422);
 
             return ApiResponse::error('Validasi gagal', $validator->error(), 422);
         }
