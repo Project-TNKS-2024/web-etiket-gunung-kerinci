@@ -126,4 +126,10 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/setting/{id}/update', [settingController::class, 'update'])->name('admin.setting.update')->middleware('permission:edit-setting');
     Route::post('admin/setting/updateAction', [settingController::class, 'updateAction'])->name('admin.setting.updateAction')->middleware('permission:edit-setting');
     Route::post('admin/setting/deleteAction', [settingController::class, 'deleteAction'])->name('admin.setting.deleteAction')->middleware('permission:delete-setting');
+
+    // Emergency Management
+    Route::get('admin/emergency', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'index'])->name('admin.emergency.index');
+    Route::post('admin/emergency/broadcast', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'broadcast'])->name('admin.emergency.broadcast');
+    Route::put('admin/emergency/{id}/acknowledge', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'acknowledge'])->name('admin.emergency.acknowledge');
+    Route::put('admin/emergency/{id}/resolve', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'resolve'])->name('admin.emergency.resolve');
 });
