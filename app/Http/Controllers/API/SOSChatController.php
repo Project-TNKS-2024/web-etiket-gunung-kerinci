@@ -25,7 +25,11 @@ class SOSChatController extends Controller
         ]);
 
         $user = $request->user();
-        $sos = GkSos::findOrFail($sosId);
+        $sos = GkSos::find($sosId);
+
+        if (!$sos) {
+            return ApiResponse::error('SOS tidak ditemukan', null, 404);
+        }
 
         // Verify access: must be the hiker who triggered OR admin of the destinasi
         if (!$this->canAccessSos($user, $sos)) {
@@ -77,7 +81,11 @@ class SOSChatController extends Controller
     public function messages(Request $request, $sosId)
     {
         $user = $request->user();
-        $sos = GkSos::findOrFail($sosId);
+        $sos = GkSos::find($sosId);
+
+        if (!$sos) {
+            return ApiResponse::error('SOS tidak ditemukan', null, 404);
+        }
 
         if (!$this->canAccessSos($user, $sos)) {
             return ApiResponse::error('Tidak memiliki akses ke SOS ini', null, 403);
