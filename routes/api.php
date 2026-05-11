@@ -10,6 +10,7 @@ include __DIR__ . '/api/routeUser.php';
 include __DIR__ . '/api/routeDomisili.php';
 include __DIR__ . '/api/routeTracking.php';
 include __DIR__ . '/api/routeEmergency.php';
+include __DIR__ . '/api/routeSOS.php';
 
 Route::fallback(function (Request $request) {
    return response()->json([

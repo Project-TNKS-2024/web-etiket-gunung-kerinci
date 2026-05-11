@@ -138,4 +138,10 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/posts', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'store'])->name('admin.posts.store');
     Route::put('admin/posts/{id}', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'update'])->name('admin.posts.update');
     Route::delete('admin/posts/{id}', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'destroy'])->name('admin.posts.destroy');
+
+    // SOS Management
+    Route::get('admin/sos', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'index'])->name('admin.sos.index');
+    Route::get('admin/sos/{id}', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'detail'])->name('admin.sos.detail');
+    Route::put('admin/sos/{id}/status', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'updateStatus'])->name('admin.sos.updateStatus');
+    Route::put('admin/disaster-report/{id}/verify', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'verifyDisasterReport'])->name('admin.disaster-report.verify');
 });
