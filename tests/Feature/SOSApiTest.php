@@ -115,8 +115,9 @@ class SOSApiTest extends TestCase
      */
     public function test_sos_trigger_requires_active_booking(): void
     {
-        $user = \App\Models\User::where('role', 'user')->first();
-        if (!$user) $this->markTestSkipped('No user');
+        // Use a user with no active booking (admin or user without status_booking=6)
+        $user = \App\Models\User::where('role', 'admin')->first();
+        if (!$user) $this->markTestSkipped('No admin user');
 
         $response = $this->actingAs($user, 'sanctum')->postJson('/api/sos/trigger', [
             'latitude' => -1.6974,
