@@ -132,4 +132,10 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/emergency/broadcast', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'broadcast'])->name('admin.emergency.broadcast');
     Route::put('admin/emergency/{id}/acknowledge', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'acknowledge'])->name('admin.emergency.acknowledge');
     Route::put('admin/emergency/{id}/resolve', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'resolve'])->name('admin.emergency.resolve');
+
+    // Post (Checkpoint) Management
+    Route::get('admin/posts', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'index'])->name('admin.posts.index');
+    Route::post('admin/posts', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'store'])->name('admin.posts.store');
+    Route::put('admin/posts/{id}', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'update'])->name('admin.posts.update');
+    Route::delete('admin/posts/{id}', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'destroy'])->name('admin.posts.destroy');
 });
