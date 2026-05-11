@@ -144,4 +144,7 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/sos/{id}', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'detail'])->name('admin.sos.detail');
     Route::put('admin/sos/{id}/status', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'updateStatus'])->name('admin.sos.updateStatus');
     Route::put('admin/disaster-report/{id}/verify', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'verifyDisasterReport'])->name('admin.disaster-report.verify');
+
+    // Live Monitoring
+    Route::get('admin/monitoring', [\App\Http\Controllers\etiket\admin\monitoring\MonitoringController::class, 'index'])->name('admin.monitoring.index');
 });
