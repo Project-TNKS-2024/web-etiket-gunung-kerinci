@@ -19,7 +19,7 @@ class login extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'g-recaptcha-response' => 'required|recaptcha',
+            // 'g-recaptcha-response' => 'required|recaptcha', // Temporarily disabled
 
         ]);
 
