@@ -93,4 +93,14 @@ class User extends Authenticatable implements MustVerifyEmail
             ->wherePivot('is_penanggungjawab', true)
             ->exists();
     }
+
+    public function hasActiveBookingAt(int $destinasiId): bool
+    {
+        return gk_booking::where('id_user', $this->id)
+            ->where('status_booking', 6) // checked-in
+            ->whereHas('gktiket', function ($q) use ($destinasiId) {
+                $q->where('id_destinasi', $destinasiId);
+            })
+            ->exists();
+    }
 }

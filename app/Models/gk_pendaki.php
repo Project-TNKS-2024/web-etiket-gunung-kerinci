@@ -53,6 +53,16 @@ class gk_pendaki extends Model
         return $this->belongsTo(gk_booking::class, 'booking_id');
     }
 
+    public function tracking()
+    {
+        return $this->hasMany(GkTracking::class, 'id_pendaki');
+    }
+
+    public function checkpointLogs()
+    {
+        return $this->hasMany(GkCheckpointLog::class, 'id_pendaki');
+    }
+
     public function biodata()
     {
         return $this->belongsTo(bio_pendaki::class, 'id_bio');
