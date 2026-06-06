@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\HomeController;
 use App\Http\Controllers\API\ProfileController;
+use App\Http\Controllers\API\DestinasiController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -14,6 +15,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/gantipassword', [ProfileController::class, 'gantiPassword'])->name('api.profile.gantipassword');
 
     // api destinasi
+    Route::get('/destinasi', [DestinasiController::class, 'index'])->name('api.destinasi.index');
+    Route::get('/destinasi/{id}', [DestinasiController::class, 'show'])->name('api.destinasi.show');
 
 
     // api mytiket

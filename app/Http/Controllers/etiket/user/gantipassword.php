@@ -41,7 +41,7 @@ class gantipassword extends Controller
         $user = User::where('email', Auth::user()->email)->first();
 
         // Update the user's password
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make($request->password_baru);
 
         if ($user->save())
             return back()->with('success', 'Password Anda telah berhasil direset.');

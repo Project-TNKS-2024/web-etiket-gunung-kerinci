@@ -168,7 +168,7 @@ class ProfileController extends Controller
             // ], 422);
 
 
-            return ApiResponse::error('Validasi gagal', $validator->error(), 422);
+            return ApiResponse::error('Validasi gagal', $validator->errors(), 422);
         }
 
         $user = $request->user();
