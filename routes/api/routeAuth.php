@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->group(function () {
 // OAuth Google
 Route::get('/auth/google/redirect', [AuthCoontroller::class, 'redirectToGoogle'])->name('api.auth.google.redirect');
 Route::get('/auth/google/callback', [AuthCoontroller::class, 'handleGoogleCallback'])->name('api.auth.google.callback');
+Route::post('/auth/google/token', [AuthCoontroller::class, 'loginWithGoogleToken'])->name('api.auth.google.token');

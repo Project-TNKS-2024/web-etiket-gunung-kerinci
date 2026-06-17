@@ -53,6 +53,34 @@
             "url": {"raw": "{{base_url}}/api/login", "host": ["{{base_url}}"], "path": ["api", "login"]}
           },
           "response": []
+        },
+        {
+          "name": "Google Login via Access Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Google login response received', () => pm.response.code >= 200 && pm.response.code < 500);",
+                  "const json = pm.response.json();",
+                  "const token = json?.data?.token || json?.token || json?.access_token;",
+                  "if (token) {",
+                  "  pm.collectionVariables.set('bearer_token', token);",
+                  "  pm.environment.set('bearer_token', token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"access_token\": \"{{google_access_token}}\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": {"raw": "{{base_url}}/api/auth/google/token", "host": ["{{base_url}}"], "path": ["api", "auth", "google", "token"]}
+          },
+          "response": []
         }
       ]
     },
@@ -142,6 +170,7 @@
     {"key": "base_url", "value": "https://eticket-tnks.fst.unja.ac.id", "type": "string"},
     {"key": "email", "value": "email_kamu@example.com", "type": "string"},
     {"key": "password", "value": "password_kamu", "type": "string"},
+    {"key": "google_access_token", "value": "", "type": "string"},
     {"key": "bearer_token", "value": "", "type": "string"},
     {"key": "first_name", "value": "Nama", "type": "string"},
     {"key": "last_name", "value": "Pendaki", "type": "string"},
