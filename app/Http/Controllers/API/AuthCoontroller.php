@@ -257,16 +257,24 @@ class AuthCoontroller extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
+            $isNewUser = !$this->googleUserExists($googleUser);
             $user = $this->findOrCreateGoogleUser($googleUser);
 
             $token = $user->createToken('api-token')->plainTextToken;
 
-            return ApiResponse::success([
-                'user'  => $user,
-                'token' => $token
-            ], 'Login dengan Google berhasil');
+            return redirect()->away($this->googleMobileRedirectUrl([
+                'token' => $token,
+                'token_type' => 'Bearer',
+                'email' => $user->email,
+                'user_id' => $user->id,
+                'is_new_user' => $isNewUser ? 1 : 0,
+            ]));
         } catch (Exception $e) {
-            return ApiResponse::error('Login dengan Google gagal', $e->getMessage(), 400);
+            return redirect()->away($this->googleMobileRedirectUrl([
+                'success' => 0,
+                'error' => 'google_login_failed',
+                'message' => $e->getMessage(),
+            ]));
         }
     }
 
@@ -334,5 +342,24 @@ class AuthCoontroller extends Controller
         }
 
         return $user->fresh();
+    }
+
+    private function googleUserExists($googleUser): bool
+    {
+        if (!$googleUser->email) {
+            return false;
+        }
+
+        return User::where('gauth_id', $googleUser->id)
+            ->orWhere('email', $googleUser->email)
+            ->exists();
+    }
+
+    private function googleMobileRedirectUrl(array $params): string
+    {
+        $baseUrl = rtrim(config('services.google.mobile_redirect', 'gunungkerinci://oauth'), '?');
+        $separator = str_contains($baseUrl, '?') ? '&' : '?';
+
+        return $baseUrl . $separator . http_build_query($params);
     }
 }

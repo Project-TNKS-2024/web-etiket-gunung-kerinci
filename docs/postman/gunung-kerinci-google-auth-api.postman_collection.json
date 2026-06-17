@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "7f3432cb-9d4f-4dbf-9e37-9bb1bca01e2a",
     "name": "Gunung Kerinci API - Google Auth Mobile",
-    "description": "Collection terpisah untuk login Google via API/mobile. Mobile app mengambil Google access_token dari Google SDK, lalu mengirimkannya ke POST /api/auth/google/token untuk mendapatkan Sanctum bearer token aplikasi.",
+    "description": "Collection terpisah untuk Google Auth mobile dengan flow server-side OAuth + deep link callback. App meminta redirect_url ke server, membuka URL Google di browser/Custom Tab, lalu server callback akan redirect ke deep link aplikasi: gunungkerinci://oauth?token=APP_TOKEN&email=...&is_new_user=0. Endpoint POST /api/auth/google/token tetap disediakan sebagai opsi fallback jika app memakai Google SDK native.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "event": [
@@ -22,7 +22,7 @@
       "item": [
         {
           "name": "Get Google Redirect URL",
-          "description": "Opsional. Endpoint ini mengembalikan URL redirect Google OAuth. Berguna kalau aplikasi ingin memakai webview/browser flow, bukan Google SDK native.",
+          "description": "Endpoint utama untuk flow server-side OAuth. App memanggil endpoint ini, mengambil data.redirect_url, lalu membuka URL tersebut di browser/Custom Tab.",
           "request": {
             "auth": {"type": "noauth"},
             "method": "GET",
@@ -36,8 +36,8 @@
           "response": []
         },
         {
-          "name": "Login Google via Access Token",
-          "description": "Endpoint utama untuk mobile. Isi variable google_access_token dengan access token dari Google SDK, lalu jalankan request ini. Response sukses akan menyimpan bearer_token otomatis ke collection dan environment variable.",
+          "name": "Fallback - Login Google via Access Token",
+          "description": "Opsional/fallback. Gunakan hanya jika app memakai Google SDK native dan bisa mengirim Google access_token ke server. Untuk flow yang direkomendasikan saat ini, pakai Get Google Redirect URL lalu tunggu deep link callback dari server.",
           "event": [
             {
               "listen": "test",
@@ -191,6 +191,7 @@
   ],
   "variable": [
     {"key": "base_url", "value": "https://eticket-tnks.fst.unja.ac.id", "type": "string"},
+    {"key": "mobile_deep_link", "value": "gunungkerinci://oauth", "type": "string"},
     {"key": "google_access_token", "value": "", "type": "string"},
     {"key": "bearer_token", "value": "", "type": "string"}
   ]
