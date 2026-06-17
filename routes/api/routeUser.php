@@ -6,6 +6,12 @@ use App\Http\Controllers\API\DestinasiController;
 use App\Http\Controllers\API\BookingController;
 use Illuminate\Support\Facades\Route;
 
+// api destinasi publik untuk kebutuhan list/detail sebelum login
+Route::get('/destinasi', [DestinasiController::class, 'index'])->name('api.destinasi.index');
+Route::get('/destinasi/{id}', [DestinasiController::class, 'show'])->whereNumber('id')->name('api.destinasi.show');
+Route::get('/destinasi/{id}/paket', [DestinasiController::class, 'paket'])->whereNumber('id')->name('api.destinasi.paket');
+Route::get('/destinasi/paket/{id}/tiket', [DestinasiController::class, 'tiket'])->whereNumber('id')->name('api.destinasi.paket.tiket');
+
 Route::middleware('auth:sanctum')->group(function () {
     // beranda
     Route::get('/beranda', [HomeController::class, 'beranda'])->name('api.beranda');
@@ -14,13 +20,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile/getbiodata', [ProfileController::class, 'getBiodata'])->name('api.profile.getbiodata');
     Route::post('/profile/updatebiodata', [ProfileController::class, 'updateBiodata'])->name('api.profile.updatebiodata');
     Route::post('/profile/gantipassword', [ProfileController::class, 'gantiPassword'])->name('api.profile.gantipassword');
-
-    // api destinasi
-    Route::get('/destinasi', [DestinasiController::class, 'index'])->name('api.destinasi.index');
-    Route::get('/destinasi/{id}', [DestinasiController::class, 'show'])->whereNumber('id')->name('api.destinasi.show');
-    Route::get('/destinasi/{id}/paket', [DestinasiController::class, 'paket'])->whereNumber('id')->name('api.destinasi.paket');
-    Route::get('/destinasi/paket/{id}/tiket', [DestinasiController::class, 'tiket'])->whereNumber('id')->name('api.destinasi.paket.tiket');
-
 
     // api mytiket
     Route::post('/booking/destinasi/paket/tiket', [BookingController::class, 'store'])->name('api.booking.store');
