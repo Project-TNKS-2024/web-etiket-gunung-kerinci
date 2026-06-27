@@ -55,7 +55,7 @@ class BookingController extends Controller
         return $booking->load([
             'gktiket:id,id_destinasi,nama,min_pendaki,penugasan,keterangan',
             'gktiket.tiket_pendaki:id,id_paket_tiket,kategori_pendaki,harga_masuk_wk,harga_masuk_wd,harga_kemah,harga_traking,harga_ansuransi,masa_ansuransi',
-            'destinasi:id,nama,status,statusGunung,kategori,lokasi,detail,sop',
+            'destinasi:destinasis.id,destinasis.nama,destinasis.status,destinasis.statusGunung,destinasis.kategori,destinasis.lokasi,destinasis.detail,destinasis.sop',
             'gateMasuk:id,nama,status,id_destinasi,max_pendaki_hari,min_pendaki_booking,lokasi,lokasi_maps,detail',
             'gateKeluar:id,nama,status,id_destinasi,max_pendaki_hari,min_pendaki_booking,lokasi,lokasi_maps,detail',
             'pendakis:id,booking_id,tagihan,id_bio,usia,lampiran_surat_izin_ortu',
