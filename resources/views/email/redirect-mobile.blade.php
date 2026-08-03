@@ -4,7 +4,7 @@
 <head>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
-   <title>Mengarahkan ke Aplikasi TNKAS...</title>
+   <title>{{ $title ?? 'Mengarahkan ke Aplikasi TNKAS...' }}</title>
    <style>
       body {
          font-family: 'Inter', Arial, sans-serif;
@@ -85,7 +85,7 @@
 
    <script>
       window.onload = function() {
-         const appUrl = `{{$url}}`;
+         const appUrl = @json($url);
          // Arahkan otomatis ke aplikasi
          window.location.href = appUrl;
 
@@ -99,8 +99,8 @@
 
 <body>
    <div class="spinner"></div>
-   <h1>Mengarahkan ke Aplikasi TNKAS...</h1>
-   <p>Mohon tunggu sebentar. Jika tidak otomatis, gunakan tombol di bawah.</p>
+   <h1>{{ $title ?? 'Mengarahkan ke Aplikasi TNKAS...' }}</h1>
+   <p>{{ $message ?? 'Mohon tunggu sebentar. Jika tidak otomatis, gunakan tombol di bawah.' }}</p>
 
    <div class="buttons">
       <a href="{{$url}}" class="button">Buka Aplikasi</a>

@@ -101,6 +101,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Email Verification
+    |--------------------------------------------------------------------------
+    |
+    | Mobile verification links are signed and expire after this many minutes.
+    |
+    */
+
+    'email_verification' => [
+        'expire' => env('EMAIL_VERIFICATION_EXPIRE', 60),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Password Confirmation Timeout
     |--------------------------------------------------------------------------
     |

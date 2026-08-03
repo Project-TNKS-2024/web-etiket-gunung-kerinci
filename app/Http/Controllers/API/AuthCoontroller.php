@@ -9,7 +9,6 @@ use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -157,23 +156,28 @@ class AuthCoontroller extends Controller
     }
 
     /**
-     * Memverifikasi email user melalui link verifikasi
-     * Menandai email user sebagai terverifikasi jika belum
+     * Memverifikasi email dari link email yang telah ditandatangani.
+     * Setelah berhasil, browser diarahkan ke deep link aplikasi mobile.
      *
-     * @param EmailVerificationRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function verify(EmailVerificationRequest $request)
+    public function verify($id, $hash)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return ApiResponse::success(null, 'Email sudah diverifikasi.');
+        $user = User::find($id);
+
+        if (!$user || !hash_equals(sha1($user->getEmailForVerification()), (string) $hash)) {
+            abort(403);
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
+        if (!$user->hasVerifiedEmail() && $user->markEmailAsVerified()) {
+            event(new Verified($user));
         }
 
-        return ApiResponse::success(null, 'Email berhasil diverifikasi.');
+        return response()->view('email.redirect-mobile', [
+            'url' => mobile('verify-email?status=success'),
+            'title' => 'Email berhasil diverifikasi',
+            'message' => 'Email Anda sudah terverifikasi. Anda akan diarahkan ke aplikasi TNKAS.',
+        ]);
     }
 
     /**
