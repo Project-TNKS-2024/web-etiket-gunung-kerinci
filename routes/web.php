@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 //homepage
 use App\Http\Controllers\homepage\HomepageController;
 use App\Http\Controllers\homepage\booking;
+use App\Http\Controllers\API\AuthCoontroller;
 use App\Http\Controllers\etiket\admin\master\ValidasiPembayaran;
 use App\Http\Controllers\helper\backupDBController;
-use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return redirect('beranda');
@@ -59,17 +59,9 @@ include __DIR__ . '/web/routeAdmins.php';
 include __DIR__ . '/web/routeUsers.php';
 
 
-Route::get('/verify-redirect', function (Request $request) {
-    $id = $request->id;
-    $hash = $request->hash;
-
-    // $url = env('MOBILE_HOST') . "verify-email?id={$id}&hash={$hash}";
-    $path = "verify-email?id={$id}&hash={$hash}";
-    $url = mobile($path);
-
-    // View sederhana untuk redirect otomatis pakai JS
-    return response()->view('email.redirect-mobile', compact('url'));
-});
+Route::get('/verify-redirect/{id}/{hash}', [AuthCoontroller::class, 'verify'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('mobile.email.verify');
 
 //test
 Route::get('/tes', function () {

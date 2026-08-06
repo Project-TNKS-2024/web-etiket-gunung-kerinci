@@ -9,11 +9,6 @@ Route::post('/login', [AuthCoontroller::class, 'login'])->name('api.auth.login')
 Route::post('/forgot-password', [AuthCoontroller::class, 'sendResetLink'])->name('api.auth.password.forgot');
 Route::post('/reset-password', [AuthCoontroller::class, 'reset'])->name('api.auth.password.reset');
 
-// Email Verification
-Route::get('/email/verify/{id}/{hash}', [AuthCoontroller::class, 'verify'])
-   ->middleware(['signed', 'throttle:6,1'])
-   ->name('api.auth.email.verify');
-
 Route::middleware('auth:sanctum')->group(function () {
    Route::get('/email/verify/notice', [AuthCoontroller::class, 'notice'])->name('api.auth.email.notice');
    Route::post('/email/resend', [AuthCoontroller::class, 'resend'])->name('api.auth.email.resend');

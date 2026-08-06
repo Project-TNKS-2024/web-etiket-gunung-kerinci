@@ -16,7 +16,7 @@ class MobileVerifyMail extends Mailable
     public function __construct($user)
     {
         $this->verificationUrl = URL::temporarySignedRoute(
-            'api.auth.email.verify',
+            'mobile.email.verify',
             now()->addMinutes((int) config('auth.email_verification.expire')),
             [
                 'id' => $user->getKey(),
