@@ -6,21 +6,23 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class MobileVerifyMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $id;
-    public $hash;
-    public $redirectUrl;
+    public string $verificationUrl;
 
     public function __construct($user)
     {
-        $this->id = $user->getKey();
-        $this->hash = sha1($user->getEmailForVerification());
-
-        // Buat URL HTTPS redirect (agar tidak diblokir email client)
-        $this->redirectUrl = url("/verify-redirect?id={$this->id}&hash={$this->hash}");
+        $this->verificationUrl = URL::temporarySignedRoute(
+            'mobile.email.verify',
+            now()->addMinutes((int) config('auth.email_verification.expire')),
+            [
+                'id' => $user->getKey(),
+                'hash' => sha1($user->getEmailForVerification()),
+            ],
+        );
     }
 
     public function build()
@@ -28,9 +30,7 @@ class MobileVerifyMail extends Mailable
         return $this->subject('Verifikasi Email Akun Anda')
             ->markdown('email.mobile_Authverify')
             ->with([
-                'redirectUrl' => $this->redirectUrl,
-                'id' => $this->id,
-                'hash' => $this->hash,
+                'verificationUrl' => $this->verificationUrl,
             ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\ApiResponse;
 use App\Http\Controllers\helper\uploadFileControlller;
 use App\Models\bio_pendaki;
+use App\Models\gk_pendaki;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,28 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
+    public function getPendakiIdentity(Request $request)
+    {
+        $user = $request->user();
+        $biodata = $user->id_bio ? bio_pendaki::find($user->id_bio) : null;
+
+        $pendakiIds = $user->id_bio
+            ? gk_pendaki::where('id_bio', $user->id_bio)
+                ->pluck('id')
+                ->values()
+            : collect();
+
+        $data = [
+            'id_user' => $user->id,
+            'id_bio' => $user->id_bio,
+            'status_verifikasi' => $biodata?->verified ?? 'unverified',
+            'verified_at' => $biodata?->verified_at,
+            'pendaki_ids' => $pendakiIds,
+        ];
+
+        return ApiResponse::success($data, 'Berhasil mengambil identitas pendaki', 200);
+    }
+
     public function getBiodata(Request $request)
     {
         $user = $request->user();
@@ -137,13 +160,15 @@ class ProfileController extends Controller
         );
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal',
-                'errors' => $validator->errors(),
-            ], 422);
 
-            return ApiResponse::error('Validasi gagal', $validator->error(), 422);
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Validasi gagal',
+            //     'errors'  => $validator->errors(),
+            // ], 422);
+
+
+            return ApiResponse::error('Validasi gagal', $validator->errors(), 422);
         }
 
         $user = $request->user();

@@ -1,0 +1,199 @@
+{
+  "info": {
+    "_postman_id": "1bd91be8-a85a-4a1b-9700-e0f48b0bf076",
+    "name": "Gunung Kerinci API - Mobile Complete",
+    "description": "Collection lengkap endpoint mobile/API yang sudah dibuat: auth, profile, beranda, destinasi, booking, payment, struk, tiket, mytiket, dan cancel. Jalankan Login dulu agar bearer_token terisi otomatis.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {"key": "token", "value": "{{bearer_token}}", "type": "string"}
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.upsert({ key: 'Accept', value: 'application/json' });"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login response received', () => pm.response.code >= 200 && pm.response.code < 500);",
+                  "const json = pm.response.json();",
+                  "const token = json?.data?.token || json?.token || json?.access_token;",
+                  "if (token) {",
+                  "  pm.collectionVariables.set('bearer_token', token);",
+                  "  pm.environment.set('bearer_token', token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": {"raw": "{{base_url}}/api/login", "host": ["{{base_url}}"], "path": ["api", "login"]}
+          },
+          "response": []
+        },
+        {
+          "name": "Google Login via Access Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Google login response received', () => pm.response.code >= 200 && pm.response.code < 500);",
+                  "const json = pm.response.json();",
+                  "const token = json?.data?.token || json?.token || json?.access_token;",
+                  "if (token) {",
+                  "  pm.collectionVariables.set('bearer_token', token);",
+                  "  pm.environment.set('bearer_token', token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"access_token\": \"{{google_access_token}}\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": {"raw": "{{base_url}}/api/auth/google/token", "host": ["{{base_url}}"], "path": ["api", "auth", "google", "token"]}
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 Profile",
+      "item": [
+        {
+          "name": "Pendaki Identity",
+          "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/profile/pendaki-identity", "host": ["{{base_url}}"], "path": ["api", "profile", "pendaki-identity"]}},
+          "response": []
+        },
+        {
+          "name": "Get Biodata",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["const json = pm.response.json();", "const id = json?.data?.id || json?.data?.biodata?.id || json?.data?.user?.biodata?.id;", "if (id) { pm.collectionVariables.set('kode_bio', id); pm.environment.set('kode_bio', id); }"]}}],
+          "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/profile/getbiodata", "host": ["{{base_url}}"], "path": ["api", "profile", "getbiodata"]}},
+          "response": []
+        },
+        {
+          "name": "Update Biodata",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"first_name\": \"{{first_name}}\",\n  \"last_name\": \"{{last_name}}\",\n  \"no_hp\": \"{{no_hp}}\",\n  \"no_hp_darurat\": \"{{no_hp_darurat}}\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": {"raw": "{{base_url}}/api/profile/updatebiodata", "host": ["{{base_url}}"], "path": ["api", "profile", "updatebiodata"]}
+          },
+          "response": []
+        },
+        {
+          "name": "Ganti Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"password_lama\": \"{{password_lama}}\",\n  \"password_baru\": \"{{password_baru}}\",\n  \"password_baru_confirmation\": \"{{password_baru_confirmation}}\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": {"raw": "{{base_url}}/api/profile/gantipassword", "host": ["{{base_url}}"], "path": ["api", "profile", "gantipassword"]}
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 Beranda & Tiket Awal",
+      "item": [
+        {"name": "Menu Beranda", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/beranda", "host": ["{{base_url}}"], "path": ["api", "beranda"]}}, "response": []},
+        {"name": "Daftar Destinasi", "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["const json = pm.response.json();", "if (Array.isArray(json?.data) && json.data.length) {", "  pm.collectionVariables.set('destinasi_id', json.data[0].id);", "  pm.environment.set('destinasi_id', json.data[0].id);", "}"]}}], "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/destinasi", "host": ["{{base_url}}"], "path": ["api", "destinasi"]}}, "response": []},
+        {"name": "Detail Destinasi", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/destinasi/{{destinasi_id}}", "host": ["{{base_url}}"], "path": ["api", "destinasi", "{{destinasi_id}}"]}}, "response": []},
+        {"name": "Paket Tiket Destinasi", "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["const json = pm.response.json();", "if (Array.isArray(json?.data?.paket) && json.data.paket.length) {", "  pm.collectionVariables.set('paket_id', json.data.paket[0].id);", "  pm.environment.set('paket_id', json.data.paket[0].id);", "}"]}}], "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/destinasi/{{destinasi_id}}/paket", "host": ["{{base_url}}"], "path": ["api", "destinasi", "{{destinasi_id}}", "paket"]}}, "response": []},
+        {"name": "Detail Tiket Paket", "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["const json = pm.response.json();", "const gates = json?.data?.destinasi?.gates || [];", "if (gates.length) {", "  pm.collectionVariables.set('gate_masuk_id', gates[0].id);", "  pm.collectionVariables.set('gate_keluar_id', gates[gates.length - 1].id);", "  pm.environment.set('gate_masuk_id', gates[0].id);", "  pm.environment.set('gate_keluar_id', gates[gates.length - 1].id);", "}"]}}], "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/destinasi/paket/{{paket_id}}/tiket", "host": ["{{base_url}}"], "path": ["api", "destinasi", "paket", "{{paket_id}}", "tiket"]}}, "response": []}
+      ]
+    },
+    {
+      "name": "04 Booking",
+      "item": [
+        {"name": "Create/Update Booking Awal", "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["const json = pm.response.json();", "if (json?.data?.id) { pm.collectionVariables.set('booking_id', json.data.id); pm.environment.set('booking_id', json.data.id); }", "if (Array.isArray(json?.data?.pendakis) && json.data.pendakis.length) {", "  pm.collectionVariables.set('pendaki_id', json.data.pendakis[0].id);", "  pm.collectionVariables.set('kode_bio', json.data.pendakis[0].id_bio);", "  pm.environment.set('pendaki_id', json.data.pendakis[0].id);", "  pm.environment.set('kode_bio', json.data.pendakis[0].id_bio);", "}"]}}], "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"date_start\": \"{{date_start}}\",\n  \"date_end\": \"{{date_end}}\",\n  \"wni\": {{wni}},\n  \"wna\": {{wna}},\n  \"jenis_tiket\": \"{{paket_id}}\",\n  \"gerbang_masuk\": \"{{gate_masuk_id}}\",\n  \"gerbang_keluar\": \"{{gate_keluar_id}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/destinasi/paket/tiket", "host": ["{{base_url}}"], "path": ["api", "booking", "destinasi", "paket", "tiket"]}}, "response": []},
+        {"name": "Detail Booking", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/booking/{{booking_id}}", "host": ["{{base_url}}"], "path": ["api", "booking", "{{booking_id}}"]}}, "response": []},
+        {"name": "Setujui SNK", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"id\": \"{{booking_id}}\",\n  \"snk\": true\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/snk", "host": ["{{base_url}}"], "path": ["api", "booking", "snk"]}}, "response": []},
+        {"name": "Data Formulir", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/booking/{{booking_id}}/formulir", "host": ["{{base_url}}"], "path": ["api", "booking", "{{booking_id}}", "formulir"]}}, "response": []},
+        {"name": "Tambah Pendaki", "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["const json = pm.response.json();", "const pendakis = json?.data?.pendakis || [];", "if (pendakis.length) {", "  const last = pendakis[pendakis.length - 1];", "  pm.collectionVariables.set('pendaki_tambahan_id', last.id);", "  pm.environment.set('pendaki_tambahan_id', last.id);", "}"]}}], "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"booking\": \"{{booking_id}}\",\n  \"code\": \"{{kode_bio_tambahan}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/formulir/pendaki/add", "host": ["{{base_url}}"], "path": ["api", "booking", "formulir", "pendaki", "add"]}}, "response": []},
+        {"name": "Update Pendaki", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"booking\": \"{{booking_id}}\",\n  \"id\": \"{{pendaki_tambahan_id}}\",\n  \"code\": \"{{kode_bio_tambahan}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/formulir/pendaki/add", "host": ["{{base_url}}"], "path": ["api", "booking", "formulir", "pendaki", "add"]}}, "response": []},
+        {"name": "Simpan Formulir", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"id_booking\": \"{{booking_id}}\",\n  \"action\": \"save\",\n  \"formulir\": [\n    {\n      \"id_pendaki\": \"{{pendaki_id}}\",\n      \"kode_bio\": \"{{kode_bio}}\",\n      \"no_hp_darurat\": \"{{no_hp_darurat}}\"\n    }\n  ],\n  \"barang_bawaan\": [\n    {\"nama_barang\": \"Carrier\", \"jumlah\": 1}\n  ]\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/formulir", "host": ["{{base_url}}"], "path": ["api", "booking", "formulir"]}}, "response": []},
+        {"name": "Finalisasi Formulir", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"id_booking\": \"{{booking_id}}\",\n  \"action\": \"next\",\n  \"barangWajib\": true,\n  \"formulir\": [\n    {\n      \"id_pendaki\": \"{{pendaki_id}}\",\n      \"kode_bio\": \"{{kode_bio}}\",\n      \"no_hp_darurat\": \"{{no_hp_darurat}}\"\n    }\n  ],\n  \"barang_bawaan\": [\n    {\"nama_barang\": \"Carrier\", \"jumlah\": 1}\n  ]\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/formulir", "host": ["{{base_url}}"], "path": ["api", "booking", "formulir"]}}, "response": []}
+      ]
+    },
+    {
+      "name": "05 Payment & Output",
+      "item": [
+        {"name": "Detail Booking Review", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/booking/{{booking_id}}/detail", "host": ["{{base_url}}"], "path": ["api", "booking", "{{booking_id}}", "detail"]}}, "response": []},
+        {"name": "Data Payment", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/booking/{{booking_id}}/payment", "host": ["{{base_url}}"], "path": ["api", "booking", "{{booking_id}}", "payment"]}}, "response": []},
+        {"name": "Upload Bukti Pembayaran", "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["const json = pm.response.json();", "const payments = json?.data?.pembayaran || [];", "if (payments.length) {", "  const last = payments[payments.length - 1];", "  pm.collectionVariables.set('payment_id', last.id);", "  pm.environment.set('payment_id', last.id);", "}"]}}], "request": {"method": "POST", "header": [], "body": {"mode": "formdata", "formdata": [{"key": "id", "value": "{{booking_id}}", "type": "text"}, {"key": "metode", "value": "transfer", "type": "text"}, {"key": "bukti_pembayaran", "type": "file", "src": ""}]}, "url": {"raw": "{{base_url}}/api/booking/payment", "host": ["{{base_url}}"], "path": ["api", "booking", "payment"]}}, "response": []},
+        {"name": "Hapus Bukti Pembayaran", "request": {"method": "DELETE", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"booking_id\": \"{{booking_id}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/payment/{{payment_id}}", "host": ["{{base_url}}"], "path": ["api", "booking", "payment", "{{payment_id}}"]}}, "response": []},
+        {"name": "Struk", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/booking/{{booking_id}}/struk", "host": ["{{base_url}}"], "path": ["api", "booking", "{{booking_id}}", "struk"]}}, "response": []},
+        {"name": "Tiket", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/booking/{{booking_id}}/tiket", "host": ["{{base_url}}"], "path": ["api", "booking", "{{booking_id}}", "tiket"]}}, "response": []},
+        {"name": "My Tiket", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/mytiket", "host": ["{{base_url}}"], "path": ["api", "mytiket"]}}, "response": []},
+        {"name": "Cancel Booking", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/booking/{{booking_id}}", "host": ["{{base_url}}"], "path": ["api", "booking", "{{booking_id}}"]}}, "response": []}
+      ]
+    },
+    {
+      "name": "06 Security Negative Tests",
+      "item": [
+        {"name": "Booking UUID Palsu", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/booking/{{fake_booking_id}}", "host": ["{{base_url}}"], "path": ["api", "booking", "{{fake_booking_id}}"]}}, "response": []},
+        {"name": "Detail Destinasi ID Non Numeric", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/destinasi/abc", "host": ["{{base_url}}"], "path": ["api", "destinasi", "abc"]}}, "response": []},
+        {"name": "Tambah Pendaki Kode Tidak Valid", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"booking\": \"{{booking_id}}\",\n  \"code\": \"{{fake_kode_bio}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/formulir/pendaki/add", "host": ["{{base_url}}"], "path": ["api", "booking", "formulir", "pendaki", "add"]}}, "response": []},
+        {"name": "Upload Bukti Pembayaran Tanpa File", "request": {"method": "POST", "header": [], "body": {"mode": "formdata", "formdata": [{"key": "id", "value": "{{booking_id}}", "type": "text"}, {"key": "metode", "value": "transfer", "type": "text"}]}, "url": {"raw": "{{base_url}}/api/booking/payment", "host": ["{{base_url}}"], "path": ["api", "booking", "payment"]}}, "response": []}
+      ]
+    }
+  ],
+  "variable": [
+    {"key": "base_url", "value": "https://eticket-tnks.fst.unja.ac.id", "type": "string"},
+    {"key": "email", "value": "email_kamu@example.com", "type": "string"},
+    {"key": "password", "value": "password_kamu", "type": "string"},
+    {"key": "google_access_token", "value": "", "type": "string"},
+    {"key": "bearer_token", "value": "", "type": "string"},
+    {"key": "first_name", "value": "Nama", "type": "string"},
+    {"key": "last_name", "value": "Pendaki", "type": "string"},
+    {"key": "no_hp", "value": "+6281234567890", "type": "string"},
+    {"key": "no_hp_darurat", "value": "+6281234567891", "type": "string"},
+    {"key": "password_lama", "value": "password_lama", "type": "string"},
+    {"key": "password_baru", "value": "password_baru", "type": "string"},
+    {"key": "password_baru_confirmation", "value": "password_baru", "type": "string"},
+    {"key": "destinasi_id", "value": "1", "type": "string"},
+    {"key": "paket_id", "value": "1", "type": "string"},
+    {"key": "gate_masuk_id", "value": "1", "type": "string"},
+    {"key": "gate_keluar_id", "value": "1", "type": "string"},
+    {"key": "date_start", "value": "2026-07-10", "type": "string"},
+    {"key": "date_end", "value": "2026-07-12", "type": "string"},
+    {"key": "wni", "value": "1", "type": "string"},
+    {"key": "wna", "value": "0", "type": "string"},
+    {"key": "booking_id", "value": "", "type": "string"},
+    {"key": "pendaki_id", "value": "", "type": "string"},
+    {"key": "pendaki_tambahan_id", "value": "", "type": "string"},
+    {"key": "kode_bio", "value": "", "type": "string"},
+    {"key": "kode_bio_tambahan", "value": "", "type": "string"},
+    {"key": "payment_id", "value": "", "type": "string"},
+    {"key": "fake_booking_id", "value": "00000000-0000-4000-8000-000000000000", "type": "string"},
+    {"key": "fake_kode_bio", "value": "00000000-0000-4000-8000-000000000000", "type": "string"}
+  ]
+}

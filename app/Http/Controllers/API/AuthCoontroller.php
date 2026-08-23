@@ -9,13 +9,13 @@ use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class AuthCoontroller extends Controller
@@ -156,23 +156,28 @@ class AuthCoontroller extends Controller
     }
 
     /**
-     * Memverifikasi email user melalui link verifikasi
-     * Menandai email user sebagai terverifikasi jika belum
+     * Memverifikasi email dari link email yang telah ditandatangani.
+     * Setelah berhasil, browser diarahkan ke deep link aplikasi mobile.
      *
-     * @param EmailVerificationRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function verify(EmailVerificationRequest $request)
+    public function verify($id, $hash)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return ApiResponse::success(null, 'Email sudah diverifikasi.');
+        $user = User::find($id);
+
+        if (!$user || !hash_equals(sha1($user->getEmailForVerification()), (string) $hash)) {
+            abort(403);
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
+        if (!$user->hasVerifiedEmail() && $user->markEmailAsVerified()) {
+            event(new Verified($user));
         }
 
-        return ApiResponse::success(null, 'Email berhasil diverifikasi.');
+        return response()->view('email.redirect-mobile', [
+            'url' => mobile('verify-email?status=success'),
+            'title' => 'Email berhasil diverifikasi',
+            'message' => 'Email Anda sudah terverifikasi. Anda akan diarahkan ke aplikasi TNKAS.',
+        ]);
     }
 
     /**
@@ -256,26 +261,109 @@ class AuthCoontroller extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
-
-            $user = User::firstOrCreate(
-                ['gauth_id' => $googleUser->id],
-                [
-                    'name'              => $googleUser->name,
-                    'email'             => $googleUser->email,
-                    'gauth_type'        => 'google',
-                    'email_verified_at' => now(),
-                    'password'          => bcrypt(Str::random(16)),
-                ]
-            );
+            $isNewUser = !$this->googleUserExists($googleUser);
+            $user = $this->findOrCreateGoogleUser($googleUser);
 
             $token = $user->createToken('api-token')->plainTextToken;
 
+            return redirect()->away($this->googleMobileRedirectUrl([
+                'token' => $token,
+                'token_type' => 'Bearer',
+                'email' => $user->email,
+                'user_id' => $user->id,
+                'is_new_user' => $isNewUser ? 1 : 0,
+            ]));
+        } catch (Exception $e) {
+            return redirect()->away($this->googleMobileRedirectUrl([
+                'success' => 0,
+                'error' => 'google_login_failed',
+                'message' => $e->getMessage(),
+            ]));
+        }
+    }
+
+    /**
+     * Login Google untuk mobile/API.
+     *
+     * Mobile app melakukan Google Sign-In di sisi aplikasi, lalu kirim Google
+     * access token ke endpoint ini. Server akan validasi token ke Google lewat
+     * Socialite dan mengembalikan Sanctum bearer token untuk akses API aplikasi.
+     */
+    public function loginWithGoogleToken(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'access_token' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponse::error('Validasi gagal', $validator->errors(), 422);
+        }
+
+        try {
+            $googleUser = Socialite::driver('google')
+                ->stateless()
+                ->userFromToken($request->access_token);
+
+            $user = $this->findOrCreateGoogleUser($googleUser);
+            $token = $user->createToken('api-token')->plainTextToken;
+
             return ApiResponse::success([
-                'user'  => $user,
-                'token' => $token
+                'user' => $user,
+                'token' => $token,
+                'token_type' => 'Bearer',
             ], 'Login dengan Google berhasil');
         } catch (Exception $e) {
-            return ApiResponse::error('Login dengan Google gagal', $e->getMessage(), 400);
+            return ApiResponse::error('Login dengan Google gagal', $e->getMessage(), 401);
         }
+    }
+
+    private function findOrCreateGoogleUser($googleUser): User
+    {
+        if (!$googleUser->email) {
+            throw new Exception('Email Google tidak tersedia. Pastikan scope Google mencakup email.');
+        }
+
+        $user = User::where('gauth_id', $googleUser->id)
+            ->orWhere('email', $googleUser->email)
+            ->first();
+
+        if (!$user) {
+            $user = User::create([
+                'email' => $googleUser->email,
+                'gauth_id' => $googleUser->id,
+                'gauth_type' => 'google',
+                'email_verified_at' => now(),
+                'password' => Hash::make(Str::random(32)),
+                'avatar' => $googleUser->avatar,
+            ]);
+        } else {
+            $user->forceFill([
+                'gauth_id' => $googleUser->id,
+                'gauth_type' => 'google',
+                'email_verified_at' => $user->email_verified_at ?: now(),
+                'avatar' => $googleUser->avatar ?: $user->avatar,
+            ])->save();
+        }
+
+        return $user->fresh();
+    }
+
+    private function googleUserExists($googleUser): bool
+    {
+        if (!$googleUser->email) {
+            return false;
+        }
+
+        return User::where('gauth_id', $googleUser->id)
+            ->orWhere('email', $googleUser->email)
+            ->exists();
+    }
+
+    private function googleMobileRedirectUrl(array $params): string
+    {
+        $baseUrl = rtrim(config('services.google.mobile_redirect', 'gunungkerinci://oauth'), '?');
+        $separator = str_contains($baseUrl, '?') ? '&' : '?';
+
+        return $baseUrl . $separator . http_build_query($params);
     }
 }

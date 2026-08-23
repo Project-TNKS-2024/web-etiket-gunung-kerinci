@@ -26,7 +26,7 @@ class register extends Controller
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            // 'g-recaptcha-response' => 'required|recaptcha', // Temporarily disabled
+            // 'g-recaptcha-response' => 'recaptcha',
         ], [
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Format email tidak valid.',

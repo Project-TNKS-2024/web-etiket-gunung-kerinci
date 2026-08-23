@@ -9,11 +9,9 @@ Route::post('/login', [AuthCoontroller::class, 'login'])->name('api.auth.login')
 Route::post('/forgot-password', [AuthCoontroller::class, 'sendResetLink'])->name('api.auth.password.forgot');
 Route::post('/reset-password', [AuthCoontroller::class, 'reset'])->name('api.auth.password.reset');
 
-// Email Verification
 Route::middleware('auth:sanctum')->group(function () {
    Route::get('/email/verify/notice', [AuthCoontroller::class, 'notice'])->name('api.auth.email.notice');
    Route::post('/email/resend', [AuthCoontroller::class, 'resend'])->name('api.auth.email.resend');
-   Route::get('/email/verify/{id}/{hash}', [AuthCoontroller::class, 'verify'])->name('api.auth.email.verify');
 
    Route::post('/logout', [AuthCoontroller::class, 'logout'])->name('api.auth.logout');
 });
@@ -21,3 +19,4 @@ Route::middleware('auth:sanctum')->group(function () {
 // OAuth Google
 Route::get('/auth/google/redirect', [AuthCoontroller::class, 'redirectToGoogle'])->name('api.auth.google.redirect');
 Route::get('/auth/google/callback', [AuthCoontroller::class, 'handleGoogleCallback'])->name('api.auth.google.callback');
+Route::post('/auth/google/token', [AuthCoontroller::class, 'loginWithGoogleToken'])->name('api.auth.google.token');

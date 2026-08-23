@@ -1,0 +1,198 @@
+{
+  "info": {
+    "_postman_id": "7f3432cb-9d4f-4dbf-9e37-9bb1bca01e2a",
+    "name": "Gunung Kerinci API - Google Auth Mobile",
+    "description": "Collection terpisah untuk Google Auth mobile dengan flow server-side OAuth + deep link callback. App meminta redirect_url ke server, membuka URL Google di browser/Custom Tab, lalu server callback akan redirect ke deep link aplikasi: gunungkerinci://oauth?token=APP_TOKEN&email=...&is_new_user=0. Endpoint POST /api/auth/google/token tetap disediakan sebagai opsi fallback jika app memakai Google SDK native.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.upsert({ key: 'Accept', value: 'application/json' });"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Google Auth API",
+      "item": [
+        {
+          "name": "Get Google Redirect URL",
+          "description": "Endpoint utama untuk flow server-side OAuth. App memanggil endpoint ini, mengambil data.redirect_url, lalu membuka URL tersebut di browser/Custom Tab.",
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/google/redirect",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "google", "redirect"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Fallback - Login Google via Access Token",
+          "description": "Opsional/fallback. Gunakan hanya jika app memakai Google SDK native dan bisa mengirim Google access_token ke server. Untuk flow yang direkomendasikan saat ini, pakai Get Google Redirect URL lalu tunggu deep link callback dari server.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Google login response received', () => pm.response.code >= 200 && pm.response.code < 500);",
+                  "const json = pm.response.json();",
+                  "const token = json?.data?.token || json?.token || json?.access_token;",
+                  "if (token) {",
+                  "  pm.collectionVariables.set('bearer_token', token);",
+                  "  pm.environment.set('bearer_token', token);",
+                  "}",
+                  "pm.test('Response JSON has success field', () => pm.expect(json).to.have.property('success'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"access_token\": \"{{google_access_token}}\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/google/token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "google", "token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Negative Test - Missing Access Token",
+          "description": "Harus menghasilkan validasi error 422 karena access_token tidak dikirim.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Validation error expected', () => pm.response.to.have.status(422));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/google/token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "google", "token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Negative Test - Invalid Access Token",
+          "description": "Harus menghasilkan 401 karena token Google tidak valid.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Unauthorized expected', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"access_token\": \"invalid-google-access-token\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/google/token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "google", "token"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 Verify Bearer Token",
+      "item": [
+        {
+          "name": "Get Biodata With Google Bearer Token",
+          "description": "Jalankan setelah Login Google via Access Token berhasil. Request ini memastikan Sanctum bearer_token bisa dipakai untuk endpoint API yang butuh auth.",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {"key": "token", "value": "{{bearer_token}}", "type": "string"}
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/profile/getbiodata",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profile", "getbiodata"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout Google API Session Token",
+          "description": "Menghapus token Sanctum aktif setelah login Google.",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {"key": "token", "value": "{{bearer_token}}", "type": "string"}
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "logout"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {"key": "base_url", "value": "https://eticket-tnks.fst.unja.ac.id", "type": "string"},
+    {"key": "mobile_deep_link", "value": "gunungkerinci://oauth", "type": "string"},
+    {"key": "google_access_token", "value": "", "type": "string"},
+    {"key": "bearer_token", "value": "", "type": "string"}
+  ]
+}
