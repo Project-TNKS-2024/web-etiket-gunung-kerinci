@@ -30,4 +30,9 @@ class gk_gates extends Model
     {
         return $this->belongsTo(destinasi::class, 'id_destinasi');
     }
+
+    public function posts()
+    {
+        return $this->hasMany(GkPost::class, 'id_gate')->orderBy('urutan');
+    }
 }

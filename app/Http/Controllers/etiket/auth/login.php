@@ -20,7 +20,6 @@ class login extends Controller
             'email' => 'required|email',
             'password' => 'required',
             // 'g-recaptcha-response' => 'recaptcha',
-
         ]);
 
         // Get credentials

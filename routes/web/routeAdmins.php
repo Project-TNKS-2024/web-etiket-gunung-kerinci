@@ -126,4 +126,25 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/setting/{id}/update', [settingController::class, 'update'])->name('admin.setting.update')->middleware('permission:edit-setting');
     Route::post('admin/setting/updateAction', [settingController::class, 'updateAction'])->name('admin.setting.updateAction')->middleware('permission:edit-setting');
     Route::post('admin/setting/deleteAction', [settingController::class, 'deleteAction'])->name('admin.setting.deleteAction')->middleware('permission:delete-setting');
+
+    // Emergency Management
+    Route::get('admin/emergency', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'index'])->name('admin.emergency.index');
+    Route::post('admin/emergency/broadcast', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'broadcast'])->name('admin.emergency.broadcast');
+    Route::put('admin/emergency/{id}/acknowledge', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'acknowledge'])->name('admin.emergency.acknowledge');
+    Route::put('admin/emergency/{id}/resolve', [\App\Http\Controllers\etiket\admin\emergency\EmergencyAdminController::class, 'resolve'])->name('admin.emergency.resolve');
+
+    // Post (Checkpoint) Management
+    Route::get('admin/posts', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'index'])->name('admin.posts.index');
+    Route::post('admin/posts', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'store'])->name('admin.posts.store');
+    Route::put('admin/posts/{id}', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'update'])->name('admin.posts.update');
+    Route::delete('admin/posts/{id}', [\App\Http\Controllers\etiket\admin\posts\PostAdminController::class, 'destroy'])->name('admin.posts.destroy');
+
+    // SOS Management
+    Route::get('admin/sos', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'index'])->name('admin.sos.index');
+    Route::get('admin/sos/{id}', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'detail'])->name('admin.sos.detail');
+    Route::put('admin/sos/{id}/status', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'updateStatus'])->name('admin.sos.updateStatus');
+    Route::put('admin/disaster-report/{id}/verify', [\App\Http\Controllers\etiket\admin\sos\SOSAdminController::class, 'verifyDisasterReport'])->name('admin.disaster-report.verify');
+
+    // Live Monitoring
+    Route::get('admin/monitoring', [\App\Http\Controllers\etiket\admin\monitoring\MonitoringController::class, 'index'])->name('admin.monitoring.index');
 });
