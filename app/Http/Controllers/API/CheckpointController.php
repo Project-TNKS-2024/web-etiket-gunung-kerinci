@@ -82,6 +82,46 @@ class CheckpointController extends Controller
     }
 
     /**
+     * Cancel a checkpoint check-in for myself or (as team leader) a member.
+     * DELETE /api/tracking/checkpoint/{checkpoint_log_id}
+     */
+    public function cancelCheckin(Request $request, $checkpointLogId)
+    {
+        if (!ctype_digit((string) $checkpointLogId) || (int) $checkpointLogId < 1) {
+            return ApiResponse::error('Check-in tidak ditemukan', null, 404);
+        }
+
+        $pendaki = $this->getActivePendaki($request->user());
+        if (!$pendaki) {
+            return ApiResponse::error('Tidak ada pendakian aktif', null, 403);
+        }
+
+        $log = GkCheckpointLog::whereKey($checkpointLogId)
+            ->where('id_booking', $pendaki->booking_id)
+            ->whereHas('pendaki', fn ($query) => $query->where('booking_id', $pendaki->booking_id))
+            ->with('post')
+            ->first();
+        if (!$log) {
+            return ApiResponse::error('Check-in tidak ditemukan', null, 404);
+        }
+
+        if ($log->id_pendaki !== $pendaki->id && $pendaki->booking->id_user !== $request->user()->id) {
+            return ApiResponse::error('Hanya ketua tim yang dapat membatalkan kehadiran anggota', null, 403);
+        }
+
+        $target = $log->pendaki;
+        $post = $log->post;
+        $log->delete();
+
+        return ApiResponse::success([
+            'checkpoint_log_id' => $log->id,
+            'pendaki_id' => $target->id,
+            'post' => ['id' => $post->id, 'nama' => $post->nama, 'urutan' => $post->urutan],
+            'progress' => $this->getProgress($target),
+        ], "Check-in dibatalkan di {$post->nama}");
+    }
+
+    /**
      * GPS proximity detection - find nearest post.
      * POST /api/tracking/checkpoint/gps
      */

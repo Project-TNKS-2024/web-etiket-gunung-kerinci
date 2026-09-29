@@ -12,6 +12,7 @@ Route::middleware('auth:sanctum')->prefix('tracking')->group(function () {
 
     // Checkpoint / trail tracking
     Route::post('/checkpoint/qr', [CheckpointController::class, 'scanQr']);
+    Route::delete('/checkpoint/{checkpointLogId}', [CheckpointController::class, 'cancelCheckin']);
     Route::post('/checkpoint/gps', [CheckpointController::class, 'detectGps']);
     Route::post('/checkpoint/manual', [CheckpointController::class, 'manualCheckin']);
     Route::get('/progress/{booking_id}', [CheckpointController::class, 'progress']);

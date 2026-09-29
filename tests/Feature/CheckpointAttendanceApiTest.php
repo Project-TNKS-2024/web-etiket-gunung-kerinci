@@ -172,4 +172,115 @@ class CheckpointAttendanceApiTest extends TestCase
             ->getJson('/api/tracking/progress/' . $this->booking->id)
             ->assertNotFound();
     }
+
+    public function test_leader_can_cancel_member_checkin_and_rescan_afterwards(): void
+    {
+        $this->actingAs($this->leader, 'sanctum');
+
+        $scan = $this->postJson('/api/tracking/checkpoint/qr', [
+            'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
+        ])->assertCreated();
+
+        $this->deleteJson('/api/tracking/checkpoint/' . $scan->json('data.checkpoint_log_id'))
+            ->assertOk()->assertJsonPath('data.pendaki_id', $this->memberHiker->id)
+            ->assertJsonPath('data.progress.completed', 0);
+        $this->getJson('/api/tracking/progress/' . $this->booking->id)
+            ->assertOk()->assertJsonPath('data.hikers.1.checkpoints.0.completed', false)
+            ->assertJsonPath('data.hikers.1.checkpoints.0.checked_at', null);
+
+        $this->postJson('/api/tracking/checkpoint/qr', [
+            'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
+        ])->assertCreated()->assertJsonPath('data.progress.completed', 1);
+        $this->assertSame(1, GkCheckpointLog::where('id_pendaki', $this->memberHiker->id)->count());
+    }
+
+    public function test_member_can_cancel_own_checkin_even_if_leader_created_it(): void
+    {
+        $scan = $this->actingAs($this->leader, 'sanctum')->postJson('/api/tracking/checkpoint/qr', [
+            'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
+        ])->assertCreated();
+
+        $this->actingAs($this->member, 'sanctum')
+            ->deleteJson('/api/tracking/checkpoint/' . $scan->json('data.checkpoint_log_id'))
+            ->assertOk()->assertJsonPath('data.progress.completed', 0);
+        $this->postJson('/api/tracking/checkpoint/qr', ['qr_code_value' => 'POST-TEST-1'])
+            ->assertCreated()->assertJsonPath('data.pendaki_id', $this->memberHiker->id);
+    }
+
+    public function test_member_cannot_cancel_leader_or_other_member_checkin(): void
+    {
+        $leaderLog = $this->actingAs($this->leader, 'sanctum')
+            ->postJson('/api/tracking/checkpoint/qr', ['qr_code_value' => 'POST-TEST-1'])
+            ->assertCreated()->json('data.checkpoint_log_id');
+
+        $this->actingAs($this->member, 'sanctum')
+            ->deleteJson('/api/tracking/checkpoint/' . $leaderLog)->assertForbidden();
+        $this->assertDatabaseHas('gk_checkpoint_logs', ['id' => $leaderLog]);
+    }
+
+    public function test_outsider_cannot_cancel_foreign_booking_checkin(): void
+    {
+        $logId = $this->actingAs($this->leader, 'sanctum')
+            ->postJson('/api/tracking/checkpoint/qr', [
+                'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
+            ])->assertCreated()->json('data.checkpoint_log_id');
+
+        $this->actingAs($this->outsider, 'sanctum')
+            ->deleteJson('/api/tracking/checkpoint/' . $logId)->assertForbidden();
+        $this->assertDatabaseHas('gk_checkpoint_logs', ['id' => $logId]);
+    }
+
+    public function test_cancel_rejects_missing_invalid_or_inactive_checkin(): void
+    {
+        $logId = $this->actingAs($this->leader, 'sanctum')
+            ->postJson('/api/tracking/checkpoint/qr', ['qr_code_value' => 'POST-TEST-1'])
+            ->assertCreated()->json('data.checkpoint_log_id');
+
+        $this->deleteJson('/api/tracking/checkpoint/not-an-id')->assertNotFound();
+        $this->deleteJson('/api/tracking/checkpoint/999999999')->assertNotFound();
+        $this->booking->update(['status_booking' => 7]);
+        $this->deleteJson('/api/tracking/checkpoint/' . $logId)->assertForbidden();
+        $this->assertDatabaseHas('gk_checkpoint_logs', ['id' => $logId]);
+    }
+
+    public function test_cancel_requires_auth_and_cannot_cancel_twice(): void
+    {
+        $this->deleteJson('/api/tracking/checkpoint/1')->assertUnauthorized();
+
+        $logId = $this->actingAs($this->leader, 'sanctum')
+            ->postJson('/api/tracking/checkpoint/qr', ['qr_code_value' => 'POST-TEST-1'])
+            ->assertCreated()->json('data.checkpoint_log_id');
+        $this->deleteJson('/api/tracking/checkpoint/' . $logId)->assertOk();
+        $this->deleteJson('/api/tracking/checkpoint/' . $logId)->assertNotFound();
+    }
+
+    public function test_leader_cannot_cancel_a_different_booking_even_if_member_of_both(): void
+    {
+        $otherBooking = $this->booking->replicate();
+        $otherBooking->id_user = $this->outsider->id;
+        $otherBooking->save();
+        $otherHiker = gk_pendaki::create([
+            'booking_id' => $otherBooking->id, 'id_bio' => $this->outsider->id_bio, 'usia' => 36,
+        ]);
+        $otherLog = GkCheckpointLog::create([
+            'id_booking' => $otherBooking->id, 'id_pendaki' => $otherHiker->id,
+            'id_post' => $this->post->id, 'method' => 'qr', 'checked_at' => now(),
+        ]);
+
+        $this->actingAs($this->leader, 'sanctum')
+            ->deleteJson('/api/tracking/checkpoint/' . $otherLog->id)->assertNotFound();
+        $this->assertDatabaseHas('gk_checkpoint_logs', ['id' => $otherLog->id]);
+    }
+
+    public function test_member_can_cancel_own_manual_checkin(): void
+    {
+        $scan = $this->actingAs($this->member, 'sanctum')
+            ->postJson('/api/tracking/checkpoint/manual', [
+                'post_id' => $this->post->id, 'latitude' => -1.704, 'longitude' => 101.266,
+            ])->assertCreated();
+
+        $this->deleteJson('/api/tracking/checkpoint/' . $scan->json('data.checkpoint_log_id'))
+            ->assertOk()->assertJsonPath('data.progress.completed', 0);
+        $this->assertSame(0, GkCheckpointLog::count());
+    }
 }

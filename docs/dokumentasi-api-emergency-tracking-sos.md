@@ -376,7 +376,7 @@ Response memuat `data.pendaki_id` (UUID pendaki yang dicatat) untuk membedakan s
 {"qr_code_value":"POST-A1B2C3D4E5F6","pendaki_id":"uuid-anggota-dari-detail-booking"}
 ```
 
-Gunakan `pendakis[].id` dari detail booking aktif, bukan `id_bio`. Anggota yang mencoba mengirim `pendaki_id` milik orang lain mendapat 403. Target di luar booking aktif juga ditolak dengan 403; UUID tidak valid mendapat 422. Check-in kedua di pos yang sama untuk pendaki yang sama mendapat 409, termasuk jika sebelumnya diwakili ketua. Response progress menampilkan catatan per pendaki.
+Gunakan `pendakis[].id` dari detail booking aktif, bukan `id_bio`. Anggota yang mencoba mengirim `pendaki_id` milik orang lain mendapat 403. Target di luar booking aktif juga ditolak dengan 403; UUID tidak valid mendapat 422. Check-in kedua di pos yang sama untuk pendaki yang sama mendapat 409, termasuk jika sebelumnya diwakili ketua. Untuk membatalkan kehadiran, gunakan `DELETE /api/tracking/checkpoint/{checkpoint_log_id}`. Setelah dibatalkan, pos dapat di-scan ulang.
 
 #### Response Gagal — QR Tidak Valid (404):
 ```json
@@ -543,7 +543,47 @@ Content-Type: application/json
 
 ---
 
-### 2.5 Progress Pendakian
+### 2.5 Batalkan Kehadiran di Pos
+
+Jika presensi sudah hijau dan perlu dikembalikan ke merah, hapus log check-in pada pos itu. Pendaki dapat membatalkan presensi dirinya sendiri, termasuk yang dulu dicatat oleh ketua. Ketua tim dapat membatalkan miliknya dan anggota pada booking aktif yang sama. Anggota tidak dapat membatalkan presensi orang lain.
+
+**Endpoint:** `DELETE /api/tracking/checkpoint/{checkpoint_log_id}`
+**Auth:** Bearer token Sanctum (`Authorization: Bearer {token}`)
+**Syarat:** Akun adalah pendaki booking berstatus 6 (`Check-in`). Log harus milik pendaki tersebut atau anggota booking itu jika pemanggil adalah ketua tim.
+
+`checkpoint_log_id` adalah angka dari `data.checkpoint_log_id` respons scan QR atau check-in manual, bukan `post_id`, `pendaki_id`, atau `booking_id`. Tidak ada payload JSON. Simpan ID log saat scan berhasil; API progress saat ini hanya mengembalikan `post_id`, `checked_at`, `method`, `completed`, bukan ID log. UI yang hanya memuat data progress setelah aplikasi dibuka ulang belum bisa memperoleh ID log dari progress; simpan ID log di aplikasi atau hubungi tim backend bila perlu endpoint daftar log.
+
+#### Contoh request
+
+```http
+DELETE /api/tracking/checkpoint/15
+Authorization: Bearer {token}
+Accept: application/json
+```
+
+#### Contoh respons berhasil (200)
+
+```json
+{
+    "success": true,
+    "message": "Check-in dibatalkan di Pos 1",
+    "data": {
+        "checkpoint_log_id": 15,
+        "pendaki_id": "uuid-anggota-yang-dibatalkan",
+        "post": {"id": 2, "nama": "Pos 1", "urutan": 2},
+        "progress": {"completed": 0, "total": 5, "percentage": 0}
+    },
+    "errors": null
+}
+```
+
+Refresh `GET /api/tracking/progress/{booking_id}` setelah sukses. Untuk pendaki/pos tersebut, `completed` berubah dari `true` menjadi `false`, `checked_at` dan `method` menjadi `null`, dan jumlah progress turun. Tombol hijau dapat kembali menjadi merah. Scan QR lagi untuk mencatat ulang dan memperoleh ID log baru. Jangan mengirim ulang DELETE jika sukses: percobaan kedua menghasilkan 404.
+
+Status gagal: `401` tanpa token; `403` akun tanpa pendakian aktif atau anggota membatalkan log orang lain; `404` ID log tidak valid, sudah dihapus, atau milik booking lain. API tidak membatalkan seluruh booking maupun check-in anggota lain.
+
+---
+
+### 2.6 Progress Pendakian
 
 Lihat progress checkpoint untuk satu booking (semua pendaki dalam grup).
 
@@ -1290,6 +1330,7 @@ Authorization: Bearer {token}
 | 3 | GET | `/api/tracking/my-position` | Posisi terakhir |
 | 4 | GET | `/api/tracking/posts/{gate_id}` | Daftar pos jalur |
 | 5 | POST | `/api/tracking/checkpoint/qr` | Check-in QR |
+| - | DELETE | `/api/tracking/checkpoint/{checkpoint_log_id}` | Batalkan kehadiran diri sendiri atau anggota oleh ketua |
 | 6 | POST | `/api/tracking/checkpoint/gps` | Deteksi kedekatan |
 | 7 | POST | `/api/tracking/checkpoint/manual` | Check-in manual |
 | 8 | GET | `/api/tracking/progress/{booking_id}` | Progress pendakian |
