@@ -164,6 +164,37 @@
         {"name": "Tambah Pendaki Kode Tidak Valid", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"booking\": \"{{booking_id}}\",\n  \"code\": \"{{fake_kode_bio}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/booking/formulir/pendaki/add", "host": ["{{base_url}}"], "path": ["api", "booking", "formulir", "pendaki", "add"]}}, "response": []},
         {"name": "Upload Bukti Pembayaran Tanpa File", "request": {"method": "POST", "header": [], "body": {"mode": "formdata", "formdata": [{"key": "id", "value": "{{booking_id}}", "type": "text"}, {"key": "metode", "value": "transfer", "type": "text"}]}, "url": {"raw": "{{base_url}}/api/booking/payment", "host": ["{{base_url}}"], "path": ["api", "booking", "payment"]}}, "response": []}
       ]
+    },
+    {
+      "name": "07 Pelacakan Jejak - Kehadiran QR",
+      "description": "Booking harus berstatus 6 (Check in). Gunakan akun ketua untuk mewakili anggota, akun anggota untuk scan mandiri dan uji penolakan. Ambil ID anggota dari Detail Booking; tiap pendaki hanya bisa check-in satu kali per pos.",
+      "item": [
+        {
+          "name": "Progress Tim (Ketua / Anggota)",
+          "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/tracking/progress/{{booking_id}}", "host": ["{{base_url}}"], "path": ["api", "tracking", "progress", "{{booking_id}}"]}},
+          "response": []
+        },
+        {
+          "name": "Scan QR Kehadiran Sendiri",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test('Kehadiran sendiri tercatat', () => {", "  pm.response.to.have.status(201);", "  pm.expect(pm.response.json().data.pendaki_id).to.be.a('string');", "});"]}}],
+          "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"qr_code_value\": \"{{checkpoint_qr_value}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/tracking/checkpoint/qr", "host": ["{{base_url}}"], "path": ["api", "tracking", "checkpoint", "qr"]}},
+          "response": []
+        },
+        {
+          "name": "Ketua Wakili Kehadiran Anggota",
+          "description": "Gunakan token ketua dari Login. Isi pendaki_tambahan_id dan checkpoint_qr_value di environment. Jalankan hanya sekali per anggota/pos.",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test('Kehadiran anggota tercatat', () => {", "  pm.response.to.have.status(201);", "  pm.expect(pm.response.json().data.pendaki_id).to.eql(pm.environment.get('pendaki_tambahan_id'));", "});"]}}],
+          "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"qr_code_value\": \"{{checkpoint_qr_value}}\",\n  \"pendaki_id\": \"{{pendaki_tambahan_id}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/tracking/checkpoint/qr", "host": ["{{base_url}}"], "path": ["api", "tracking", "checkpoint", "qr"]}},
+          "response": []
+        },
+        {
+          "name": "Anggota Dilarang Wakili Pendaki Lain (Login Anggota)",
+          "description": "Login dengan token akun anggota pada booking ini. pendaki_id menunjuk pendaki lain, misalnya ketua.",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test('Anggota tidak dapat mewakili', () => {", "  pm.response.to.have.status(403);", "  pm.expect(pm.response.json().success).to.eql(false);", "});"]}}],
+          "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"qr_code_value\": \"{{checkpoint_qr_value}}\",\n  \"pendaki_id\": \"{{pendaki_id}}\"\n}", "options": {"raw": {"language": "json"}}}, "url": {"raw": "{{base_url}}/api/tracking/checkpoint/qr", "host": ["{{base_url}}"], "path": ["api", "tracking", "checkpoint", "qr"]}},
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
@@ -189,6 +220,7 @@
     {"key": "wna", "value": "0", "type": "string"},
     {"key": "booking_id", "value": "", "type": "string"},
     {"key": "pendaki_id", "value": "", "type": "string"},
+    {"key": "checkpoint_qr_value", "value": "", "type": "string"},
     {"key": "pendaki_tambahan_id", "value": "", "type": "string"},
     {"key": "kode_bio", "value": "", "type": "string"},
     {"key": "kode_bio_tambahan", "value": "", "type": "string"},

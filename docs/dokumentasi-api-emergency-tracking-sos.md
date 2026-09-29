@@ -313,11 +313,11 @@ Authorization: Bearer {token}
 
 ### 2.2 Check-in via QR Code
 
-Pendaki scan QR code di pos untuk mencatat kehadiran.
+Pendaki scan QR code di pos untuk mencatat kehadirannya sendiri. Ketua tim (pemilik booking) dapat memilih anggota dari booking aktif yang sama untuk diwakili; anggota tidak dapat mewakili pendaki lain.
 
 **Endpoint:** `POST /api/tracking/checkpoint/qr`  
 **Auth:** Bearer Token  
-**Syarat:** Pendakian aktif
+**Syarat:** Pendakian aktif (`status_booking = 6`), pemanggil tercatat sebagai pendaki lewat `id_bio`. `pendaki_id` boleh menunjuk orang lain hanya jika pemanggil adalah pemilik booking aktif.
 
 #### Cara Penggunaan:
 1. Pendaki scan QR code yang terpasang di pos jalur
@@ -332,6 +332,7 @@ Pendaki scan QR code di pos untuk mencatat kehadiran.
 | qr_code_value | string | ✅ | harus ada di gk_posts | Nilai dari QR code yang di-scan |
 | latitude | numeric | ❌ | -90 s/d 90 | Koordinat saat scan |
 | longitude | numeric | ❌ | -180 s/d 180 | Koordinat saat scan |
+| pendaki_id | UUID | ❌ | anggota booking aktif yang sama | Tanpa parameter: diri sendiri. Dengan parameter anggota: khusus ketua tim. |
 
 #### Contoh Request:
 ```json
@@ -353,6 +354,7 @@ Content-Type: application/json
     "message": "Check-in berhasil di Pos 1",
     "data": {
         "checkpoint_log_id": 15,
+        "pendaki_id": "uuid-pendaki-yang-dicatat",
         "post": {
             "id": 2,
             "nama": "Pos 1",
@@ -367,6 +369,14 @@ Content-Type: application/json
     "errors": null
 }
 ```
+
+Response memuat `data.pendaki_id` (UUID pendaki yang dicatat) untuk membedakan scan sendiri dan perwakilan. Contoh ketua mewakili anggota:
+
+```json
+{"qr_code_value":"POST-A1B2C3D4E5F6","pendaki_id":"uuid-anggota-dari-detail-booking"}
+```
+
+Gunakan `pendakis[].id` dari detail booking aktif, bukan `id_bio`. Anggota yang mencoba mengirim `pendaki_id` milik orang lain mendapat 403. Target di luar booking aktif juga ditolak dengan 403; UUID tidak valid mendapat 422. Check-in kedua di pos yang sama untuk pendaki yang sama mendapat 409, termasuk jika sebelumnya diwakili ketua. Response progress menampilkan catatan per pendaki.
 
 #### Response Gagal — QR Tidak Valid (404):
 ```json
@@ -538,7 +548,7 @@ Content-Type: application/json
 Lihat progress checkpoint untuk satu booking (semua pendaki dalam grup).
 
 **Endpoint:** `GET /api/tracking/progress/{booking_id}`  
-**Auth:** Bearer Token
+**Auth:** Bearer Token. Hanya pemilik booking atau akun pendaki yang tercatat dalam booking tersebut yang dapat melihat progress tim.
 
 #### Cara Penggunaan:
 1. Gunakan `booking_id` dari data booking aktif

@@ -21,6 +21,7 @@ class CheckpointController extends Controller
     {
         $validated = $request->validate([
             'qr_code_value' => 'required|string',
+            'pendaki_id' => 'sometimes|required|uuid',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
         ]);
@@ -29,6 +30,18 @@ class CheckpointController extends Controller
         $pendaki = $this->getActivePendaki($user);
         if (!$pendaki) {
             return ApiResponse::error('Tidak ada pendakian aktif', null, 403);
+        }
+
+        if (isset($validated['pendaki_id']) && $validated['pendaki_id'] !== $pendaki->id) {
+            if ($pendaki->booking->id_user !== $user->id) {
+                return ApiResponse::error('Hanya ketua tim yang dapat mewakili anggota', null, 403);
+            }
+
+            $target = $pendaki->booking->pendakis()->whereKey($validated['pendaki_id'])->first();
+            if (!$target) {
+                return ApiResponse::error('Pendaki bukan anggota booking aktif', null, 403);
+            }
+            $pendaki = $target;
         }
 
         $post = GkPost::where('qr_code_value', $validated['qr_code_value'])
@@ -62,6 +75,7 @@ class CheckpointController extends Controller
 
         return ApiResponse::success([
             'checkpoint_log_id' => $log->id,
+            'pendaki_id' => $pendaki->id,
             'post' => ['id' => $post->id, 'nama' => $post->nama, 'urutan' => $post->urutan],
             'progress' => $progress,
         ], "Check-in berhasil di {$post->nama}", 201);
@@ -192,7 +206,12 @@ class CheckpointController extends Controller
     {
         $user = $request->user();
         $booking = gk_booking::where('id', $bookingId)
-            ->where('id_user', $user->id)
+            ->where(function ($query) use ($user) {
+                $query->where('id_user', $user->id);
+                if ($user->id_bio) {
+                    $query->orWhereHas('pendakis', fn ($pendaki) => $pendaki->where('id_bio', $user->id_bio));
+                }
+            })
             ->firstOrFail();
 
         $gateId = $booking->gate_masuk;
@@ -252,9 +271,14 @@ class CheckpointController extends Controller
 
     private function getActivePendaki($user): ?gk_pendaki
     {
-        return gk_pendaki::whereHas('booking', function ($q) use ($user) {
-            $q->where('id_user', $user->id)->where('status_booking', 6);
-        })->first();
+        if (!$user->id_bio) {
+            return null;
+        }
+
+        return gk_pendaki::where('id_bio', $user->id_bio)
+            ->whereHas('booking', fn ($query) => $query->where('status_booking', 6))
+            ->with('booking')
+            ->first();
     }
 
     private function getProgress(gk_pendaki $pendaki): array
