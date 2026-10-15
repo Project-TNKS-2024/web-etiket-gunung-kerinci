@@ -1,0 +1,61 @@
+{
+  "$kind": http-request,
+  "name": 041 POST admin-master-destinasi-add,
+  "method": POST,
+  "url": "{{base_url}}/admin/master/destinasi/add",
+  "order": 41000,
+  "description": "Route 41: POST /admin/master/destinasi/add
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\master\\destinasisController@addAction
+
+    Nama: admin.master.destinasi.addAction
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin, Spatie\\Permission\\Middleware\\PermissionMiddleware:master-create-destinasi
+
+    Source lokal: app/Http/Controllers/etiket/admin/master/destinasisController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - nama: required|string|max:255
+
+    - status: required|in:0,1
+
+    - kategori: required|string|max:100
+
+    - lokasi: required|string|max:255
+
+    - detail: required|string
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": urlencoded, "content": { nama: "{{nama}}", status: "0", kategori: "{{kategori}}", lokasi: "{{lokasi}}", detail: "{{detail}}", _token: "{{csrf_token}}" } },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

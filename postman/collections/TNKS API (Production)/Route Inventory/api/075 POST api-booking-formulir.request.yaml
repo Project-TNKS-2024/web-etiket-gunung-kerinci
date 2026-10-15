@@ -1,0 +1,66 @@
+{
+  "$kind": http-request,
+  "name": 075 POST api-booking-formulir,
+  "method": POST,
+  "url": "{{base_url}}/api/booking/formulir",
+  "order": 75000,
+  "description": "Route 75: POST /api/booking/formulir
+
+    Action: App\\Http\\Controllers\\API\\BookingController@saveFormulir
+
+    Nama: api.booking.formulir.save
+
+    Middleware: api, Illuminate\\Auth\\Middleware\\Authenticate:sanctum
+
+    Source lokal: app/Http/Controllers/API/BookingController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - id_booking: required|uuid
+
+    - action: required|in:next,save
+
+    - formulir: required|array
+
+    - formulir.*.id_pendaki: required|uuid
+
+    - formulir.*.kode_bio: required|string|max:36
+
+    - formulir.*.no_hp_darurat: nullable|string|regex:/^(\\+?[1-9]\\d{0,2})?\\s?\\d{6,15}$/
+
+    - formulir.*.surat_izin_ortu: nullable|file|mimes:jpg,jpeg,png,pdf|max:2048
+
+    - barang_bawaan: nullable|array
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: application/json },
+  "auth": { "type": bearer, "credentials": { token: "{{token}}" } },
+  "body": { "type": formdata, "content": [ { type: text, key: id_booking, value: "{{pendaki_id}}" }, { type: text, key: action, value: next }, { type: text, key: formulir, value: '[{"id_pendaki": "{{pendaki_id}}", "kode_bio": "{{formulir___kode_bio}}", "no_hp_darurat": "{{formulir___no_hp_darurat}}", "surat_izin_ortu": "{{formulir___surat_izin_ortu}}"}]' }, { type: text, key: barang_bawaan, value: "[]" } ] },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

@@ -1,0 +1,61 @@
+{
+  "$kind": http-request,
+  "name": 059 POST admin-setting-updateAction,
+  "method": POST,
+  "url": "{{base_url}}/admin/setting/updateAction",
+  "order": 59000,
+  "description": "Route 59: POST /admin/setting/updateAction
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\settingController@updateAction
+
+    Nama: admin.setting.updateAction
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin, Spatie\\Permission\\Middleware\\PermissionMiddleware:edit-setting
+
+    Source lokal: app/Http/Controllers/etiket/admin/settingController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - id: required|exists:settings,id
+
+    - nama: required|string
+
+    - text1: nullable|string
+
+    - text2: nullable|string
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": urlencoded, "content": { id: "{{id}}", nama: "{{nama}}", text1: "{{text1}}", text2: "{{text2}}", _token: "{{csrf_token}}" } },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

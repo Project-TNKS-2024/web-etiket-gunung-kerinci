@@ -1,0 +1,69 @@
+{
+  "$kind": http-request,
+  "name": 137 POST booking-formulir,
+  "method": POST,
+  "url": "{{base_url}}/booking/formulir",
+  "order": 137000,
+  "description": "Route 137: POST /booking/formulir
+
+    Action: App\\Http\\Controllers\\homepage\\booking@bookingFPStore
+
+    Nama: homepage.booking.formulir.action
+
+    Middleware: web, Illuminate\\Auth\\Middleware\\Authenticate, App\\Http\\Middleware\\CheckRole:user, App\\Http\\Middleware\\LoggerMiddleware
+
+    Source lokal: app/Http/Controllers/homepage/booking.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - id_booking: required|string
+
+    - action: required|in:next,save
+
+    - formulir: required|array
+
+    - formulir.*.id_pendaki: nullable|string
+
+    - formulir.*.kode_bio: nullable|string
+
+    - formulir.*.no_hp_darurat: nullable|string|regex:/^(\\+?[1-9]\\d{0,2})?\\s?\\d{6,15}$/
+
+    - formulir.*.surat_izin_ortu: nullable|file|mimes:jpg,jpeg,png,pdf|max:2048
+
+    - barangWajib: required|boolean
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": formdata, "content": [ { type: text, key: id_booking, value: "{{id_booking}}" }, { type: text, key: action, value: next }, { type: text, key: formulir, value: '[{"id_pendaki": "{{formulir___id_pendaki}}", "kode_bio": "{{formulir___kode_bio}}", "no_hp_darurat": "{{formulir___no_hp_darurat}}", "surat_izin_ortu": "{{formulir___surat_izin_ortu}}"}]' }, { type: text, key: barangWajib, value: "true" }, { type: text, key: _token, value: "{{csrf_token}}" } ] },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

@@ -1,0 +1,49 @@
+{
+  "$kind": http-request,
+  "name": 166 GET oauth-google-callback,
+  "method": GET,
+  "url": "{{base_url}}/oauth/google/callback",
+  "order": 166000,
+  "description": "Route 166: GET|HEAD /oauth/google/callback
+
+    Action: App\\Http\\Controllers\\etiket\\auth\\OauthController@handleProviderCallback
+
+    Nama: oauth.google.callback
+
+    Middleware: web
+
+    Source lokal: app/Http/Controllers/etiket/auth/OauthController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Tidak ada aturan validasi literal yang diekstrak dari metode. Ini tidak menjamin endpoint tanpa parameter; periksa form/source dan prasyarat sesi.
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

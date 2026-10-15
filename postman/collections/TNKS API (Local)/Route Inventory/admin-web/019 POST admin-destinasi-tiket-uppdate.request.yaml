@@ -1,0 +1,93 @@
+{
+  "$kind": http-request,
+  "name": 019 POST admin-destinasi-tiket-uppdate,
+  "method": POST,
+  "url": "{{base_url}}/admin/destinasi/tiket/uppdate",
+  "order": 19000,
+  "description": "Route 19: POST /admin/destinasi/tiket/uppdate
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\destinasi\\tiketController@uppdateAction
+
+    Nama: admin.destinasi.tiket.uppdateAction
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin, Spatie\\Permission\\Middleware\\PermissionMiddleware:edit-tiket
+
+    Source lokal: app/Http/Controllers/etiket/admin/destinasi/tiketController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - id_tiket: required|integer
+
+    - destinasi: required|string|max:255
+
+    - nama_paket: required|string|max:255
+
+    - min_pendaki: required|integer|min:1
+
+    - title_penugasan: nullable|string|max:255
+
+    - keterangan: nullable|string
+
+    - id_tiket_wni: required|integer
+
+    - harga_masuk_weekend_wni: required|numeric|min:0
+
+    - harga_masuk_weekday_wni: required|numeric|min:0
+
+    - harga_kemah_wni: required|numeric|min:0
+
+    - harga_tracking_wni: required|numeric|min:0
+
+    - harga_asuransi_wni: required|numeric|min:0
+
+    - masa_asuransi_wni: required|numeric|min:0
+
+    - id_tiket_wna: required|integer
+
+    - harga_masuk_weekend_wna: required|numeric|min:0
+
+    - harga_masuk_weekday_wna: required|numeric|min:0
+
+    - harga_kemah_wna: required|numeric|min:0
+
+    - harga_tracking_wna: required|numeric|min:0
+
+    - harga_asuransi_wna: required|numeric|min:0
+
+    - masa_asuransi_wna: required|numeric|min:0
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": urlencoded, "content": { id_tiket: "1", destinasi: "{{destinasi}}", nama_paket: "{{nama_paket}}", min_pendaki: "1", title_penugasan: "{{title_penugasan}}", keterangan: "{{keterangan}}", id_tiket_wni: "1", harga_masuk_weekend_wni: "1", harga_masuk_weekday_wni: "1", harga_kemah_wni: "1", harga_tracking_wni: "1", harga_asuransi_wni: "1", masa_asuransi_wni: "1", id_tiket_wna: "1", harga_masuk_weekend_wna: "1", harga_masuk_weekday_wna: "1", harga_kemah_wna: "1", harga_tracking_wna: "1", harga_asuransi_wna: "1", masa_asuransi_wna: "1", _token: "{{csrf_token}}" } },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

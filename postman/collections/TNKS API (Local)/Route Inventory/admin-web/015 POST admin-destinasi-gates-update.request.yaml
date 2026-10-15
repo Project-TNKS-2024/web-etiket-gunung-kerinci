@@ -1,0 +1,71 @@
+{
+  "$kind": http-request,
+  "name": 015 POST admin-destinasi-gates-update,
+  "method": POST,
+  "url": "{{base_url}}/admin/destinasi/gates/update",
+  "order": 15000,
+  "description": "Route 15: POST /admin/destinasi/gates/update
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\destinasi\\destinasiController@gatesUpdateAction
+
+    Nama: admin.destinasi.gates.updateAction
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin, Spatie\\Permission\\Middleware\\PermissionMiddleware:edit-gates
+
+    Source lokal: app/Http/Controllers/etiket/admin/destinasi/destinasiController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - id_gate: required|exists:gk_gates,id
+
+    - nama: required|string|max:255
+
+    - status: required|in:1,0
+
+    - max_pendaki_hari: required|integer|min:1
+
+    - min_pendaki_booking: required|integer|min:1
+
+    - lokasi: required|string|max:255
+
+    - lokasi_maps: nullable|string|max:500
+
+    - detail: nullable|string|max:1000
+
+    - qris: nullable|image|mimes:jpg,png,jpeg|max:1048
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": formdata, "content": [ { type: text, key: id_gate, value: "{{id_gate}}" }, { type: text, key: nama, value: "{{nama}}" }, { type: text, key: status, value: "1" }, { type: text, key: max_pendaki_hari, value: "1" }, { type: text, key: min_pendaki_booking, value: "1" }, { type: text, key: lokasi, value: "{{lokasi}}" }, { type: text, key: lokasi_maps, value: "{{lokasi_maps}}" }, { type: text, key: detail, value: "{{detail}}" }, { type: file, key: qris, src: "{{upload_file}}" }, { type: text, key: _token, value: "{{csrf_token}}" } ] },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

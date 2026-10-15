@@ -1,0 +1,58 @@
+{
+  "$kind": http-request,
+  "name": 077 POST api-booking-payment,
+  "method": POST,
+  "url": "{{base_url}}/api/booking/payment",
+  "order": 77000,
+  "description": "Route 77: POST /api/booking/payment
+
+    Action: App\\Http\\Controllers\\API\\BookingController@addPayment
+
+    Nama: api.booking.payment.add
+
+    Middleware: api, Illuminate\\Auth\\Middleware\\Authenticate:sanctum
+
+    Source lokal: app/Http/Controllers/API/BookingController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - id: required|uuid
+
+    - metode: required|in:scan,transfer
+
+    - bukti_pembayaran: required|file|mimes:jpg,jpeg,png,pdf|max:2048
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: application/json },
+  "auth": { "type": bearer, "credentials": { token: "{{token}}" } },
+  "body": { "type": formdata, "content": [ { type: text, key: id, value: "{{booking_id}}" }, { type: text, key: metode, value: scan }, { type: file, key: bukti_pembayaran, src: "{{upload_file}}" } ] },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

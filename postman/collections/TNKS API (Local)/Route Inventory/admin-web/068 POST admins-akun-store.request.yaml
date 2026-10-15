@@ -1,0 +1,63 @@
+{
+  "$kind": http-request,
+  "name": 068 POST admins-akun-store,
+  "method": POST,
+  "url": "{{base_url}}/admins/akun/store",
+  "order": 68000,
+  "description": "Route 68: POST /admins/akun/store
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\master\\AccountAdminController@store
+
+    Nama: admins.akun.store
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin, Spatie\\Permission\\Middleware\\PermissionMiddleware:master-create-admin
+
+    Source lokal: app/Http/Controllers/etiket/admin/master/AccountAdminController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - fullName: required|string
+
+    - nip: required|string
+
+    - email: required|email|unique:users,email
+
+    - role: required|exists:roles,name
+
+    - destination_ids: array|exists:destinasis,id
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": urlencoded, "content": { fullName: "{{fullName}}", nip: "{{nip}}", email: "{{email}}", role: "{{role}}", destination_ids: "[]", _token: "{{csrf_token}}" } },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

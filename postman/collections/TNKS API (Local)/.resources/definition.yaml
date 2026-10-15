@@ -1,0 +1,27 @@
+{
+  "$kind": collection,
+  "description": "Inventaris seluruh route Laravel, audit 15 Oktober 2026. base_url adalah origin tanpa /api. Folder Route Inventory mencakup seluruh method, termasuk HEAD dan fallback. Workflow lama dipertahankan. Body/validasi bersumber dari source, bukan hasil pengujian empiris. Contoh lama belum diverifikasi. Default hanya mengizinkan tiga pemeriksaan aman (health, fallback, penolakan autentikasi). Untuk menjalankan request lain secara manual, isi variabel allow_requests=true dan data uji yang sah. Jangan menjalankan seluruh koleksi pada production: SOS, pembayaran, email dan GET tertentu mengubah data. Web/admin memakai sesi login + CSRF; token Sanctum hanya untuk API. Variabel token/password kosong; simpan rahasia sebagai nilai lokal Postman, jangan dibagikan.",
+  "variables": { token: "", allow_requests: "false", email: audit@example.invalid, password: "", csrf_token: "", booking_id: 00000000-0000-4000-8000-000000000000, pendaki_id: 00000000-0000-4000-8000-000000000000, gate_id: "1", post_id: "1", sos_id: "1", checkpointLogId: "1", page: "1", upload_file: "", base_url: http://127.0.0.1:8000, id: "1", uq: "1", hash: "1", id_booking: "", keterangan: "", id_destinasi: "", foto_nama: "", foto_detail: "", id_gambar: "", nama: "", lokasi: "", lokasi_maps: "", detail: "", id_gate: "", destinasi: "", nama_paket: "", title_penugasan: "", id_tiket: "", kategori: "", status: "", statusGunung: "", sop: "", notes: "", title: "", description: "", id_user: "", verified: "", text1: "", text2: "", resolution_notes: "", fullName: "", nip: "", role: "", access_token: "", formulir___kode_bio: "", formulir___no_hp_darurat: "", formulir___surat_izin_ortu: "", code: "", snk: "", password_baru: "", firstName: "", lastName: "", kewarganegaraan: "", nik: "", telp_country: "", potensi_bencana: "", deskripsi: "", message: "", qr_code_value: "", metode: "", jenis_tiket: "", gerbang_masuk: "", gerbang_keluar: "", formulir___id_pendaki: "", booking: "", id_pembayaran: "", name: "", permissions__: "" },
+  "scripts":
+    [
+      {
+          type: http:beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

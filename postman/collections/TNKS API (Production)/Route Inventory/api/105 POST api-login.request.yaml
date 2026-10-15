@@ -1,0 +1,63 @@
+{
+  "$kind": http-request,
+  "name": 105 POST api-login,
+  "method": POST,
+  "url": "{{base_url}}/api/login",
+  "order": 105000,
+  "description": "Route 105: POST /api/login
+
+    Action: App\\Http\\Controllers\\API\\AuthCoontroller@login
+
+    Nama: api.auth.login
+
+    Middleware: api
+
+    Source lokal: app/Http/Controllers/API/AuthCoontroller.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - email: required|email
+
+    - password: required
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: application/json },
+  "body":
+    {
+      "type": json,
+      "content": "{
+
+        \  \"email\": \"{{email}}\",
+
+        \  \"password\": \"{{password}}\"
+
+        }"
+    },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

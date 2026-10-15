@@ -1,0 +1,77 @@
+{
+  "$kind": http-request,
+  "name": 154 POST dashboard-profile,
+  "method": POST,
+  "url": "{{base_url}}/dashboard/profile",
+  "order": 154000,
+  "description": "Route 154: POST /dashboard/profile
+
+    Action: App\\Http\\Controllers\\etiket\\user\\profile@action
+
+    Nama: user.dashboard.action
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:user, Illuminate\\Auth\\Middleware\\EnsureEmailIsVerified, App\\Http\\Middleware\\LoggerMiddleware
+
+    Source lokal: app/Http/Controllers/etiket/user/profile.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - firstName: required|string|max:255
+
+    - lastName: string|max:255|nullable
+
+    - lampiran_identitas: required|file|mimes:jpg,jpeg,png,pdf|max:548
+
+    - kewarganegaraan: required|string
+
+    - nik: required|string|min:6|max:16|alpha_num
+
+    - nomor_telepon: required|numeric
+
+    - telp_country: required|string|max:5
+
+    - jenis_kelamin: required|in:l,p
+
+    - tanggal_lahir: required|date|before:today
+
+    - provinsi: numeric
+
+    - kabupaten_kota: numeric
+
+    - kecamatan: numeric
+
+    - desa_kelurahan: numeric
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": formdata, "content": [ { type: text, key: firstName, value: "{{firstName}}" }, { type: text, key: lastName, value: "{{lastName}}" }, { type: file, key: lampiran_identitas, src: "{{upload_file}}" }, { type: text, key: kewarganegaraan, value: "{{kewarganegaraan}}" }, { type: text, key: nik, value: "{{nik}}" }, { type: text, key: nomor_telepon, value: "1" }, { type: text, key: telp_country, value: "{{telp_country}}" }, { type: text, key: jenis_kelamin, value: l }, { type: text, key: tanggal_lahir, value: 2026-10-16 }, { type: text, key: provinsi, value: "1" }, { type: text, key: kabupaten_kota, value: "1" }, { type: text, key: kecamatan, value: "1" }, { type: text, key: desa_kelurahan, value: "1" }, { type: text, key: _token, value: "{{csrf_token}}" } ] },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

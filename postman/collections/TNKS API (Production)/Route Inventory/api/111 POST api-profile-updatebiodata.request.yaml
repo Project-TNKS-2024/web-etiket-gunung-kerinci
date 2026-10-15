@@ -1,0 +1,92 @@
+{
+  "$kind": http-request,
+  "name": 111 POST api-profile-updatebiodata,
+  "method": POST,
+  "url": "{{base_url}}/api/profile/updatebiodata",
+  "order": 111000,
+  "description": "Route 111: POST /api/profile/updatebiodata
+
+    Action: App\\Http\\Controllers\\API\\ProfileController@updateBiodata
+
+    Nama: api.profile.updatebiodata
+
+    Middleware: api, Illuminate\\Auth\\Middleware\\Authenticate:sanctum
+
+    Source lokal: app/Http/Controllers/API/ProfileController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - firstName: required|string|max:255
+
+    - lastName: nullable|string|max:255
+
+    - kewarganegaraan: required|string
+
+    - nik: required|string|min:6|max:16|alpha_num
+
+    - nomor_telepon: required|numeric
+
+    - telp_country: required|string|max:5
+
+    - jenis_kelamin: required|in:l,p
+
+    - tanggal_lahir: required|date|before:today
+
+    - desa_kelurahan: nullable|numeric
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: application/json },
+  "auth": { "type": bearer, "credentials": { token: "{{token}}" } },
+  "body":
+    {
+      "type": json,
+      "content": "{
+
+        \  \"firstName\": \"{{firstName}}\",
+
+        \  \"lastName\": \"{{lastName}}\",
+
+        \  \"kewarganegaraan\": \"{{kewarganegaraan}}\",
+
+        \  \"nik\": \"{{nik}}\",
+
+        \  \"nomor_telepon\": 1,
+
+        \  \"telp_country\": \"{{telp_country}}\",
+
+        \  \"jenis_kelamin\": \"l\",
+
+        \  \"tanggal_lahir\": \"2026-10-16\",
+
+        \  \"desa_kelurahan\": 1
+
+        }"
+    },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

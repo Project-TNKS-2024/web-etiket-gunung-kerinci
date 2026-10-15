@@ -1,0 +1,69 @@
+{
+  "$kind": http-request,
+  "name": 021 POST admin-destinasi-update,
+  "method": POST,
+  "url": "{{base_url}}/admin/destinasi/update",
+  "order": 21000,
+  "description": "Route 21: POST /admin/destinasi/update
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\destinasi\\destinasiController@destinasiUpdateAction
+
+    Nama: admin.destinasi.update.action
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin, Spatie\\Permission\\Middleware\\PermissionMiddleware:edit-destinasi
+
+    Source lokal: app/Http/Controllers/etiket/admin/destinasi/destinasiController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - id: required
+
+    - nama: required
+
+    - kategori: required
+
+    - status: required
+
+    - statusGunung: required
+
+    - lokasi: required
+
+    - detail: required
+
+    - sop: required
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": urlencoded, "content": { id: "{{id}}", nama: "{{nama}}", kategori: "{{kategori}}", status: "{{status}}", statusGunung: "{{statusGunung}}", lokasi: "{{lokasi}}", detail: "{{detail}}", sop: "{{sop}}", _token: "{{csrf_token}}" } },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

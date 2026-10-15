@@ -1,0 +1,45 @@
+{
+  "description": Harus pemilik SOS atau admin destinasi.
+
+
+    Workflow lama. Payload/contoh historis belum diverifikasi terhadap audit ini; lihat Route Inventory untuk aturan source. Dilindungi guard koleksi.,
+  "url": "{{base_url}}/api/sos/chat/{{sos_id}}/send",
+  "method": POST,
+  "headers": { Authorization: "Bearer {{token}}", Content-Type: application/json },
+  "body":
+    {
+      "type": text,
+      "content": "{
+
+        \  \"type\": \"text\",
+
+        \  \"content\": \"Saya di dekat pohon besar setelah Pos 2, ada batu besar di sebelah kiri\"
+
+        }"
+    },
+  "$kind": http-request,
+  "examples": ./.resources/Send SOS Chat Text.resources/examples,
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ],
+  order: 3000
+}

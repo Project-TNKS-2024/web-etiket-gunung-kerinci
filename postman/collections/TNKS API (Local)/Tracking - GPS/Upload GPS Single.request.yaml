@@ -1,0 +1,53 @@
+{
+  "description": Pendakian aktif required. Rate limit 1x/30 detik; rekomendasi mobile tiap 60 detik.
+
+
+    Workflow lama. Payload/contoh historis belum diverifikasi terhadap audit ini; lihat Route Inventory untuk aturan source. Dilindungi guard koleksi.,
+  "url": "{{base_url}}/api/tracking/gps",
+  "method": POST,
+  "headers": { Authorization: "Bearer {{token}}", Content-Type: application/json },
+  "body":
+    {
+      "type": text,
+      "content": "{
+
+        \  \"latitude\": -1.6974,
+
+        \  \"longitude\": 101.2642,
+
+        \  \"altitude\": 2800.5,
+
+        \  \"accuracy\": 12.3,
+
+        \  \"battery_level\": 75,
+
+        \  \"recorded_at\": \"2026-05-12T08:30:00+07:00\"
+
+        }"
+    },
+  "$kind": http-request,
+  "examples": ./.resources/Upload GPS Single.resources/examples,
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ],
+  order: 1000
+}

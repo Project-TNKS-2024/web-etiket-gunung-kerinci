@@ -1,0 +1,72 @@
+{
+  "$kind": http-request,
+  "name": 122 POST api-tracking-checkpoint-manual,
+  "method": POST,
+  "url": "{{base_url}}/api/tracking/checkpoint/manual",
+  "order": 122000,
+  "description": "Route 122: POST /api/tracking/checkpoint/manual
+
+    Action: App\\Http\\Controllers\\API\\CheckpointController@manualCheckin
+
+    Nama: -
+
+    Middleware: api, Illuminate\\Auth\\Middleware\\Authenticate:sanctum
+
+    Source lokal: app/Http/Controllers/API/CheckpointController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+    Production menambahkan pemeriksaan gate pos terhadap gate_masuk booking. Radius manual dan waktu offline belum berubah.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - post_id: required|exists:gk_posts,id
+
+    - latitude: required|numeric|between:-90,90
+
+    - longitude: required|numeric|between:-180,180
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: application/json },
+  "auth": { "type": bearer, "credentials": { token: "{{token}}" } },
+  "body":
+    {
+      "type": json,
+      "content": "{
+
+        \  \"post_id\": \"{{post_id}}\",
+
+        \  \"latitude\": 0,
+
+        \  \"longitude\": 0
+
+        }"
+    },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

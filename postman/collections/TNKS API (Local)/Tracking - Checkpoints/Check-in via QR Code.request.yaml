@@ -1,0 +1,47 @@
+{
+  "description": Scan QR pos untuk mencatat checkpoint.
+
+
+    Workflow lama. Payload/contoh historis belum diverifikasi terhadap audit ini; lihat Route Inventory untuk aturan source. Dilindungi guard koleksi.,
+  "url": "{{base_url}}/api/tracking/checkpoint/qr",
+  "method": POST,
+  "headers": { Authorization: "Bearer {{token}}", Content-Type: application/json },
+  "body":
+    {
+      "type": text,
+      "content": "{
+
+        \  \"qr_code_value\": \"POST-A1B2C3D4E5F6\",
+
+        \  \"latitude\": -1.704,
+
+        \  \"longitude\": 101.266
+
+        }"
+    },
+  "$kind": http-request,
+  "examples": ./.resources/Check-in via QR Code.resources/examples,
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ],
+  order: 1000
+}

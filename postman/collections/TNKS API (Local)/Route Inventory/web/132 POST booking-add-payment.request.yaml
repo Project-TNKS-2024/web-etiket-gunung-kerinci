@@ -1,0 +1,59 @@
+{
+  "$kind": http-request,
+  "name": 132 POST booking-add-payment,
+  "method": POST,
+  "url": "{{base_url}}/booking/add-payment",
+  "order": 132000,
+  "description": "Route 132: POST /booking/add-payment
+
+    Action: App\\Http\\Controllers\\homepage\\booking@addBuktiPembayaran
+
+    Nama: homepage.booking.addBuktiPembayaran
+
+    Middleware: web, Illuminate\\Auth\\Middleware\\Authenticate, App\\Http\\Middleware\\CheckRole:user, App\\Http\\Middleware\\LoggerMiddleware
+
+    Source lokal: app/Http/Controllers/homepage/booking.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - id: required|string
+
+    - metode: required|string
+
+    - bukti_pembayaran: required|file|mimes:jpg,jpeg,png,pdf|max:2048
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": formdata, "content": [ { type: text, key: id, value: "{{id}}" }, { type: text, key: metode, value: "{{metode}}" }, { type: file, key: bukti_pembayaran, src: "{{upload_file}}" }, { type: text, key: _token, value: "{{csrf_token}}" } ] },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

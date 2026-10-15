@@ -1,0 +1,10 @@
+cloudResources:
+  collections:
+    ../postman/collections/TNKS API (Local): 55136218-9ba9eb50-35a2-4f5b-8356-1ddf3a6846ec
+    ../postman/collections/TNKS API (Production): 55136218-79824cce-3b46-4ba9-a5be-2b0c16edf9f7
+  environments:
+    ../postman/environments/TNKS Local Development.environment.yaml: 55136218-9f45148b-de9b-4859-89c3-4e60e3dacbcf
+  globals:
+    ../postman/globals/workspace.globals.yaml: fdc007e4-2b31-43f4-8bfd-5574b950ab9e
+workspace:
+  id: c10d748d-f653-4744-81e6-b134997e8b50

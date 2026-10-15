@@ -1,0 +1,59 @@
+{
+  "$kind": http-request,
+  "name": 029 POST admin-emergency-broadcast,
+  "method": POST,
+  "url": "{{base_url}}/admin/emergency/broadcast",
+  "order": 29000,
+  "description": "Route 29: POST /admin/emergency/broadcast
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\emergency\\EmergencyAdminController@broadcast
+
+    Nama: admin.emergency.broadcast
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin
+
+    Source lokal: app/Http/Controllers/etiket/admin/emergency/EmergencyAdminController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - title: required|string|max:255
+
+    - description: required|string|max:2000
+
+    - severity: required|in:low,medium,high,critical
+
+    - id_destinasi: required|exists:destinasis,id
+
+
+    Path parameter: -. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": urlencoded, "content": { title: "{{title}}", description: "{{description}}", severity: low, id_destinasi: "{{id_destinasi}}", _token: "{{csrf_token}}" } },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

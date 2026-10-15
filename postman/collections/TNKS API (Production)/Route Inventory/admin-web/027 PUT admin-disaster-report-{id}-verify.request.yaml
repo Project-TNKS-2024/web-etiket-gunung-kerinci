@@ -1,0 +1,55 @@
+{
+  "$kind": http-request,
+  "name": "027 PUT admin-disaster-report-{id}-verify",
+  "method": PUT,
+  "url": "{{base_url}}/admin/disaster-report/{{id}}/verify",
+  "order": 27000,
+  "description": "Route 27: PUT /admin/disaster-report/{id}/verify
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\sos\\SOSAdminController@verifyDisasterReport
+
+    Nama: admin.disaster-report.verify
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin
+
+    Source lokal: app/Http/Controllers/etiket/admin/sos/SOSAdminController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - status: required|in:verified,rejected
+
+    - notes: nullable|string|max:1000
+
+
+    Path parameter: id. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": urlencoded, "content": { status: verified, notes: "{{notes}}", _token: "{{csrf_token}}" } },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}

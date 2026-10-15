@@ -1,0 +1,71 @@
+{
+  "$kind": http-request,
+  "name": "049 PUT admin-posts-{id}",
+  "method": PUT,
+  "url": "{{base_url}}/admin/posts/{{id}}",
+  "order": 49000,
+  "description": "Route 49: PUT /admin/posts/{id}
+
+    Action: App\\Http\\Controllers\\etiket\\admin\\posts\\PostAdminController@update
+
+    Nama: admin.posts.update
+
+    Middleware: web, App\\Http\\Middleware\\CheckRole:admin
+
+    Source lokal: app/Http/Controllers/etiket/admin/posts/PostAdminController.php
+
+    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
+
+    Target lokal; pastikan server lokal berjalan.
+
+
+    Validasi literal pada metode (syarat dinamis/percabangan tetap perlu dibaca):
+
+    - nama: required|string|max:255
+
+    - urutan: required|integer|min:1
+
+    - latitude: required|numeric|between:-90,90
+
+    - longitude: required|numeric|between:-180,180
+
+    - altitude: nullable|integer
+
+    - radius_meter: nullable|integer|min:50|max:500
+
+    - id_gate: required|exists:gk_gates,id
+
+    - detail: nullable|string|max:1000
+
+    - status: nullable|boolean
+
+
+    Path parameter: id. Gunakan ID milik akun uji sendiri.
+
+    WEB/ADMIN: response dapat berupa HTML/redirect. Diperlukan cookie sesi, hak akses sesuai middleware dan _token CSRF untuk form.\n",
+  "settings": { "followRedirects": false },
+  "headers": { Accept: text/html },
+  "body": { "type": urlencoded, "content": { nama: "{{nama}}", urutan: "1", latitude: "0", longitude: "0", altitude: "1", radius_meter: "1", id_gate: "{{id_gate}}", detail: "{{detail}}", status: "True", _token: "{{csrf_token}}" } },
+  "scripts":
+    [
+      {
+          type: beforeRequest,
+          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
+
+            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
+
+            const hasToken = Boolean(pm.variables.get('token'));
+
+            if (pm.variables.get('allow_requests') !== 'true' &&
+
+            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
+
+            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
+
+            \  pm.execution.skipRequest();
+
+            }",
+          language: text/javascript
+        }
+    ]
+}
