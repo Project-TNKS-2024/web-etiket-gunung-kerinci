@@ -15,10 +15,11 @@ class UserSampelSeeder extends Seeder
     public function run(): void
     {
         // Hanya nama yang mengikuti pengguna; identitas/kontak lain adalah data contoh.
-        // Email sampel dipertahankan karena juga digunakan oleh BookingSeeder.
+        // Ganti email akun lama tanpa membuat user/biodata baru atau memutus booking.
         $users = [
             [
-                'email' => 'user1@example.com',
+                'email' => 'satria@gmail.com',
+                'legacy_email' => 'user1@example.com',
                 'bio' => [
                     'nik' => '1234567834567347',
                     'kenegaraan' => 'ID',
@@ -38,7 +39,8 @@ class UserSampelSeeder extends Seeder
                 ],
             ],
             [
-                'email' => 'user2@example.com',
+                'email' => 'mukhtada@gmail.com',
+                'legacy_email' => 'user2@example.com',
                 'bio' => [
                     'nik' => '1234567834567348',
                     'kenegaraan' => 'ID',
@@ -58,7 +60,8 @@ class UserSampelSeeder extends Seeder
                 ],
             ],
             [
-                'email' => 'user3@example.com',
+                'email' => 'opi@gmail.com',
+                'legacy_email' => 'user3@example.com',
                 'bio' => [
                     'nik' => '1234567834567349',
                     'kenegaraan' => 'SA',
@@ -81,7 +84,13 @@ class UserSampelSeeder extends Seeder
 
         foreach ($users as $user) {
             $existing = User::where('email', $user['email'])->first();
+            $legacy = User::where('email', $user['legacy_email'])->first();
+            if ($existing && $legacy && $existing->id !== $legacy->id) {
+                throw new \RuntimeException("Email {$user['email']} sudah dipakai akun berbeda; penggantian dibatalkan.");
+            }
+            $existing ??= $legacy;
             if ($existing) {
+                $existing->update(['email' => $user['email']]);
                 $biodata = $existing->biodata;
                 if (!$biodata) {
                     $biodata = bio_pendaki::firstOrCreate(['nik' => $user['bio']['nik']], $user['bio']);
