@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\bio_pendaki;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,14 +14,16 @@ class UserSampelSeeder extends Seeder
      */
     public function run(): void
     {
+        // Hanya nama yang mengikuti pengguna; identitas/kontak lain adalah data contoh.
+        // Email sampel dipertahankan karena juga digunakan oleh BookingSeeder.
         $users = [
             [
                 'email' => 'user1@example.com',
                 'bio' => [
                     'nik' => '1234567834567347',
                     'kenegaraan' => 'ID',
-                    'first_name' => 'User',
-                    'last_name' => 'One',
+                    'first_name' => 'Satria',
+                    'last_name' => 'Bahari',
                     'lampiran_identitas' => 'lampiran1.jpg',
                     'no_hp' => '081234567890',
                     'no_hp_darurat' => '081298765432',
@@ -41,8 +42,8 @@ class UserSampelSeeder extends Seeder
                 'bio' => [
                     'nik' => '1234567834567348',
                     'kenegaraan' => 'ID',
-                    'first_name' => 'User',
-                    'last_name' => 'Two',
+                    'first_name' => 'Mukhtada',
+                    'last_name' => 'Billah Nasution',
                     'lampiran_identitas' => 'lampiran2.jpg',
                     'no_hp' => '081234567891',
                     'no_hp_darurat' => '081298765431',
@@ -61,8 +62,8 @@ class UserSampelSeeder extends Seeder
                 'bio' => [
                     'nik' => '1234567834567349',
                     'kenegaraan' => 'SA',
-                    'first_name' => 'User',
-                    'last_name' => 'Three',
+                    'first_name' => 'Opinur',
+                    'last_name' => '',
                     'lampiran_identitas' => 'lampiran3.jpg',
                     'no_hp' => '081234567892',
                     'no_hp_darurat' => '081298765430',
@@ -79,8 +80,15 @@ class UserSampelSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            if (!User::where('email', $user['email'])->exists()) {
-                $biodata = bio_pendaki::create($user['bio']);
+            $existing = User::where('email', $user['email'])->first();
+            if ($existing) {
+                $biodata = $existing->biodata;
+                if (!$biodata) {
+                    $biodata = bio_pendaki::firstOrCreate(['nik' => $user['bio']['nik']], $user['bio']);
+                    $existing->update(['id_bio' => $biodata->id]);
+                }
+            } else {
+                $biodata = bio_pendaki::firstOrCreate(['nik' => $user['bio']['nik']], $user['bio']);
                 User::create([
                     'email' => $user['email'],
                     'password' => Hash::make('password'),
@@ -91,43 +99,10 @@ class UserSampelSeeder extends Seeder
                     'email_verified_at' => now(),
                 ]);
             }
-        }
-
-
-
-
-        for ($i = 1; $i <= 10; $i++) {
-            $email = 'user' . $i . '@example.com';
-            if (User::where('email', $email)->exists()) {
-                continue;
-            }
-
-            $biodata = bio_pendaki::create([
-                'nik' => '111sampel' . $i,
-                'kenegaraan' => 'ID',
-                'first_name' => 'User',
-                'last_name' => $i,
-                'lampiran_identitas' => 'lampiran1.jpg',
-                'no_hp' => '081234567890',
-                // beri nilai random untuk jenis kelamin l/p dan tangggal lahir >17 tahun
-                'jenis_kelamin' => 'l',
-                'tanggal_lahir' => '2000-01-01',
-
-                'provinsi' => '14',
-                'kabupaten' => '276',
-                'kec' => '4730',
-                'desa' => '26624',
-                'keterangan' => 'Pendaki Pemula',
-                'verified' => 'verified',
-            ]);
-
-            User::create([
-                'email' => $email,
-                'password' => Hash::make('password'),
-                'role' => 'user',
-                // 'token' => 'user_token',
-                'email_verified_at' => now(),
-                'id_bio' => $biodata->id,
+            // Perbarui nama sampel tanpa mereset password atau biodata lain.
+            $biodata->update([
+                'first_name' => $user['bio']['first_name'],
+                'last_name' => $user['bio']['last_name'],
             ]);
         }
     }
