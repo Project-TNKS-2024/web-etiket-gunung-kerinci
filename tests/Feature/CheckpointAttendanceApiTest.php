@@ -98,6 +98,43 @@ class CheckpointAttendanceApiTest extends TestCase
             ->assertJsonPath('data.hikers.1.completed', 1);
     }
 
+    public function test_leader_cannot_mark_member_before_checking_in_at_the_same_post(): void
+    {
+        $this->actingAs($this->leader, 'sanctum');
+        $this->postJson('/api/tracking/checkpoint/qr', [
+            'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
+        ])->assertForbidden()->assertJsonPath('message', 'Ketua tim harus check-in di pos ini terlebih dahulu');
+        $this->assertSame(0, GkCheckpointLog::count());
+
+        $otherPost = GkPost::create([
+            'nama' => 'Pos 2', 'urutan' => 2, 'latitude' => -1.705,
+            'longitude' => 101.267, 'id_gate' => $this->post->id_gate,
+            'qr_code_value' => 'POST-TEST-2', 'status' => true,
+        ]);
+        $this->postJson('/api/tracking/checkpoint/qr', ['qr_code_value' => 'POST-TEST-1'])->assertCreated();
+        $this->postJson('/api/tracking/checkpoint/qr', [
+            'qr_code_value' => $otherPost->qr_code_value, 'pendaki_id' => $this->memberHiker->id,
+        ])->assertForbidden();
+        $this->assertSame(0, GkCheckpointLog::where('id_pendaki', $this->memberHiker->id)->count());
+    }
+
+    public function test_progress_only_unlocks_member_switches_for_leader_checked_in_posts(): void
+    {
+        $url = '/api/tracking/progress/' . $this->booking->id;
+        $this->actingAs($this->leader, 'sanctum')->getJson($url)
+            ->assertOk()->assertJsonPath('data.member_mark_post_ids', []);
+        $scan = $this->postJson('/api/tracking/checkpoint/qr', ['qr_code_value' => 'POST-TEST-1'])->assertCreated();
+        $this->getJson($url)->assertOk()->assertJsonPath('data.member_mark_post_ids', [$this->post->id]);
+        $this->actingAs($this->member, 'sanctum')->getJson($url)
+            ->assertOk()->assertJsonPath('data.member_mark_post_ids', []);
+        $this->actingAs($this->leader, 'sanctum')
+            ->deleteJson('/api/tracking/checkpoint/' . $scan->json('data.checkpoint_log_id'))->assertOk();
+        $this->getJson($url)->assertOk()->assertJsonPath('data.member_mark_post_ids', []);
+        $this->postJson('/api/tracking/checkpoint/qr', [
+            'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
+        ])->assertForbidden();
+    }
+
     public function test_member_can_scan_self_but_cannot_represent_leader_or_other_member(): void
     {
         $thirdHiker = gk_pendaki::create(['booking_id' => $this->booking->id, 'id_bio' => $this->outsider->id_bio, 'usia' => 36]);
@@ -116,6 +153,7 @@ class CheckpointAttendanceApiTest extends TestCase
 
     public function test_leader_cannot_represent_another_booking_or_nonmember_and_duplicate_is_rejected(): void
     {
+        $this->checkInLeader();
         $otherBooking = $this->booking->replicate();
         $otherBooking->id_user = $this->outsider->id;
         $otherBooking->save();
@@ -138,6 +176,7 @@ class CheckpointAttendanceApiTest extends TestCase
 
     public function test_member_self_scan_after_leader_represents_them_is_duplicate(): void
     {
+        $this->checkInLeader();
         $this->actingAs($this->leader, 'sanctum')->postJson('/api/tracking/checkpoint/qr', [
             'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
         ])->assertCreated();
@@ -175,6 +214,7 @@ class CheckpointAttendanceApiTest extends TestCase
 
     public function test_leader_can_cancel_member_checkin_and_rescan_afterwards(): void
     {
+        $this->checkInLeader();
         $this->actingAs($this->leader, 'sanctum');
 
         $scan = $this->postJson('/api/tracking/checkpoint/qr', [
@@ -196,6 +236,7 @@ class CheckpointAttendanceApiTest extends TestCase
 
     public function test_member_can_cancel_own_checkin_even_if_leader_created_it(): void
     {
+        $this->checkInLeader();
         $scan = $this->actingAs($this->leader, 'sanctum')->postJson('/api/tracking/checkpoint/qr', [
             'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
         ])->assertCreated();
@@ -220,6 +261,7 @@ class CheckpointAttendanceApiTest extends TestCase
 
     public function test_outsider_cannot_cancel_foreign_booking_checkin(): void
     {
+        $this->checkInLeader();
         $logId = $this->actingAs($this->leader, 'sanctum')
             ->postJson('/api/tracking/checkpoint/qr', [
                 'qr_code_value' => 'POST-TEST-1', 'pendaki_id' => $this->memberHiker->id,
@@ -307,4 +349,9 @@ class CheckpointAttendanceApiTest extends TestCase
         $this->assertFalse($memberPosts[$this->post->id]['completed']);
     }
 
+    private function checkInLeader(): void
+    {
+        $this->actingAs($this->leader, 'sanctum')
+            ->postJson('/api/tracking/checkpoint/qr', ['qr_code_value' => 'POST-TEST-1'])->assertCreated();
+    }
 }

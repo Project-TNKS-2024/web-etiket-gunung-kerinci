@@ -33,6 +33,7 @@ class CheckpointController extends Controller
             return ApiResponse::error('Tidak ada pendakian aktif', null, 403);
         }
 
+        $actorPendaki = $pendaki;
         if (isset($validated['pendaki_id']) && $validated['pendaki_id'] !== $pendaki->id) {
             if ($pendaki->booking->id_user !== $user->id) {
                 return ApiResponse::error('Hanya ketua tim yang dapat mewakili anggota', null, 403);
@@ -55,6 +56,12 @@ class CheckpointController extends Controller
         // Pos harus berada di jalur (gate) booking yang sedang aktif.
         if ((int) $post->id_gate !== (int) $pendaki->booking->gate_masuk) {
             return ApiResponse::error('QR code tidak valid', null, 404);
+        }
+
+        if ($pendaki->id !== $actorPendaki->id && !GkCheckpointLog::where('id_pendaki', $actorPendaki->id)
+            ->where('id_booking', $actorPendaki->booking_id)
+            ->where('id_post', $post->id)->exists()) {
+            return ApiResponse::error('Ketua tim harus check-in di pos ini terlebih dahulu', null, 403);
         }
 
         // Prevent duplicate (same post within same booking)
@@ -291,11 +298,20 @@ class CheckpointController extends Controller
             ];
         }
 
+        $leaderHiker = $user->id_bio ? $booking->pendakis->firstWhere('id_bio', $user->id_bio) : null;
+        $memberMarkPostIds = (int) $booking->status_booking === 6
+            && (int) $booking->id_user === (int) $user->id && $leaderHiker
+            ? $logs->get($leaderHiker->id, collect())->pluck('id_post')
+                ->intersect($posts->pluck('id'))->unique()->map(fn ($id) => (int) $id)->values()->all()
+            : [];
+
         return ApiResponse::success([
             'booking_id' => $bookingId,
             'gate' => $booking->gateMasuk?->nama,
             'total_posts' => $totalPosts,
             'hikers' => $hikerProgress,
+            'member_mark_post_ids' => $memberMarkPostIds,
+            'current_pendaki_id' => $leaderHiker?->id,
         ]);
     }
 
