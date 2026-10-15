@@ -9,6 +9,7 @@ use App\Models\GkPost;
 use App\Models\gk_pendaki;
 use App\Models\gk_booking;
 use App\Services\GeoService;
+use App\Services\CheckpointTimelineService;
 use Illuminate\Http\Request;
 
 class CheckpointController extends Controller
@@ -286,14 +287,7 @@ class CheckpointController extends Controller
                 'completed' => $completedPosts->count(),
                 'total' => $totalPosts,
                 'percentage' => $totalPosts > 0 ? round(($completedPosts->count() / $totalPosts) * 100) : 0,
-                'checkpoints' => $posts->map(fn($p) => [
-                    'post_id' => $p->id,
-                    'nama' => $p->nama,
-                    'urutan' => $p->urutan,
-                    'completed' => $completedPosts->contains($p->id),
-                    'checked_at' => $pendakiLogs->firstWhere('id_post', $p->id)?->checked_at?->toISOString(),
-                    'method' => $pendakiLogs->firstWhere('id_post', $p->id)?->method,
-                ]),
+                'checkpoints' => app(CheckpointTimelineService::class)->checkpoints($posts, $pendakiLogs),
             ];
         }
 

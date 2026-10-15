@@ -283,4 +283,28 @@ class CheckpointAttendanceApiTest extends TestCase
             ->assertOk()->assertJsonPath('data.progress.completed', 0);
         $this->assertSame(0, GkCheckpointLog::count());
     }
+    public function test_progress_returns_arrival_estimates_per_hiker_without_completing_other_members(): void
+    {
+        $this->post->update(['estimated_time_minutes' => 45]);
+        $next = GkPost::create([
+            'nama' => 'Pos 2', 'urutan' => 2, 'latitude' => -1.705,
+            'longitude' => 101.267, 'id_gate' => $this->post->id_gate,
+            'qr_code_value' => 'POST-TEST-2', 'status' => true,
+        ]);
+        GkCheckpointLog::create([
+            'id_booking' => $this->booking->id, 'id_pendaki' => $this->leaderHiker->id,
+            'id_post' => $this->post->id, 'method' => 'qr',
+            'checked_at' => '2026-10-15T16:45:00Z',
+        ]);
+        $response = $this->actingAs($this->leader, 'sanctum')
+            ->getJson('/api/tracking/progress/' . $this->booking->id)->assertOk();
+        $hikers = collect($response->json('data.hikers'))->keyBy('pendaki_id');
+        $leaderPosts = collect($hikers[$this->leaderHiker->id]['checkpoints'])->keyBy('post_id');
+        $memberPosts = collect($hikers[$this->memberHiker->id]['checkpoints'])->keyBy('post_id');
+        $this->assertSame('2026-10-15T17:30:00.000000Z', $leaderPosts[$next->id]['estimated_arrival_at']);
+        $this->assertSame(45, $leaderPosts[$next->id]['travel_minutes_from_previous']);
+        $this->assertNull($memberPosts[$next->id]['estimated_arrival_at']);
+        $this->assertFalse($memberPosts[$this->post->id]['completed']);
+    }
+
 }
