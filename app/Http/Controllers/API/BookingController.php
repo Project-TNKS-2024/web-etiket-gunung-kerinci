@@ -459,7 +459,12 @@ class BookingController extends Controller
 
     public function myTickets(Request $request)
     {
-        $bookings = $this->bookingQuery($request)->latest()->get()->map(fn ($booking) => $this->loadBooking($booking));
+        $user = $request->user();
+        $bookings = gk_booking::where('id_user', $user->id)
+            ->orWhereHas('pendakis', fn ($query) => $query->where('id_bio', $user->id_bio))
+            ->latest()
+            ->get()
+            ->map(fn ($booking) => $this->loadBooking($booking));
         return ApiResponse::success($bookings, 'Berhasil mengambil daftar booking', 200);
     }
 

@@ -10,14 +10,14 @@ class MidtransController extends HelperController
 {
     public function __construct()
     {
-        // Set your Merchant Server Key
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-dvS9mWzaI5eiN_nH4sbYe18W';
-        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
-        \Midtrans\Config::$isProduction = false;
+        // Kredensial diambil dari .env (lihat config/midtrans.php)
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        // Set true untuk Production Environment (transaksi nyata)
+        \Midtrans\Config::$isProduction = (bool) config('midtrans.is_production');
         // Set sanitization on (default)
-        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$isSanitized = (bool) config('midtrans.is_sanitized');
         // Set 3DS transaction for credit card to true
-        \Midtrans\Config::$is3ds = true;
+        \Midtrans\Config::$is3ds = (bool) config('midtrans.is_3ds');
     }
 
     public function checkPaymentStatus($orderId)

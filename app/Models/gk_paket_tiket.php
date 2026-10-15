@@ -27,6 +27,6 @@ class gk_paket_tiket extends Model
 
     public function destinasi()
     {
-        return $this->belongsTo(Destinasi::class, 'id_destinasi');
+        return $this->belongsTo(destinasi::class, 'id_destinasi');
     }
 }

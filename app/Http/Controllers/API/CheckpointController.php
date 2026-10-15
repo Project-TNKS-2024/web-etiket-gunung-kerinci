@@ -44,10 +44,15 @@ class CheckpointController extends Controller
             $pendaki = $target;
         }
 
-        $post = GkPost::where('qr_code_value', $validated['qr_code_value'])
+         $post = GkPost::where('qr_code_value', $validated['qr_code_value'])
             ->where('status', true)->first();
 
         if (!$post) {
+            return ApiResponse::error('QR code tidak valid', null, 404);
+        }
+
+        // Pos harus berada di jalur (gate) booking yang sedang aktif.
+        if ((int) $post->id_gate !== (int) $pendaki->booking->gate_masuk) {
             return ApiResponse::error('QR code tidak valid', null, 404);
         }
 
@@ -198,6 +203,11 @@ class CheckpointController extends Controller
         }
 
         $post = GkPost::findOrFail($validated['post_id']);
+
+        // Pos harus berada di jalur (gate) booking yang sedang aktif.
+        if ((int) $post->id_gate !== (int) $pendaki->booking->gate_masuk) {
+            return ApiResponse::error('Pos tidak ditemukan', null, 404);
+        }
 
         // Check duplicate
         $existing = GkCheckpointLog::where('id_pendaki', $pendaki->id)

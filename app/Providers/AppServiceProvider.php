@@ -9,6 +9,7 @@ use App\Models\setting;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
+        
         view()->composer('etiket.admin.template.sidebar', function ($view) {
             $destinasi = ModelDestinasi::all();
             $view->with('DataDestinasi', $destinasi);

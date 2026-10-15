@@ -144,8 +144,13 @@ class SOSCallController extends Controller
 
     private function getActivePendaki($user): ?gk_pendaki
     {
-        return gk_pendaki::whereHas('booking', function ($q) use ($user) {
-            $q->where('id_user', $user->id)->where('status_booking', 6);
-        })->first();
+        if (!$user->id_bio) {
+            return null;
+        }
+    
+        return gk_pendaki::where('id_bio', $user->id_bio)
+            ->whereHas('booking', fn ($q) => $q->where('status_booking', 6))
+            ->with('booking')
+            ->first();
     }
 }

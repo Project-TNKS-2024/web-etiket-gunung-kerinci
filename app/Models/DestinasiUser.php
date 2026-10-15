@@ -24,6 +24,6 @@ class DestinasiUser extends Model
     // Define the relationship with Destinasi
     public function destinasi()
     {
-        return $this->belongsTo(Destinasi::class);
+        return $this->belongsTo(destinasi::class);
     }
 }

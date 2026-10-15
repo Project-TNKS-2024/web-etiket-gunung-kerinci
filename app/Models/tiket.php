@@ -37,7 +37,7 @@ class tiket extends Model
      */
     public function destinasi()
     {
-        return $this->belongsTo(Destinasi::class, 'id_destinasi');
+        return $this->belongsTo(destinasi::class, 'id_destinasi');
     }
 
     public function gk_gates()
