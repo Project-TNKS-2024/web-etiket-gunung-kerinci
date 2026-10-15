@@ -122,6 +122,12 @@
             <!--  Header End -->
             <div class="container-fluid mx-3 my-3" style="width: -webkit-fill-available; max-width: none; flex:1;">
                 <!--  Row 1 -->
+                <div id="admin-safety" class="alert alert-info" role="status" aria-live="polite"
+                     data-summary-url="{{ route('admin.safety.summary') }}">
+                    <span id="admin-safety-status">Menghubungkan pembaruan keselamatan…</span>
+                    <a href="{{ route('admin.sos.index') }}" class="ms-2">Lihat SOS</a>
+                    <a href="{{ route('admin.emergency.index') }}" class="ms-2">Lihat peringatan</a>
+                </div>
                 @yield('main')
 
 
@@ -144,6 +150,7 @@
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
     </script> -->
 
+    <script src="{{ asset('assets/js/admin-safety.js') }}" defer></script>
     @yield('js')
 
 

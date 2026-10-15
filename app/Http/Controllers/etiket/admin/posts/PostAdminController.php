@@ -39,10 +39,11 @@ class PostAdminController extends Controller
             'detail' => 'nullable|string|max:1000',
         ]);
 
-        $validated['qr_code_value'] = 'POST-' . strtoupper(Str::random(12));
         $validated['radius_meter'] = $validated['radius_meter'] ?? 150;
 
-        GkPost::create($validated);
+        // Opsi D: nilai QR deterministik mengikuti id pos → 'TNKS_CHECKPOINT:<id>'
+        $post = GkPost::create(array_merge($validated, ['qr_code_value' => 'PLACEHOLDER']));
+        $post->update(['qr_code_value' => 'TNKS_CHECKPOINT:' . $post->id]);
 
         return back()->with('success', 'Post berhasil ditambahkan');
     }

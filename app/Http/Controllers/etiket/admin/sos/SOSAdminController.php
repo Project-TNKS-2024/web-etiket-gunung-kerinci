@@ -23,7 +23,7 @@ class SOSAdminController extends Controller
 
         $sosList = GkSos::whereIn('id_destinasi', $destinasiIds)
             ->with(['pendaki.biodata', 'destinasi'])
-            ->orderByRaw("FIELD(status, 'active', 'acknowledged', 'dispatched', 'resolved', 'false_alarm')")
+            ->orderByRaw("CASE status WHEN 'active' THEN 0 WHEN 'acknowledged' THEN 1 WHEN 'dispatched' THEN 2 WHEN 'resolved' THEN 3 ELSE 4 END")
             ->orderByDesc('created_at')
             ->paginate(20);
 
@@ -45,7 +45,8 @@ class SOSAdminController extends Controller
      */
     public function detail(Request $request, $id)
     {
-        $sos = GkSos::with(['pendaki.biodata', 'booking', 'destinasi'])->findOrFail($id);
+        $sos = GkSos::whereIn('id_destinasi', $request->user()->destinasis()->pluck('destinasis.id'))
+            ->with(['pendaki.biodata', 'booking', 'destinasi'])->findOrFail($id);
 
         $messages = GkSosChat::where('id_sos', $id)
             ->with('sender.biodata')
@@ -64,6 +65,18 @@ class SOSAdminController extends Controller
         return view('etiket.admin.sos.detail', compact('sos', 'messages'));
     }
 
+    /** Send through the web session and CSRF protection used by the admin panel. */
+    public function sendMessage(Request $request, $id, \App\Http\Controllers\API\SOSChatController $chat)
+    {
+        $sos = GkSos::whereIn('id_destinasi', $request->user()->destinasis()->pluck('destinasis.id'))->findOrFail($id);
+        abort_if(in_array($sos->status, ['resolved', 'false_alarm']), 422, 'Percakapan SOS sudah ditutup.');
+        $response = $chat->send($request, $id);
+        if ($response->getStatusCode() !== 201) {
+            return back()->withInput()->with('error', $response->getData(true)['message'] ?? 'Pesan gagal dikirim.');
+        }
+        return redirect()->route('admin.sos.detail', $id)->with('success', 'Pesan terkirim');
+    }
+
     /**
      * Update SOS status.
      * PUT /admin/sos/{id}/status
@@ -75,7 +88,7 @@ class SOSAdminController extends Controller
             'resolution_notes' => 'nullable|string|max:1000',
         ]);
 
-        $sos = GkSos::findOrFail($id);
+        $sos = GkSos::whereIn('id_destinasi', $request->user()->destinasis()->pluck('destinasis.id'))->findOrFail($id);
         $user = $request->user();
         $oldStatus = $sos->status;
 
@@ -115,7 +128,7 @@ class SOSAdminController extends Controller
             'notes' => 'nullable|string|max:1000',
         ]);
 
-        $report = GkDisasterReport::findOrFail($id);
+        $report = GkDisasterReport::whereIn('id_destinasi', $request->user()->destinasis()->pluck('destinasis.id'))->findOrFail($id);
         $user = $request->user();
 
         $report->update([

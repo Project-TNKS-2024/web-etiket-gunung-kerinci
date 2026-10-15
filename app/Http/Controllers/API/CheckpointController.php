@@ -326,7 +326,12 @@ class CheckpointController extends Controller
         $posts = GkPost::where('id_gate', $gateId)
             ->where('status', true)
             ->orderBy('urutan')
-            ->get(['id', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter']);
+            ->get([
+                'id', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'detail',
+                'mountain_status', 'water_source_status', 'camping_status', 'temperature_c',
+                'distance_to_next_m', 'estimated_time_minutes', 'distance_to_summit_m',
+                'info_is_dummy', 'info_note', 'info_updated_at',
+            ]);
 
         return ApiResponse::success($posts);
     }

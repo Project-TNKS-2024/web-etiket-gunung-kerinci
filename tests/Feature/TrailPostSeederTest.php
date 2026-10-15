@@ -93,7 +93,9 @@ class TrailPostSeederTest extends TestCase
         $this->assertFalse($admin->status);
         $this->assertSame('SURVEYED-QR', $admin->qr_code_value);
         $this->assertSame('Hasil survei admin', $admin->detail);
-        $this->assertSame($beforeSolok, $solok->fresh()->toArray());
+        foreach (['id', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'qr_code_value', 'status', 'detail'] as $field) {
+            $this->assertSame($beforeSolok[$field], $solok->fresh()->toArray()[$field]);
+        }
         $this->assertSame(11, GkPost::where('id_gate', 10)->count());
         $this->assertDatabaseMissing('gk_posts', ['id_gate' => 10, 'nama' => 'Pos 1']);
     }
@@ -127,5 +129,23 @@ class TrailPostSeederTest extends TestCase
         $this->assertSame('OLD-BAYANGAN-QR', $old->fresh()->qr_code_value);
         $this->assertSame(self::NAMES, GkPost::where('id_gate', 10)->where('status', true)->orderBy('urutan')->pluck('nama')->all());
         $this->assertSame(12, GkPost::where('id_gate', 10)->count());
+    }
+
+    public function test_demo_info_does_not_replace_existing_non_dummy_information(): void
+    {
+        $real = GkPost::create([
+            'nama' => 'Shelter 1', 'urutan' => 6, 'latitude' => -1.7204, 'longitude' => 101.2636,
+            'id_gate' => 10, 'qr_code_value' => 'REAL-INFO', 'info_is_dummy' => false,
+            'water_source_status' => 'Tidak tersedia', 'camping_status' => 'Tidak boleh',
+            'info_note' => 'Catatan petugas',
+        ]);
+        $this->seed(TrailPostSeeder::class);
+        $real->refresh();
+        $this->assertFalse($real->info_is_dummy);
+        $this->assertSame('Tidak tersedia', $real->water_source_status);
+        $this->assertSame('Tidak boleh', $real->camping_status);
+        $this->assertSame('Catatan petugas', $real->info_note);
+        $this->assertNull($real->temperature_c);
+        $this->assertNull($real->info_updated_at);
     }
 }

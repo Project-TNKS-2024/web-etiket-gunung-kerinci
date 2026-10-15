@@ -14,6 +14,11 @@ class destinasi_gate extends Seeder
      */
     public function run(): void
     {
+        // Idempotent: cegah duplikat destinasi/gate saat db:seed dijalankan ulang.
+        if (gk_gates::where('nama', 'Desa Kersik Tuo')->exists()) {
+            $this->command?->info('destinasi_gate: data sudah ada, dilewati.');
+            return;
+        }
 
         destinasi::create([
             'nama' => 'Gunung Kerinci',

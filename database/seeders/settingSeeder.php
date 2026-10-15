@@ -13,6 +13,12 @@ class settingSeeder extends Seeder
      */
     public function run(): void
     {
+        // Idempotent: id settings sudah deterministik (0000xxx) — cegah crash duplicate PK.
+        if (setting::where('id', '0000bank')->exists()) {
+            $this->command?->info('settingSeeder: data sudah ada, dilewati.');
+            return;
+        }
+
         // media sosial
         setting::create([
             'id' => '0000bank',

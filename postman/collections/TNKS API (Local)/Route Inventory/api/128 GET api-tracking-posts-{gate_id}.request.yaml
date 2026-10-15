@@ -1,50 +1,38 @@
 {
-  "$kind": http-request,
-  "name": "128 GET api-tracking-posts-{gate_id}",
-  "method": GET,
-  "url": "{{base_url}}/api/tracking/posts/{{gate_id}}",
-  "order": 128000,
-  "description": "Route 128: GET|HEAD /api/tracking/posts/{gate_id}
-
-    Action: App\\Http\\Controllers\\API\\CheckpointController@posts
-
-    Nama: -
-
-    Middleware: api, Illuminate\\Auth\\Middleware\\Authenticate:sanctum
-
-    Source lokal: app/Http/Controllers/API/CheckpointController.php
-
-    Metadata production dibandingkan dari runtime server pada audit sebelumnya; perubahan perilaku dibaca dari source. Belum merupakan hasil uji end-to-end.
-
-    Target lokal; pastikan server lokal berjalan.
-
-    Tidak ada aturan validasi literal yang diekstrak dari metode. Ini tidak menjamin endpoint tanpa parameter; periksa form/source dan prasyarat sesi.
-
-
-    Path parameter: gate_id. Gunakan ID milik akun uji sendiri.\n",
-  "settings": { "followRedirects": false },
-  "headers": { Accept: application/json },
-  "auth": { "type": bearer, "credentials": { token: "{{token}}" } },
-  "scripts":
-    [
-      {
-          type: beforeRequest,
-          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
-
-            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
-
-            const hasToken = Boolean(pm.variables.get('token'));
-
-            if (pm.variables.get('allow_requests') !== 'true' &&
-
-            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
-
-            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
-
-            \  pm.execution.skipRequest();
-
-            }",
-          language: text/javascript
+    "$kind": "http-request",
+    "name": "128 GET api-tracking-posts-{gate_id}",
+    "method": "GET",
+    "url": "{{base_url}}/api/tracking/posts/{{gate_id}}",
+    "order": 128000,
+    "description": "BACKEND LOKAL — informasi demo per pos (15 Oktober 2026).\nGET /api/tracking/posts/{gate_id}; autentikasi Bearer Sanctum. Jalankan migrasi 77_add_demo_info_to_gk_posts dan TrailPostSeeder pada database lokal yang dituju terlebih dahulu.\nField tambahan: mountain_status (string/null), water_source_status (Tersedia/Tidak tersedia/Belum diketahui), camping_status (Boleh/Tidak boleh/Belum diketahui), temperature_c (number/null), distance_to_next_m (integer/null, meter), estimated_time_minutes (integer/null, menit), distance_to_summit_m (integer/null, meter), info_is_dummy (boolean), info_note (string/null), info_updated_at (ISO-8601/null), detail (string/null).\nSeeder menyediakan nilai statis untuk 11 titik Kersik Tuo dan 4 titik Solok. Tidak ada perhitungan otomatis atau informasi kondisi lapangan aktual. Semua nilai contoh ditandai info_is_dummy=true dan catatan DATA DEMO. Pos belum diisi mengembalikan Belum diketahui/null; nilai 0 menandai titik terakhir pada data demo.\nAtur base_url ke origin backend lokal tanpa /api; gate_id ke ID gate lokal; token sebagai nilai privat; allow_requests=true untuk menjalankan request yang dipilih. Set expect_dummy=true untuk memverifikasi data seeder (harus berisi setidaknya satu pos). Jangan kirim request kontrak lokal ini ke production. Respons 200/401 pada saved examples ditangkap dari Laravel lokal dengan database fixture SQLite, bukan production.",
+    "settings": {
+        "followRedirects": false
+    },
+    "headers": {
+        "Accept": "application/json"
+    },
+    "auth": {
+        "type": "bearer",
+        "credentials": {
+            "token": "{{token}}"
         }
-    ]
+    },
+    "scripts": [
+        {
+            "type": "beforeRequest",
+            "code": "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];\nconst path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');\nconst hasToken = Boolean(pm.variables.get('token'));\nif (pm.variables.get('allow_requests') !== 'true' &&\n    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {\n  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');\n  pm.execution.skipRequest();\n}",
+            "language": "text/javascript"
+        },
+        {
+            "type": "beforeRequest",
+            "language": "text/javascript",
+            "code": "const localTarget = pm.variables.replaceIn(pm.request.url.toString());\nif (!/^https?:\\/\\/(localhost|127\\.0\\.0\\.1|\\[::1\\])(?::\\d+)?\\//i.test(localTarget)) {\n  throw new Error('Kontrak ini hanya untuk backend lokal. Gunakan localhost/127.0.0.1, bukan production.');\n}"
+        },
+        {
+            "type": "afterResponse",
+            "language": "text/javascript",
+            "code": "pm.test('Pos lokal: HTTP 200', () => pm.response.to.have.status(200));\nif (pm.response.code === 200) {\n  const body = pm.response.json();\n  pm.test('Envelope dan data pos', () => {\n    pm.expect(body.success).to.eql(true);\n    pm.expect(body.data).to.be.an('array');\n  });\n  const fields = ['id', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'detail', 'mountain_status', 'water_source_status', 'camping_status', 'temperature_c', 'distance_to_next_m', 'estimated_time_minutes', 'distance_to_summit_m', 'info_is_dummy', 'info_note', 'info_updated_at'];\n  pm.test('Kontrak informasi per pos', () => {\n    body.data.forEach(p => {\n      fields.forEach(f => pm.expect(p).to.have.property(f));\n      pm.expect(p.info_is_dummy).to.be.a('boolean');\n      pm.expect(['Tersedia', 'Tidak tersedia', 'Belum diketahui']).to.include(p.water_source_status);\n      pm.expect(['Boleh', 'Tidak boleh', 'Belum diketahui']).to.include(p.camping_status);\n      if (p.temperature_c !== null) pm.expect(p.temperature_c).to.be.a('number');\n      ['distance_to_next_m', 'estimated_time_minutes', 'distance_to_summit_m'].forEach(f => {\n        if (p[f] !== null) {\n          pm.expect(Number.isInteger(p[f])).to.eql(true);\n          pm.expect(p[f]).to.be.at.least(0);\n        }\n      });\n      if (p.info_is_dummy) {\n        pm.expect(p.info_note).to.include('DATA DEMO');\n        pm.expect(p.info_updated_at).to.be.a('string');\n      }\n    });\n  });\n  if (pm.variables.get('expect_dummy') === 'true') {\n    pm.test('Data contoh ditandai dummy', () => {\n      pm.expect(body.data.length).to.be.above(0);\n      body.data.forEach(p => pm.expect(p.info_is_dummy).to.eql(true));\n    });\n  }\n}"
+        }
+    ],
+    "examples": "./.resources/128 GET api-tracking-posts-{gate_id}.resources/examples"
 }

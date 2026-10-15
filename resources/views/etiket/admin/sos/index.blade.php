@@ -12,7 +12,7 @@
 @endsection
 
 @section('main')
-<div class="row">
+<div class="row" data-admin-live="sos-list">
     <div class="col-12 mb-3">
         <h4 class="fw-semibold">
             <i class="ti ti-urgent me-2"></i>SOS Management

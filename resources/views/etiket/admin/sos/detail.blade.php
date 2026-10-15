@@ -18,7 +18,7 @@
 @section('main')
 <div class="row">
     {{-- Header --}}
-    <div class="col-12 mb-3">
+    <div class="col-12 mb-3" data-admin-live="sos-heading">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-semibold mb-0">
                 <a href="{{ route('admin.sos.index') }}" class="text-muted me-2"><i class="ti ti-arrow-left"></i></a>
@@ -44,6 +44,7 @@
                     <tr><td>Waktu</td><td>{{ $sos->created_at->format('d/m/Y H:i:s') }}</td></tr>
                 </table>
 
+                <div data-admin-live="sos-actions">
                 {{-- Status Actions --}}
                 @if($sos->status !== 'resolved' && $sos->status !== 'false_alarm')
                 <div class="d-flex gap-2 mt-3">
@@ -71,6 +72,7 @@
                     </form>
                 </div>
                 @endif
+                </div>
             </div>
         </div>
     </div>
@@ -89,7 +91,7 @@
         <div class="card">
             <div class="card-body">
                 <h6 class="fw-semibold">Chat SOS</h6>
-                <div class="chat-container" id="chatContainer">
+                <div class="chat-container" id="chatContainer" data-admin-live="chat">
                     @forelse($messages as $msg)
                     <div class="chat-msg {{ $msg['sender_type'] }}">
                         <div class="chat-bubble">
@@ -108,17 +110,19 @@
                     @endforelse
                 </div>
 
+                <div data-admin-live="chat-form">
                 {{-- Send Message Form --}}
                 @if(!in_array($sos->status, ['resolved', 'false_alarm']))
-                <form action="{{ url('/api/sos/chat/' . $sos->id . '/send') }}" method="POST" enctype="multipart/form-data" class="mt-3">
+                <form action="{{ route('admin.sos.messages.send', $sos->id) }}" method="POST" enctype="multipart/form-data" class="mt-3">
                     @csrf
                     <input type="hidden" name="type" value="text" id="msgType">
                     <div class="input-group">
-                        <input type="text" name="content" class="form-control" placeholder="Ketik pesan..." id="msgContent">
+                        <input type="text" name="content" required maxlength="2000" value="{{ old('content') }}" class="form-control" placeholder="Ketik pesan..." id="msgContent">
                         <button type="submit" class="btn btn-primary"><i class="ti ti-send"></i></button>
                     </div>
                 </form>
                 @endif
+                </div>
             </div>
         </div>
     </div>

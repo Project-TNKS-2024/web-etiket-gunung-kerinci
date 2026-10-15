@@ -11,12 +11,21 @@ class GkPost extends Model
     protected $fillable = [
         'nama', 'urutan', 'latitude', 'longitude', 'altitude',
         'radius_meter', 'id_gate', 'qr_code_value', 'status', 'detail',
+        'mountain_status', 'water_source_status', 'camping_status', 'temperature_c',
+        'distance_to_next_m', 'estimated_time_minutes', 'distance_to_summit_m',
+        'info_is_dummy', 'info_note', 'info_updated_at',
     ];
 
     protected $casts = [
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
         'status' => 'boolean',
+        'temperature_c' => 'float',
+        'distance_to_next_m' => 'integer',
+        'estimated_time_minutes' => 'integer',
+        'distance_to_summit_m' => 'integer',
+        'info_is_dummy' => 'boolean',
+        'info_updated_at' => 'datetime',
     ];
 
     public function gate()

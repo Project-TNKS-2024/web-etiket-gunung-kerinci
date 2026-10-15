@@ -1,27 +1,306 @@
 {
-  "$kind": collection,
-  "description": "Inventaris seluruh route Laravel, audit 15 Oktober 2026. base_url adalah origin tanpa /api. Folder Route Inventory mencakup seluruh method, termasuk HEAD dan fallback. Workflow lama dipertahankan. Body/validasi bersumber dari source, bukan hasil pengujian empiris. Contoh lama belum diverifikasi. Default hanya mengizinkan tiga pemeriksaan aman (health, fallback, penolakan autentikasi). Untuk menjalankan request lain secara manual, isi variabel allow_requests=true dan data uji yang sah. Jangan menjalankan seluruh koleksi pada production: SOS, pembayaran, email dan GET tertentu mengubah data. Web/admin memakai sesi login + CSRF; token Sanctum hanya untuk API. Variabel token/password kosong; simpan rahasia sebagai nilai lokal Postman, jangan dibagikan.",
-  "variables": { token: "", allow_requests: "false", email: audit@example.invalid, password: "", csrf_token: "", booking_id: 00000000-0000-4000-8000-000000000000, pendaki_id: 00000000-0000-4000-8000-000000000000, gate_id: "1", post_id: "1", sos_id: "1", checkpointLogId: "1", page: "1", upload_file: "", base_url: http://127.0.0.1:8000, id: "1", uq: "1", hash: "1", id_booking: "", keterangan: "", id_destinasi: "", foto_nama: "", foto_detail: "", id_gambar: "", nama: "", lokasi: "", lokasi_maps: "", detail: "", id_gate: "", destinasi: "", nama_paket: "", title_penugasan: "", id_tiket: "", kategori: "", status: "", statusGunung: "", sop: "", notes: "", title: "", description: "", id_user: "", verified: "", text1: "", text2: "", resolution_notes: "", fullName: "", nip: "", role: "", access_token: "", formulir___kode_bio: "", formulir___no_hp_darurat: "", formulir___surat_izin_ortu: "", code: "", snk: "", password_baru: "", firstName: "", lastName: "", kewarganegaraan: "", nik: "", telp_country: "", potensi_bencana: "", deskripsi: "", message: "", qr_code_value: "", metode: "", jenis_tiket: "", gerbang_masuk: "", gerbang_keluar: "", formulir___id_pendaki: "", booking: "", id_pembayaran: "", name: "", permissions__: "" },
-  "scripts":
-    [
-      {
-          type: http:beforeRequest,
-          code: "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];
-
-            const path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');
-
-            const hasToken = Boolean(pm.variables.get('token'));
-
-            if (pm.variables.get('allow_requests') !== 'true' &&
-
-            \    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {
-
-            \  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');
-
-            \  pm.execution.skipRequest();
-
-            }",
-          language: text/javascript
+    "$kind": "collection",
+    "description": "Inventaris seluruh route Laravel, audit 15 Oktober 2026. base_url adalah origin tanpa /api. Folder Route Inventory mencakup seluruh method, termasuk HEAD dan fallback. Workflow lama dipertahankan. Body/validasi bersumber dari source, bukan hasil pengujian empiris. Contoh lama belum diverifikasi. Default hanya mengizinkan tiga pemeriksaan aman (health, fallback, penolakan autentikasi). Untuk menjalankan request lain secara manual, isi variabel allow_requests=true dan data uji yang sah. Jangan menjalankan seluruh koleksi pada production: SOS, pembayaran, email dan GET tertentu mengubah data. Web/admin memakai sesi login + CSRF; token Sanctum hanya untuk API. Variabel token/password kosong; simpan rahasia sebagai nilai lokal Postman, jangan dibagikan.\n\nInformasi demo pos lokal: GET /api/tracking/posts/{gate_id} kini menyediakan sumber air, kebijakan berkemah, status gunung demo, suhu, jarak dan waktu statis. Lihat request Get Route Posts by Gate beserta saved examples lokal terverifikasi. Field info_is_dummy membedakan contoh dengan informasi non-dummy. Mobile dan production belum memakai kontrak tambahan ini.",
+    "variables": [
+        {
+            "key": "token",
+            "value": ""
+        },
+        {
+            "key": "allow_requests",
+            "value": "false"
+        },
+        {
+            "key": "email",
+            "value": "audit@example.invalid"
+        },
+        {
+            "key": "password",
+            "value": ""
+        },
+        {
+            "key": "csrf_token",
+            "value": ""
+        },
+        {
+            "key": "booking_id",
+            "value": "00000000-0000-4000-8000-000000000000"
+        },
+        {
+            "key": "pendaki_id",
+            "value": "00000000-0000-4000-8000-000000000000"
+        },
+        {
+            "key": "gate_id",
+            "value": "1"
+        },
+        {
+            "key": "post_id",
+            "value": "1"
+        },
+        {
+            "key": "sos_id",
+            "value": "1"
+        },
+        {
+            "key": "checkpointLogId",
+            "value": "1"
+        },
+        {
+            "key": "page",
+            "value": "1"
+        },
+        {
+            "key": "upload_file",
+            "value": ""
+        },
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000"
+        },
+        {
+            "key": "id",
+            "value": "1"
+        },
+        {
+            "key": "uq",
+            "value": "1"
+        },
+        {
+            "key": "hash",
+            "value": "1"
+        },
+        {
+            "key": "id_booking",
+            "value": ""
+        },
+        {
+            "key": "keterangan",
+            "value": ""
+        },
+        {
+            "key": "id_destinasi",
+            "value": ""
+        },
+        {
+            "key": "foto_nama",
+            "value": ""
+        },
+        {
+            "key": "foto_detail",
+            "value": ""
+        },
+        {
+            "key": "id_gambar",
+            "value": ""
+        },
+        {
+            "key": "nama",
+            "value": ""
+        },
+        {
+            "key": "lokasi",
+            "value": ""
+        },
+        {
+            "key": "lokasi_maps",
+            "value": ""
+        },
+        {
+            "key": "detail",
+            "value": ""
+        },
+        {
+            "key": "id_gate",
+            "value": ""
+        },
+        {
+            "key": "destinasi",
+            "value": ""
+        },
+        {
+            "key": "nama_paket",
+            "value": ""
+        },
+        {
+            "key": "title_penugasan",
+            "value": ""
+        },
+        {
+            "key": "id_tiket",
+            "value": ""
+        },
+        {
+            "key": "kategori",
+            "value": ""
+        },
+        {
+            "key": "status",
+            "value": ""
+        },
+        {
+            "key": "statusGunung",
+            "value": ""
+        },
+        {
+            "key": "sop",
+            "value": ""
+        },
+        {
+            "key": "notes",
+            "value": ""
+        },
+        {
+            "key": "title",
+            "value": ""
+        },
+        {
+            "key": "description",
+            "value": ""
+        },
+        {
+            "key": "id_user",
+            "value": ""
+        },
+        {
+            "key": "verified",
+            "value": ""
+        },
+        {
+            "key": "text1",
+            "value": ""
+        },
+        {
+            "key": "text2",
+            "value": ""
+        },
+        {
+            "key": "resolution_notes",
+            "value": ""
+        },
+        {
+            "key": "fullName",
+            "value": ""
+        },
+        {
+            "key": "nip",
+            "value": ""
+        },
+        {
+            "key": "role",
+            "value": ""
+        },
+        {
+            "key": "access_token",
+            "value": ""
+        },
+        {
+            "key": "formulir___kode_bio",
+            "value": ""
+        },
+        {
+            "key": "formulir___no_hp_darurat",
+            "value": ""
+        },
+        {
+            "key": "formulir___surat_izin_ortu",
+            "value": ""
+        },
+        {
+            "key": "code",
+            "value": ""
+        },
+        {
+            "key": "snk",
+            "value": ""
+        },
+        {
+            "key": "password_baru",
+            "value": ""
+        },
+        {
+            "key": "firstName",
+            "value": ""
+        },
+        {
+            "key": "lastName",
+            "value": ""
+        },
+        {
+            "key": "kewarganegaraan",
+            "value": ""
+        },
+        {
+            "key": "nik",
+            "value": ""
+        },
+        {
+            "key": "telp_country",
+            "value": ""
+        },
+        {
+            "key": "potensi_bencana",
+            "value": ""
+        },
+        {
+            "key": "deskripsi",
+            "value": ""
+        },
+        {
+            "key": "message",
+            "value": ""
+        },
+        {
+            "key": "qr_code_value",
+            "value": ""
+        },
+        {
+            "key": "metode",
+            "value": ""
+        },
+        {
+            "key": "jenis_tiket",
+            "value": ""
+        },
+        {
+            "key": "gerbang_masuk",
+            "value": ""
+        },
+        {
+            "key": "gerbang_keluar",
+            "value": ""
+        },
+        {
+            "key": "formulir___id_pendaki",
+            "value": ""
+        },
+        {
+            "key": "booking",
+            "value": ""
+        },
+        {
+            "key": "id_pembayaran",
+            "value": ""
+        },
+        {
+            "key": "name",
+            "value": ""
+        },
+        {
+            "key": "permissions__",
+            "value": ""
+        },
+        {
+            "key": "expect_dummy",
+            "value": "false",
+            "description": "true untuk pemeriksaan data demo hasil TrailPostSeeder."
+        }
+    ],
+    "scripts": [
+        {
+            "type": "http:beforeRequest",
+            "code": "const safe = ['/up', '/api/_audit_not_found', '/api/tracking/my-position'];\nconst path = '/' + pm.request.url.getPath().replace(/^\\/+/, '');\nconst hasToken = Boolean(pm.variables.get('token'));\nif (pm.variables.get('allow_requests') !== 'true' &&\n    !(pm.request.method === 'GET' && safe.includes(path) && !hasToken)) {\n  console.warn('Dilewati: audit tidak mengirim request ini. Jalankan manual dengan allow_requests=true dan data uji.');\n  pm.execution.skipRequest();\n}",
+            "language": "text/javascript"
         }
     ]
 }

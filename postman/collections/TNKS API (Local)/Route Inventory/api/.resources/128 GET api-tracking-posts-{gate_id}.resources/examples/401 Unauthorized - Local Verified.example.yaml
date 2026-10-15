@@ -1,0 +1,23 @@
+{
+    "$kind": "http-example",
+    "name": "401 Unauthorized - Local Verified",
+    "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/tracking/posts/{{gate_id}}"
+    },
+    "response": {
+        "statusCode": 401,
+        "statusText": "Unauthorized",
+        "headers": [
+            {
+                "key": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "body": {
+            "type": "json",
+            "content": "{\n    \"message\": \"Unauthenticated.\"\n}"
+        }
+    },
+    "order": 2000
+}

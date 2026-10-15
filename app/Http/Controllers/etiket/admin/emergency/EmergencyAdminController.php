@@ -21,7 +21,7 @@ class EmergencyAdminController extends Controller
 
         $emergencies = GkEmergencyMessage::whereIn('id_destinasi', $destinasiIds)
             ->with(['user', 'pendaki.biodata', 'destinasi'])
-            ->orderByRaw("FIELD(status, 'active', 'acknowledged', 'resolved')")
+            ->orderByRaw("CASE status WHEN 'active' THEN 0 WHEN 'acknowledged' THEN 1 ELSE 2 END")
             ->orderByDesc('created_at')
             ->paginate(20);
 
@@ -82,7 +82,7 @@ class EmergencyAdminController extends Controller
      */
     public function acknowledge(Request $request, $id)
     {
-        $emergency = GkEmergencyMessage::findOrFail($id);
+        $emergency = GkEmergencyMessage::whereIn('id_destinasi', $request->user()->destinasis()->pluck('destinasis.id'))->findOrFail($id);
         $user = $request->user();
 
         if ($emergency->status !== 'active') {
@@ -103,7 +103,7 @@ class EmergencyAdminController extends Controller
      */
     public function resolve(Request $request, $id)
     {
-        $emergency = GkEmergencyMessage::findOrFail($id);
+        $emergency = GkEmergencyMessage::whereIn('id_destinasi', $request->user()->destinasis()->pluck('destinasis.id'))->findOrFail($id);
         $user = $request->user();
 
         $emergency->update([

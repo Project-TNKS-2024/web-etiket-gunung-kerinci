@@ -14,6 +14,12 @@ class paket_tiket extends Seeder
      */
     public function run(): void
     {
+        // Idempotent: paket+tiket tidak boleh digandakan saat db:seed dijalankan ulang.
+        if (gk_paket_tiket::where('nama', 'Umum')->exists()) {
+            $this->command?->info('paket_tiket: data sudah ada, dilewati.');
+            return;
+        }
+
         // GUNUNG KERINCI KERSIK TUO, NUSANTARA
         gk_paket_tiket::create([
             'id_destinasi' => 1,

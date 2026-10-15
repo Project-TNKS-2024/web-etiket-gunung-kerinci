@@ -17,14 +17,15 @@ class UsersAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Superadmin
-        $admin = User::create([
-            'email' => 'superadmin@tnks.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-
-            // 'token' => 'superadmin_token',
-            'email_verified_at' => now(),
-        ]);
+        // Idempotent: firstOrCreate supaya db:seed dijalankan ulang tidak crash
+        // (kolom users.email punya unique index).
+        $admin = User::firstOrCreate(
+            ['email' => 'superadmin@tnks.com'],
+            [
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }

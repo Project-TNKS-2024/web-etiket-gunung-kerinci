@@ -21,6 +21,18 @@
                </a>
             </li>
 
+            <li class="nav-small-cap"><span class="hide-menu">Keselamatan Pendaki</span></li>
+            <li class="sidebar-item">
+               <a class="sidebar-link {{ request()->routeIs('admin.emergency.*') ? 'active' : '' }}" href="{{ route('admin.emergency.index') }}">
+                  <span><i class="fa-solid fa-triangle-exclamation"></i></span><span class="hide-menu">Peringatan Dini Bahaya</span>
+               </a>
+            </li>
+            <li class="sidebar-item">
+               <a class="sidebar-link {{ request()->routeIs('admin.sos.*') ? 'active' : '' }}" href="{{ route('admin.sos.index') }}">
+                  <span><i class="fa-solid fa-life-ring"></i></span><span class="hide-menu">SOS dan Chat</span>
+               </a>
+            </li>
+
             <li class="nav-small-cap">
                <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                <span class="hide-menu">Destinasi</span>

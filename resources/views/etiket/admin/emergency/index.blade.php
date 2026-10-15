@@ -21,9 +21,11 @@
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="fw-semibold mb-0">
                 <i class="ti ti-alert-triangle me-2"></i>Emergency Dashboard
+                <span data-admin-live="emergency-count">
                 @if($activeCount > 0)
                     <span class="badge bg-danger ms-2">{{ $activeCount }} Aktif</span>
                 @endif
+                </span>
             </h4>
             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#broadcastModal">
                 <i class="ti ti-broadcast me-1"></i> Broadcast Darurat
@@ -60,7 +62,7 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody data-admin-live="emergency-list">
                             @forelse($emergencies as $e)
                             <tr>
                                 <td>
@@ -101,7 +103,7 @@
                         </tbody>
                     </table>
                 </div>
-                {{ $emergencies->links() }}
+                <div data-admin-live="emergency-pagination">{{ $emergencies->links() }}</div>
             </div>
         </div>
     </div>
