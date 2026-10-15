@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             UsersAdminSeeder::class,
             UserSampelSeeder::class,
             destinasi_gate::class,
+            AdminDestinationSeeder::class,
             paket_tiket::class,
             settingSeeder::class,
             // permisionSeeder me-reset seluruh permission & role dari middleware route,
