@@ -349,6 +349,17 @@ class CheckpointAttendanceApiTest extends TestCase
         $this->assertFalse($memberPosts[$this->post->id]['completed']);
     }
 
+    public function test_leader_label_identifies_booking_owner_for_both_leader_and_member(): void
+    {
+        foreach ([$this->leader, $this->member] as $viewer) {
+            $response = $this->actingAs($viewer, 'sanctum')
+                ->getJson('/api/tracking/progress/' . $this->booking->id)->assertOk();
+            $hikers = collect($response->json('data.hikers'))->keyBy('pendaki_id');
+            $this->assertTrue($hikers[$this->leaderHiker->id]['is_leader']);
+            $this->assertFalse($hikers[$this->memberHiker->id]['is_leader']);
+        }
+    }
+
     private function checkInLeader(): void
     {
         $this->actingAs($this->leader, 'sanctum')

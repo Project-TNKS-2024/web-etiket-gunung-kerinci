@@ -283,6 +283,7 @@ class CheckpointController extends Controller
 
         $totalPosts = $posts->count();
 
+        $leaderBioId = $booking->user?->id_bio;
         $hikerProgress = [];
         foreach ($booking->pendakis as $pendaki) {
             $pendakiLogs = $logs->get($pendaki->id, collect());
@@ -291,6 +292,7 @@ class CheckpointController extends Controller
             $hikerProgress[] = [
                 'pendaki_id' => $pendaki->id,
                 'nama' => $pendaki->fullName,
+                'is_leader' => $leaderBioId !== null && $pendaki->id_bio === $leaderBioId,
                 'completed' => $completedPosts->count(),
                 'total' => $totalPosts,
                 'percentage' => $totalPosts > 0 ? round(($completedPosts->count() / $totalPosts) * 100) : 0,
