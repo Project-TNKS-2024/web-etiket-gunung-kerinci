@@ -58,6 +58,8 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::get('admin/destinasi/booking/{id}', [bookingController::class, 'showBooking'])->name('admin.destinasi.booking.show')->middleware('permission:view-booking');
     Route::post('admin/destinasi/booking/updateStatus', [bookingController::class, 'updateStatus'])->name('admin.destinasi.booking.updateStatus')->middleware('permission:edit-booking');
     Route::post('admin/destinasi/booking/gantiTanggal', [bookingController::class, 'gantiTanggal'])->name('admin.destinasi.booking.gantiTanggal')->middleware('permission:edit-booking');
+    Route::post('admin/destinasi/booking/checkout', [bookingController::class, 'checkoutAction'])->name('admin.destinasi.booking.checkout')->middleware('permission:edit-booking');
+    Route::post('admin/destinasi/booking/payment-record', [bookingController::class, 'recordPaymentAction'])->name('admin.destinasi.booking.paymentRecord')->middleware('permission:edit-payment');
 
     Route::get('admin/destinasi/booking/{id}/pembayaran', [bookingController::class, 'showPembayaran'])->name('admin.destinasi.booking.payment.show')->middleware('permission:view-payment');
     Route::post('admin/destinasi/booking/pembayaran/update', [bookingController::class, 'updatePembayaran'])->name('admin.destinasi.booking.payment.update')->middleware('permission:edit-payment');

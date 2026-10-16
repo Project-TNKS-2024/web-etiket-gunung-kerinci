@@ -197,6 +197,7 @@ class OverstayCalculator
             'is_estimate' => false,
             'amount' => null,
             'charge_status' => 'none',
+            'charge_id' => null,
             'payment_state' => 'none',
             'rate_source' => null,
             'paid_at' => null,
@@ -280,6 +281,7 @@ class OverstayCalculator
         $charge = $pendaki->overstayCharge;
         $result = $base;
         $result['charge_status'] = $charge->status; // final|needs_review
+        $result['charge_id'] = $charge->id;
         $result['rate_source'] = $charge->items->first()?->source;
 
         if ($charge->status === 'needs_review') {
@@ -302,6 +304,52 @@ class OverstayCalculator
         $result['paid_at'] = $charge->payment?->paid_at?->setTimezone(self::TZ)->toIso8601String();
 
         return $result;
+    }
+
+    /**
+     * Payload final untuk satu pendaki berdasarkan waktu turun aktual.
+     * Tidak menyimpan apa pun; hanya mengembalikan rincian yang siap disimpan.
+     */
+    public function finalize(gk_pendaki $pendaki, CarbonInterface $actualCheckoutAt): array
+    {
+        $pendaki->loadMissing(['booking', 'biodata', 'tarifSnapshot']);
+
+        $rates = $this->ratesForPendaki($pendaki);
+        $scheduledExitDate = $pendaki->booking->tanggal_keluar;
+
+        if ($rates['harga_wk'] === null || $rates['harga_wd'] === null) {
+            return [
+                'needs_review' => true,
+                'status' => 'needs_review',
+                'amount' => 0,
+                'source' => $rates['source'],
+                'kategori' => $rates['kategori'],
+                'items' => [],
+            ];
+        }
+
+        $holidays = $this->holidayDates(
+            Carbon::createFromFormat('Y-m-d', $scheduledExitDate, self::TZ)->startOfDay()->addDay()->toDateString(),
+            $actualCheckoutAt->copy()->setTimezone(self::TZ)->startOfDay()->toDateString()
+        );
+
+        $computed = $this->compute(
+            $scheduledExitDate,
+            $actualCheckoutAt,
+            (int) $rates['harga_wk'],
+            (int) $rates['harga_wd'],
+            $rates['kategori'],
+            $holidays
+        );
+
+        return [
+            'needs_review' => false,
+            'status' => 'final',
+            'amount' => $computed['amount'],
+            'source' => $rates['source'],
+            'kategori' => $rates['kategori'],
+            'items' => $computed['items'],
+        ];
     }
 
     /**

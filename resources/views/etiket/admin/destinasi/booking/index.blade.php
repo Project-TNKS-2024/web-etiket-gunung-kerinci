@@ -29,6 +29,13 @@
                <option value="" {{ request('filter-waktu') == '' ? 'selected' : '' }}>Semua</option>
             </select>
 
+            <!-- Filter Keterlambatan -->
+            <select name="filter-overstay" class="form-select" style="width: auto; max-width: 200px;">
+               <option value="" {{ request('filter-overstay') == '' ? 'selected' : '' }}>Semua keterlambatan</option>
+               <option value="overdue" {{ request('filter-overstay') == 'overdue' ? 'selected' : '' }}>Lewat jadwal, belum turun</option>
+               <option value="unpaid" {{ request('filter-overstay') == 'unpaid' ? 'selected' : '' }}>Tagihan final belum bayar</option>
+            </select>
+
 
             <!-- Tombol Filter -->
             <button type="submit" class="btn btn-primary">Filter</button>

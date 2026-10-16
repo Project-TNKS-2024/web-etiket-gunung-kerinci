@@ -8,8 +8,14 @@ use App\Mail\BookingPayment;
 use App\Mail\BookingPaymentFailed;
 use App\Models\destinasi;
 use App\Models\gk_booking;
+use App\Models\gk_tiket_pendaki;
+use App\Models\GkPendakiTarifSnapshot;
+use App\Models\GkOverstayCharge;
 use App\Models\statusPendaki;
 use App\Models\User;
+use App\Services\AdditionalChargePaymentService;
+use App\Services\CheckoutService;
+use App\Services\OverstayCalculator;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +27,20 @@ use function PHPUnit\Framework\isEmpty;
 class bookingController extends AdminController
 {
     private $helper;
+    private CheckoutService $checkout;
+    private AdditionalChargePaymentService $paymentService;
+    private OverstayCalculator $overstay;
 
-    public function __construct(BookingHelperController $helper)
-    {
+    public function __construct(
+        BookingHelperController $helper,
+        CheckoutService $checkout,
+        AdditionalChargePaymentService $paymentService,
+        OverstayCalculator $overstay
+    ) {
         $this->helper = $helper;
+        $this->checkout = $checkout;
+        $this->paymentService = $paymentService;
+        $this->overstay = $overstay;
     }
 
     public function index($id, Request $request)
@@ -48,6 +64,22 @@ class bookingController extends AdminController
                 $queryUtama->where('gk_bookings.status_booking', '=', 8);
             } elseif ($request->input('filter-waktu') === 'akan_datang') {
                 $queryUtama->whereDate('gk_bookings.tanggal_masuk', '>', now());
+            }
+        }
+
+        // 🔹 **Filter keterlambatan tiket (overstay)**
+        if ($request->filled('filter-overstay')) {
+            if ($request->input('filter-overstay') === 'overdue') {
+                $today = now()->setTimezone('Asia/Jakarta')->toDateString();
+                $queryUtama->whereDate('gk_bookings.tanggal_keluar', '<', $today)
+                    ->whereHas('pendakis', function ($q) {
+                        $q->whereHas('getStatus', fn ($s) => $s->where('status', 2))
+                            ->whereDoesntHave('getStatus', fn ($s) => $s->where('status', 3));
+                    });
+            } elseif ($request->input('filter-overstay') === 'unpaid') {
+                $queryUtama->whereHas('pendakis.overstayCharge', function ($q) {
+                    $q->where('status', 'final')->whereDoesntHave('payment');
+                });
             }
         }
 
@@ -216,6 +248,8 @@ class bookingController extends AdminController
 
         $listStatusPendakian = $booking->riwayatPendakian();
 
+        $overstay = $this->overstay->bookingSummary($booking);
+
         // return $listStatusPendakian;
 
 
@@ -223,6 +257,7 @@ class bookingController extends AdminController
         return view('etiket.admin.destinasi.booking.showBooking', [
             'booking' => $booking,
             'listStatusPendakian' => $listStatusPendakian,
+            'overstay' => $overstay,
         ]);
     }
 
@@ -315,7 +350,7 @@ class bookingController extends AdminController
 
     private function bookingSelesai($booking)
     {
-        $booking->load('pendakis.getStatus');
+        $booking->load('pendakis.getStatus', 'pendakis.overstayCharge.payment');
         // Cek jika semua pendaki dalam booking memiliki status terakhir 3 (Cek Out) atau 1 (Batal Mendaki)
         $semuaSelesai = $booking->pendakis->every(function ($pendaki) {
             $lastStatus = $pendaki->getStatus->last();
@@ -324,6 +359,14 @@ class bookingController extends AdminController
 
         // Jika semua pendaki sudah selesai (Cek Out atau Batal), update status booking menjadi 7
         if ($semuaSelesai) {
+            $adaTagihanBelumLunas = $booking->pendakis->contains(function ($pendaki) {
+                return $pendaki->overstayCharge && !$pendaki->overstayCharge->payment;
+            });
+
+            if ($adaTagihanBelumLunas) {
+                return ['error' => ['Masih ada biaya tambahan yang belum dibayar']];
+            }
+
             $booking->update([
                 'status_booking' => 8,
                 'validator' =>  $this->userAdmin()->id
@@ -372,7 +415,7 @@ class bookingController extends AdminController
     }
     private function pendakiCekIn($booking, $pendakis)
     {
-        $booking->load('pendakis.getStatus');
+        $booking->load('pendakis.getStatus', 'pendakis.biodata');
         $messages = [];
         foreach ($pendakis as $idPendaki => $statusPendaki) {
             $pendaki = $booking->pendakis->where('id', $idPendaki)->first();
@@ -386,6 +429,9 @@ class bookingController extends AdminController
                         'detail' => 'Melakukan pendakian',
                         'validator' =>  $this->userAdmin()->id,
                     ]);
+                    // Bekukan waktu masuk dan dasar tarif tambahan saat check-in.
+                    $pendaki->update(['checkin_at' => Carbon::now()->setTimezone(OverstayCalculator::TZ)]);
+                    $this->freezeTarifSnapshot($pendaki);
                     $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
                 }
             } elseif ($lastStatus->status == 1) {
@@ -409,6 +455,31 @@ class bookingController extends AdminController
         }
 
         return $messages;
+    }
+
+    /**
+     * Bekukan kategori + tarif masuk (weekend/weekday) pendaki saat check-in.
+     */
+    private function freezeTarifSnapshot($pendaki)
+    {
+        $kategori = ($pendaki->biodata->kenegaraan ?? 'ID') === 'ID' ? 'wni' : 'wna';
+        $tiket = gk_tiket_pendaki::where('id_paket_tiket', $pendaki->booking->id_tiket)
+            ->where('kategori_pendaki', $kategori)
+            ->first();
+
+        if (!$tiket) {
+            return;
+        }
+
+        GkPendakiTarifSnapshot::updateOrCreate(
+            ['id_pendaki' => $pendaki->id],
+            [
+                'kategori' => $kategori,
+                'harga_masuk_wk' => $tiket->harga_masuk_wk,
+                'harga_masuk_wd' => $tiket->harga_masuk_wd,
+                'source' => 'snapshot',
+            ]
+        );
     }
     private function pendakiCekOut($booking, $pendakis)
     {
@@ -482,5 +553,83 @@ class bookingController extends AdminController
         return view('etiket.admin.destinasi.booking.showStruk', [
             'data' => $booking
         ]);
+    }
+
+    /**
+     * Catat kepulangan aktual per pendaki (dengan waktu turun, opsional mundur + alasan).
+     */
+    public function checkoutAction(Request $request)
+    {
+        $request->validate([
+            'booking_id' => 'required|uuid|exists:gk_bookings,id',
+            'checkout' => 'required|array|min:1',
+            'checkout.*' => 'nullable|date',
+            'reasons' => 'nullable|array',
+            'reasons.*' => 'nullable|string|max:255',
+        ]);
+
+        $booking = gk_booking::find($request->booking_id);
+        if (!$booking || $booking->status_booking < 4 || $booking->status_booking > 8) {
+            return redirect()->back()->withErrors('Booking tidak valid');
+        }
+
+        $items = [];
+        foreach ($request->input('checkout', []) as $idPendaki => $time) {
+            $items[] = [
+                'pendaki_id' => $idPendaki,
+                'actual_checkout_at' => $time ? Carbon::parse($time, OverstayCalculator::TZ) : null,
+                'reason' => $request->input("reasons.$idPendaki"),
+            ];
+        }
+
+        try {
+            $this->checkout->checkout($booking, $items, $this->userAdmin());
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->back()->withErrors($e->getMessage());
+        }
+
+        return redirect()->back()->with('success', 'Kepulangan pendaki berhasil dicatat');
+    }
+
+    /**
+     * Catat pembayaran biaya tambahan di pos (nominal dari tagihan server).
+     */
+    public function recordPaymentAction(Request $request)
+    {
+        $request->validate([
+            'booking_id' => 'required|uuid|exists:gk_bookings,id',
+            'charge_id' => 'required|uuid|exists:gk_overstay_charges,id',
+            'method' => 'required|string|max:100',
+            'reference' => 'nullable|string|max:100',
+            'note' => 'nullable|string|max:255',
+        ]);
+
+        $booking = gk_booking::find($request->booking_id);
+        if (!$booking) {
+            return redirect()->back()->withErrors('Booking tidak ditemukan');
+        }
+
+        $charge = GkOverstayCharge::where('id', $request->charge_id)
+            ->where('id_booking', $booking->id)
+            ->first();
+
+        if (!$charge) {
+            return redirect()->back()->withErrors('Tagihan tidak ditemukan');
+        }
+
+        try {
+            $this->paymentService->record(
+                $booking,
+                $charge,
+                $request->method,
+                $this->userAdmin(),
+                $request->reference,
+                $request->note
+            );
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->back()->withErrors($e->getMessage());
+        }
+
+        return redirect()->back()->with('success', 'Pembayaran biaya tambahan berhasil dicatat');
     }
 }

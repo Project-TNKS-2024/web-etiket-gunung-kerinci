@@ -240,7 +240,6 @@
             <button type="button" class="btn btn-warning btn-aksi btn-batal-pendakian" data-target="batal-checkbox" data-name="1">Batal Pendakian</button>
             @if ($booking->tanggal_masuk < now())
                <button type="button" class="btn btn-primary btn-aksi btn-cekin" data-target="cekin-checkbox" data-name="2">Cek in</button>
-               <button type="button" class="btn btn-primary btn-aksi btn-cekout" data-target="cekout-checkbox" data-name="3">Cek out</button>
                @endif
 
                <button type="button" class="btn btn-danger btn-batal d-none">Batal</button>
@@ -258,6 +257,227 @@
 
    </div>
 </div>
+
+@if ($booking->status_booking >= 4)
+@php
+   $hikeStateLabel = [
+      'belum_masuk' => 'Belum masuk',
+      'batal' => 'Batal mendaki',
+      'mendaki' => 'Sedang mendaki',
+      'turun' => 'Sudah turun',
+   ];
+   $chargeStatusLabel = [
+      'none' => 'Tidak ada',
+      'estimate' => 'Estimasi',
+      'final' => 'Final',
+      'needs_review' => 'Perlu ditinjau',
+   ];
+   $paymentStateLabel = [
+      'none' => '-',
+      'unpaid' => 'Belum dibayar',
+      'paid' => 'Lunas',
+   ];
+   $dayTypeLabel = [
+      'weekday' => 'Hari biasa',
+      'weekend' => 'Akhir pekan',
+      'holiday' => 'Hari libur',
+   ];
+   $activePendakis = collect($overstay['pendakis'])->where('hike_state', 'mendaki');
+@endphp
+
+<div class="card">
+   <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><b>Konfirmasi Turun (Cek Out)</b></h5>
+      <span class="badge text-bg-warning">Waktu default: sekarang (WIB). Ubah hanya jika turun lebih awal, sertakan alasan.</span>
+   </div>
+   <div class="card-body">
+      @if ($activePendakis->isEmpty())
+         <p class="text-muted mb-0">Tidak ada pendaki yang sedang mendaki.</p>
+      @else
+      <form id="checkoutForm" method="POST" action="{{ route('admin.destinasi.booking.checkout') }}">
+         @csrf
+         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+         <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+               <thead class="bg-dark text-white">
+                  <tr>
+                     <td style="width:40px">Pilih</td>
+                     <td>Nama</td>
+                     <td>Waktu turun</td>
+                     <td>Alasan (jika mundur)</td>
+                  </tr>
+               </thead>
+               <tbody>
+                  @foreach ($activePendakis as $p)
+                  <tr>
+                     <td class="text-center">
+                        <input class="form-check-input checkout-select" type="checkbox" value="{{ $p['id'] }}">
+                     </td>
+                     <td>{{ $p['full_name'] }}</td>
+                     <td>
+                        <input type="datetime-local" class="form-control checkout-time" data-id="{{ $p['id'] }}"
+                           value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Jakarta')->format('Y-m-d\TH:i') }}">
+                     </td>
+                     <td>
+                        <input type="text" class="form-control checkout-reason" data-id="{{ $p['id'] }}" maxlength="255" placeholder="Opsional">
+                     </td>
+                  </tr>
+                  @endforeach
+               </tbody>
+            </table>
+         </div>
+         <div class="text-end">
+            <button type="submit" class="btn btn-success">Simpan Kepulangan</button>
+         </div>
+      </form>
+      @endif
+   </div>
+</div>
+
+<div class="card">
+   <div class="card-header">
+      <h5><b>Biaya Tambahan (Keterlambatan Tiket)</b></h5>
+   </div>
+   <div class="card-body">
+      <div class="row mb-3">
+         <div class="col-12 col-md-3">
+            <div class="border rounded p-2 text-center">
+               <small class="text-muted">Overdue aktif</small>
+               <h5 class="mb-0">{{ $overstay['team']['overdue_active_count'] }}</h5>
+            </div>
+         </div>
+         <div class="col-12 col-md-3">
+            <div class="border rounded p-2 text-center">
+               <small class="text-muted">Tagihan final belum bayar</small>
+               <h5 class="mb-0">{{ $overstay['team']['unpaid_final_count'] }}</h5>
+            </div>
+         </div>
+         <div class="col-12 col-md-3">
+            <div class="border rounded p-2 text-center">
+               <small class="text-muted">Estimasi</small>
+               <h5 class="mb-0">Rp {{ number_format($overstay['team']['estimate_total'], 0, ',', '.') }}</h5>
+            </div>
+         </div>
+         <div class="col-12 col-md-3">
+            <div class="border rounded p-2 text-center">
+               <small class="text-muted">Final</small>
+               <h5 class="mb-0">Rp {{ number_format($overstay['team']['final_total'], 0, ',', '.') }}</h5>
+            </div>
+         </div>
+      </div>
+
+      <div class="table-responsive">
+         <table class="table table-bordered align-middle">
+            <thead class="bg-dark text-white">
+               <tr>
+                  <td>Nama</td>
+                  <td>Status</td>
+                  <td>Jadwal turun</td>
+                  <td>Turun aktual</td>
+                  <td>Hari tambahan</td>
+                  <td>Biaya</td>
+                  <td>Status biaya</td>
+                  <td>Pembayaran</td>
+                  <td></td>
+               </tr>
+            </thead>
+            <tbody>
+               @foreach ($overstay['pendakis'] as $p)
+               <tr>
+                  <td>{{ $p['full_name'] }}</td>
+                  <td>{{ $hikeStateLabel[$p['hike_state']] ?? $p['hike_state'] }}</td>
+                  <td>{{ $p['scheduled_exit_date'] }}</td>
+                  <td>
+                     @if ($p['actual_checkout_at'])
+                        {{ \Carbon\Carbon::parse($p['actual_checkout_at'])->setTimezone('Asia/Jakarta')->format('d M Y H:i') }}
+                     @else
+                        -
+                     @endif
+                  </td>
+                  <td>
+                     @if ($p['overdue_days'] === null)
+                        -
+                     @else
+                        {{ $p['overdue_days'] }} hari
+                     @endif
+                  </td>
+                  <td>
+                     @if ($p['amount'] === null)
+                        Biaya belum dapat dihitung
+                     @else
+                        Rp {{ number_format($p['amount'], 0, ',', '.') }}
+                     @endif
+                  </td>
+                  <td>
+                     @php $cs = $p['charge_status']; @endphp
+                     <span class="badge {{ $cs === 'final' ? 'text-bg-primary' : ($cs === 'needs_review' ? 'text-bg-danger' : ($cs === 'estimate' ? 'text-bg-warning' : 'text-bg-secondary')) }}">
+                        {{ $chargeStatusLabel[$cs] ?? $cs }}
+                     </span>
+                  </td>
+                  <td>
+                     @php $ps = $p['payment_state']; @endphp
+                     <span class="badge {{ $ps === 'paid' ? 'text-bg-success' : ($ps === 'unpaid' ? 'text-bg-warning' : 'text-bg-secondary') }}">
+                        {{ $paymentStateLabel[$ps] ?? $ps }}
+                     </span>
+                  </td>
+                  <td>
+                     @if ($p['charge_id'] && $p['charge_status'] === 'final' && $p['payment_state'] === 'unpaid')
+                        <button type="button" class="btn btn-sm btn-primary btn-catat-pembayaran"
+                           data-charge-id="{{ $p['charge_id'] }}"
+                           data-nama="{{ $p['full_name'] }}"
+                           data-amount="{{ $p['amount'] }}">
+                           Catat pembayaran
+                        </button>
+                     @endif
+                  </td>
+               </tr>
+               @endforeach
+            </tbody>
+         </table>
+      </div>
+      <small class="text-muted">Biaya tambahan hanya mencakup tiket masuk per tanggal tambahan.</small>
+   </div>
+</div>
+
+<div class="modal fade" id="modalCatatPembayaran" tabindex="-1" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <form method="POST" action="{{ route('admin.destinasi.booking.paymentRecord') }}">
+            @csrf
+            <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+            <input type="hidden" name="charge_id" id="paymentChargeId">
+            <div class="modal-header">
+               <h5 class="modal-title">Catat Pembayaran Biaya Tambahan</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <p id="paymentDesc" class="fw-bold"></p>
+               <div class="mb-3">
+                  <label class="form-label">Metode pembayaran</label>
+                  <select name="method" class="form-select" required>
+                     <option value="Tunai">Tunai</option>
+                     <option value="QRIS">QRIS</option>
+                     <option value="Transfer Bank">Transfer Bank</option>
+                  </select>
+               </div>
+               <div class="mb-3">
+                  <label class="form-label">Referensi / No. (opsional)</label>
+                  <input type="text" name="reference" class="form-control" maxlength="100">
+               </div>
+               <div class="mb-3">
+                  <label class="form-label">Catatan (opsional)</label>
+                  <input type="text" name="note" class="form-control" maxlength="255">
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+               <button type="submit" class="btn btn-success">Simpan Pembayaran</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+@endif
 
 @if ($booking->status_booking >= 4)
 <div class="card">
@@ -417,4 +637,47 @@
    });
 </script>
 @endif
+
+<script>
+// Konfirmasi turun: kumpulkan pendaki yang dipilih menjadi checkout[]/reasons[].
+const checkoutForm = document.getElementById('checkoutForm');
+if (checkoutForm) {
+   checkoutForm.addEventListener('submit', function (e) {
+      this.querySelectorAll('input.dynamic-checkout').forEach(i => i.remove());
+      let any = false;
+      this.querySelectorAll('.checkout-select:checked').forEach(cb => {
+         const id = cb.value;
+         const timeInput = this.querySelector(`.checkout-time[data-id="${id}"]`);
+         const reasonInput = this.querySelector(`.checkout-reason[data-id="${id}"]`);
+         const time = timeInput ? timeInput.value : '';
+         const reason = reasonInput ? reasonInput.value : '';
+
+         const t = document.createElement('input');
+         t.type = 'hidden'; t.name = `checkout[${id}]`; t.value = time; t.className = 'dynamic-checkout';
+         this.appendChild(t);
+
+         if (reason) {
+            const r = document.createElement('input');
+            r.type = 'hidden'; r.name = `reasons[${id}]`; r.value = reason; r.className = 'dynamic-checkout';
+            this.appendChild(r);
+         }
+         any = true;
+      });
+      if (!any) {
+         e.preventDefault();
+         alert('Pilih minimal satu pendaki yang sudah turun.');
+      }
+   });
+}
+
+// Catat pembayaran biaya tambahan.
+document.querySelectorAll('.btn-catat-pembayaran').forEach(btn => {
+   btn.addEventListener('click', function () {
+      document.getElementById('paymentChargeId').value = this.dataset.chargeId;
+      const rupiah = 'Rp ' + Number(this.dataset.amount).toLocaleString('id-ID');
+      document.getElementById('paymentDesc').textContent = this.dataset.nama + ' — ' + rupiah;
+      new bootstrap.Modal(document.getElementById('modalCatatPembayaran')).show();
+   });
+});
+</script>
 @endsection
