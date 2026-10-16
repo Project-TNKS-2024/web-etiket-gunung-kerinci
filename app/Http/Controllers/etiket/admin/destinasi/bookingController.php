@@ -276,7 +276,7 @@ class bookingController extends AdminController
 
         // cek status booking >= 4
         $booking = gk_booking::find($request->booking_id);
-        if ($booking->status_booking < 4 and $booking->status_booking > 8) {
+        if ($booking->status_booking < 4 || $booking->status_booking > 8) {
             return redirect()->back()->withErrors('Bookingan belum menyelesaikan pembayaran');
         }
 

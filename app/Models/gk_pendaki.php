@@ -23,7 +23,19 @@ class gk_pendaki extends Model
         'usia',
         // input lampiran
         'lampiran_surat_izin_ortu',
+        // waktu kepulangan aktual (overstay)
+        'checkin_at',
+        'actual_checkout_at',
+        'checkout_recorded_at',
+        'checkout_recorded_by',
+        'checkout_reason',
 
+    ];
+
+    protected $casts = [
+        'checkin_at' => 'datetime',
+        'actual_checkout_at' => 'datetime',
+        'checkout_recorded_at' => 'datetime',
     ];
 
     public $incrementing = false;
@@ -71,6 +83,16 @@ class gk_pendaki extends Model
     public function getStatus()
     {
         return $this->hasMany(statusPendaki::class, 'id_pendaki');
+    }
+
+    public function tarifSnapshot()
+    {
+        return $this->hasOne(GkPendakiTarifSnapshot::class, 'id_pendaki');
+    }
+
+    public function overstayCharge()
+    {
+        return $this->hasOne(GkOverstayCharge::class, 'id_pendaki');
     }
 
     public function getFirstNameAttribute()

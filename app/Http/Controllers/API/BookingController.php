@@ -15,6 +15,7 @@ use App\Models\gk_paket_tiket;
 use App\Models\gk_pendaki;
 use App\Models\pembayaran;
 use App\Models\setting;
+use App\Services\OverstayCalculator;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,8 @@ class BookingController extends Controller
 {
     public function __construct(
         private BookingHelperController $helper,
-        private uploadFileControlller $upload
+        private uploadFileControlller $upload,
+        private OverstayCalculator $overstay
     ) {}
 
     private function bookingQuery(Request $request)
@@ -48,6 +50,22 @@ class BookingController extends Controller
         }
 
         return $booking;
+    }
+
+    /**
+     * Booking yang boleh dibaca oleh user: pemilik ATAU anggota terdaftar
+     * (id_bio cocok dengan salah satu pendaki). Tidak memberi hak edit pemilik.
+     */
+    private function findReadableBooking(Request $request, string $id): ?gk_booking
+    {
+        $user = $request->user();
+
+        return gk_booking::where('id', $id)
+            ->where(function ($query) use ($user) {
+                $query->where('id_user', $user->id)
+                    ->orWhereHas('pendakis', fn ($q) => $q->where('id_bio', $user->id_bio));
+            })
+            ->first();
     }
 
     private function loadBooking(gk_booking $booking): gk_booking
@@ -450,11 +468,17 @@ class BookingController extends Controller
 
     public function tiket(Request $request, $id)
     {
-        $booking = $this->findUserBooking($request, $id, [4, 5, 6, 7, 8]);
-        if (!$booking) {
+        $booking = $this->findReadableBooking($request, $id);
+        if (!$booking || !in_array((int) $booking->status_booking, [4, 5, 6, 7, 8], true)) {
             return ApiResponse::error('Tiket tidak ditemukan atau belum tersedia', null, 404);
         }
-        return ApiResponse::success($this->loadBooking($booking), 'Berhasil mengambil tiket', 200);
+
+        $booking = $this->loadBooking($booking);
+        $booking->overstay = $this->overstay->bookingSummary($booking);
+        $booking->server_now = now()->setTimezone(OverstayCalculator::TZ)->toIso8601String();
+        $booking->timezone = OverstayCalculator::TZ;
+
+        return ApiResponse::success($booking, 'Berhasil mengambil tiket', 200);
     }
 
     public function myTickets(Request $request)
@@ -464,7 +488,11 @@ class BookingController extends Controller
             ->orWhereHas('pendakis', fn ($query) => $query->where('id_bio', $user->id_bio))
             ->latest()
             ->get()
-            ->map(fn ($booking) => $this->loadBooking($booking));
+            ->map(function ($booking) {
+                $booking = $this->loadBooking($booking);
+                $booking->overstay = $this->overstay->bookingSummary($booking);
+                return $booking;
+            });
         return ApiResponse::success($bookings, 'Berhasil mengambil daftar booking', 200);
     }
 
