@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\bio_pendaki;
 use App\Models\gk_booking;
+use App\Models\destinasi;
+use App\Models\gk_gates;
 use App\Models\gk_paket_tiket;
 use App\Models\gk_pendaki;
 use App\Models\statusPendaki;
@@ -53,7 +55,9 @@ class BookingSeeder extends Seeder
         $keluar = Carbon::today()->addDay();
 
         // gk_bookings.id_tiket -> relasi gktiket() = gk_paket_tiket ("Umum").
-        $paketId = gk_paket_tiket::where('nama', 'Umum')->value('id') ?? 1;
+        $destinationId = destinasi::where('nama', 'Gunung Kerinci')->firstOrFail()->id;
+        $paketId = gk_paket_tiket::where('id_destinasi', $destinationId)->where('nama', 'Umum')->firstOrFail()->id;
+        $gateId = gk_gates::where('id_destinasi', $destinationId)->where('nama', 'Desa Kersik Tuo')->firstOrFail()->id;
 
         $booking = gk_booking::create([
             'id_user' => $user1->id,
@@ -63,8 +67,8 @@ class BookingSeeder extends Seeder
             'total_hari' => (int) $masuk->diffInDays($keluar) + 1,
             'total_pendaki_wni' => $pendakiUsers->count(),
             'total_pendaki_wna' => 0,
-            'gate_masuk' => 1, // Desa Kersik Tuo (gate 1 dibuat destinasi_gate)
-            'gate_keluar' => 1,
+            'gate_masuk' => $gateId,
+            'gate_keluar' => $gateId,
             'status_booking' => 6, // Check-in / sedang mendaki
             'total_pembayaran' => $tagihanPerPendaki * $pendakiUsers->count(),
             'status_pembayaran' => 1,

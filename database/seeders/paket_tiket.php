@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\gk_paket_tiket;
 use App\Models\gk_tiket_pendaki;
+use App\Models\destinasi;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,22 +15,18 @@ class paket_tiket extends Seeder
      */
     public function run(): void
     {
-        // Idempotent: paket+tiket tidak boleh digandakan saat db:seed dijalankan ulang.
-        if (gk_paket_tiket::where('nama', 'Umum')->exists()) {
-            $this->command?->info('paket_tiket: data sudah ada, dilewati.');
-            return;
-        }
+        $destinationId = destinasi::where('nama', 'Gunung Kerinci')->firstOrFail()->id;
 
         // GUNUNG KERINCI KERSIK TUO, NUSANTARA
-        gk_paket_tiket::create([
-            'id_destinasi' => 1,
+        $umum = gk_paket_tiket::firstOrCreate(['id_destinasi' => $destinationId, 'nama' => 'Umum'], [
+            'id_destinasi' => $destinationId,
             'nama' => 'Umum',
             'min_pendaki' => 2,
             'penugasan' => null,
             'keterangan' => 'Paket ini dirancang untuk individu atau kelompok kecil yang ingin menikmati pengalaman mendaki Gunung Kerinci. Minimal 2 pendaki.',
         ]);
-        gk_paket_tiket::create([
-            'id_destinasi' => 1,
+        $rombongan = gk_paket_tiket::firstOrCreate(['id_destinasi' => $destinationId, 'nama' => 'Rombongan pelajar/mahasiswa'], [
+            'id_destinasi' => $destinationId,
             'nama' => 'Rombongan pelajar/mahasiswa',
             'min_pendaki' => 10,
             'penugasan' => 'Surat Pengantar',
@@ -38,8 +35,8 @@ class paket_tiket extends Seeder
 
         // @bbtn_kerinciseblatofficial 24-okt-2024
         // @bbtn_kerinciseblatofficial 16-jann-2025
-        gk_tiket_pendaki::create([
-            'id_paket_tiket' => 1,
+        gk_tiket_pendaki::firstOrCreate(['id_paket_tiket' => $umum->id, 'kategori_pendaki' => 'wni'], [
+            'id_paket_tiket' => $umum->id,
             'kategori_pendaki' => 'wni',
             'harga_masuk_wk' => 10000,
             'harga_masuk_wd' => 15000,
@@ -48,8 +45,8 @@ class paket_tiket extends Seeder
             'harga_ansuransi' => 2500,
             'masa_ansuransi' => 3,
         ]);
-        gk_tiket_pendaki::create([
-            'id_paket_tiket' => 1,
+        gk_tiket_pendaki::firstOrCreate(['id_paket_tiket' => $umum->id, 'kategori_pendaki' => 'wna'], [
+            'id_paket_tiket' => $umum->id,
             'kategori_pendaki' => 'wna',
             'harga_masuk_wk' => 150000,
             'harga_masuk_wd' => 150000,
@@ -60,8 +57,8 @@ class paket_tiket extends Seeder
         ]);
 
 
-        gk_tiket_pendaki::create([
-            'id_paket_tiket' => 2,
+        gk_tiket_pendaki::firstOrCreate(['id_paket_tiket' => $rombongan->id, 'kategori_pendaki' => 'wni'], [
+            'id_paket_tiket' => $rombongan->id,
             'kategori_pendaki' => 'wni',
             'harga_masuk_wk' => 7500,
             'harga_masuk_wd' => 5000,
@@ -70,8 +67,8 @@ class paket_tiket extends Seeder
             'harga_ansuransi' => 2500,
             'masa_ansuransi' => 3,
         ]);
-        gk_tiket_pendaki::create([
-            'id_paket_tiket' => 2,
+        gk_tiket_pendaki::firstOrCreate(['id_paket_tiket' => $rombongan->id, 'kategori_pendaki' => 'wna'], [
+            'id_paket_tiket' => $rombongan->id,
             'kategori_pendaki' => 'wna',
             'harga_masuk_wk' => 150000,
             'harga_masuk_wd' => 150000,

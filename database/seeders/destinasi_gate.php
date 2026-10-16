@@ -6,6 +6,7 @@ use App\Models\destinasi;
 use App\Models\gambar_destinasi;
 use App\Models\gk_gates;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
 
 class destinasi_gate extends Seeder
 {
@@ -14,13 +15,7 @@ class destinasi_gate extends Seeder
      */
     public function run(): void
     {
-        // Idempotent: cegah duplikat destinasi/gate saat db:seed dijalankan ulang.
-        if (gk_gates::where('nama', 'Desa Kersik Tuo')->exists()) {
-            $this->command?->info('destinasi_gate: data sudah ada, dilewati.');
-            return;
-        }
-
-        destinasi::create([
+        $kerinci = destinasi::firstOrCreate(['nama' => 'Gunung Kerinci'], [
             'nama' => 'Gunung Kerinci',
             'status' => 2,
             'statusGunung' => 0,
@@ -30,14 +25,14 @@ class destinasi_gate extends Seeder
             'sop' => '<p class="ql-align-justify">Setiap pendaki yang melalui pintu masuk di Pos R10 Kersik Tuo Kabupaten Kerinci Provinsi Jambi wajib memiliki karcis sedangkan pendaki yang melalaui Camping Ground  Bangun Rejo Kabupaten Solok Selatan Provinsi Sumatera Barat wajib memiliki karcis dan Surat Ijin Masuk Kawasan Konservasi (SIMAKSI) pendakian karena melalui zona rimba.</p><p class="ql-align-justify"><br></p><p><strong>A.	 Ketentuan </strong></p><ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Pembelian karcis di Kantor Balai Besar TNKS Sungai Penuh, Pusat informasi R10 Kersik Tuo Kabupaten Kerinci Provinsi Jambi untuk pendakian melalui pintu masuk Kersik Tuo sedangkan pendakian yang melalui pintu masuk Camping Ground  Bangun Rejo Kabupaten Solok Selatan Provinsi Sumatera Barat menggunakan Karcis dan SIMAKSI;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Pengurusan SIMAKSI dilakukan secara online dan langsung di Kantor BBTNKS di Sungai Penuh atau Kantor Bidang Pengelolaan TN Wilayah II Sumatera Barat di Padang atau Kantor Seksi Pengelolaan TN Wilayah IV Sangir dan dapat dilakukan 2 bulan hingga 1 hari sebelum pendakian;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Batas waktu pendakian melalui Pos R10 Kersik Tuo Kabupaten Kerinci Provinsi Jambi adalah 2 (dua) hari dan pendakian melalui Camping Ground  Bangun Rejo Kabupaten Solok Selatan Provinsi Sumatera Barat adalah 4 (empat) hari, apabila merencanakan lebih dari itu wajib memberitahukan/ menginformasikan diawal keberangkatan dan dikenai biaya kelipatannya;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Pendaki wajib memberitahukan  rencana tanggal dan lokasi turun/kembali dan melaporkan kepada petugas di pintu masuk;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Tanggung jawab dan keselamatan pendaki menjadi tangggung jawab pribadi dan tidak akan menuntut pihak pengelola (Balai Besar TNKS), pemandu, porter, pemerintah dan pemerintah daerah;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Bagi pendaki yang naik dari pintu masuk Kersik Tuo dan turun melalui pintu masuk Camping Ground Bangun Rejo Kabupaten Solok Selatan wajib menggunakan SIMAKSI;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Apabila pendaki melanggar kelebihan hari dalam mendaki akan dikenakan SANKSI, kecuali dalam keadaan darurat dan telah dilaporkan kepada petugas;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Jumlah pendaki yang di ijinkan naik maksimum 46 orang/hari khusus jalur pendakian melalui Camping Ground  Bangun Rejo Kabupaten Solok Selatan Provinsi Sumatera Barat;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Setiap SIMAKSI pendakian dikeluarkan untuk grup pendaki dengan jumlah minimum 3 (tiga) orang dan maksimum 10 (sepuluh) orang pendaki, serta untuk mengurangi resiko kecelakaan diwajibkan menggunakan jasa pemanduan dari Sekretariat Bersama Pemandu Gunung Kerinci Kabupaten Solok Selatan yang telah mendapat rekomendasi dari Balai Besar TNKS;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Proses pengambilan SIMAKSI bisa dilakukan pada hari jam/ kerja; </li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Semua calon pendaki wajib menyerahkan fotocopy Kartu Identitas yang masih berlaku seperti: SIM, KTA, KTP, Paspor, atau Kartu Pelajar serta Surat Keterangan Sehat dokter (asli);</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Calon pendaki yang berumur kurang dari 17 tahun, wajib menyerahkan Surat Izin Orang Tua/ Wali dan ditandatangani di atas materai Rp. 10.000 serta dilampirkan fotocopy KTP Orang Tua/ Wali yang masih berlaku;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Bagi Warga Negara Asing (WNA) yang akan mendaki diwajibkan untuk menggunakan jasa pemanduan yang telah terdaftar di Balai Besar TNKS;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Untuk komposisi jumlah pengunjung, pemandu yaitu:</li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Maksimal pemanduan: 1 orang pemandu untuk 5 orang pengunjung/pendaki</li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Maksimal beban porter:  1 orang porter seberat 25 Kg</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Membayar karcis masuk sesuai dengan peraturan yang berlaku dan asuransi keselamatan</li></ol><p><br></p><p><strong>B.		Pendaki DIWAJIBKAN :</strong></p><ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Berbadan sehat pada saat melakukan pendakian dengan menunjukan Surat Keterangan Dokter (asli) pada pintu masuk dan pada saat mengurus Simaksi;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Masuk jalur pendakian antara pukul 07.30 s/d 15.00 WIB dan mendaki pada jalur yang sudah ditentukan/ jalur resmi;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Mematuhi semua rambu-rambu dan informasi keselamatan yang ada di sepanjang jalur pendakian;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Melakukan evakuasi mandiri terhadap diri dan rekannya yang sakit sebelum mendapatkan bantuan dari petugas;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Wajib menggunakan dan membawa jasa Pemandu/ Porter yang telah terdaftar di Balai Besar TNKS;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Memakai dan membawa perlengkapan standar pendakian gunung serta perbekalan pendakian yang cukup;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Mengisi form identitas diri dan isian barang bawaan yang menghasilkan sampah;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Membawa trash bag kantong sampah dan membawa sampah bawaannya ke luar kawasan Taman Nasional;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Memprioritaskan penanganan bagi wanita yang sedang menstruasi utamanya segera membawa turun korban tersebut apabila sudah menderita sakit;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Membawa kelengkapan P3K standar, dan survival kit standar;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Menjaga norma agama, norma susila dan kearifan lokal;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Mengikuti jalur pendakian yang sudah ditetapkan Balai Besar TNKS.</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Petugas Balai Besar TNKS akan memeriksa barang bawaan, karcis dan SIMAKSI sebelum dan sesudah memasuki kawasan. Dalam rangka penangulangan sampah di Gunung Kerinci oleh para pendaki diwajibkan untuk meninggalkan salah satu identitas asli pribadi kepada petugas akan dikembalikan kepada pendaki apabila barang bawaan yang menghasilkan sampah dibawa kembali keluar TNKS.</li></ol><p><br></p><p><strong>C.	Setiap Pendaki DILARANG : </strong></p><ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Membawa Satwa dan tumbuhan dan bagian-bagiannya dari luar dan dari dalam kawasan TNKS; </li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Mengambil, merusak, semua jenis tanaman dan bagian-bagiannya di dalam kawasan TNKS;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Membunuh, melukai, mengambil satwa beserta bagian-bagiannya dari dalam kawasan TNKS;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Memetik, memindahkan, memotong, menebang, mencabut tumbuhan di dalam kawasan TNKS;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Membawa Senjata api, senjata tajam (Parang, Golok dan sejenisnya) kecuali pisau lipat, pisau saku/pisau kecil;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Melakukan aktifitas yang menyebabkan kebakaran hutan di dalam kawasan TNKS; </li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Membuang sampah di dalam kawasan TNKS; </li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Mengganggu, memindahkan dan merusak  fasilitas yang tersedia di dalam kawasan TNKS;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Melakukan Vandalisme dalam kawasan TNKS;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Melakukan pendakian antara  jam 15.00  s/d 07.30 WIB:</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Mengganti identitas/ pendaki pada SIMAKSI atau tidak sesuai dengan SIMAKSI;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Menggunakan SIMAKSI pendakian untuk kegiatan Diklat pencinta alam/kegiatan orientasi pencinta alam;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Buang Air Besar  dialiran sungai/mata air dan di sepanjang jalur pendakian;</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Membawa dan menggunakan Narkotika dan obat-obatan Terlarang (NARKOBA), Miras dan bahan-bahan yang dilarang oleh undang-undang Republik Indonesia didalam kawasan TNKS dan sekitarnya.</li></ol><p><br></p><p><strong>D.	SANKSI</strong></p><p>Sanksi  dikenakan  kepada Pendaki apabila melanggar ketentuan sebagai berikut : </p><ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Bagi pendaki yang memasuki kawasan TNKS lebih dari pukul 15.00 WIB diwajib untuk menunggu di lokasi berkemah (camping) atau homestay terdekat sampai pukul 07.30 WIB; </li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Bagi pendaki yang tidak membawa alat pendakian sesuai standar maka harus melengkapinya atau tidak diizinkan melakukan pendakian; </li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span>Bagi yang melanggar aturan tersebut pada point A, B dan C, maka pendaki yang bersangkutan dan organisasinya akan masuk Daftar Hitam (BLACKLIST) dan tidak diperbolehkan untuk melakukan pendakian kembali ke Gunung Kerinci sampai batas waktu yang diberikan Balai Besar TNKS</li></ol><p>Bagi Para Pendaki yang melakukan perbuatan hukum yang melanggar Peraturan Perundang-undangan yang berlaku di Republik Indonesia, dilakukan tindakan sesuai dengan Peraturan Perundang-undangan Republik Indonesia serta sesuai dengan Kitab Undang-Undang Hukum Acara Indonesia.</p><p><br></p>'
         ]);
 
-        gambar_destinasi::create([
+        $kerinciImage = gambar_destinasi::firstOrCreate(['src' => 'componen/gambar_destinasi/kerinci.png'], [
             'src' => 'componen/gambar_destinasi/kerinci.png',
             'nama' => 'Kerinci',
             'detail' => 'Gunung Kerinci',
-            'id_destinasi' => 1,
+            'id_destinasi' => $kerinci->id,
         ]);
 
-        Destinasi::create([
+        $kaco = destinasi::firstOrCreate(['nama' => 'Danau Kaco'], [
             'nama' => 'Danau Kaco',
             'status' => 1,
             'statusGunung' => 0,
@@ -46,14 +41,14 @@ class destinasi_gate extends Seeder
             'detail' => 'Danau Kaco adalah salah satu destinasi wisata yang terkenal di Indonesia, terletak di Desa Lempur, Kecamatan Gunung Raya, Kabupaten Kerinci, Jambi. Danau ini merupakan bagian dari Taman Nasional Kerinci Seblat, yang telah diakui oleh UNESCO sebagai situs warisan dunia karena memiliki keanekaragaman hayati yang sangat tinggi. Dengan luas sekitar 90 meter persegi, merupakan danau yang cukup kecil. Namun, keindahan dan keunikan danau ini membuatnya menjadi salah satu destinasi wisata yang banyak dikunjungi. Kedalaman danau ini masih belum diketahui secara pasti, namun menurut para pengunjung yang pernah datang ke sana, kedalamannya cukup dalam.',
         ]);
 
-        gambar_destinasi::create([
+        $kacoImage = gambar_destinasi::firstOrCreate(['src' => 'componen/gambar_destinasi/danau kaco.jpg'], [
             'src' => 'componen/gambar_destinasi/danau kaco.jpg',
             'nama' => 'Danau Kaco',
             'detail' => 'Danau Kaco',
-            'id_destinasi' => 2,
+            'id_destinasi' => $kaco->id,
         ]);
 
-        Destinasi::create([
+        $tujuh = destinasi::firstOrCreate(['nama' => 'Danau Gunung Tujuh'], [
             'nama' => 'Danau Gunung Tujuh',
             'status' => 1,
             'statusGunung' => 0,
@@ -62,17 +57,17 @@ class destinasi_gate extends Seeder
             'detail' => 'Danau Gunung Tujuh merupakan danau yang terletak di desa Pelompek, kabupaten Kerinci, Jambi. Danau ini berada di kawasan Gunung Tujuh, sebuah gunung yang berada tepat di belakang Gunung Kerinci. Gunung Tujuh masih termasuk dalam wilayah Taman Nasional Kerinci Seblat yang merupakan Situs Warisan Dunia UNESCO. Seperti namanya, danau gunung tujuh dikelilingi tujuh puncak gunung di Jambi. Tidak heran kalau tempat ini menjadi destinasi wisata yang menawarkan banyak panorama keindahan.Bagi pendaki gunung, Kerinci mungkin menjadi tujuan utama karena gunung tersebut merupakan gunung aktif tertinggi di Indonesia (3805 mdpl), tetapi bagi wisatawan yang ingin sekadar menikmati keindahan alam Kabupaten Kerinci, Danau Gunung Tujuh bisa menjadi pertimbangan sebagai tujuan wisata.',
         ]);
 
-        gambar_destinasi::create([
+        $tujuhImage = gambar_destinasi::firstOrCreate(['src' => 'componen/gambar_destinasi/danau gunung tujuh.jpg'], [
             'src' => 'componen/gambar_destinasi/danau gunung tujuh.jpg',
             'nama' => 'Danau Gunung Tujuh',
             'detail' => 'Danau Gunung Tujuh',
-            'id_destinasi' => 2,
+            'id_destinasi' => $tujuh->id,
         ]);
 
-        gk_gates::create([
+        $kersikGate = gk_gates::firstOrCreate(['nama' => 'Desa Kersik Tuo'], [
             'nama' => 'Desa Kersik Tuo',
             'status' => true,
-            'id_destinasi' => '1',
+            'id_destinasi' => $kerinci->id,
             'max_pendaki_hari' => 30,
             'min_pendaki_booking' => 2,
             'lokasi_maps' => '-',
@@ -80,15 +75,28 @@ class destinasi_gate extends Seeder
             'detail' => '.',
         ]);
 
-        gk_gates::create([
+        $solokGate = gk_gates::firstOrCreate(['nama' => 'Solok Selatan'], [
             'nama' => 'Solok Selatan',
             'status' => true,
-            'id_destinasi' => '1',
+            'id_destinasi' => $kerinci->id,
             'max_pendaki_hari' => 46,
             'min_pendaki_booking' => 2,
             'lokasi_maps' => '-',
             'lokasi' => 'Jl.Raya Timbulun, Lubuk Gadang, Kec. Sangir, Kabupaten Solok Selatan, Sumatera Barat 27778',
             'detail' => 'Camping Ground Bangun Rejo di Kabupaten Solok Selatan, Sumatera Barat.',
         ]);
+
+        // Repair dangling references left by earlier seeds, preserving valid admin assignments.
+        foreach ([[$kerinciImage, $kerinci], [$kacoImage, $kaco], [$tujuhImage, $tujuh],
+            [$kersikGate, $kerinci], [$solokGate, $kerinci]] as [$record, $destination]) {
+            $this->repairDestination($record, $destination->id);
+        }
+    }
+
+    private function repairDestination(Model $record, int $destinationId): void
+    {
+        if (!destinasi::whereKey($record->id_destinasi)->exists()) {
+            $record->update(['id_destinasi' => $destinationId]);
+        }
     }
 }
