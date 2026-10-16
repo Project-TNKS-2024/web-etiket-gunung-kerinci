@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EmergencyTrackingApiTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Test GPS upload requires authentication.
      */
@@ -126,10 +128,7 @@ class EmergencyTrackingApiTest extends TestCase
      */
     public function test_gps_upload_validates_coordinates(): void
     {
-        $user = \App\Models\User::first();
-        if (!$user) {
-            $this->markTestSkipped('No user in database');
-        }
+        $user = \App\Models\User::create(['email' => 'gps-validation@example.test', 'password' => 'password']);
 
         $response = $this->actingAs($user, 'sanctum')->postJson('/api/tracking/gps', [
             'latitude' => 999,
@@ -145,10 +144,7 @@ class EmergencyTrackingApiTest extends TestCase
      */
     public function test_emergency_trigger_validates_input(): void
     {
-        $user = \App\Models\User::first();
-        if (!$user) {
-            $this->markTestSkipped('No user in database');
-        }
+        $user = \App\Models\User::create(['email' => 'emergency-validation@example.test', 'password' => 'password']);
 
         $response = $this->actingAs($user, 'sanctum')->postJson('/api/emergency/trigger', [
             'title' => '',

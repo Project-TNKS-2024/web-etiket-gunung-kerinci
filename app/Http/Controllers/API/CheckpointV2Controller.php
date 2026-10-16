@@ -155,7 +155,8 @@ class CheckpointV2Controller extends Controller
             return ApiResponse::error($e->getMessage(), $e->toErrors(), $e->httpStatus);
         }
 
-        $pendakiIds = $booking->pendakis()->pluck('id');
+        $booking->load('pendakis.biodata');
+        $pendakiIds = $booking->pendakis->pluck('id');
         $logs = GkCheckpointLog::where('id_booking', $bookingId)
             ->whereIn('id_pendaki', $pendakiIds)
             ->get()

@@ -26,6 +26,34 @@ class CheckpointVisitService
     {
     }
 
+    /** Legacy clients record ascent only and may use routes without v2 configuration. */
+    public function recordLegacyAscent(gk_pendaki $target, GkPost $post, array $attributes): GkCheckpointLog
+    {
+        return DB::transaction(function () use ($target, $post, $attributes) {
+            $locked = gk_pendaki::whereKey($target->id)->lockForUpdate()->firstOrFail();
+            $existing = GkCheckpointLog::where('id_pendaki', $locked->id)
+                ->where('id_booking', $locked->booking_id)
+                ->where('id_post', $post->id)
+                ->where('phase', TrackingPhase::Naik->value)
+                ->first();
+            if ($existing !== null) {
+                throw new CheckpointException('CHECKPOINT_ALREADY_RECORDED', 'Sudah check-in di pos ini', [
+                    'checked_at' => $existing->checked_at?->toISOString(),
+                ]);
+            }
+            $log = GkCheckpointLog::create(array_merge($attributes, [
+                'id_pendaki' => $locked->id,
+                'id_booking' => $locked->booking_id,
+                'id_post' => $post->id,
+                'phase' => TrackingPhase::Naik->value,
+            ]));
+            if ($post->is_summit) {
+                $locked->update(['tracking_phase' => TrackingPhase::Turun->value]);
+            }
+            return $log;
+        });
+    }
+
     /**
      * @return array{log: GkCheckpointLog, target: gk_pendaki, idempotent: bool}
      */
@@ -150,6 +178,14 @@ class CheckpointVisitService
                         ['summit_post_id' => $summit->id]
                     );
                 }
+                if ($summitLog->checked_at !== null
+                    && $recordedAt->lt($summitLog->checked_at->copy()->subSeconds(self::FUTURE_TOLERANCE_SECONDS))) {
+                    throw new CheckpointException(
+                        'CHECKPOINT_PHASE_CONFLICT',
+                        'Waktu check-in turun mendahului waktu puncak.',
+                        ['recorded_at' => $recordedAt->toISOString(), 'summit_checked_at' => $summitLog->checked_at->toISOString()]
+                    );
+                }
             }
 
             // 7. Kejadian naik yang datang terlambat setelah summit tidak membalik fase.
@@ -192,6 +228,13 @@ class CheckpointVisitService
 
         DB::transaction(function () use ($log, $target, $phase, $post) {
             $locked = gk_pendaki::whereKey($target->id)->lockForUpdate()->firstOrFail();
+            $log = GkCheckpointLog::whereKey($log->id)
+                ->where('id_pendaki', $locked->id)
+                ->where('id_booking', $locked->booking_id)
+                ->first();
+            if ($log === null) {
+                throw new CheckpointException('CHECKPOINT_NOT_FOUND', 'Check-in tidak ditemukan.', [], 404);
+            }
 
             if ($phase === TrackingPhase::Naik->value && $post->is_summit) {
                 $hasDescent = GkCheckpointLog::where('id_pendaki', $locked->id)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\CheckpointException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\ApiResponse;
 use App\Models\GkCheckpointLog;
@@ -10,10 +11,15 @@ use App\Models\gk_pendaki;
 use App\Models\gk_booking;
 use App\Services\GeoService;
 use App\Services\CheckpointTimelineService;
+use App\Services\CheckpointVisitService;
 use Illuminate\Http\Request;
 
 class CheckpointController extends Controller
 {
+    public function __construct(private CheckpointVisitService $visits)
+    {
+    }
+
     /**
      * Check-in via QR code scan.
      * POST /api/tracking/checkpoint/qr
@@ -60,29 +66,20 @@ class CheckpointController extends Controller
 
         if ($pendaki->id !== $actorPendaki->id && !GkCheckpointLog::where('id_pendaki', $actorPendaki->id)
             ->where('id_booking', $actorPendaki->booking_id)
-            ->where('id_post', $post->id)->exists()) {
+            ->where('id_post', $post->id)->where('phase', 'naik')->exists()) {
             return ApiResponse::error('Ketua tim harus check-in di pos ini terlebih dahulu', null, 403);
         }
 
-        // Prevent duplicate (same post within same booking)
-        $existing = GkCheckpointLog::where('id_pendaki', $pendaki->id)
-            ->where('id_post', $post->id)
-            ->where('id_booking', $pendaki->booking_id)
-            ->first();
-
-        if ($existing) {
-            return ApiResponse::error('Sudah check-in di pos ini', ['checked_at' => $existing->checked_at->toISOString()], 409);
+        try {
+            $log = $this->visits->recordLegacyAscent($pendaki, $post, [
+                'method' => 'qr',
+                'latitude' => $validated['latitude'] ?? null,
+                'longitude' => $validated['longitude'] ?? null,
+                'checked_at' => now(),
+            ]);
+        } catch (CheckpointException $e) {
+            return ApiResponse::error($e->getMessage(), $e->toErrors(), $e->httpStatus);
         }
-
-        $log = GkCheckpointLog::create([
-            'id_pendaki' => $pendaki->id,
-            'id_post' => $post->id,
-            'id_booking' => $pendaki->booking_id,
-            'method' => 'qr',
-            'latitude' => $validated['latitude'] ?? null,
-            'longitude' => $validated['longitude'] ?? null,
-            'checked_at' => now(),
-        ]);
 
         $progress = $this->getProgress($pendaki);
 
@@ -122,24 +119,13 @@ class CheckpointController extends Controller
             return ApiResponse::error('Hanya ketua tim yang dapat membatalkan kehadiran anggota', null, 403);
         }
 
-        // Endpoint lama tidak boleh membatalkan puncak yang sudah punya check-in turun.
-        if ($log->post?->is_summit && ($log->phase ?: 'naik') === 'naik') {
-            $hasDescent = GkCheckpointLog::where('id_pendaki', $log->id_pendaki)
-                ->where('id_booking', $log->id_booking)
-                ->where('phase', 'turun')
-                ->exists();
-            if ($hasDescent) {
-                return ApiResponse::error(
-                    'Puncak tidak dapat dibatalkan karena sudah ada check-in turun.',
-                    ['code' => 'SUMMIT_HAS_DESCENT_CHECKINS'],
-                    409
-                );
-            }
-        }
-
         $target = $log->pendaki;
         $post = $log->post;
-        $log->delete();
+        try {
+            $this->visits->cancel($log, $target);
+        } catch (CheckpointException $e) {
+            return ApiResponse::error($e->getMessage(), $e->toErrors(), $e->httpStatus);
+        }
 
         return ApiResponse::success([
             'checkpoint_log_id' => $log->id,
@@ -232,16 +218,6 @@ class CheckpointController extends Controller
             return ApiResponse::error('Pos tidak ditemukan', null, 404);
         }
 
-        // Check duplicate
-        $existing = GkCheckpointLog::where('id_pendaki', $pendaki->id)
-            ->where('id_post', $post->id)
-            ->where('id_booking', $pendaki->booking_id)
-            ->first();
-
-        if ($existing) {
-            return ApiResponse::error('Sudah check-in di pos ini', ['checked_at' => $existing->checked_at->toISOString()], 409);
-        }
-
         // Check if manual override (> 500m from post)
         $distance = GeoService::distance(
             (float) $validated['latitude'], (float) $validated['longitude'],
@@ -249,16 +225,17 @@ class CheckpointController extends Controller
         );
         $isOverride = $distance > 500;
 
-        $log = GkCheckpointLog::create([
-            'id_pendaki' => $pendaki->id,
-            'id_post' => $post->id,
-            'id_booking' => $pendaki->booking_id,
-            'method' => 'manual',
-            'latitude' => $validated['latitude'],
-            'longitude' => $validated['longitude'],
-            'is_manual_override' => $isOverride,
-            'checked_at' => now(),
-        ]);
+        try {
+            $log = $this->visits->recordLegacyAscent($pendaki, $post, [
+                'method' => 'manual',
+                'latitude' => $validated['latitude'],
+                'longitude' => $validated['longitude'],
+                'is_manual_override' => $isOverride,
+                'checked_at' => now(),
+            ]);
+        } catch (CheckpointException $e) {
+            return ApiResponse::error($e->getMessage(), $e->toErrors(), $e->httpStatus);
+        }
 
         $progress = $this->getProgress($pendaki);
 
@@ -290,7 +267,8 @@ class CheckpointController extends Controller
         $gateId = $booking->gate_masuk;
         $posts = GkPost::where('id_gate', $gateId)->where('status', true)->orderBy('urutan')->get();
 
-        $pendakiIds = $booking->pendakis()->pluck('id');
+        $booking->load('pendakis.biodata');
+        $pendakiIds = $booking->pendakis->pluck('id');
         // Endpoint lama menyajikan proyeksi NAIK saja: log turun tidak boleh
         // menaikkan persentase di atas 100% atau dipakai sebagai timestamp naik.
         $logs = GkCheckpointLog::where('id_booking', $bookingId)
