@@ -474,6 +474,13 @@ class BookingController extends Controller
         }
 
         $booking = $this->loadBooking($booking);
+
+        // Halaman tiket tidak memerlukan NIK/kontak; hindari bocor data pribadi
+        // anggota lain saat tiket dibuka oleh anggota (bukan pemilik).
+        foreach ($booking->pendakis as $pendaki) {
+            $pendaki->biodata?->setHidden(['nik', 'no_hp', 'no_hp_darurat', 'jenis_kelamin', 'tanggal_lahir']);
+        }
+
         $booking->overstay = $this->overstay->bookingSummary($booking);
         $booking->server_now = now()->setTimezone(OverstayCalculator::TZ)->toIso8601String();
         $booking->timezone = OverstayCalculator::TZ;
