@@ -14,8 +14,15 @@ class GkPost extends Model
         'mountain_status', 'water_source_status', 'camping_status', 'temperature_c',
         'distance_to_next_m', 'estimated_time_minutes', 'estimated_descent_time_minutes',
         'distance_to_summit_m',
-        'info_is_dummy', 'info_note', 'info_updated_at',
+        'info_is_dummy', 'info_note', 'info_updated_at', 'map_image_path',
     ];
+
+    protected $appends = ['map_image_url'];
+
+    public function getMapImageUrlAttribute(): ?string
+    {
+        return $this->map_image_path ? asset($this->map_image_path) : null;
+    }
 
     protected $casts = [
         'latitude' => 'decimal:8',

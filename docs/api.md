@@ -1010,3 +1010,20 @@ Data wilayah Indonesia menggunakan format dari wilayah.id.
 **Dokumentasi ini dibuat pada:** 14 April 2026  
 **Versi API:** 1.0  
 **Framework:** Laravel 11 dengan Sanctum
+
+
+### Peta posisi per pos
+
+`GET /api/tracking/posts/{gate_id}` dan `GET /api/tracking/v2/posts/{gate_id}`
+menyertakan `map_image_url` (URL absolut, atau `null` bila belum tersedia).
+Gambar mengikuti pos yang dipilih, bukan pos tujuan berikutnya. Mobile menampilkan
+peta utuh dan membuka tampilan zoom ketika diketuk.
+
+Sepuluh peta PNG jalur Kersik Tuo tersedia di
+`public/images/trail-maps/kersik-tuo/`. Jalankan migrasi
+`85_gk_posts_add_map_image_path.php`, lalu `TrailPostSeeder` untuk memasangkannya.
+Pada database kosong, jalankan `destinasi_gate` terlebih dahulu. Seeder mengikuti
+10 titik pada gambar; Batu Gantung dan Bayangan Shelter 2 lama dinonaktifkan
+tanpa menghapus ID atau riwayat. Data jarak dan durasi demo Shelter 3–Tugu Yudha
+menggabungkan dua segmen lama melalui Batu Gantung. Jalur Solok Selatan belum
+memiliki peta dan mengembalikan `map_image_url: null`.

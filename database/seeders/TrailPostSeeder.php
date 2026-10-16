@@ -21,9 +21,8 @@ class TrailPostSeeder extends Seeder
         'Pondok Panorama' => ['Tersedia', 'Belum diketahui', 15, 1300, 60, 4800, 45],
         'Shelter 1' => ['Tersedia', 'Boleh', 13, 1200, 75, 3500, 60],
         'Shelter 2' => ['Tersedia', 'Boleh', 10, 600, 45, 2300, 75],
-        'Shelter 3' => ['Tersedia', 'Boleh', 8, 800, 60, 1700, 45],
-        'Batu Gantung' => ['Tidak tersedia', 'Tidak boleh', 6, 500, 30, 900, 55],
-        'Tugu Yudha' => ['Tidak tersedia', 'Tidak boleh', 5, 400, 25, 400, 30],
+        'Shelter 3' => ['Tersedia', 'Boleh', 8, 1300, 90, 1700, 45],
+        'Tugu Yudha' => ['Tidak tersedia', 'Tidak boleh', 5, 400, 25, 400, 85],
         'Puncak Kerinci' => ['Tidak tersedia', 'Tidak boleh', 4, 0, 0, 0, 25],
         'Pos 1 Solok' => ['Belum diketahui', 'Tidak boleh', 18, 1800, 60, 5100, null],
         'Pos 2 Solok' => ['Tersedia', 'Boleh', 12, 1600, 70, 3300, 60],
@@ -46,8 +45,8 @@ class TrailPostSeeder extends Seeder
         // ESTIMATES for development, read approximately from the 2020.1 trail map.
         // https://www.gunungbagging.com/wp-content/maps/peta-jalur-pendakian-gunung-kerinci.pdf
         // Names, order and elevations follow the author's latest list.
-        // Kersik Tuo is an estimated approach/basecamp point; Batu Gantung is
-        // interpolated between Shelter 3 and Tugu Yudha. No field survey yet.
+        // The ten active points follow the supplied position maps.
+        // Kersik Tuo is an estimated approach/basecamp point. No field survey yet.
         $kersikTuoPosts = [
             ['nama' => 'Kersik Tuo', 'urutan' => 1, 'latitude' => -1.7650, 'longitude' => 101.2650, 'altitude' => 1605, 'radius_meter' => 150],
             ['nama' => 'Pintu Rimba', 'urutan' => 2, 'latitude' => -1.7483, 'longitude' => 101.2594, 'altitude' => 1809, 'radius_meter' => 150],
@@ -57,9 +56,21 @@ class TrailPostSeeder extends Seeder
             ['nama' => 'Shelter 1', 'urutan' => 6, 'latitude' => -1.7204, 'longitude' => 101.2636, 'altitude' => 2505, 'radius_meter' => 150],
             ['nama' => 'Shelter 2', 'urutan' => 7, 'latitude' => -1.7096, 'longitude' => 101.2675, 'altitude' => 3056, 'radius_meter' => 150],
             ['nama' => 'Shelter 3', 'urutan' => 8, 'latitude' => -1.7056, 'longitude' => 101.2673, 'altitude' => 3290, 'radius_meter' => 150],
-            ['nama' => 'Batu Gantung', 'urutan' => 9, 'latitude' => -1.7029, 'longitude' => 101.2652, 'altitude' => 3528, 'radius_meter' => 150],
-            ['nama' => 'Tugu Yudha', 'urutan' => 10, 'latitude' => -1.6992, 'longitude' => 101.2642, 'altitude' => 3673, 'radius_meter' => 150],
-            ['nama' => 'Puncak Kerinci', 'urutan' => 11, 'latitude' => -1.6974, 'longitude' => 101.2661, 'altitude' => 3805, 'radius_meter' => 200],
+            ['nama' => 'Tugu Yudha', 'urutan' => 9, 'latitude' => -1.6992, 'longitude' => 101.2642, 'altitude' => 3673, 'radius_meter' => 150],
+            ['nama' => 'Puncak Kerinci', 'urutan' => 10, 'latitude' => -1.6974, 'longitude' => 101.2661, 'altitude' => 3805, 'radius_meter' => 200],
+        ];
+
+        $mapImages = [
+            'Kersik Tuo' => 'kersik-tuo.png',
+            'Pintu Rimba' => 'pintu-rimba.png',
+            'Bangku Panjang' => 'pos-1-bangku-panjang.png',
+            'Batu Lumut' => 'pos-2-batu-lumut.png',
+            'Pondok Panorama' => 'pos-3-pondok-panorama.png',
+            'Shelter 1' => 'shelter-1.png',
+            'Shelter 2' => 'shelter-2.png',
+            'Shelter 3' => 'shelter-3.png',
+            'Tugu Yudha' => 'tugu-yudha.png',
+            'Puncak Kerinci' => 'puncak-kerinci.png',
         ];
 
         $aliases = [
@@ -112,11 +123,12 @@ class TrailPostSeeder extends Seeder
             if ((bool) $created->is_summit !== $isSummit) {
                 $created->update(['is_summit' => $isSummit]);
             }
+            $created->update(['map_image_path' => 'images/trail-maps/kersik-tuo/' . $mapImages[$post['nama']]]);
             $this->seedDemoInfo($created);
         }
 
         // Retain old IDs and attendance history; omit this point from the active route.
-        GkPost::where('id_gate', $kersikGate->id)->where('nama', 'Bayangan Shelter 2')->update(['status' => false]);
+        GkPost::where('id_gate', $kersikGate->id)->whereIn('nama', ['Bayangan Shelter 2', 'Batu Gantung'])->update(['status' => false]);
 
         // Gate 2: Solok Selatan route
         $solokPosts = [
@@ -146,7 +158,7 @@ class TrailPostSeeder extends Seeder
             $this->seedDemoInfo($created);
         }
 
-        $this->command?->info('Trail posts seeded: 11 (Kersik Tuo) + 4 (Solok Selatan). Koordinat Kersik Tuo masih perkiraan.');
+        $this->command?->info('Trail posts seeded: 10 (Kersik Tuo) + 4 (Solok Selatan). Koordinat Kersik Tuo masih perkiraan.');
     }
 
     private function seedDemoInfo(GkPost $post): void

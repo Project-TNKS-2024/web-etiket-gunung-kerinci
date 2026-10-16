@@ -15,7 +15,7 @@ class TrailPostSeederTest extends TestCase
     private const NAMES = [
         'Kersik Tuo', 'Pintu Rimba', 'Bangku Panjang', 'Batu Lumut',
         'Pondok Panorama', 'Shelter 1', 'Shelter 2', 'Shelter 3',
-        'Batu Gantung', 'Tugu Yudha', 'Puncak Kerinci',
+        'Tugu Yudha', 'Puncak Kerinci',
     ];
 
     protected function setUp(): void
@@ -32,17 +32,19 @@ class TrailPostSeederTest extends TestCase
         ]);
     }
 
-    public function test_seeds_eleven_ordered_posts_with_estimated_coordinates_on_the_correct_gate(): void
+    public function test_seeds_ten_ordered_posts_with_estimated_coordinates_on_the_correct_gate(): void
     {
         $this->seed(TrailPostSeeder::class);
         $posts = GkPost::where('id_gate', 10)->orderBy('urutan')->get();
         $this->assertSame(self::NAMES, $posts->pluck('nama')->all());
-        $this->assertSame(range(1, 11), $posts->pluck('urutan')->all());
-        $this->assertSame([1605, 1809, 1890, 2010, 2367, 2505, 3056, 3290, 3528, 3673, 3805], $posts->pluck('altitude')->all());
+        $this->assertSame(range(1, 10), $posts->pluck('urutan')->all());
+        $this->assertSame([1605, 1809, 1890, 2010, 2367, 2505, 3056, 3290, 3673, 3805], $posts->pluck('altitude')->all());
         foreach ($posts as $post) {
             $this->assertSame('TNKS_CHECKPOINT:' . $post->id, $post->qr_code_value);
             $this->assertStringContainsString('perkiraan', $post->detail);
             $this->assertTrue($post->status);
+            $this->assertFileExists(public_path($post->map_image_path));
+            $this->assertSame(asset($post->map_image_path), $post->map_image_url);
             $this->assertGreaterThan(-1.78, (float) $post->latitude);
             $this->assertLessThan(-1.69, (float) $post->latitude);
             $this->assertGreaterThan(101.25, (float) $post->longitude);
@@ -58,7 +60,7 @@ class TrailPostSeederTest extends TestCase
         $before = GkPost::orderBy('id')->get()->toArray();
         $this->seed(TrailPostSeeder::class);
         $this->assertSame($before, GkPost::orderBy('id')->get()->toArray());
-        $this->assertSame(15, GkPost::count());
+        $this->assertSame(14, GkPost::count());
     }
 
     public function test_updates_legacy_names_and_samples_while_preserving_existing_qr_and_admin_coordinates(): void
@@ -96,7 +98,7 @@ class TrailPostSeederTest extends TestCase
         foreach (['id', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'qr_code_value', 'status', 'detail'] as $field) {
             $this->assertSame($beforeSolok[$field], $solok->fresh()->toArray()[$field]);
         }
-        $this->assertSame(11, GkPost::where('id_gate', 10)->count());
+        $this->assertSame(10, GkPost::where('id_gate', 10)->count());
         $this->assertDatabaseMissing('gk_posts', ['id_gate' => 10, 'nama' => 'Pos 1']);
     }
 
@@ -118,17 +120,17 @@ class TrailPostSeederTest extends TestCase
         $this->assertDatabaseMissing('gk_posts', ['nama' => 'Kersik Tuo']);
     }
 
-    public function test_retires_bayangan_shelter_two_without_deleting_its_id_or_qr(): void
+    public function test_retires_batu_gantung_without_deleting_its_id_or_qr(): void
     {
         $old = GkPost::create([
-            'nama' => 'Bayangan Shelter 2', 'urutan' => 7, 'latitude' => -1.7136, 'longitude' => 101.2652,
+            'nama' => 'Batu Gantung', 'urutan' => 9, 'latitude' => -1.7136, 'longitude' => 101.2652,
             'id_gate' => 10, 'qr_code_value' => 'OLD-BAYANGAN-QR', 'status' => true,
         ]);
         $this->seed(TrailPostSeeder::class);
         $this->assertFalse($old->fresh()->status);
         $this->assertSame('OLD-BAYANGAN-QR', $old->fresh()->qr_code_value);
         $this->assertSame(self::NAMES, GkPost::where('id_gate', 10)->where('status', true)->orderBy('urutan')->pluck('nama')->all());
-        $this->assertSame(12, GkPost::where('id_gate', 10)->count());
+        $this->assertSame(11, GkPost::where('id_gate', 10)->count());
     }
 
     public function test_demo_info_does_not_replace_existing_non_dummy_information(): void
