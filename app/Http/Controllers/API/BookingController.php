@@ -497,6 +497,14 @@ class BookingController extends Controller
             ->get()
             ->map(function ($booking) {
                 $booking = $this->loadBooking($booking);
+
+                // Daftar tiket tidak memerlukan NIK/kontak; hindari bocor data
+                // pribadi anggota lain saat booking dibuka oleh anggota (bukan
+                // pemilik), konsisten dengan endpoint /tiket.
+                foreach ($booking->pendakis as $pendaki) {
+                    $pendaki->biodata?->setHidden(['nik', 'no_hp', 'no_hp_darurat', 'jenis_kelamin', 'tanggal_lahir']);
+                }
+
                 $booking->overstay = $this->overstay->bookingSummary($booking);
                 return $booking;
             });
