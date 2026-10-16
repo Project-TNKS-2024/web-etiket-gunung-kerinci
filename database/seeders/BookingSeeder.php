@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\helper\BookingHelperController;
 use App\Models\bio_pendaki;
 use App\Models\gk_booking;
 use App\Models\destinasi;
@@ -15,6 +16,8 @@ use Illuminate\Database\Seeder;
 
 class BookingSeeder extends Seeder
 {
+    private const DEMO_DESCRIPTION = 'Data demo seeding: pendakian aktif untuk uji fitur pelacakan jejak.';
+
     /**
      * Booking demo siap sidang: Satria + Mukhtada dalam keadaan sedang mendaki
      * (status_booking = 6). Tanpa ini semua endpoint tracking/checkpoint
@@ -24,6 +27,20 @@ class BookingSeeder extends Seeder
      */
     public function run(): void
     {
+        // Lengkapi booking demo lama tanpa mengulang check-in atau mengganti kode yang ada.
+        $demoOwner = User::where('email', 'satria@gmail.com')->first();
+        if ($demoOwner) {
+            gk_booking::where('id_user', $demoOwner->id)
+                ->where('status_booking', 6)
+                ->where('keterangan', self::DEMO_DESCRIPTION)
+                ->get()
+                ->each(function (gk_booking $booking): void {
+                    if (blank($booking->unique_code)) {
+                        $booking->update(['unique_code' => $this->generateTicketCode()]);
+                    }
+                });
+        }
+
         if (gk_booking::where('status_booking', 6)->exists()) {
             $this->command?->info('BookingSeeder: booking aktif sudah ada, dilewati.');
             return;
@@ -72,7 +89,8 @@ class BookingSeeder extends Seeder
             'status_booking' => 6, // Check-in / sedang mendaki
             'total_pembayaran' => $tagihanPerPendaki * $pendakiUsers->count(),
             'status_pembayaran' => 1,
-            'keterangan' => 'Data demo seeding: pendakian aktif untuk uji fitur pelacakan jejak.',
+            'unique_code' => $this->generateTicketCode(),
+            'keterangan' => self::DEMO_DESCRIPTION,
         ]);
 
         foreach ($pendakiUsers as $user) {
@@ -99,5 +117,15 @@ class BookingSeeder extends Seeder
             'BookingSeeder: 1 booking aktif (status_booking=6) + %d pendaki dibuat (gate Desa Kersik Tuo).',
             $pendakiUsers->count()
         ));
+    }
+
+    private function generateTicketCode(): string
+    {
+        $helper = app(BookingHelperController::class);
+        do {
+            $code = $helper->generateCode(10);
+        } while (gk_booking::where('unique_code', $code)->exists());
+
+        return $code;
     }
 }
