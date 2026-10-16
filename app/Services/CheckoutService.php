@@ -89,8 +89,9 @@ class CheckoutService
             throw new InvalidArgumentException('Alasan wajib diisi bila waktu turun diubah dari waktu sekarang');
         }
 
-        $pendaki->actual_checkout_at = $actual;
-        $pendaki->checkout_recorded_at = $now;
+        // Eloquent menyimpan tanggal tanpa offset dan membacanya dalam timezone aplikasi.
+        $pendaki->actual_checkout_at = $actual->copy()->setTimezone(config('app.timezone'));
+        $pendaki->checkout_recorded_at = $now->copy()->setTimezone(config('app.timezone'));
         $pendaki->checkout_recorded_by = $admin->id;
         $pendaki->checkout_reason = $reason ?: null;
         $pendaki->save();
@@ -98,7 +99,7 @@ class CheckoutService
         statusPendaki::create([
             'id_pendaki' => $pendaki->id,
             'status' => 3,
-            'detail' => 'Melakukan pendakian',
+            'detail' => 'Selesai melakukan pendakian',
             'validator' => $admin->id,
         ]);
 
@@ -151,9 +152,8 @@ class CheckoutService
                 'scheduled_exit_date' => $booking->tanggal_keluar,
                 'actual_checkout_at' => $actual->toIso8601String(),
             ],
-            'finalized_at' => $now,
+            'finalized_at' => $now->copy()->setTimezone(config('app.timezone')),
             'finalized_by' => $admin->id,
-            'version' => 1,
         ]);
 
         foreach ($payload['items'] as $item) {

@@ -170,7 +170,7 @@ class OverstayCalculator
      */
     public function summary(gk_pendaki $pendaki, ?CarbonInterface $now = null, ?array $holidays = null): array
     {
-        $now = ($now ?? Carbon::now())->setTimezone(self::TZ);
+        $now = ($now ?? Carbon::now())->copy()->setTimezone(self::TZ);
 
         $pendaki->loadMissing(['booking', 'biodata', 'getStatus', 'tarifSnapshot', 'overstayCharge.items', 'overstayCharge.payment']);
 
@@ -247,7 +247,7 @@ class OverstayCalculator
 
         $holidays ??= $this->holidayDates(
             Carbon::createFromFormat('Y-m-d', $scheduledExitDate, self::TZ)->startOfDay()->addDay()->toDateString(),
-            $effectiveEnd->setTimezone(self::TZ)->startOfDay()->toDateString()
+            $effectiveEnd->copy()->setTimezone(self::TZ)->startOfDay()->toDateString()
         );
 
         $computed = $this->compute(
@@ -357,7 +357,7 @@ class OverstayCalculator
      */
     public function bookingSummary(gk_booking $booking, ?CarbonInterface $now = null): array
     {
-        $now = ($now ?? Carbon::now())->setTimezone(self::TZ);
+        $now = ($now ?? Carbon::now())->copy()->setTimezone(self::TZ);
 
         $booking->loadMissing([
             'pendakis.biodata',
@@ -369,7 +369,7 @@ class OverstayCalculator
         ]);
 
         $holidayStart = Carbon::createFromFormat('Y-m-d', $booking->tanggal_keluar, self::TZ)->startOfDay()->addDay()->toDateString();
-        $holidayEnd = $now->startOfDay()->toDateString();
+        $holidayEnd = $now->copy()->startOfDay()->toDateString();
         $holidays = $holidayStart <= $holidayEnd ? $this->holidayDates($holidayStart, $holidayEnd) : [];
 
         $pendakis = $booking->pendakis->map(fn (gk_pendaki $p) => $this->summary($p, $now, $holidays))->values();

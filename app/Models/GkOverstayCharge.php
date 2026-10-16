@@ -24,7 +24,6 @@ class GkOverstayCharge extends Model
         'snapshot',
         'finalized_at',
         'finalized_by',
-        'version',
     ];
 
     protected $casts = [

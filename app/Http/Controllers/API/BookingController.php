@@ -76,7 +76,7 @@ class BookingController extends Controller
             'destinasi:destinasis.id,destinasis.nama,destinasis.status,destinasis.statusGunung,destinasis.kategori,destinasis.lokasi,destinasis.detail,destinasis.sop',
             'gateMasuk:id,nama,status,id_destinasi,max_pendaki_hari,min_pendaki_booking,lokasi,lokasi_maps,detail',
             'gateKeluar:id,nama,status,id_destinasi,max_pendaki_hari,min_pendaki_booking,lokasi,lokasi_maps,detail',
-            'pendakis:id,booking_id,tagihan,id_bio,usia,lampiran_surat_izin_ortu',
+            'pendakis:id,booking_id,tagihan,id_bio,usia,lampiran_surat_izin_ortu,checkin_at,actual_checkout_at',
             'pendakis.biodata:id,nik,kenegaraan,first_name,last_name,no_hp,no_hp_darurat,jenis_kelamin,tanggal_lahir,verified',
             'pembayaran:id,id_booking,amount,status,payment_method,bukti_pembayaran,deadline,keterangan',
         ]);

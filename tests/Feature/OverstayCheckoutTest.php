@@ -10,6 +10,7 @@ use App\Models\statusPendaki;
 use App\Models\User;
 use App\Services\AdditionalChargePaymentService;
 use App\Services\CheckoutService;
+use App\Services\OverstayCalculator;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,8 @@ class OverstayCheckoutTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        config(['app.timezone' => 'UTC']);
+        date_default_timezone_set('UTC');
         $now = now();
 
         $this->admin = User::create(['email' => 'admin@test.id', 'password' => 'password', 'role' => 'admin']);
@@ -49,7 +52,7 @@ class OverstayCheckoutTest extends TestCase
         ]);
 
         $this->booking = gk_booking::create([
-            'id_user' => $this->admin->id, 'id_tiket' => $tiket,
+            'id_user' => $this->admin->id, 'id_tiket' => $pkg,
             'tanggal_masuk' => '2026-10-17', 'tanggal_keluar' => '2026-10-19',
             'total_hari' => 3, 'total_pendaki_wni' => 1, 'total_pendaki_wna' => 0,
             'gate_masuk' => $gate, 'gate_keluar' => $gate, 'status_booking' => 6, 'total_pembayaran' => 0,
@@ -62,7 +65,7 @@ class OverstayCheckoutTest extends TestCase
             'id_pendaki' => $this->pendaki->id, 'kategori' => 'wni', 'harga_masuk_wk' => 50000, 'harga_masuk_wd' => 40000,
             'source' => 'snapshot', 'created_at' => $now, 'updated_at' => $now,
         ]);
-        $this->pendaki->update(['checkin_at' => Carbon::parse('2026-10-17 08:00:00', 'Asia/Jakarta')]);
+        $this->pendaki->update(['checkin_at' => Carbon::parse('2026-10-17 08:00:00', 'Asia/Jakarta')->utc()]);
     }
 
     private function checkoutAt(string $time): void
@@ -78,6 +81,99 @@ class OverstayCheckoutTest extends TestCase
         $this->checkoutAt('2026-10-19 23:30:00');
         $this->assertSame(0, GkOverstayCharge::count());
         $this->assertNotNull($this->pendaki->fresh()->actual_checkout_at);
+    }
+
+    public function test_on_time_checkout_stays_on_time_after_database_reload(): void
+    {
+        $this->checkoutAt('2026-10-19 23:30:00');
+
+        $pendaki = $this->pendaki->fresh();
+        $this->assertSame('2026-10-19T23:30:00+07:00', $pendaki->actual_checkout_at->setTimezone('Asia/Jakarta')->toIso8601String());
+        $summary = app(OverstayCalculator::class)->summary($pendaki);
+        $this->assertSame(0, $summary['overdue_days']);
+        $this->assertSame(0, $summary['amount']);
+        $this->assertSame('none', $summary['payment_state']);
+    }
+
+    public function test_checkin_controller_preserves_time_and_allows_same_morning_checkout(): void
+    {
+        $this->pendaki->getStatus()->delete();
+        $this->travelTo(Carbon::parse('2026-10-17 08:00:00', 'Asia/Jakarta')->utc());
+        $this->actingAs($this->admin)->withoutMiddleware()
+            ->post('/admin/destinasi/booking/updateStatus', [
+                'booking_id' => $this->booking->id, 'name' => 2,
+                'pendakis' => [$this->pendaki->id => 1],
+            ])->assertSessionHasNoErrors();
+
+        $this->assertSame('2026-10-17T08:00:00+07:00', $this->pendaki->fresh()->checkin_at->setTimezone('Asia/Jakarta')->toIso8601String());
+        $this->checkoutAt('2026-10-17 10:00:00');
+        $this->assertSame(3, (int) $this->pendaki->fresh()->getStatus->last()->status);
+    }
+
+    public function test_legacy_checkout_cannot_bypass_finalization(): void
+    {
+        $this->travelTo(Carbon::parse('2026-10-20 06:00:00', 'Asia/Jakarta')->utc());
+        $this->actingAs($this->admin)->withoutMiddleware()
+            ->post('/admin/destinasi/booking/updateStatus', [
+                'booking_id' => $this->booking->id, 'name' => 3,
+                'pendakis' => [$this->pendaki->id => 1],
+            ])->assertSessionHasErrors('name');
+
+        $this->assertSame(2, (int) $this->pendaki->fresh()->getStatus->last()->status);
+        $this->assertNull($this->pendaki->fresh()->actual_checkout_at);
+    }
+
+    public function test_legacy_undo_cannot_remove_paid_checkout(): void
+    {
+        $this->checkoutAt('2026-10-20 06:00:00');
+        $charge = GkOverstayCharge::where('id_pendaki', $this->pendaki->id)->firstOrFail();
+        app(AdditionalChargePaymentService::class)->record($this->booking, $charge, 'Tunai', $this->admin);
+
+        $this->actingAs($this->admin)->withoutMiddleware()
+            ->post('/admin/destinasi/booking/updateStatus', [
+                'booking_id' => $this->booking->id, 'name' => 3,
+                'pendakis' => [$this->pendaki->id => 0],
+            ])->assertSessionHasErrors('name');
+
+        $this->assertSame(3, (int) $this->pendaki->fresh()->getStatus->last()->status);
+        $this->assertNotNull($this->pendaki->fresh()->actual_checkout_at);
+        $this->assertSame(40000, $charge->fresh()->payment->amount);
+    }
+
+    public function test_booking_summary_preserves_server_time(): void
+    {
+        $now = Carbon::parse('2026-10-20 14:15:00', 'Asia/Jakarta');
+        $summary = app(OverstayCalculator::class)->bookingSummary($this->booking, $now);
+        $this->assertSame('2026-10-20T14:15:00+07:00', $summary['server_now']);
+        $this->assertSame('14:15', $now->format('H:i'));
+    }
+
+    public function test_checkout_form_and_ticket_api_preserve_late_evening_return(): void
+    {
+        $this->travelTo(Carbon::parse('2026-10-19 23:30:00', 'Asia/Jakarta')->utc());
+        $this->actingAs($this->admin)->withoutMiddleware()
+            ->post('/admin/destinasi/booking/checkout', [
+                'booking_id' => $this->booking->id,
+                'checkout' => [$this->pendaki->id => '2026-10-19T23:30'],
+            ])->assertSessionHasNoErrors();
+
+        $this->getJson('/api/booking/'.$this->booking->id.'/tiket')
+            ->assertOk()
+            ->assertJsonPath('data.overstay.pendakis.0.actual_checkout_at', '2026-10-19T23:30:00+07:00')
+            ->assertJsonPath('data.overstay.pendakis.0.amount', 0)
+            ->assertJsonPath('data.overstay.pendakis.0.payment_state', 'none');
+    }
+
+    public function test_payment_timestamp_survives_reload_in_wib(): void
+    {
+        $this->checkoutAt('2026-10-20 06:00:00');
+        $charge = GkOverstayCharge::where('id_pendaki', $this->pendaki->id)->firstOrFail();
+        $paidAt = Carbon::parse('2026-10-20 06:30:00', 'Asia/Jakarta');
+        $payment = app(AdditionalChargePaymentService::class)->record(
+            $this->booking, $charge, 'Tunai', $this->admin, paidAt: $paidAt
+        );
+        $this->assertSame('2026-10-20T06:30:00+07:00', $payment->fresh()->paid_at->setTimezone('Asia/Jakarta')->toIso8601String());
+        $this->assertSame('2026-10-20T06:00:00+07:00', $charge->fresh()->finalized_at->setTimezone('Asia/Jakarta')->toIso8601String());
     }
 
     public function test_checkout_next_day_creates_weekday_charge(): void

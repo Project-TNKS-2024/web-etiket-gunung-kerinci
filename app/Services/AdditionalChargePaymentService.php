@@ -49,7 +49,7 @@ class AdditionalChargePaymentService
                 'id_overstay_charge' => $charge->id,
                 'amount' => $charge->total,
                 'method' => $method,
-                'paid_at' => $paidAt,
+                'paid_at' => $paidAt->copy()->setTimezone(config('app.timezone')),
                 'recorded_by' => $admin->id,
                 'reference' => $reference,
                 'note' => $note,

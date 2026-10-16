@@ -302,7 +302,8 @@ class bookingController extends AdminController
     {
         $request->validate([
             'booking_id' => 'required|uuid|exists:gk_bookings,id',
-            'name' => 'required|integer|in:0,1,2,3,4',
+            // Cek out hanya melalui checkoutAction agar waktu dan biaya selalu tercatat.
+            'name' => 'required|integer|in:0,1,2,4',
             'pendakis' => 'nullable|array',
             'pendakis.*' => 'nullable|in:0,1'
         ]);
@@ -318,7 +319,7 @@ class bookingController extends AdminController
         $message = [];
 
         // jika tanggal masuk < hari ini, cuma bisa memberi konfirmasi batal pendakian
-        if ($booking->tanggal_masuk > date('Y-m-d')) {
+        if ($booking->tanggal_masuk > Carbon::now(OverstayCalculator::TZ)->toDateString()) {
             if ($request->name != 0) {
                 return redirect()->back()->withErrors('Tidak bisa mengubah status booking');
             }
@@ -330,9 +331,6 @@ class bookingController extends AdminController
                     break;
                 case '2':
                     $message += $this->pendakiCekIn($booking, $request->pendakis);
-                    break;
-                case '3':
-                    $message += $this->pendakiCekOut($booking, $request->pendakis);
                     break;
                 case '4':
                     $message += $this->bookingSelesai($booking);
@@ -430,7 +428,7 @@ class bookingController extends AdminController
                         'validator' =>  $this->userAdmin()->id,
                     ]);
                     // Bekukan waktu masuk dan dasar tarif tambahan saat check-in.
-                    $pendaki->update(['checkin_at' => Carbon::now()->setTimezone(OverstayCalculator::TZ)]);
+                    $pendaki->update(['checkin_at' => Carbon::now(config('app.timezone'))]);
                     $this->freezeTarifSnapshot($pendaki);
                     $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
                 }
@@ -481,57 +479,6 @@ class bookingController extends AdminController
             ]
         );
     }
-    private function pendakiCekOut($booking, $pendakis)
-    {
-        $booking->load('pendakis.getStatus');
-        $messages = [];
-        foreach ($pendakis as $idPendaki => $statusPendaki) {
-            $pendaki = $booking->pendakis->where('id', $idPendaki)->first();
-            $lastStatus = $pendaki->getStatus->last();
-
-            if (empty($lastStatus)) {
-                if ($statusPendaki == 1) {
-                    $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' gagal diupdate';
-                }
-            } elseif ($lastStatus->status == 1) {
-                $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' tidak dapat diterima, karna sudah ' . $lastStatus->statusName();
-            } elseif ($lastStatus->status == 2) {
-                if ($statusPendaki == 1) {
-                    statusPendaki::create([
-                        'id_pendaki' => $pendaki->id,
-                        'status' => 3,
-                        'detail' => 'Melakukan pendakian',
-                        'validator' =>  $this->userAdmin()->id,
-                    ]);
-                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
-                }
-            } elseif ($lastStatus->status == 3) {
-                if ($statusPendaki == 0) {
-                    $lastStatus->delete();
-                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil dihapus';
-                } else {
-                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' sudah ' . $lastStatus->statusName();
-                }
-            }
-        }
-
-
-        $booking->refresh();
-        $semuaSelesai = $booking->pendakis->every(function ($pendaki) {
-            $lastStatus = $pendaki->getStatus->last();
-            return $lastStatus && in_array($lastStatus->status, [1, 3]);
-        });
-
-        // Jika semua pendaki sudah selesai (Cek Out atau Batal), update status booking menjadi 7
-        if ($semuaSelesai) {
-            $booking->update(['status_booking' => 7]);
-        } else {
-            $booking->update(['status_booking' => 6]);
-        }
-
-        return $messages;
-    }
-
 
     public function showStruk($id)
     {
