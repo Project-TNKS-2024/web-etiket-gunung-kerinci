@@ -29,6 +29,8 @@ class gk_pendaki extends Model
         'checkout_recorded_at',
         'checkout_recorded_by',
         'checkout_reason',
+        // Fase perjalanan pendaki pada booking ini ("naik"/"turun").
+        'tracking_phase',
 
     ];
 

@@ -9,24 +9,28 @@ use Illuminate\Support\Facades\DB;
 
 class TrailPostSeeder extends Seeder
 {
-    // DATA DEMO: [sumber air, berkemah, suhu C, jarak berikutnya m, waktu menit, jarak puncak m].
+    // DATA DEMO: [sumber air, berkemah, suhu C, jarak berikutnya m, waktu menit,
+    //              jarak puncak m, durasi turun menit].
     // Angka ditentukan langsung, bukan hasil pengukuran atau perhitungan jalur.
+    // Durasi turun (elemen ke-7) adalah durasi pos ini -> pos berurutan tepat sebelumnya.
     private const DEMO_INFO = [
-        'Kersik Tuo' => ['Tersedia', 'Boleh', 20, 2000, 45, 9400],
-        'Pintu Rimba' => ['Belum diketahui', 'Tidak boleh', 19, 900, 30, 7400],
-        'Bangku Panjang' => ['Tidak tersedia', 'Tidak boleh', 18, 700, 25, 6500],
-        'Batu Lumut' => ['Tersedia', 'Tidak boleh', 17, 1000, 40, 5800],
-        'Pondok Panorama' => ['Tersedia', 'Belum diketahui', 15, 1300, 60, 4800],
-        'Shelter 1' => ['Tersedia', 'Boleh', 13, 1200, 75, 3500],
-        'Shelter 2' => ['Tersedia', 'Boleh', 10, 600, 45, 2300],
-        'Shelter 3' => ['Tersedia', 'Boleh', 8, 800, 60, 1700],
-        'Batu Gantung' => ['Tidak tersedia', 'Tidak boleh', 6, 500, 30, 900],
-        'Tugu Yudha' => ['Tidak tersedia', 'Tidak boleh', 5, 400, 25, 400],
-        'Puncak Kerinci' => ['Tidak tersedia', 'Tidak boleh', 4, 0, 0, 0],
-        'Pos 1 Solok' => ['Belum diketahui', 'Tidak boleh', 18, 1800, 60, 5100],
-        'Pos 2 Solok' => ['Tersedia', 'Boleh', 12, 1600, 70, 3300],
-        'Pos 3 Solok' => ['Belum diketahui', 'Boleh', 9, 1700, 90, 1700],
+        'Kersik Tuo' => ['Tersedia', 'Boleh', 20, 2000, 45, 9400, null],
+        'Pintu Rimba' => ['Belum diketahui', 'Tidak boleh', 19, 900, 30, 7400, 50],
+        'Bangku Panjang' => ['Tidak tersedia', 'Tidak boleh', 18, 700, 25, 6500, 30],
+        'Batu Lumut' => ['Tersedia', 'Tidak boleh', 17, 1000, 40, 5800, 30],
+        'Pondok Panorama' => ['Tersedia', 'Belum diketahui', 15, 1300, 60, 4800, 45],
+        'Shelter 1' => ['Tersedia', 'Boleh', 13, 1200, 75, 3500, 60],
+        'Shelter 2' => ['Tersedia', 'Boleh', 10, 600, 45, 2300, 75],
+        'Shelter 3' => ['Tersedia', 'Boleh', 8, 800, 60, 1700, 45],
+        'Batu Gantung' => ['Tidak tersedia', 'Tidak boleh', 6, 500, 30, 900, 55],
+        'Tugu Yudha' => ['Tidak tersedia', 'Tidak boleh', 5, 400, 25, 400, 30],
+        'Puncak Kerinci' => ['Tidak tersedia', 'Tidak boleh', 4, 0, 0, 0, 25],
+        'Pos 1 Solok' => ['Belum diketahui', 'Tidak boleh', 18, 1800, 60, 5100, null],
+        'Pos 2 Solok' => ['Tersedia', 'Boleh', 12, 1600, 70, 3300, 60],
+        'Pos 3 Solok' => ['Belum diketahui', 'Boleh', 9, 1700, 90, 1700, 70],
     ];
+
+    private const SUMMIT_NAMES = ['Puncak Kerinci', 'Puncak Gunung Kerinci'];
 
     public function run(): void
     {
@@ -103,6 +107,11 @@ class TrailPostSeeder extends Seeder
             if (!$created->qr_code_value || $created->qr_code_value === 'PLACEHOLDER') {
                 $created->update(['qr_code_value' => 'TNKS_CHECKPOINT:' . $created->id]);
             }
+            // Tandai puncak jalur dari nama (bukan urutan/altitude), idempoten.
+            $isSummit = in_array($post['nama'], self::SUMMIT_NAMES, true);
+            if ((bool) $created->is_summit !== $isSummit) {
+                $created->update(['is_summit' => $isSummit]);
+            }
             $this->seedDemoInfo($created);
         }
 
@@ -130,6 +139,10 @@ class TrailPostSeeder extends Seeder
             if ($created->qr_code_value === 'PLACEHOLDER') {
                 $created->update(['qr_code_value' => 'TNKS_CHECKPOINT:' . $created->id]);
             }
+            $isSummit = in_array($post['nama'], self::SUMMIT_NAMES, true);
+            if ((bool) $created->is_summit !== $isSummit) {
+                $created->update(['is_summit' => $isSummit]);
+            }
             $this->seedDemoInfo($created);
         }
 
@@ -144,12 +157,13 @@ class TrailPostSeeder extends Seeder
             || ($post->camping_status ?? 'Belum diketahui') !== 'Belum diketahui'
             || $post->temperature_c !== null || $post->distance_to_next_m !== null
             || $post->estimated_time_minutes !== null || $post->distance_to_summit_m !== null
+            || $post->estimated_descent_time_minutes !== null
             || $post->info_note !== null || $post->info_updated_at !== null;
         if (!$post->info_is_dummy && $hasInfo) {
             return;
         }
 
-        [$water, $camping, $temperature, $distance, $minutes, $summit] = self::DEMO_INFO[$post->nama];
+        [$water, $camping, $temperature, $distance, $minutes, $summit, $descent] = self::DEMO_INFO[$post->nama];
         $info = [
             'mountain_status' => 'Normal',
             'water_source_status' => $water,
@@ -157,6 +171,7 @@ class TrailPostSeeder extends Seeder
             'temperature_c' => $temperature,
             'distance_to_next_m' => $distance,
             'estimated_time_minutes' => $minutes,
+            'estimated_descent_time_minutes' => $descent,
             'distance_to_summit_m' => $summit,
             'info_is_dummy' => true,
             'info_note' => 'DATA DEMO: contoh untuk pengembangan, bukan kondisi lapangan, prakiraan cuaca, atau izin berkemah yang sebenarnya.',

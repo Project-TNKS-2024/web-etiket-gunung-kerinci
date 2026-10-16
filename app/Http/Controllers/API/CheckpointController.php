@@ -122,6 +122,21 @@ class CheckpointController extends Controller
             return ApiResponse::error('Hanya ketua tim yang dapat membatalkan kehadiran anggota', null, 403);
         }
 
+        // Endpoint lama tidak boleh membatalkan puncak yang sudah punya check-in turun.
+        if ($log->post?->is_summit && ($log->phase ?: 'naik') === 'naik') {
+            $hasDescent = GkCheckpointLog::where('id_pendaki', $log->id_pendaki)
+                ->where('id_booking', $log->id_booking)
+                ->where('phase', 'turun')
+                ->exists();
+            if ($hasDescent) {
+                return ApiResponse::error(
+                    'Puncak tidak dapat dibatalkan karena sudah ada check-in turun.',
+                    ['code' => 'SUMMIT_HAS_DESCENT_CHECKINS'],
+                    409
+                );
+            }
+        }
+
         $target = $log->pendaki;
         $post = $log->post;
         $log->delete();
@@ -276,16 +291,23 @@ class CheckpointController extends Controller
         $posts = GkPost::where('id_gate', $gateId)->where('status', true)->orderBy('urutan')->get();
 
         $pendakiIds = $booking->pendakis()->pluck('id');
+        // Endpoint lama menyajikan proyeksi NAIK saja: log turun tidak boleh
+        // menaikkan persentase di atas 100% atau dipakai sebagai timestamp naik.
         $logs = GkCheckpointLog::where('id_booking', $bookingId)
             ->whereIn('id_pendaki', $pendakiIds)
+            ->where('phase', 'naik')
             ->get()
             ->groupBy('id_pendaki');
 
         $totalPosts = $posts->count();
 
         $leaderBioId = $booking->user?->id_bio;
+        // Urutan deterministik: ketua lebih dulu, sisanya mengikuti urutan created_at.
+        $pendakis = $booking->pendakis
+            ->sortBy(fn ($p) => $leaderBioId !== null && $p->id_bio === $leaderBioId ? 0 : 1)
+            ->values();
         $hikerProgress = [];
-        foreach ($booking->pendakis as $pendaki) {
+        foreach ($pendakis as $pendaki) {
             $pendakiLogs = $logs->get($pendaki->id, collect());
             $completedPosts = $pendakiLogs->pluck('id_post')->unique();
 
@@ -354,6 +376,7 @@ class CheckpointController extends Controller
         $totalPosts = GkPost::where('id_gate', $gateId)->where('status', true)->count();
         $completed = GkCheckpointLog::where('id_pendaki', $pendaki->id)
             ->where('id_booking', $pendaki->booking_id)
+            ->where('phase', 'naik')
             ->distinct('id_post')->count('id_post');
 
         return [
