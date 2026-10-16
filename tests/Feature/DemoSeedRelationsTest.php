@@ -8,11 +8,13 @@ use App\Models\gk_booking;
 use App\Models\gk_gates;
 use App\Models\gk_paket_tiket;
 use App\Models\gk_tiket_pendaki;
+use App\Models\statusPendaki;
 use App\Models\User;
+use Carbon\Carbon;
 use Database\Seeders\BookingSeeder;
-use Database\Seeders\UserSampelSeeder;
 use Database\Seeders\destinasi_gate;
 use Database\Seeders\paket_tiket;
+use Database\Seeders\UserSampelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -37,10 +39,19 @@ class DemoSeedRelationsTest extends TestCase
         $booking = gk_booking::firstOrFail();
         $this->assertSame($gate->id, (int) $booking->gate_masuk);
         $this->assertSame($package->id, (int) $booking->id_tiket);
-        $this->assertSame(2, $booking->pendakis()->count());
+        $this->assertSame(3, $booking->pendakis()->count());
+        $this->assertSame(3, (int) $booking->total_hari);
+        $this->assertSame(2, (int) $booking->total_pendaki_wni);
+        $this->assertSame(1, (int) $booking->total_pendaki_wna);
+        $this->assertSame(User::where('email', 'satria@gmail.com')->firstOrFail()->id, (int) $booking->id_user);
+        foreach (['satria@gmail.com', 'mukhtada@gmail.com', 'opi@gmail.com'] as $email) {
+            $user = User::where('email', $email)->firstOrFail();
+            $this->assertTrue($booking->pendakis()->where('id_bio', $user->id_bio)->exists());
+            $this->actingAs($user, 'sanctum')->getJson('/api/booking/'.$booking->id.'/tiket')->assertOk();
+        }
         $this->assertMatchesRegularExpression('/^[A-Za-z0-9]{10}$/', $booking->unique_code ?? '');
         $this->actingAs(User::where('email', 'satria@gmail.com')->firstOrFail(), 'sanctum')
-            ->getJson('/api/booking/' . $booking->id . '/tiket')
+            ->getJson('/api/booking/'.$booking->id.'/tiket')
             ->assertOk()
             ->assertJsonPath('data.unique_code', $booking->unique_code);
 
@@ -80,5 +91,40 @@ class DemoSeedRelationsTest extends TestCase
 
         $this->assertSame($snapshot, $booking->fresh()->getAttributes());
         $this->assertSame(1, gk_booking::count());
+    }
+
+    public function test_reseeding_upgrades_old_two_member_booking_to_three_days_and_members(): void
+    {
+        $this->seed([destinasi_gate::class, paket_tiket::class, UserSampelSeeder::class, BookingSeeder::class]);
+        $booking = gk_booking::firstOrFail();
+        $opi = $booking->pendakis()->where('id_bio', User::where('email', 'opi@gmail.com')->firstOrFail()->id_bio)->firstOrFail();
+        $opi->getStatus()->delete();
+        $opi->delete();
+        $booking->update([
+            'tanggal_keluar' => Carbon::parse($booking->tanggal_masuk)->addDay()->toDateString(),
+            'total_hari' => 2,
+            'total_pendaki_wni' => 2,
+            'total_pendaki_wna' => 0,
+            'total_pembayaran' => 105000,
+        ]);
+        $existingIds = $booking->pendakis()->pluck('id')->all();
+        $statusCount = statusPendaki::count();
+
+        $this->seed(BookingSeeder::class);
+
+        $fresh = $booking->fresh();
+        $this->assertSame(1, gk_booking::count());
+        $this->assertSame($booking->unique_code, $fresh->unique_code);
+        $this->assertSame($booking->tanggal_masuk, $fresh->tanggal_masuk);
+        $this->assertSame(3, (int) $fresh->total_hari);
+        $this->assertSame(Carbon::parse($fresh->tanggal_masuk)->addDays(2)->toDateString(), $fresh->tanggal_keluar);
+        $this->assertSame(3, $fresh->pendakis()->count());
+        $this->assertSame(2, $fresh->pendakis()->whereIn('id', $existingIds)->count());
+        $this->assertSame($statusCount + 1, statusPendaki::count());
+        $this->assertEquals($fresh->pendakis()->sum('tagihan'), $fresh->total_pembayaran);
+
+        $this->seed(BookingSeeder::class);
+        $this->assertSame(3, $fresh->pendakis()->count());
+        $this->assertSame($statusCount + 1, statusPendaki::count());
     }
 }
