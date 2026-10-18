@@ -5,15 +5,18 @@ namespace App\Http\Controllers\API;
 use App\Exceptions\CheckpointException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\helper\ApiResponse;
-use App\Models\GkCheckpointLog;
-use App\Models\GkPost;
 use App\Models\gk_booking;
 use App\Models\gk_pendaki;
+use App\Models\GkCheckpointLog;
+use App\Models\GkCheckpointMemberNote;
+use App\Models\GkPost;
 use App\Services\CheckpointItineraryService;
 use App\Services\CheckpointVisitService;
 use App\Services\GeoService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Kontrak v2 untuk checkpoint naik–turun. Endpoint v1 tetap menyajikan proyeksi
@@ -24,8 +27,7 @@ class CheckpointV2Controller extends Controller
     public function __construct(
         private CheckpointVisitService $visits,
         private CheckpointItineraryService $itinerary
-    ) {
-    }
+    ) {}
 
     /**
      * GET /api/tracking/v2/posts/{gate_id}
@@ -134,6 +136,47 @@ class CheckpointV2Controller extends Controller
         }
     }
 
+    /** Catatan terpisah dari log check-in: tidak mengubah kehadiran/progres. */
+    public function saveMemberNote(Request $request)
+    {
+        $data = $request->validate([
+            'pendaki_id' => 'required|uuid',
+            'post_id' => 'required|integer|exists:gk_posts,id',
+            'phase' => 'required|in:naik,turun',
+            'note' => 'present|nullable|string|max:500',
+        ]);
+        [$actor, $target, $error] = $this->resolveTarget($request->user(), $data['pendaki_id']);
+        if ($error !== null) {
+            return $error;
+        }
+        $post = GkPost::whereKey($data['post_id'])->where('status', true)->firstOrFail();
+        if ((int) $post->id_gate !== (int) $actor->booking->gate_masuk) {
+            return ApiResponse::error('Pos tidak berada di jalur booking ini.', null, 404);
+        }
+
+        return DB::transaction(function () use ($request, $actor, $target, $post, $data) {
+            // Lock yang sama dengan pencatatan check-in agar catatan tidak ditulis setelah hijau.
+            $locked = gk_pendaki::whereKey($target->id)->lockForUpdate()->firstOrFail();
+            if ((int) $locked->booking->status_booking !== 6) {
+                return ApiResponse::error('Pendakian tidak aktif.', null, 409);
+            }
+            $atPost = fn ($id) => GkCheckpointLog::where('id_booking', $locked->booking_id)
+                ->where('id_pendaki', $id)->where('id_post', $post->id)->where('phase', $data['phase'])->exists();
+            if ($atPost($locked->id)) {
+                return ApiResponse::error('Catatan hanya dapat diubah sebelum anggota check-in.', null, 409);
+            }
+            if ($actor->id !== $locked->id && ! $atPost($actor->id)) {
+                return ApiResponse::error('Ketua harus check-in pada pos dan fase yang sama.', null, 403);
+            }
+            $note = GkCheckpointMemberNote::updateOrCreate([
+                'booking_id' => $locked->booking_id, 'pendaki_id' => $locked->id,
+                'post_id' => $post->id, 'phase' => $data['phase'],
+            ], ['note' => trim($data['note'] ?? ''), 'updated_by' => $request->user()->id]);
+
+            return ApiResponse::success($note->only(['pendaki_id', 'post_id', 'phase', 'note', 'updated_at']), 'Catatan tersimpan.');
+        });
+    }
+
     /**
      * GET /api/tracking/v2/progress/{booking_id}
      */
@@ -187,6 +230,8 @@ class CheckpointV2Controller extends Controller
             'total_posts' => $posts->count(),
             'total_visits' => 2 * $posts->count() - 1,
             'hikers' => $hikers,
+            'member_notes' => GkCheckpointMemberNote::where('booking_id', $bookingId)
+                ->get(['pendaki_id', 'post_id', 'phase', 'note', 'updated_at']),
             'current_pendaki_id' => $leaderHiker?->id,
         ]);
     }
@@ -232,7 +277,7 @@ class CheckpointV2Controller extends Controller
     /**
      * Resolve aktor (pendaki login) dan target (anggota yang diwakili, bila ada).
      *
-     * @return array{0: gk_pendaki, 1: ?gk_pendaki, 2: ?\Illuminate\Http\JsonResponse}
+     * @return array{0: gk_pendaki, 1: ?gk_pendaki, 2: ?JsonResponse}
      */
     private function resolveTarget($user, ?string $targetId): array
     {

@@ -1050,3 +1050,10 @@ Admin dengan izin `edit-booking` dapat mengirim `POST /admin/destinasi/booking/c
 Cuaca berbahasa Indonesia, cache sukses 5 menit; jumlah pendaki dan status tidak ikut dicache. Cuaca gagal tidak menghilangkan angka/status: `cuaca` null, bagian lain tetap dikirim. Nol berarti perhitungan berhasil dan hasilnya kosong. Key cuaca dibaca dari `WEATHER_API_KEY` melalui konfigurasi services; koordinat opsional `WEATHER_COORDINATES`. Log gagal tidak memuat URL, key, atau exception request. Key lama yang pernah masuk Git/log perlu dirotasi oleh pemilik akun provider. Tidak ada migration baru.
 
 Jika PHP lokal belum memiliki trust store CA, `WEATHER_CA_BUNDLE` dapat menunjuk ke bundle PEM tepercaya milik lingkungan (path privat; jangan commit sertifikat lokal). Verifikasi HTTPS tetap aktif. Cache cuaca hanya menyimpan respons berhasil selama 300 detik.
+
+
+## Catatan anggota checkpoint (18 Oktober 2026)
+
+`POST /api/tracking/v2/member-note` (Sanctum) menerima `pendaki_id` UUID, `post_id`, `phase` (`naik`/`turun`), dan `note` nullable string maksimal 500 karakter. Field `note` wajib ada, nilai kosong mengosongkan catatan. Scope unik: booking aktif + anggota + pos + fase. Catatan tidak membuat log kehadiran. Hanya pemilik catatan atau ketua booking yang dapat menulis; untuk anggota lain, ketua harus sudah check-in pada pos/fase sama. Anggota asing ditolak 403, pos berbeda gate 404, anggota sudah check-in ditolak 409. Penyimpanan diserialisasi dengan lock pendaki yang juga dipakai check-in.
+
+`GET /api/tracking/v2/progress/{booking_id}` menambahkan `member_notes`: daftar `{pendaki_id, post_id, phase, note, updated_at}`. Akses mengikuti keanggotaan/pemilik booking pada endpoint progress yang sudah ada. Catatan disimpan terpisah dari `gk_checkpoint_logs` agar dapat ditulis sebelum kehadiran, dan tetap tersimpan ketika UI menyembunyikannya setelah hijau. Jalankan migration 87 sebelum memakai kode ini. Tidak ada antrean offline baru untuk catatan.
