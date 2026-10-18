@@ -38,8 +38,21 @@ class HomeController extends Controller
 
         $pendaki = $homeHelper->getPendaki();
 
+        $kerinci = $destinasi->firstWhere('id', 1);
+        $mountainCode = is_numeric($kerinci?->statusGunung) ? (int) $kerinci->statusGunung : null;
         $data = [
             'cuaca' => $cuaca,
+            'status_gunung' => $kerinci && in_array($mountainCode, [0, 1, 2, 3, 4], true) ? [
+                'kode' => $mountainCode,
+                'label' => str_replace('Leverl', 'Level', $kerinci->getStatusGunung()),
+            ] : null,
+            'ringkasan_pendaki' => [
+                'sedang_mendaki' => $pendaki['total_sedang_cekin'],
+                'total_tercatat' => $pendaki['total_pendaki'],
+                'cakupan' => 'seluruh_riwayat',
+            ],
+            'ringkasan_diperbarui_pada' => now()->toIso8601String(),
+            'cuaca_diamati_pada' => $cuaca['current']['last_updated_epoch'] ?? null,
             'total_mendaki' => $pendaki['total_sedang_cekin'],
             'total_pendaki' => $pendaki['total_pendaki'],
             'total_pendaki_wna' => $pendaki['total_pendaki_wna'],

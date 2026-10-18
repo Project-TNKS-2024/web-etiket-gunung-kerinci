@@ -14,6 +14,12 @@ return [
     |
     */
 
+    'weather' => [
+        'key' => env('WEATHER_API_KEY'),
+        'ca_bundle' => env('WEATHER_CA_BUNDLE'),
+        'coordinates' => env('WEATHER_COORDINATES', '-1.6955471535960556,101.26376495341809'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

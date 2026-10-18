@@ -13,48 +13,37 @@ class homepageHelperController extends Controller
 {
     public function get_cuaca()
     {
+        $key = config('services.weather.key');
+        if (!$key) {
+            return null;
+        }
         try {
-            $apiWeatherKey = 'a2e80ea3991444f38a015609251802';
-            $laLongitude = '-1.6955471535960556,101.26376495341809'; // Gunung Kerinci
-            $apiWeatherUrl = "https://api.weatherapi.com/v1/current.json?key={$apiWeatherKey}&q={$laLongitude}&aqi=no";
-
-            // Gunakan cURL untuk pengambilan data lebih aman
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $apiWeatherUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout 10 detik
-            if (app()->environment('local')) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            }
-            $weatherResponse = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $curlError = curl_error($ch);
-            curl_close($ch);
-
-            if ($httpCode !== 200 || empty($weatherResponse)) {
-                throw new \Exception("Gagal mengambil data cuaca. HTTP Code: {$httpCode} | cURL Error: {$curlError}");
-            }
-
-            $weatherData = json_decode($weatherResponse, true);
-            if (!$weatherData) {
-                throw new \Exception('JSON decode gagal. Data tidak valid.');
-            }
-
-            return $weatherData;
-        } catch (\Exception $e) {
-            // Logging menggunakan channel default (laravel.log)
-            Log::error("Terjadi kesalahan saat mengambil data cuaca dari API: {$apiWeatherUrl}", [
-                'error' => $e->getMessage(),
-            ]);
-
+            return \Illuminate\Support\Facades\Cache::remember('weather.kerinci.id.v1.'.sha1(config('services.weather.coordinates')), 300, function () use ($key) {
+                $response = \Illuminate\Support\Facades\Http::connectTimeout(2)->timeout(5)
+                    ->withOptions(['verify' => config('services.weather.ca_bundle') ?: true])
+                    ->get('https://api.weatherapi.com/v1/current.json', [
+                        'key' => $key,
+                        'q' => config('services.weather.coordinates'),
+                        'aqi' => 'no',
+                        'lang' => 'id',
+                    ]);
+                if (!$response->successful()) {
+                    Log::warning('Data cuaca tidak tersedia.', ['http_status' => $response->status()]);
+                    return null;
+                }
+                $data = $response->json();
+                return is_array($data) && isset($data['current']['temp_c']) ? $data : null;
+            });
+        } catch (\Throwable $e) {
+            // Exception HTTP dapat memuat URL/key, jangan sertakan detail request.
+            Log::warning('Koneksi layanan cuaca tidak tersedia.');
             return null;
         }
     }
     public function getPendaki()
     {
-        // ambil semua pendaki gunung kerinci yang status booking >= 6
-        $PKerinci = gk_pendaki::whereHas('booking', function ($q) {
+        // Kunjungan Kerinci yang sudah check-in; termasuk riwayat checkout.
+        $PKerinci = gk_pendaki::with(['biodata', 'getStatus' => fn ($q) => $q->orderByDesc('created_at')->orderByDesc('id')])->whereHas('booking', function ($q) {
             $q->whereHas('destinasi', function ($query) {
                 $query->where('destinasis.id', 1);
             })->whereBetween('status_booking', [6, 8]);
@@ -62,8 +51,7 @@ class homepageHelperController extends Controller
 
         // Filter pendaki yang melakukan cekin
         $filteredPendaki = $PKerinci->filter(function ($pendaki) {
-            return $pendaki->getStatus()->count() > 0 &&
-                optional($pendaki->getStatus()->latest()->first())->status > 1;
+            return in_array((int) $pendaki->getStatus->first()?->status, [2, 3], true);
         });
 
         $totalPendaki = $filteredPendaki->count();
@@ -76,7 +64,7 @@ class homepageHelperController extends Controller
         })->count();
 
         $totalPendakiCekin = $filteredPendaki->filter(function ($pendaki) {
-            return optional($pendaki->getStatus()->latest()->first())->status == 2;
+            return (int) $pendaki->getStatus->first()?->status === 2;
         })->count();
 
 

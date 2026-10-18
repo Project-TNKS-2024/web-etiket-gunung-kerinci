@@ -1036,3 +1036,17 @@ memiliki peta dan mengembalikan `map_image_url: null`.
 `DELETE /api/booking/{id}` tetap khusus pemilik dan status 0–3; body opsional `reason` (maksimal 500 karakter). Pembatalan menyimpan status 9 beserta alasan, waktu, pelaku, anggota, dan bukti pembayaran. Pembatalan ulang mengembalikan keberhasilan yang sama; status yang tidak memenuhi syarat menghasilkan 409, booking bukan milik pengguna menghasilkan 404.
 
 Admin dengan izin `edit-booking` dapat mengirim `POST /admin/destinasi/booking/cancel` dengan `booking_id` dan `reason` wajib. Pembatalan hanya sebelum pembayaran dikonfirmasi (0–3); tidak ada perubahan aturan refund atau pembatalan pendaki yang sudah check-in. Booking batal tidak dapat dilanjutkan/dikonfirmasi dan tidak memakan kuota. Daftar admin menyediakan filter serta detail riwayat pembatalan.
+
+
+## Ringkasan kartu Beranda (18 Oktober 2026)
+
+`GET /api/beranda` mempertahankan field lama dan menambah:
+
+- `status_gunung`: `{kode, label}` dari destinasi Kerinci, atau null jika tidak tersedia/di luar kode 0–4. Bukan fallback status aman/bahaya.
+- `ringkasan_pendaki`: `{sedang_mendaki, total_tercatat, cakupan: "seluruh_riwayat"}`. Angka pertama adalah anggota booking dengan status terakhir check-in; angka kedua mencakup anggota yang telah check-in atau checkout. Keduanya menghitung kunjungan per anggota booking Kerinci status 6–8, bukan kuota, orang unik lintas booking, atau statistik hari ini. Pembatalan/draft/no-show tidak dihitung.
+- `ringkasan_diperbarui_pada`: waktu respons ISO 8601.
+- `cuaca_diamati_pada`: Unix timestamp pengamatan dari provider, atau null. Bukan waktu request aplikasi.
+
+Cuaca berbahasa Indonesia, cache sukses 5 menit; jumlah pendaki dan status tidak ikut dicache. Cuaca gagal tidak menghilangkan angka/status: `cuaca` null, bagian lain tetap dikirim. Nol berarti perhitungan berhasil dan hasilnya kosong. Key cuaca dibaca dari `WEATHER_API_KEY` melalui konfigurasi services; koordinat opsional `WEATHER_COORDINATES`. Log gagal tidak memuat URL, key, atau exception request. Key lama yang pernah masuk Git/log perlu dirotasi oleh pemilik akun provider. Tidak ada migration baru.
+
+Jika PHP lokal belum memiliki trust store CA, `WEATHER_CA_BUNDLE` dapat menunjuk ke bundle PEM tepercaya milik lingkungan (path privat; jangan commit sertifikat lokal). Verifikasi HTTPS tetap aktif. Cache cuaca hanya menyimpan respons berhasil selama 300 detik.
