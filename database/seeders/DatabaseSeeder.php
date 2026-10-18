@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             RescueContactSeeder::class,
             TrailPostSeeder::class,
             BookingSeeder::class,
+            CompletedBookingSeeder::class,
         ]);
     }
 }

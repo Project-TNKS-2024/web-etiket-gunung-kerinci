@@ -20,4 +20,6 @@
 
 ## Batas pemeriksaan
 
+Seeder tambahan `CompletedBookingSeeder` dipanggil sesudah `BookingSeeder` dalam `DatabaseSeeder`. Seeder menyalin tiket demo aktif Satria beserta tiga anggota, gate, tanggal, dan biaya ke tiket demo status 8, dengan kode QR berbeda dan riwayat checkout seluruh anggota. Tiket aktif tidak diubah; pemanggilan ulang tidak menambah duplikat. Sudah dijalankan pada database lokal. Endpoint detail tiket selesai mengembalikan HTTP 200. Enam test terkait seeder/daftar tiket yang sudah ada berhasil (49 assertions); tanpa test baru.
+
 Belum diverifikasi secara visual pada emulator/HP Android. Pemeriksaan ukuran layar/font besar, perpindahan layar, dan kondisi jaringan nyata tetap perlu dilakukan pada perangkat. Dashboard QA SQLite memiliki query MONTH khusus MySQL yang sudah ada; pemeriksaan browser dilakukan langsung pada halaman booking.
