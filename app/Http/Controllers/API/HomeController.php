@@ -36,9 +36,8 @@ class HomeController extends Controller
             ->with('gambar_destinasi:id,id_destinasi,src,nama,detail')
             ->get();
 
-        $pendaki = $homeHelper->getPendaki();
-
-        $kerinci = $destinasi->firstWhere('id', 1);
+        $kerinci = $destinasi->firstWhere('nama', 'Gunung Kerinci');
+        $pendaki = $homeHelper->getPendaki($kerinci?->id);
         $mountainCode = is_numeric($kerinci?->statusGunung) ? (int) $kerinci->statusGunung : null;
         $data = [
             'cuaca' => $cuaca,

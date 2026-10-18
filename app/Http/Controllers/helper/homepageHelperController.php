@@ -40,12 +40,13 @@ class homepageHelperController extends Controller
             return null;
         }
     }
-    public function getPendaki()
+    public function getPendaki(?int $destinationId = null)
     {
+        $destinationId ??= \App\Models\destinasi::where('nama', 'Gunung Kerinci')->value('id');
         // Kunjungan Kerinci yang sudah check-in; termasuk riwayat checkout.
-        $PKerinci = gk_pendaki::with(['biodata', 'getStatus' => fn ($q) => $q->orderByDesc('created_at')->orderByDesc('id')])->whereHas('booking', function ($q) {
-            $q->whereHas('destinasi', function ($query) {
-                $query->where('destinasis.id', 1);
+        $PKerinci = gk_pendaki::with(['biodata', 'getStatus' => fn ($q) => $q->orderByDesc('created_at')->orderByDesc('id')])->whereHas('booking', function ($q) use ($destinationId) {
+            $q->whereHas('destinasi', function ($query) use ($destinationId) {
+                $query->where('destinasis.id', $destinationId);
             })->whereBetween('status_booking', [6, 8]);
         })->get();
 

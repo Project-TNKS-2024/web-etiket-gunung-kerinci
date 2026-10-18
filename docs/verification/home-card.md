@@ -17,3 +17,9 @@ Backend `/api/beranda` menambahkan ringkasan jumlah, status gunung, serta waktu 
 Belum memasang APK baru atau memeriksa tampilan langsung di HP/emulator. Pemeriksaan screenshot terhadap Figma, font besar, layar sempit, TalkBack, dan ketukan retry dengan jaringan nyata masih diperlukan pada perangkat. Jangan menganggap build sebagai bukti kesamaan visual sempurna.
 
 Key cuaca yang sebelumnya pernah berada di kode/log perlu dirotasi oleh pemilik akun provider. Rotasi tidak dilakukan karena akses akun provider tidak tersedia dalam tugas ini. Lingkungan lain perlu mengisi WEATHER_API_KEY; WEATHER_CA_BUNDLE hanya bila trust store PHP memerlukannya.
+
+## Koreksi destinasi dan posisi gambar
+
+Pemeriksaan lanjutan menemukan data lokal Kerinci memakai ID 89, sedangkan helper masih memfilter ID 1. Helper kini menerima ID aktual dari destinasi Kerinci pada respons, atau mencari destinasi berdasarkan nama bila dipanggil alur web. Data lokal berisi tiga anggota dengan status check-in; hasil ringkasan setelah perbaikan 3 sedang mendaki / 3 total tercatat. Tidak mengubah data pendaki atau menjalankan seeder. Sebanyak 34 test backend terkait kembali berhasil (163 assertions).
+
+Referensi Figma diperluas ke frame 1501:8545: gambar berasio 360:214 dan kartu berada di atas tepi bawah gambar. XML memakai constraint top/bottom kartu pada anchor bawah gambar sehingga pusat vertikal kartu sejajar tepi gambar, bukan margin atas tetap. Lebar kartu masuk 16dp dari sisi gambar. Gambar asli diekspor dari node gambar 1501:8546 ke aset lokal; bukan tangkapan kartu/halaman. Build APK setelah koreksi berhasil; tampilan HP masih belum diverifikasi langsung.
