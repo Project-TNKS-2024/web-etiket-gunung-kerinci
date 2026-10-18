@@ -43,7 +43,7 @@ Route::middleware(['auth', 'check.role:user', 'logger'])->group(function () {
 
     Route::get('booking/{id}/detail', [booking::class, 'bookingDetail'])->name('homepage.booking.detail');
     Route::get('booking/{id}/edit', [booking::class, 'bookingEdit'])->name('homepage.booking.edit');
-    Route::get('booking/{id}/cancel', [booking::class, 'bookingCancel'])->name('homepage.booking.cancel');
+    Route::post('booking/{id}/cancel', [booking::class, 'bookingCancel'])->name('homepage.booking.cancel');
 
     Route::get('booking/{id}/payment', [booking::class, 'bookingPayment'])->name('homepage.booking.payment');
     Route::post('booking/add-payment', [booking::class, 'addBuktiPembayaran'])->name('homepage.booking.addBuktiPembayaran');

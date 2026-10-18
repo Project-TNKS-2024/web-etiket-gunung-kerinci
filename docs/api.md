@@ -1027,3 +1027,12 @@ Pada database kosong, jalankan `destinasi_gate` terlebih dahulu. Seeder mengikut
 tanpa menghapus ID atau riwayat. Data jarak dan durasi demo Shelter 3–Tugu Yudha
 menggabungkan dua segmen lama melalui Batu Gantung. Jalur Solok Selatan belum
 memiliki peta dan mengembalikan `map_image_url: null`.
+
+
+## Riwayat dan pembatalan tiket (18 Oktober 2026)
+
+`GET /api/mytiket` mempertahankan dua kelompok: Draft (0–3 dan 9 dibatalkan), Tiket Saya (4–8). Status 7–8 berarti pendakian selesai; tagihan tambahan tetap berdiri sendiri. Respons booking menambahkan `cancelled_at`, `cancelled_by`, `cancellation_reason`, `payment_deadline`, `ticket_notice`, `ticket_notice_type` (warning/error/null), dan `can_continue`. Kode pemesanan berasal dari `unique_code`. Tenggat pembayaran tanpa bukti mengikuti batas 24 jam setelah finalisasi; bukti pending menampilkan menunggu verifikasi.
+
+`DELETE /api/booking/{id}` tetap khusus pemilik dan status 0–3; body opsional `reason` (maksimal 500 karakter). Pembatalan menyimpan status 9 beserta alasan, waktu, pelaku, anggota, dan bukti pembayaran. Pembatalan ulang mengembalikan keberhasilan yang sama; status yang tidak memenuhi syarat menghasilkan 409, booking bukan milik pengguna menghasilkan 404.
+
+Admin dengan izin `edit-booking` dapat mengirim `POST /admin/destinasi/booking/cancel` dengan `booking_id` dan `reason` wajib. Pembatalan hanya sebelum pembayaran dikonfirmasi (0–3); tidak ada perubahan aturan refund atau pembatalan pendaki yang sudah check-in. Booking batal tidak dapat dilanjutkan/dikonfirmasi dan tidak memakan kuota. Daftar admin menyediakan filter serta detail riwayat pembatalan.

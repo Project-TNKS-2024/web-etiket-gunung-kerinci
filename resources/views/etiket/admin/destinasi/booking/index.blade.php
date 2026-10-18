@@ -23,6 +23,8 @@
 
             <!-- Filter Status -->
             <select name="filter-waktu" class="form-select" style="width: auto; max-width: 150px;">
+               <option value="draft" {{ request('filter-waktu') == 'draft' ? 'selected' : '' }}>Draft</option>
+               <option value="dibatalkan" {{ request('filter-waktu') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
                <option value="dalam_booking" {{ request('filter-waktu') == 'dalam_booking' ? 'selected' : '' }}>Dalam Booking</option>
                <option value="sudah_selesai" {{ request('filter-waktu') == 'sudah_selesai' ? 'selected' : '' }}>Sudah Selesai</option>
                <option value="akan_datang" {{ request('filter-waktu') == 'akan_datang' ? 'selected' : '' }}>Akan Datang</option>
@@ -73,7 +75,11 @@
                   <td class="">{{ $item->tanggal_masuk }}</td>
                   <td class="">{{ $item->gateMasuk['nama'] }}</td>
                   <td class="">{{ $item->pendakis->count() }} orang</td>
-                  <td class="">{{ $item->getStatusBooking()->status}}</td>
+                  <td class="">{{ $item->getStatusBooking()->status}}
+                     @if ((int) $item->status_booking === 9)
+                     <small class="d-block text-danger">{{ $item->cancellation_reason }}</small>
+                     <small class="d-block text-muted">{{ $item->cancelled_at?->timezone('Asia/Jakarta')->format('d/m/Y H:i') }} WIB</small>
+                     @endif</td>
                   @php
                   $colorStatus = 'outline-info';
                   if($item->pembayaran && $item->pembayaran->count() > 0) {
@@ -113,7 +119,11 @@
                   <td class="">{{ $item->tanggal_masuk }}</td>
                   <td class="">{{ $item->gateMasuk['nama'] }}</td>
                   <td class="">{{ $item->pendakis->count() }} orang</td>
-                  <td class="">{{ $item->getStatusBooking()->status}}</td>
+                  <td class="">{{ $item->getStatusBooking()->status}}
+                     @if ((int) $item->status_booking === 9)
+                     <small class="d-block text-danger">{{ $item->cancellation_reason }}</small>
+                     <small class="d-block text-muted">{{ $item->cancelled_at?->timezone('Asia/Jakarta')->format('d/m/Y H:i') }} WIB</small>
+                     @endif</td>
                   @php
                   $colorStatus = 'outline-info';
                   if($item->pembayaran && $item->pembayaran->count() > 0) {

@@ -12,6 +12,10 @@ use function PHPUnit\Framework\isEmpty;
 class gk_booking extends Model
 {
     use HasFactory;
+
+    public const STATUS_CANCELLED = 9;
+
+    protected $casts = ['cancelled_at' => 'datetime'];
     protected $fillable = [
         'id_user',
         'id_tiket',
@@ -29,6 +33,9 @@ class gk_booking extends Model
         'unique_code',
         'keterangan',
         'id_booking_master',
+        'cancelled_at',
+        'cancelled_by',
+        'cancellation_reason',
         'validator'
     ];
 
@@ -54,6 +61,11 @@ class gk_booking extends Model
     /**
      * Get the user that owns the booking.
      */
+    public function cancelledBy()
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user');
@@ -75,6 +87,40 @@ class gk_booking extends Model
     public function gateMasuk()
     {
         return $this->belongsTo(gk_gates::class, 'gate_masuk');
+    }
+
+    public function ticketPresentation(): array
+    {
+        $this->loadMissing('pembayaran');
+        $state = (int) $this->status_booking;
+        $payment = $this->pembayaran->sortBy('created_at')->last();
+        $deadline = $state === 3 && $payment?->status !== 'pending'
+            ? $this->updated_at->copy()->addDay() : null;
+        $expired = $deadline && now()->greaterThanOrEqualTo($deadline);
+        $notice = null;
+        $tone = null;
+        if ($state === self::STATUS_CANCELLED) {
+            $notice = $this->cancellation_reason ?: 'Pesanan dibatalkan.';
+            $tone = 'error';
+        } elseif ($state === 3 && $payment?->status === 'pending') {
+            $notice = 'Bukti pembayaran menunggu verifikasi petugas.';
+            $tone = 'warning';
+        } elseif ($expired) {
+            $notice = 'Masa pembayaran telah habis. Buat pesanan baru.';
+            $tone = 'error';
+        } elseif ($state === 3 && $deadline) {
+            $notice = 'Lakukan pembayaran sebelum '.$deadline->setTimezone('Asia/Jakarta')->format('d M Y H.i').' WIB.';
+            $tone = 'warning';
+        } elseif (in_array($state, [0, 1, 2], true) && $this->tanggal_masuk < now()->setTimezone('Asia/Jakarta')->toDateString()) {
+            $notice = 'Tanggal masuk sudah tidak tersedia, silakan ubah pesanan Anda.';
+            $tone = 'warning';
+        }
+        return [
+            'payment_deadline' => $deadline?->toIso8601String(),
+            'ticket_notice' => $notice,
+            'ticket_notice_type' => $tone,
+            'can_continue' => in_array($state, [0, 1, 2, 3], true) && !$expired,
+        ];
     }
 
     public function getStatusBooking($id = null)
@@ -129,11 +175,12 @@ class gk_booking extends Model
             61 => 'Perlu Konfirmasi Check-out',
             7  => 'Check-out',
             8  => 'Selesai',
+            9  => 'Dibatalkan',
         ];
 
         return (object) [
             'code' => $id,
-            'status' => $status[$id]
+            'status' => $status[$id] ?? 'Tidak Diketahui'
         ];
     }
 

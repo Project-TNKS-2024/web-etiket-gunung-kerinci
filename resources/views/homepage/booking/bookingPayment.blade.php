@@ -153,7 +153,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             @if ($booking->status_booking <=3)
-                                <a type="submit" class="btn btn-danger w-100 fw-bold mt-3" href="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}" onclick="openswal(event, this)">Batalkan Pemesanan</a>
+                                <form method="POST" action="{{ route('homepage.booking.cancel', ['id' => $booking->id]) }}">@csrf<button type="submit" class="btn btn-danger w-100 fw-bold mt-3">Batalkan Pemesanan</button></form>
                                 @endif
                         </div>
                     </div>

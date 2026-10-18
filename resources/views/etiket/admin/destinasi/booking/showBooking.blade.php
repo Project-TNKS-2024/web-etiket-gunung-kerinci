@@ -37,6 +37,32 @@
 @endsection
 
 @section('main')
+@if ((int) $booking->status_booking === 9)
+<div class="alert alert-danger" role="status">
+   <strong>Pesanan dibatalkan</strong>
+   <p class="mb-1">{{ $booking->cancellation_reason }}</p>
+   <small>{{ $booking->cancelled_at?->timezone('Asia/Jakarta')->format('d/m/Y H:i') }} WIB
+      · {{ $booking->cancelledBy?->email ?? 'Pemesan/petugas' }}</small>
+   <div>Riwayat pemesanan dan bukti pembayaran tetap tersimpan.</div>
+</div>
+@endif
+@can('edit-booking')
+@if (in_array((int) $booking->status_booking, [0, 1, 2, 3], true))
+<div class="card"><div class="card-body">
+   <h5>Batalkan pesanan</h5>
+   <p>Hanya tersedia sebelum konfirmasi pembayaran. Data pesanan tidak dihapus.</p>
+   <form method="POST" action="{{ route('admin.destinasi.booking.cancel') }}">
+      @csrf
+      <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+      <label for="cancellationReason" class="form-label">Alasan pembatalan</label>
+      <textarea id="cancellationReason" name="reason" class="form-control mb-2" rows="2" maxlength="500" required>{{ old('reason') }}</textarea>
+      @error('reason')<div class="text-danger">{{ $message }}</div>@enderror
+      <button type="submit" class="btn btn-danger">Batalkan Pesanan</button>
+   </form>
+</div></div>
+@endif
+@endcan
+
 
 <div class="card">
    <div class="card-header">
@@ -53,7 +79,7 @@
                         <td>Destinasi</td>
                      </tr>
                      <tr>
-                        <td>{{ $booking->pendakis[0]->biodata->first_name .' '. $booking->pendakis[0]->biodata->last_name }}</td>
+                        <td>{{ $booking->pendakis->first()?->biodata?->fullName ?? 'Belum diisi' }}</td>
                         <td>
                            {{$booking->destinasi->nama}}
                         </td>
@@ -102,11 +128,12 @@
             </div>
          </div>
          <div class="col-12 col-lg-4">
-            <h6 class="text-center"><b>Progres booking</b></h6>
+            <h6 class="text-center"><b>{{ (int) $booking->status_booking === 9 ? 'Pesanan dibatalkan' : 'Progres booking' }}</b></h6>
+            @if ((int) $booking->status_booking !== 9)
             <div class="progress my-1" style="height: 25px;">
 
                <div class="progress-bar bg-success" role="progressbar"
-                  style="width: {{ ($booking->status_booking / 8) * 100 }}%;"
+                  style="width: {{ min($booking->status_booking, 8) / 8 * 100 }}%;"
                   aria-valuenow="{{ $booking->status_booking }}"
                   aria-valuemin="0" aria-valuemax="8">
                   {{ $booking->status_booking }}/8 Selesai
@@ -123,6 +150,7 @@
                <span class="badge {{ $booking->status_booking >= 7 ? 'bg-primary' : 'bg-light text-dark' }}">7. Check-out</span>
                <span class="badge {{ $booking->status_booking >= 8 ? 'bg-success' : 'bg-light text-dark' }}">8. Selesai</span>
             </div>
+            @endif
          </div>
       </div>
    </div>
@@ -131,10 +159,16 @@
 <div class="card">
    <div class="card-body py-3">
       <div class="text-end">
+         @if ($booking->dataStruk)
          <a href="{{route('admin.destinasi.booking.struk.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Struk</a>
+         @endif
          <a href="{{route('admin.destinasi.booking.payment.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Pembelian</a>
+         @if (in_array((int) $booking->status_booking, [4, 5, 6, 7, 8], true))
          <a href="{{route('admin.destinasi.booking.tiket.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Tiket</a>
+         @endif
+         @if ((int) $booking->status_booking !== 9)
          <a href="" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalGantiTanggal">Ganti Hari</a>
+         @endif
       </div>
    </div>
 </div>
@@ -225,7 +259,7 @@
             </tbody>
          </table>
       </div>
-      @if ($booking->status_booking >= 4)
+      @if ($booking->status_booking >= 4 && $booking->status_booking <= 8)
       <div class="mt-1 d-flex justify-content-between align-items-center">
          <form id="statusForm" action="{{ route('admin.destinasi.booking.updateStatus') }}" method="POST">
             @csrf
@@ -258,7 +292,7 @@
    </div>
 </div>
 
-@if ($booking->status_booking >= 4)
+@if ($booking->status_booking >= 4 && $booking->status_booking <= 8)
 @php
    $hikeStateLabel = [
       'belum_masuk' => 'Belum masuk',
@@ -479,7 +513,7 @@
 </div>
 @endif
 
-@if ($booking->status_booking >= 4)
+@if ($booking->status_booking >= 4 && $booking->status_booking <= 8)
 <div class="card">
    <div class="card-header">
       <h5><b>Riwayat Pendakian</b></h5>
@@ -560,7 +594,7 @@
    });
 </script>
 
-@if ($booking->status_booking >= 4)
+@if ($booking->status_booking >= 4 && $booking->status_booking <= 8)
 <!-- JavaScript untuk mengatur tampilan checkbox -->
 <script>
    document.addEventListener("DOMContentLoaded", function() {

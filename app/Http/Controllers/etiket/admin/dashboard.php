@@ -47,7 +47,7 @@ class dashboard extends AdminController
         // Ambil data booking dan kelompokkan berdasarkan tiket dan bulan
         $rawData = gk_booking::selectRaw('id_tiket, MONTH(tanggal_masuk) as bulan, COUNT(*) as jumlah_pendaki')
             ->whereBetween('tanggal_masuk', [$minMonth, $maxMonth])
-            ->where('status_booking', '>', 3)
+            ->whereBetween('status_booking', [4, 8])
             ->groupBy('id_tiket', 'bulan')
             ->get()
             ->groupBy('id_tiket');
@@ -117,7 +117,7 @@ class dashboard extends AdminController
             ->whereHas('pembayaran', function ($query) use ($currentMonth) {
                 $query->whereMonth('updated_at', $currentMonth);
             })
-            ->where('status_booking', '>', 3)
+            ->whereBetween('status_booking', [4, 8])
             ->sum('total_pembayaran');
 
         // Ambil pendapatan bulan lalu
@@ -126,7 +126,7 @@ class dashboard extends AdminController
             ->whereHas('pembayaran', function ($query) use ($lastMonth) {
                 $query->whereMonth('updated_at', $lastMonth);
             })
-            ->where('status_booking', '>', 3)
+            ->whereBetween('status_booking', [4, 8])
             ->sum('total_pembayaran');
 
         // dd($monthlyEarnings);

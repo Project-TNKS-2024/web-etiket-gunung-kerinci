@@ -57,7 +57,7 @@ class homepageHelperController extends Controller
         $PKerinci = gk_pendaki::whereHas('booking', function ($q) {
             $q->whereHas('destinasi', function ($query) {
                 $query->where('destinasis.id', 1);
-            })->where('status_booking', '>=', 6);
+            })->whereBetween('status_booking', [6, 8]);
         })->get();
 
         // Filter pendaki yang melakukan cekin

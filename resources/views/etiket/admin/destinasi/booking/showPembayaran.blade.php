@@ -11,6 +11,9 @@
 @endsection
 
 @section('main')
+@if ((int) $booking->status_booking === 9)
+<div class="alert alert-danger">Pesanan dibatalkan: {{ $booking->cancellation_reason }}. Bukti pembayaran disimpan sebagai riwayat dan tidak dapat dikonfirmasi.</div>
+@endif
 
 <a class="btn btn-secondary w-fit text-start mb-3" href="{{ route('admin.destinasi.booking.show', ['id' => $booking]) }}">
    <i class="ti ti-arrow-left"></i>
@@ -52,7 +55,7 @@
                         <tr>
                            <td>Nama Ketua</td>
                            <td>:</td>
-                           <td>{{$booking->pendakis[0]->first_name}} {{$booking->pendakis[0]->last_name}}</td>
+                           <td>{{ $booking->pendakis->first()?->biodata?->fullName ?? 'Belum diisi' }}</td>
                         </tr>
                         <tr>
                            <td>Gate Masuk</td>
@@ -91,7 +94,7 @@
                         </tr>
                         @foreach ($booking->pendakis as $pendaki)
                         <tr>
-                           <td>{{$pendaki->firt_name}} {{$pendaki->last_name}}</td>
+                           <td>{{ $pendaki->biodata?->fullName ?? 'Belum diisi' }}</td>
                            <td class="text-end">Rp. {{$pendaki->tagihan}}</td>
                         </tr>
                         @endforeach
@@ -103,7 +106,9 @@
                   </table>
                </div>
             </div>
+            @if ($booking->dataStruk)
             <a href="{{route('admin.destinasi.booking.struk.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Struk Pembelian</a>
+            @endif
          </div>
 
          <div class="col-md-6">
@@ -137,13 +142,15 @@
       </div>
    </div>
    <div class="card-footer">
-      <form method="post" id="btnVerify" class="d-flex align-items-center w-100" action="{{ route('admin.destinasi.booking.payment.update') }}">
+      @if ((int) $booking->status_booking !== 9)
+<form method="post" id="btnVerify" class="d-flex align-items-center w-100" action="{{ route('admin.destinasi.booking.payment.update') }}">
          @csrf
          <input type="text" name="keterangan" class="form-control me-3" placeholder="Masukkan keterangan" required>
          <input type="hidden" name="id_booking" id="updateIdBooking" value="{{$booking->id}}">
          <button type="submit" name="verified" class="btn btn-primary" value="yes">Setujui</button>
          <button type="submit" name="verified" class="btn btn-warning ms-1" value="no">Tolak</button>
       </form>
+@endif
    </div>
 </div>
 

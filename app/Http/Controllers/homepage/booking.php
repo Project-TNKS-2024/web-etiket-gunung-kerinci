@@ -48,7 +48,7 @@ class booking extends Controller
             ->whereHas('gktiket', function ($q) use ($idDestinasi) {
                 $q->where('id_destinasi', $idDestinasi);
             })
-            ->where('status_booking', '>=', 4)
+            ->whereBetween('status_booking', [4, 8])
             ->where(function ($q) use ($startDate, $endDate) {
                 $q->whereBetween('tanggal_masuk', [$startDate, $endDate])
                     ->orWhere(function ($q) use ($startDate, $endDate) {
@@ -127,17 +127,12 @@ class booking extends Controller
                 // return redirect()->route('homepage.booking', ['id' => $id]);
             }
         }
-        // Cek apakah booking sudah expired
-        if ($booking->status_booking == 3 && Carbon::now()->diffInHours($booking->updated_at) >= 24) {
-            $booking->load('pembayaran');
-            $pembayaranTerakhir = $booking->pembayaran()->latest()->first();
-
-            if (optional($pembayaranTerakhir)->status !== 'pending' || !$pembayaranTerakhir) {
-                // Hapus semua pembayaran dan ubah status booking
-                $booking->pembayaran()->delete();
-                $booking->update(['status_booking' => 2]);
-                return null;
-            }
+        // Simpan riwayat pesanan kedaluwarsa tanpa menghapus bukti pembayaran.
+        if ((int) $booking->status_booking === 3 && !$booking->ticketPresentation()['can_continue']) {
+            app(\App\Services\BookingCancellationService::class)->cancel(
+                $booking, Auth::user(), 'Masa pembayaran telah habis.'
+            );
+            return null;
         }
 
         return $booking;
@@ -145,7 +140,7 @@ class booking extends Controller
 
     private function getbookingByDate($startDate, $endDate, $idBio)
     {
-        return gk_booking::whereHas('pendakis', function ($query) use ($idBio) {
+        return gk_booking::where('status_booking', '!=', gk_booking::STATUS_CANCELLED)->whereHas('pendakis', function ($query) use ($idBio) {
             $query->where('id_bio', $idBio);
         })
             ->where(function ($query) use ($startDate, $endDate) {
@@ -654,6 +649,9 @@ class booking extends Controller
     public function bookingEdit($id)
     {
         $booking = $this->getBookingByUser($id, 3);
+        if ($booking == null) {
+            return redirect()->route('homepage.booking', ['id' => $id]);
+        }
         $booking->load(['gateMasuk', 'gateKeluar', 'pendakis', 'pembayaran']);
 
         $booking->status_booking = 2;
@@ -673,22 +671,9 @@ class booking extends Controller
         if ($booking == null) {
             return redirect()->route('homepage.booking', ['id' => $id]);
         }
-        $booking->load(['gateMasuk', 'gateKeluar', 'pendakis']);
-
-        // hapus pembayaran
-        $pembayaran = pembayaran::where('id_booking', $id)->get();
-        foreach ($pembayaran as $p) {
-            $p->delete();
-        }
-
-        // hapus pendakian
-        $pendakis = gk_pendaki::where('booking_id', $id)->get();
-        foreach ($pendakis as $p) {
-            $p->delete();
-        }
-
-        // hapus booking
-        $booking->delete();
+        app(\App\Services\BookingCancellationService::class)->cancel(
+            $booking, Auth::user(), 'Pesanan dibatalkan oleh pemesan.'
+        );
 
         return redirect()->route('homepage.booking.destinasi.list')->with('success', 'Booking berhasil dibatalkan');
     }

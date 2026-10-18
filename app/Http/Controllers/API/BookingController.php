@@ -70,7 +70,7 @@ class BookingController extends Controller
 
     private function loadBooking(gk_booking $booking): gk_booking
     {
-        return $booking->load([
+        $booking->load([
             'gktiket:id,id_destinasi,nama,min_pendaki,penugasan,keterangan',
             'gktiket.tiket_pendaki:id,id_paket_tiket,kategori_pendaki,harga_masuk_wk,harga_masuk_wd,harga_kemah,harga_traking,harga_ansuransi,masa_ansuransi',
             'destinasi:destinasis.id,destinasis.nama,destinasis.status,destinasis.statusGunung,destinasis.kategori,destinasis.lokasi,destinasis.detail,destinasis.sop',
@@ -78,13 +78,19 @@ class BookingController extends Controller
             'gateKeluar:id,nama,status,id_destinasi,max_pendaki_hari,min_pendaki_booking,lokasi,lokasi_maps,detail',
             'pendakis:id,booking_id,tagihan,id_bio,usia,lampiran_surat_izin_ortu,checkin_at,actual_checkout_at',
             'pendakis.biodata:id,nik,kenegaraan,first_name,last_name,no_hp,no_hp_darurat,jenis_kelamin,tanggal_lahir,verified',
-            'pembayaran:id,id_booking,amount,status,payment_method,bukti_pembayaran,deadline,keterangan',
+            'pembayaran:id,id_booking,amount,status,payment_method,bukti_pembayaran,deadline,keterangan,created_at',
         ]);
+        $presentation = $booking->ticketPresentation();
+        foreach ($presentation as $key => $value) {
+            $booking->setAttribute($key, $value);
+        }
+        $booking->syncOriginalAttributes(array_keys($presentation));
+        return $booking;
     }
 
     private function getBookingByDate(string $startDate, string $endDate, string $idBio)
     {
-        return gk_booking::whereHas('pendakis', fn ($query) => $query->where('id_bio', $idBio))
+        return gk_booking::where('status_booking', '!=', gk_booking::STATUS_CANCELLED)->whereHas('pendakis', fn ($query) => $query->where('id_bio', $idBio))
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('tanggal_masuk', [$startDate, $endDate])
                     ->orWhere(function ($query) use ($startDate) {
@@ -99,7 +105,7 @@ class BookingController extends Controller
         $endDate = $endDate ?? Carbon::parse($startDate)->addMonths(2)->format('Y-m-d');
         $bookings = gk_booking::with('gateMasuk:id,nama,status,id_destinasi,max_pendaki_hari,min_pendaki_booking,lokasi,lokasi_maps,detail')
             ->whereHas('gktiket', fn ($query) => $query->where('id_destinasi', $idDestinasi))
-            ->where('status_booking', '>=', 4)
+            ->whereBetween('status_booking', [4, 8])
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('tanggal_masuk', [$startDate, $endDate])
                     ->orWhere(function ($query) use ($startDate) {
@@ -193,6 +199,10 @@ class BookingController extends Controller
         }
 
         $existingDraft = $this->bookingQuery($request)->where('status_booking', '<', 4)->latest()->first();
+        if ($existingDraft && !$existingDraft->ticketPresentation()['can_continue']) {
+            app(\App\Services\BookingCancellationService::class)->cancel($existingDraft, $request->user(), 'Masa pembayaran telah habis.');
+            $existingDraft = null;
+        }
         $conflictingBooking = $this->getBookingByDate($request->date_start, $request->date_end, $user->biodata->id)
             ->when($existingDraft, fn ($collection) => $collection->where('id', '!=', $existingDraft->id));
         if ($conflictingBooking->count() > 0) {
@@ -421,6 +431,9 @@ class BookingController extends Controller
         if (!$booking) {
             return ApiResponse::error('Booking tidak ditemukan atau status tidak valid', null, 404);
         }
+        if (!$booking->ticketPresentation()['can_continue']) {
+            return ApiResponse::error('Masa pembayaran telah habis. Buat pesanan baru.', null, 409);
+        }
         $path = $this->upload->create($booking->id, 'booking', $request->file('bukti_pembayaran'));
         pembayaran::create([
             'id_booking' => $booking->id,
@@ -513,11 +526,17 @@ class BookingController extends Controller
 
     public function cancel(Request $request, $id)
     {
-        $booking = $this->findUserBooking($request, $id, [0, 1, 2, 3]);
+        $booking = $this->findUserBooking($request, $id);
         if (!$booking) {
             return ApiResponse::error('Booking tidak ditemukan atau tidak dapat dibatalkan', null, 404);
         }
-        $booking->delete();
-        return ApiResponse::success(null, 'Booking berhasil dibatalkan', 200);
+        if (!in_array((int) $booking->status_booking, [0, 1, 2, 3, 9], true)) {
+            return ApiResponse::error('Pesanan tidak dapat dibatalkan setelah konfirmasi pembayaran.', null, 409);
+        }
+        $request->validate(['reason' => 'nullable|string|max:500']);
+        $booking = app(\App\Services\BookingCancellationService::class)->cancel(
+            $booking, $request->user(), $request->input('reason') ?: 'Pesanan dibatalkan oleh pemesan.'
+        );
+        return ApiResponse::success($this->loadBooking($booking), 'Booking berhasil dibatalkan', 200);
     }
 }

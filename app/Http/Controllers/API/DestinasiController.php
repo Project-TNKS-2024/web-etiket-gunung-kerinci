@@ -24,7 +24,7 @@ class DestinasiController extends Controller
             ->whereHas('gktiket', function ($query) use ($idDestinasi) {
                 $query->where('id_destinasi', $idDestinasi);
             })
-            ->where('status_booking', '>=', 4)
+            ->whereBetween('status_booking', [4, 8])
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('tanggal_masuk', [$startDate, $endDate])
                     ->orWhere(function ($query) use ($startDate, $endDate) {

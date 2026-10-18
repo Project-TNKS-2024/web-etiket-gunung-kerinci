@@ -48,7 +48,7 @@ class bookingController extends AdminController
         $destinasi = destinasi::find($id);
 
         // Query utama
-        $queryUtama = gk_booking::where('gk_bookings.status_booking', '>=', 3)
+        $queryUtama = gk_booking::with(['pendakis.biodata', 'gateMasuk', 'pembayaran'])
             ->whereHas('destinasi', function ($q) use ($destinasi) {
                 $q->where('destinasis.id', $destinasi->id);
             });
@@ -57,13 +57,17 @@ class bookingController extends AdminController
         if ($request->filled('filter-waktu')) {
             if ($request->input('filter-waktu') === 'dalam_booking') {
                 $queryUtama->where(function ($q) {
-                    $q->whereBetween('gk_bookings.status_booking', [4, 7])
+                    $q->whereBetween('gk_bookings.status_booking', [4, 6])
                         ->whereDate('gk_bookings.tanggal_masuk', '<=', now());
                 });
             } elseif ($request->input('filter-waktu') === 'sudah_selesai') {
-                $queryUtama->where('gk_bookings.status_booking', '=', 8);
+                $queryUtama->whereIn('gk_bookings.status_booking', [7, 8]);
+            } elseif ($request->input('filter-waktu') === 'dibatalkan') {
+                $queryUtama->where('gk_bookings.status_booking', gk_booking::STATUS_CANCELLED);
+            } elseif ($request->input('filter-waktu') === 'draft') {
+                $queryUtama->whereBetween('gk_bookings.status_booking', [0, 3]);
             } elseif ($request->input('filter-waktu') === 'akan_datang') {
-                $queryUtama->whereDate('gk_bookings.tanggal_masuk', '>', now());
+                $queryUtama->whereBetween('gk_bookings.status_booking', [4, 6])->whereDate('gk_bookings.tanggal_masuk', '>', now());
             }
         }
 
@@ -85,20 +89,19 @@ class bookingController extends AdminController
 
         // 🔹 **Filter berdasarkan pencarian (Nama atau Email)**
         if ($request->filled('search')) {
-            $queryUtama->whereHas('pendakis.biodata', function ($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $request->search . '%');
-            })
-                ->orWhereHas('user', function ($q) use ($request) {
-                    $q->where('email', 'like', '%' . $request->search . '%');
-                });
+            $queryUtama->where(function ($query) use ($request) {
+                $query->whereHas('pendakis.biodata', function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $request->search . '%');
+                })->orWhereHas('user', fn ($q) => $q->where('email', 'like', '%' . $request->search . '%'));
+            });
         }
 
         // 🔹 **Optimasi Urutan Data**
         $queryUtama->orderBy('gk_bookings.tanggal_masuk', 'desc');
 
         // Query Prioritas
-        $dataPrioritas = gk_booking::where('gk_bookings.status_booking', '>=', 3)
+        $dataPrioritas = (clone $queryUtama)->where('gk_bookings.status_booking', 3)
             ->whereHas('destinasi', function ($q) use ($destinasi) {
                 $q->where('destinasis.id', $destinasi->id);
             })
@@ -116,6 +119,18 @@ class bookingController extends AdminController
             'data' => $data,
             'dataPrioritas' => $dataPrioritas
         ]);
+    }
+
+    public function cancelBooking(Request $request)
+    {
+        $request->validate([
+            'booking_id' => 'required|uuid|exists:gk_bookings,id',
+            'reason' => 'required|string|max:500',
+        ]);
+        app(\App\Services\BookingCancellationService::class)->cancel(
+            gk_booking::findOrFail($request->booking_id), $request->user(), $request->reason
+        );
+        return back()->with('success', 'Pesanan dibatalkan. Riwayat dan bukti pembayaran tetap tersimpan.');
     }
 
     public function showPembayaran($id)
@@ -138,112 +153,117 @@ class bookingController extends AdminController
             'verified' => 'required|in:yes,no',
         ]);
 
-        $booking = gk_booking::with('pembayaran')->findOrFail($request->id_booking);
-        $userBooking = User::with('biodata')->find($booking->id_user);
-        if (!$booking) {
-            abort(404);
-        }
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
+            $booking = gk_booking::with('pembayaran')->lockForUpdate()->findOrFail($request->id_booking);
+            $userBooking = User::with('biodata')->find($booking->id_user);
+            if (!$booking) {
+                abort(404);
+            }
 
-        if ($booking->status_booking > 4) {
-            return redirect()->back()->withErrors('Bookingan sudah melakukan pendakian');
-        }
+            if ((int) $booking->status_booking === gk_booking::STATUS_CANCELLED) {
+                return redirect()->back()->withErrors('Pesanan dibatalkan dan tidak dapat dikonfirmasi.');
+            }
+            if ($booking->status_booking > 4) {
+                return redirect()->back()->withErrors('Bookingan sudah melakukan pendakian');
+            }
 
-        // Perbarui keterangan pembayaran terakhir
-        if ($booking->pembayaran->isNotEmpty()) {
-            $pembayaranPending = $booking->pembayaran->where('status', 'pending');
-            foreach ($pembayaranPending as  $p) {
-                $p->update([
+            // Perbarui keterangan pembayaran terakhir
+            if ($booking->pembayaran->isNotEmpty()) {
+                $pembayaranPending = $booking->pembayaran->where('status', 'pending');
+                foreach ($pembayaranPending as  $p) {
+                    $p->update([
+                        'status' => $request->verified === 'yes' ? 'success' : 'failed',
+                        'validator' =>  $this->userAdmin()->id
+                    ]);
+                }
+                $lastPembayaran = $booking->pembayaran->last();
+                $lastPembayaran->update([
                     'status' => $request->verified === 'yes' ? 'success' : 'failed',
+                    'keterangan' => $request->keterangan,
                     'validator' =>  $this->userAdmin()->id
                 ]);
+            } else {
+                return redirect()->back()->withErrors('Pembayaran tidak ditemukan');
             }
-            $lastPembayaran = $booking->pembayaran->last();
-            $lastPembayaran->update([
-                'status' => $request->verified === 'yes' ? 'success' : 'failed',
-                'keterangan' => $request->keterangan,
-                'validator' =>  $this->userAdmin()->id
-            ]);
-        } else {
-            return redirect()->back()->withErrors('Pembayaran tidak ditemukan');
-        }
 
-        if ($request->verified === 'yes') {
-            $booking->update([
-                'unique_code' =>  $this->helper->generateCode(10),
-                'status_booking' =>  4,
-                'status_pembayaran' =>  1,
-            ]);
+            if ($request->verified === 'yes') {
+                $booking->update([
+                    'unique_code' =>  $this->helper->generateCode(10),
+                    'status_booking' =>  4,
+                    'status_pembayaran' =>  1,
+                ]);
 
-            // update struk
-            $booking->load('pembayaran');
-            $dataStruk = json_decode($booking->dataStruk);
-            // return $dataStruk;
+                // update struk
+                $booking->load('pembayaran');
+                $dataStruk = json_decode($booking->dataStruk);
+                // return $dataStruk;
 
-            $dataStruk->status_booking = 4;
-            $dataStruk->status_pembayaran = 1;
-            $dataStruk->unique_code = $booking->unique_code;
-            $dataStruk->pembayaran = $booking->pembayaran;
+                $dataStruk->status_booking = 4;
+                $dataStruk->status_pembayaran = 1;
+                $dataStruk->unique_code = $booking->unique_code;
+                $dataStruk->pembayaran = $booking->pembayaran;
 
-            $booking->update([
-                'dataStruk' => json_encode($dataStruk),
-            ]);
+                $booking->update([
+                    'dataStruk' => json_encode($dataStruk),
+                ]);
 
-            // Kirim email ke user
-            $order = [
-                'name' => $userBooking->biodata->first_name . ' ' . $userBooking->biodata->last_name,
-                'booking_code' => $booking->unique_code,
-                'amount' => $booking->total_pembayaran,
-                'payment_date' => $booking->pembayaran->last()->created_at,
-                'invoice_url' => route('homepage.booking.struk', $booking->id),
-                'email' => $userBooking->email,
-            ];
-            try {
-                Mail::to($userBooking->email)->send(new BookingPayment($order));
-            } catch (\Exception $e) {
-                Log::channel('admin')->error('Gagal mengirim email konfirmasi pembayaran.', [
-                    'error' => $e->getMessage(),
-                    'user_email' => $userBooking->email,
+                // Kirim email ke user
+                $order = [
+                    'name' => $userBooking->biodata->first_name . ' ' . $userBooking->biodata->last_name,
                     'booking_code' => $booking->unique_code,
                     'amount' => $booking->total_pembayaran,
                     'payment_date' => $booking->pembayaran->last()->created_at,
                     'invoice_url' => route('homepage.booking.struk', $booking->id),
+                    'email' => $userBooking->email,
+                ];
+                try {
+                    Mail::to($userBooking->email)->send(new BookingPayment($order));
+                } catch (\Exception $e) {
+                    Log::channel('admin')->error('Gagal mengirim email konfirmasi pembayaran.', [
+                        'error' => $e->getMessage(),
+                        'user_email' => $userBooking->email,
+                        'booking_code' => $booking->unique_code,
+                        'amount' => $booking->total_pembayaran,
+                        'payment_date' => $booking->pembayaran->last()->created_at,
+                        'invoice_url' => route('homepage.booking.struk', $booking->id),
+                    ]);
+                }
+            } else {
+                $booking->update([
+                    'unique_code' => null,
+                    'status_booking' =>  3,
+                    'status_pembayaran' =>  0,
                 ]);
-            }
-        } else {
-            $booking->update([
-                'unique_code' => null,
-                'status_booking' =>  3,
-                'status_pembayaran' =>  0,
-            ]);
 
-            // Kirim email untuk pembayaran gagal
-            $failedOrder = [
-                'name' => $userBooking->biodata->first_name . ' ' . $userBooking->biodata->last_name,
-                'booking_code' => $booking->id,
-                'amount' => $booking->total_pembayaran,
-                'payment_status' => 'Failed',
-                'email' => $userBooking->email,
-            ];
-
-            try {
-                Mail::to($userBooking->email)->send(new BookingPaymentFailed($failedOrder));
-            } catch (\Exception $e) {
-                Log::channel('admin')->error('Gagal mengirim email pembayaran gagal.', [
-                    'error' => $e->getMessage(),
-                    'user_email' => $userBooking->email,
+                // Kirim email untuk pembayaran gagal
+                $failedOrder = [
+                    'name' => $userBooking->biodata->first_name . ' ' . $userBooking->biodata->last_name,
                     'booking_code' => $booking->id,
                     'amount' => $booking->total_pembayaran,
                     'payment_status' => 'Failed',
-                ]);
-            }
-        }
+                    'email' => $userBooking->email,
+                ];
 
-        return redirect()->back()->with('success', 'Pengajuan berhasil diperbarui');
+                try {
+                    Mail::to($userBooking->email)->send(new BookingPaymentFailed($failedOrder));
+                } catch (\Exception $e) {
+                    Log::channel('admin')->error('Gagal mengirim email pembayaran gagal.', [
+                        'error' => $e->getMessage(),
+                        'user_email' => $userBooking->email,
+                        'booking_code' => $booking->id,
+                        'amount' => $booking->total_pembayaran,
+                        'payment_status' => 'Failed',
+                    ]);
+                }
+            }
+
+            return redirect()->back()->with('success', 'Pengajuan berhasil diperbarui');
+        });
     }
 
     public function showBooking($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'pendakis.getStatus',  'destinasi'])->where('id', $id)->first();
+        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'pendakis.getStatus', 'cancelledBy', 'destinasi'])->where('id', $id)->first();
 
 
         $listStatusPendakian = $booking->riwayatPendakian();
@@ -269,7 +289,7 @@ class bookingController extends AdminController
             'bookinfStartDate' => 'required|date',
         ]);
         $booking = gk_booking::where('id', $request->id_booking)
-            ->where('status_booking', '>=', 4)
+            ->whereBetween('status_booking', [4, 8])
             ->first();
 
         if (!$booking) {

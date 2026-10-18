@@ -28,7 +28,7 @@ class pendapatan extends Controller
         // Query utama
         $bigData = gk_booking::with(['destinasi', 'pembayaran'])
             ->withMax('pembayaran', 'created_at')
-            ->where('status_booking', '>=', 4)
+            ->whereBetween('status_booking', [4, 8])
             ->when($filter_destinasi, function ($query) use ($filter_destinasi) {
                 $query->whereHas('destinasi', function ($q) use ($filter_destinasi) {
                     $q->where('destinasis.id', $filter_destinasi);
@@ -65,7 +65,7 @@ class pendapatan extends Controller
             : Carbon::now()->endOfDay();
 
         $data = gk_booking::with(['destinasi', 'pembayaran'])
-            ->where('status_booking', '>=', 4)
+            ->whereBetween('status_booking', [4, 8])
             ->when($filter_destinasi, function ($query) use ($filter_destinasi) {
                 $query->whereHas('destinasi', function ($q) use ($filter_destinasi) {
                     $q->where('destinasis.id', $filter_destinasi);

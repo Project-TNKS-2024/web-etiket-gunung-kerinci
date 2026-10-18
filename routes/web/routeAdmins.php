@@ -54,6 +54,7 @@ Route::middleware(['check.role:admin'])->group(function () {
     Route::post('admin/destinasi/tiket/delete', [tiketController::class, 'deleteAction'])->name('admin.destinasi.tiket.deleteAction')->middleware('permission:delete-tiket');
 
     // Destinasi - booking
+    Route::post('admin/destinasi/booking/cancel', [bookingController::class, 'cancelBooking'])->name('admin.destinasi.booking.cancel')->middleware('permission:edit-booking');
     Route::get('admin/destinasi/{id}/booking', [bookingController::class, 'index'])->name('admin.destinasi.booking')->middleware('permission:view-booking');
     Route::get('admin/destinasi/booking/{id}', [bookingController::class, 'showBooking'])->name('admin.destinasi.booking.show')->middleware('permission:view-booking');
     Route::post('admin/destinasi/booking/updateStatus', [bookingController::class, 'updateStatus'])->name('admin.destinasi.booking.updateStatus')->middleware('permission:edit-booking');
