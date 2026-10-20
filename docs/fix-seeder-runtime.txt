@@ -22,6 +22,6 @@ constraint. Penggantinya adalah $id === null, sehingga parameter status 0
 tetap dikenali dan parameter yang tidak diisi memakai status model.
 
 Error direproduksi dengan fungsi PHPUnit tidak dimuat. Perbaikan diuji dengan
-6 pemeriksaan status tanpa PHPUnit, 18 pengujian terkait, serta dua kali
+6 pemeriksaan status tanpa PHPUnit, 18 pengujian terkait, serta
 migrasi lengkap dan dua kali seeder pada database memori terpisah tanpa PHPUnit.
 Tidak ada akses atau perubahan ke database production oleh Codex.
