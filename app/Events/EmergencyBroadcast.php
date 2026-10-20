@@ -38,7 +38,7 @@ class EmergencyBroadcast implements ShouldBroadcast
             'description' => $this->description,
             'severity' => $this->severity,
             'admin_name' => $this->adminName,
-            'timestamp' => now()->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'timestamp' => now()->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ];
     }
 }

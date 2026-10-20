@@ -79,7 +79,7 @@ class EmergencyController extends Controller
         return ApiResponse::success([
             'id' => $emergency->id,
             'status' => $emergency->status,
-            'created_at' => $emergency->created_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'created_at' => $emergency->created_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ], 'Pesan darurat berhasil dikirim', 201);
     }
 
@@ -113,7 +113,7 @@ class EmergencyController extends Controller
                 'severity' => $e->severity,
                 'latitude' => $e->latitude,
                 'longitude' => $e->longitude,
-                'created_at' => $e->created_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+                'created_at' => $e->created_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
             ]);
 
         return ApiResponse::success($emergencies);

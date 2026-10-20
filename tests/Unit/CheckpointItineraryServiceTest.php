@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use App\Models\GkPost;
 use App\Services\CheckpointItineraryService;
 use Carbon\Carbon;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class CheckpointItineraryServiceTest extends TestCase
 {

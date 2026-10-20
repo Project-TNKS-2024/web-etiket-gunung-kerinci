@@ -38,7 +38,7 @@ class SOSMessageSent implements ShouldBroadcast
             'sender_name' => $this->senderName,
             'type' => $this->type,
             'content' => $this->content,
-            'timestamp' => now()->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'timestamp' => now()->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ];
     }
 }

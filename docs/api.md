@@ -2,6 +2,24 @@
 
 ## Informasi Umum
 
+### Kontrak Waktu WIB
+
+Satu pengaturan backend, `APP_TIMEZONE=Asia/Jakarta`, menentukan zona aplikasi
+dan offset sesi koneksi MySQL/MariaDB. Tidak diperlukan `DB_TIMEZONE` terpisah.
+Timestamp aplikasi pada response HTTP/broadcast menggunakan ISO-8601 dengan
+offset `+07:00`, misalnya `2026-10-20T21:00:00+07:00`.
+
+Mobile menampilkan komponen tanggal dan jam response tersebut secara langsung,
+tanpa menambah tujuh jam atau mengonversi UTC. Timestamp response bertanda `Z`
+atau zona lain berarti backend belum memenuhi kontrak; jangan dilabeli WIB.
+Backend tetap menerima input lama bertanda `Z` dan menormalisasikannya sebelum
+penyimpanan. Klien baru mengirim `recorded_at` dengan offset `+07:00`.
+
+Tanggal kalender tanpa jam dan angka epoch tetap mempertahankan semantik aslinya.
+Epoch antrean offline menyatakan waktu kejadian; tidak ditambah tujuh jam atau
+diganti waktu sinkronisasi. Epoch cuaca dari penyedia eksternal bukan timestamp
+ISO milik aplikasi dan tetap diformat sesuai jenis nilainya.
+
 ### Base URL
 ```
 /api

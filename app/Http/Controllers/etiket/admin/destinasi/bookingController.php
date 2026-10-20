@@ -74,7 +74,7 @@ class bookingController extends AdminController
         // 🔹 **Filter keterlambatan tiket (overstay)**
         if ($request->filled('filter-overstay')) {
             if ($request->input('filter-overstay') === 'overdue') {
-                $today = now()->setTimezone('Asia/Jakarta')->toDateString();
+                $today = now()->setTimezone(config('app.timezone'))->toDateString();
                 $queryUtama->whereDate('gk_bookings.tanggal_keluar', '<', $today)
                     ->whereHas('pendakis', function ($q) {
                         $q->whereHas('getStatus', fn ($s) => $s->where('status', 2))
@@ -339,7 +339,7 @@ class bookingController extends AdminController
         $message = [];
 
         // jika tanggal masuk < hari ini, cuma bisa memberi konfirmasi batal pendakian
-        if ($booking->tanggal_masuk > Carbon::now(OverstayCalculator::TZ)->toDateString()) {
+        if ($booking->tanggal_masuk > Carbon::now(config('app.timezone'))->toDateString()) {
             if ($request->name != 0) {
                 return redirect()->back()->withErrors('Tidak bisa mengubah status booking');
             }
@@ -544,7 +544,7 @@ class bookingController extends AdminController
         foreach ($request->input('checkout', []) as $idPendaki => $time) {
             $items[] = [
                 'pendaki_id' => $idPendaki,
-                'actual_checkout_at' => $time ? Carbon::parse($time, OverstayCalculator::TZ) : null,
+                'actual_checkout_at' => $time ? Carbon::parse($time, config('app.timezone')) : null,
                 'reason' => $request->input("reasons.$idPendaki"),
             ];
         }

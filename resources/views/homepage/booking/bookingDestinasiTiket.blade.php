@@ -260,8 +260,17 @@
     const dataBulanan = JSON.parse('@json($bookingBulanan)');
     const dataEvents = JSON.parse('@json($events)')
 
+    // Calendar fields stay on the selected day in every browser timezone.
+    function calendarDate(value) {
+        const parts = String(value).split('-').map(Number);
+        return parts.length === 3 && parts.every(Number.isFinite)
+            ? new Date(parts[0], parts[1] - 1, parts[2], 12)
+            : new Date(NaN);
+    }
+    const serverToday = @json(now()->toDateString());
+
     function getDate(index) {
-        let today = new Date();
+        const today = calendarDate(serverToday);
         return new Date(today.getFullYear(), today.getMonth() + index, 1);
     }
 
@@ -360,10 +369,10 @@
         if (dateStart && dateEnd) {
             if (dateStart <= dateEnd) {
                 // Hitung selisih hari antara tanggal mulai dan tanggal selesai
-                days = (new Date(dateEnd) - new Date(dateStart)) / (1000 * 3600 * 24);
+                days = Math.round((calendarDate(dateEnd) - calendarDate(dateStart)) / (1000 * 3600 * 24));
 
                 // Iterasi melalui rentang tanggal
-                for (let currentDate = new Date(dateStart); currentDate <= new Date(dateEnd); currentDate.setDate(currentDate.getDate() + 1)) {
+                for (let currentDate = calendarDate(dateStart); currentDate <= calendarDate(dateEnd); currentDate.setDate(currentDate.getDate() + 1)) {
                     const isWeekend = checkIfWeekend(currentDate);
 
                     // Harga tiket masuk
@@ -411,7 +420,7 @@
 
     // Fungsi untuk mengecek apakah tanggal adalah akhir pekan
     function checkIfWeekend(dateString) {
-        const date = new Date(dateString);
+        const date = dateString instanceof Date ? dateString : calendarDate(dateString);
         const day = date.getDay(); // 0 = Minggu, 6 = Sabtu
 
         // Cek jika hari Sabtu atau Minggu
@@ -421,8 +430,8 @@
 
         // Cek apakah tanggal tersebut termasuk dalam events dengan libur == true
         const isHoliday = dataEvents.some(e => {
-            const eventDate = new Date(e.tanggal).toISOString().split('T')[0];
-            const checkDate = date.toISOString().split('T')[0];
+            const eventDate = String(e.tanggal).slice(0, 10);
+            const checkDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
             return eventDate === checkDate && e.libur === 1;
         });
 
@@ -439,9 +448,8 @@
 
     // Validasi tanggal
     formBooking.date_start.addEventListener('change', function() {
-        const dateStart = new Date(this.value);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const dateStart = calendarDate(this.value);
+        const today = calendarDate(serverToday);
         console.log(dateStart, today);
         if (dateStart < today) {
             Swal.fire({
@@ -455,8 +463,8 @@
     });
 
     formBooking.date_end.addEventListener('change', function() {
-        const dateEnd = new Date(this.value);
-        const dateStart = new Date(formBooking.date_start.value);
+        const dateEnd = calendarDate(this.value);
+        const dateStart = calendarDate(formBooking.date_start.value);
         console.log(dateStart, dateEnd);
         if (dateEnd < dateStart) {
             Swal.fire({

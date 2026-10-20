@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Services\OverstayCalculator;
 use Carbon\Carbon;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class OverstayCalculatorTest extends TestCase
 {

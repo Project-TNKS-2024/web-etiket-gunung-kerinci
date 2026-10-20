@@ -69,7 +69,7 @@ class TrackingController extends Controller
 
         return ApiResponse::success([
             'id' => $tracking->id,
-            'server_time' => now()->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'server_time' => now()->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ], 'GPS berhasil direkam', 201);
     }
 
@@ -113,7 +113,7 @@ class TrackingController extends Controller
 
         return ApiResponse::success([
             'inserted' => $inserted,
-            'server_time' => now()->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'server_time' => now()->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ], "Batch GPS berhasil direkam ({$inserted} posisi)", 201);
     }
 
@@ -144,7 +144,7 @@ class TrackingController extends Controller
             'altitude' => $lastPosition->altitude,
             'accuracy' => $lastPosition->accuracy,
             'battery_level' => $lastPosition->battery_level,
-            'recorded_at' => $lastPosition->recorded_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'recorded_at' => $lastPosition->recorded_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ]);
     }
 

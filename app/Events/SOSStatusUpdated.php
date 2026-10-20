@@ -39,7 +39,7 @@ class SOSStatusUpdated implements ShouldBroadcast
             'old_status' => $this->oldStatus,
             'new_status' => $this->newStatus,
             'admin_name' => $this->adminName,
-            'timestamp' => now()->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'timestamp' => now()->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ];
     }
 }

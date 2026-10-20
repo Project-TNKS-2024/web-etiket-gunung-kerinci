@@ -109,9 +109,9 @@ class gk_booking extends Model
             $notice = 'Masa pembayaran telah habis. Buat pesanan baru.';
             $tone = 'error';
         } elseif ($state === 3 && $deadline) {
-            $notice = 'Lakukan pembayaran sebelum '.$deadline->setTimezone('Asia/Jakarta')->format('d M Y H.i').' WIB.';
+            $notice = 'Lakukan pembayaran sebelum '.$deadline->setTimezone(config('app.timezone'))->format('d M Y H.i').' WIB.';
             $tone = 'warning';
-        } elseif (in_array($state, [0, 1, 2], true) && $this->tanggal_masuk < now()->setTimezone('Asia/Jakarta')->toDateString()) {
+        } elseif (in_array($state, [0, 1, 2], true) && $this->tanggal_masuk < now()->setTimezone(config('app.timezone'))->toDateString()) {
             $notice = 'Tanggal masuk sudah tidak tersedia, silakan ubah pesanan Anda.';
             $tone = 'warning';
         }

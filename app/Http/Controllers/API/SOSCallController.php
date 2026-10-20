@@ -116,7 +116,7 @@ class SOSCallController extends Controller
         return ApiResponse::success([
             'id' => $report->id,
             'status' => 'pending',
-            'created_at' => $report->created_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'created_at' => $report->created_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ], 'Laporan bencana berhasil dikirim', 201);
     }
 
@@ -136,7 +136,7 @@ class SOSCallController extends Controller
                 'potensi_bencana' => $r->potensi_bencana,
                 'lokasi' => $r->lokasi,
                 'status' => $r->status,
-                'created_at' => $r->created_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+                'created_at' => $r->created_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
             ]);
 
         return ApiResponse::success($reports);

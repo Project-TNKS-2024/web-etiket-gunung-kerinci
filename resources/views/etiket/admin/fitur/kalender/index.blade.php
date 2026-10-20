@@ -288,7 +288,7 @@
 
    function displayEventList(date) {
       const eventsOnDate = eventsData.filter(event => {
-         const eventStart = new Date(event.start).toISOString().split('T')[0]; // Format YYYY-MM-DD
+         const eventStart = String(event.start).slice(0, 10); // Calendar date, not an instant.
          return eventStart === date;
       });
 

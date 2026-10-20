@@ -71,7 +71,6 @@ APP_DEBUG=true
 APP_URL=http://127.0.0.1:8000
 
 DB_CONNECTION=mysql
-DB_TIMEZONE=+07:00
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=etiket_gunung_kerinci
@@ -89,12 +88,29 @@ php artisan migrate
 php artisan db:seed
 ```
 
-Waktu aplikasi, sesi MySQL, dan tanggal API menggunakan WIB (`Asia/Jakarta`,
-offset `+07:00`). Input API bertanda `Z` tetap diterima dan dikonversi sebelum
-disimpan. Migrasi `88_convert_legacy_dates_to_wib.php` menyesuaikan timestamp
-lama yang ditulis oleh versi aplikasi UTC; migrasi berjalan sekali sebelum
-seeding. Buat cadangan database sebelum memperbarui instalasi lama. Tanggal
-tanpa jam, seperti tanggal lahir dan jadwal tiket, tidak digeser.
+Waktu aplikasi, sesi koneksi MySQL/MariaDB, dan tanggal API mengikuti satu
+pengaturan `APP_TIMEZONE=Asia/Jakarta`. Offset database diturunkan otomatis;
+`DB_TIMEZONE` tidak lagi digunakan. Semua timestamp API/broadcast memakai
+ISO-8601 `+07:00`; input lama bertanda `Z` tetap dinormalisasi di backend.
+Mobile menampilkan komponen tanggal/jam respons WIB tanpa konversi zona.
+
+Migrasi `88_convert_legacy_dates_to_wib.php` kini nondestruktif. Versi lama
+pernah menggeser seluruh datetime/timestamp; jangan jalankan ulang pergeseran
+tersebut. Database lokal yang sudah dikonversi tidak perlu diubah lagi.
+Sebelum memperbaiki database hosting lama, cadangkan dan klasifikasikan
+data: MySQL TIMESTAMP mengikuti zona sesi, sedangkan DATETIME tidak.
+Perbaikan satu kali hanya untuk nilai yang terbukti salah, dengan daftar
+kolom/baris eksplisit dan uji pada salinan database. Jangan menggeser DATE,
+epoch, NULL, atau data yang sudah benar. Ledger migrasi bukan bukti bahwa
+semua data sebelumnya UTC. Jangan memakai rollback -7 jam pada data campuran.
+
+Saat memperbarui cPanel, pertahankan `.env` hosting dan `APP_KEY` yang sudah
+dipakai. Atur `APP_TIMEZONE=Asia/Jakarta`, unggah kode backend terbaru, lalu
+bersihkan cache konfigurasi (`php artisan config:clear`). Jika memakai cache,
+bangun ulang dengan `php artisan config:cache`. Mulai ulang worker queue dan
+Reverb yang memang sedang berjalan. Verifikasi `created_at` pada API chat
+menunjukkan jam yang benar dan `+07:00` sebelum memasang APK terbaru.
+Jangan menganggap API hosting sudah berubah hanya karena admin terlihat benar.
 
 Jika ada perubahan cache konfigurasi atau `.env`, bersihkan cache:
 

@@ -78,7 +78,7 @@
                   <td class="">{{ $item->getStatusBooking()->status}}
                      @if ((int) $item->status_booking === 9)
                      <small class="d-block text-danger">{{ $item->cancellation_reason }}</small>
-                     <small class="d-block text-muted">{{ $item->cancelled_at?->timezone('Asia/Jakarta')->format('d/m/Y H:i') }} WIB</small>
+                     <small class="d-block text-muted">{{ $item->cancelled_at?->timezone(config('app.timezone'))->format('d/m/Y H:i') }} WIB</small>
                      @endif</td>
                   @php
                   $colorStatus = 'outline-info';
@@ -122,7 +122,7 @@
                   <td class="">{{ $item->getStatusBooking()->status}}
                      @if ((int) $item->status_booking === 9)
                      <small class="d-block text-danger">{{ $item->cancellation_reason }}</small>
-                     <small class="d-block text-muted">{{ $item->cancelled_at?->timezone('Asia/Jakarta')->format('d/m/Y H:i') }} WIB</small>
+                     <small class="d-block text-muted">{{ $item->cancelled_at?->timezone(config('app.timezone'))->format('d/m/Y H:i') }} WIB</small>
                      @endif</td>
                   @php
                   $colorStatus = 'outline-info';

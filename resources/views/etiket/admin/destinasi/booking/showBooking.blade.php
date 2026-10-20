@@ -41,7 +41,7 @@
 <div class="alert alert-danger" role="status">
    <strong>Pesanan dibatalkan</strong>
    <p class="mb-1">{{ $booking->cancellation_reason }}</p>
-   <small>{{ $booking->cancelled_at?->timezone('Asia/Jakarta')->format('d/m/Y H:i') }} WIB
+   <small>{{ $booking->cancelled_at?->timezone(config('app.timezone'))->format('d/m/Y H:i') }} WIB
       · {{ $booking->cancelledBy?->email ?? 'Pemesan/petugas' }}</small>
    <div>Riwayat pemesanan dan bukti pembayaran tetap tersimpan.</div>
 </div>
@@ -350,7 +350,7 @@
                      <td>{{ $p['full_name'] }}</td>
                      <td>
                         <input type="datetime-local" class="form-control checkout-time" data-id="{{ $p['id'] }}"
-                           value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Jakarta')->format('Y-m-d\TH:i') }}">
+                           value="{{ \Carbon\Carbon::now()->setTimezone(config('app.timezone'))->format('Y-m-d\TH:i') }}">
                      </td>
                      <td>
                         <input type="text" class="form-control checkout-reason" data-id="{{ $p['id'] }}" maxlength="255" placeholder="Opsional">
@@ -423,7 +423,7 @@
                   <td>{{ $p['scheduled_exit_date'] }}</td>
                   <td>
                      @if ($p['actual_checkout_at'])
-                        {{ \Carbon\Carbon::parse($p['actual_checkout_at'])->setTimezone('Asia/Jakarta')->format('d M Y H:i') }}
+                        {{ \Carbon\Carbon::parse($p['actual_checkout_at'])->setTimezone(config('app.timezone'))->format('d M Y H:i') }}
                      @else
                         -
                      @endif
@@ -584,12 +584,15 @@
    const bookingEndDateInput = document.getElementById('bookingEndDate');
 
    formGantiDate.addEventListener('change', function() {
-      const selectedDate = new Date(bookingStartDateInput.value);
+      const parts = bookingStartDateInput.value.split('-').map(Number);
+      const selectedDate = parts.length === 3 && parts.every(Number.isFinite)
+         ? new Date(parts[0], parts[1] - 1, parts[2], 12)
+         : new Date(NaN);
       const totalDays = parseInt(formGantiDate.totalHari.value, 10) - 1; // Ambil dari input hidden
 
       if (!isNaN(totalDays) && selectedDate instanceof Date && !isNaN(selectedDate)) {
          selectedDate.setDate(selectedDate.getDate() + totalDays); // Tambahkan hari dengan benar
-         bookingEndDateInput.value = selectedDate.toISOString().split('T')[0]; // Format ke YYYY-MM-DD
+         bookingEndDateInput.value = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
       }
    });
 </script>

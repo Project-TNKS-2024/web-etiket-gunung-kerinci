@@ -50,7 +50,7 @@ class HomeController extends Controller
                 'total_tercatat' => $pendaki['total_pendaki'],
                 'cakupan' => 'seluruh_riwayat',
             ],
-            'ringkasan_diperbarui_pada' => now()->toIso8601String(),
+            'ringkasan_diperbarui_pada' => now()->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
             'cuaca_diamati_pada' => $cuaca['current']['last_updated_epoch'] ?? null,
             'total_mendaki' => $pendaki['total_sedang_cekin'],
             'total_pendaki' => $pendaki['total_pendaki'],

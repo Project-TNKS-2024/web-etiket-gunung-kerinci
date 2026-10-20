@@ -360,6 +360,36 @@ class CheckpointAttendanceApiTest extends TestCase
         }
     }
 
+    public function test_chat_warning_and_tracking_http_timestamps_are_wib(): void
+    {
+        $this->travelTo(\Carbon\Carbon::parse('2026-10-20T14:00:00Z'));
+        \Illuminate\Support\Facades\Event::fake([\App\Events\SOSMessageSent::class, \App\Events\TrackingUpdated::class]);
+        try {
+            $destinationId = $this->booking->gktiket->id_destinasi;
+            $sos = \App\Models\GkSos::create([
+                'id_pendaki' => $this->leaderHiker->id, 'id_booking' => $this->booking->id,
+                'id_destinasi' => $destinationId, 'severity' => 'high',
+                'latitude' => -1.704, 'longitude' => 101.266, 'status' => 'active',
+            ]);
+            $this->actingAs($this->leader, 'sanctum')
+                ->postJson('/api/sos/chat/'.$sos->id.'/send', ['type' => 'text', 'content' => 'Clock test'])
+                ->assertCreated()->assertJsonPath('data.created_at', '2026-10-20T21:00:00+07:00');
+            $this->getJson('/api/sos/chat/'.$sos->id.'/messages')
+                ->assertOk()->assertJsonPath('data.messages.0.created_at', '2026-10-20T21:00:00+07:00');
+            \App\Models\GkEmergencyMessage::create([
+                'id_user' => $this->leader->id, 'id_destinasi' => $destinationId,
+                'type' => 'admin_broadcast', 'title' => 'Clock test', 'description' => 'Test',
+                'severity' => 'high', 'status' => 'active',
+            ]);
+            $this->getJson('/api/emergency/active')->assertOk()
+                ->assertJsonPath('data.0.created_at', '2026-10-20T21:00:00+07:00');
+            $this->postJson('/api/tracking/gps', ['latitude' => -1.704, 'longitude' => 101.266])
+                ->assertCreated()->assertJsonPath('data.server_time', '2026-10-20T21:00:00+07:00');
+        } finally {
+            $this->travelBack();
+        }
+    }
+
     private function checkInLeader(): void
     {
         $this->actingAs($this->leader, 'sanctum')

@@ -495,8 +495,8 @@ class BookingController extends Controller
         }
 
         $booking->overstay = $this->overstay->bookingSummary($booking);
-        $booking->server_now = now()->setTimezone(OverstayCalculator::TZ)->toIso8601String();
-        $booking->timezone = OverstayCalculator::TZ;
+        $booking->server_now = now()->setTimezone(config('app.timezone'))->toIso8601String();
+        $booking->timezone = config('app.timezone');
 
         return ApiResponse::success($booking, 'Berhasil mengambil tiket', 200);
     }

@@ -38,7 +38,7 @@ class CheckpointVisitService
                 ->first();
             if ($existing !== null) {
                 throw new CheckpointException('CHECKPOINT_ALREADY_RECORDED', 'Sudah check-in di pos ini', [
-                    'checked_at' => $existing->checked_at?->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+                    'checked_at' => $existing->checked_at?->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
                 ]);
             }
             $log = GkCheckpointLog::create(array_merge($attributes, [
@@ -80,7 +80,7 @@ class CheckpointVisitService
         }
 
         $target ??= $actor;
-        $recordedAt = ($recordedAt ?? Carbon::now())->copy()->setTimezone('Asia/Jakarta');
+        $recordedAt = ($recordedAt ?? Carbon::now())->copy()->setTimezone(config('app.timezone'));
 
         return DB::transaction(function () use (
             $actor, $target, $post, $phase, $method, $latitude, $longitude,
@@ -149,7 +149,7 @@ class CheckpointVisitService
                     'Sudah check-in di pos ini pada fase ini.',
                     [
                         'checkpoint_log_id' => $existingByTuple->id,
-                        'checked_at' => $existingByTuple->checked_at?->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+                        'checked_at' => $existingByTuple->checked_at?->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
                         'visit_key' => $phase->value . ':' . $post->id,
                     ]
                 );
@@ -183,7 +183,7 @@ class CheckpointVisitService
                     throw new CheckpointException(
                         'CHECKPOINT_PHASE_CONFLICT',
                         'Waktu check-in turun mendahului waktu puncak.',
-                        ['recorded_at' => $recordedAt->copy()->setTimezone('Asia/Jakarta')->toIso8601String(), 'summit_checked_at' => $summitLog->checked_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String()]
+                        ['recorded_at' => $recordedAt->copy()->setTimezone(config('app.timezone'))->toIso8601String(), 'summit_checked_at' => $summitLog->checked_at->copy()->setTimezone(config('app.timezone'))->toIso8601String()]
                     );
                 }
             }
@@ -276,7 +276,7 @@ class CheckpointVisitService
             'client_event_id' => $log->client_event_id,
             'pendaki_id' => $target->id,
             'phase' => $phase,
-            'checked_at' => $log->checked_at?->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+            'checked_at' => $log->checked_at?->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
             'post' => ['id' => $post->id, 'nama' => $post->nama, 'urutan' => $post->urutan],
             'visit_key' => $phase . ':' . $post->id,
             'tracking_phase' => $target->tracking_phase,
@@ -326,7 +326,7 @@ class CheckpointVisitService
             throw new CheckpointException(
                 'CHECKPOINT_PHASE_CONFLICT',
                 'Waktu check-in berada di masa depan dan butuh penyesuaian jam perangkat.',
-                ['recorded_at' => $recordedAt->copy()->setTimezone('Asia/Jakarta')->toIso8601String()]
+                ['recorded_at' => $recordedAt->copy()->setTimezone(config('app.timezone'))->toIso8601String()]
             );
         }
     }
@@ -339,8 +339,8 @@ class CheckpointVisitService
                 'CHECKPOINT_PHASE_CONFLICT',
                 'Waktu check-in naik bertentangan dengan waktu puncak.',
                 [
-                    'recorded_at' => $recordedAt->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
-                    'summit_checked_at' => $summitAt->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+                    'recorded_at' => $recordedAt->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
+                    'summit_checked_at' => $summitAt->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
                 ]
             );
         }

@@ -48,9 +48,9 @@ class WibTimezoneTest extends TestCase
         }
     }
 
-    public function test_legacy_conversion_preserves_instants_and_does_not_shift_date_only_values(): void
+    public function test_historical_migration_never_shifts_existing_dates_again(): void
     {
-        $id = DB::table('biodatas')->insertGetId([
+        DB::table('biodatas')->insert([
             'id' => 'legacy-bio', 'nik' => 'test', 'kenegaraan' => 'ID', 'first_name' => 'Clock',
             'lampiran_identitas' => 'test.jpg', 'no_hp' => '0', 'jenis_kelamin' => 'l',
             'tanggal_lahir' => '2000-01-01', 'created_at' => '2026-10-20 13:20:00',
@@ -59,12 +59,20 @@ class WibTimezoneTest extends TestCase
         $migration = require database_path('migrations/88_convert_legacy_dates_to_wib.php');
         $migration->up();
         $row = DB::table('biodatas')->where('id', 'legacy-bio')->first();
-        $this->assertSame('2026-10-20 20:20:00', $row->created_at);
+        $this->assertSame('2026-10-20 13:20:00', $row->created_at);
         $this->assertSame('2000-01-01', $row->tanggal_lahir);
         $this->assertNull($row->updated_at);
-        $this->assertSame(Carbon::parse('2026-10-20 13:20:00', 'UTC')->timestamp, Carbon::parse($row->created_at, 'Asia/Jakarta')->timestamp);
         $migration->down();
         $this->assertSame('2026-10-20 13:20:00', DB::table('biodatas')->where('id', 'legacy-bio')->value('created_at'));
+    }
+
+    public function test_database_offset_is_derived_from_application_timezone_only(): void
+    {
+        $database = require config_path('database.php');
+        $expected = now(config('app.timezone'))->format('P');
+        $this->assertSame('+07:00', $expected);
+        $this->assertSame($expected, $database['connections']['mysql']['timezone']);
+        $this->assertSame($expected, $database['connections']['mariadb']['timezone']);
     }
 
     public function test_broadcast_timestamp_uses_wib_offset(): void

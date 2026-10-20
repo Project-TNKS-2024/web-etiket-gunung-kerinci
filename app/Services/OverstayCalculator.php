@@ -24,7 +24,6 @@ use Carbon\CarbonInterface;
  */
 class OverstayCalculator
 {
-    public const TZ = 'Asia/Jakarta';
 
     /**
      * Fungsi murni: menghitung hari tambahan + rincian tarif per tanggal.
@@ -44,8 +43,8 @@ class OverstayCalculator
         string $kategori,
         array $holidayDates = []
     ): array {
-        $scheduledExit = Carbon::createFromFormat('Y-m-d', $scheduledExitDate, self::TZ)->startOfDay();
-        $endDay = $effectiveEnd->copy()->setTimezone(self::TZ)->startOfDay();
+        $scheduledExit = Carbon::createFromFormat('Y-m-d', $scheduledExitDate, config('app.timezone'))->startOfDay();
+        $endDay = $effectiveEnd->copy()->setTimezone(config('app.timezone'))->startOfDay();
 
         $extraDays = $endDay->greaterThan($scheduledExit)
             ? (int) $scheduledExit->diffInDays($endDay)
@@ -170,7 +169,7 @@ class OverstayCalculator
      */
     public function summary(gk_pendaki $pendaki, ?CarbonInterface $now = null, ?array $holidays = null): array
     {
-        $now = ($now ?? Carbon::now())->copy()->setTimezone(self::TZ);
+        $now = ($now ?? Carbon::now())->copy()->setTimezone(config('app.timezone'));
 
         $pendaki->loadMissing(['booking', 'biodata', 'getStatus', 'tarifSnapshot', 'overstayCharge.items', 'overstayCharge.payment']);
 
@@ -179,7 +178,7 @@ class OverstayCalculator
         $state = $this->hikeState($pendaki);
         $rates = $this->ratesForPendaki($pendaki);
 
-        $deadlineExclusive = Carbon::createFromFormat('Y-m-d', $scheduledExitDate, self::TZ)
+        $deadlineExclusive = Carbon::createFromFormat('Y-m-d', $scheduledExitDate, config('app.timezone'))
             ->startOfDay()
             ->addDay();
 
@@ -192,7 +191,7 @@ class OverstayCalculator
             'hike_state' => $state,
             'scheduled_exit_date' => $scheduledExitDate,
             'deadline_exclusive' => $deadlineExclusive->toIso8601String(),
-            'actual_checkout_at' => $pendaki->actual_checkout_at?->setTimezone(self::TZ)->toIso8601String(),
+            'actual_checkout_at' => $pendaki->actual_checkout_at?->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
             'overdue_days' => null,
             'is_estimate' => false,
             'amount' => null,
@@ -210,7 +209,7 @@ class OverstayCalculator
 
         // Final: sudah turun, pakai waktu turun aktual.
         if ($state === 'turun' && $pendaki->actual_checkout_at) {
-            $effectiveEnd = $pendaki->actual_checkout_at->copy()->setTimezone(self::TZ);
+            $effectiveEnd = $pendaki->actual_checkout_at->copy()->setTimezone(config('app.timezone'));
             $result['is_estimate'] = false;
 
             // Tagihan final sudah ada? Pakai data tersimpan (tidak berubah diam-diam).
@@ -246,8 +245,8 @@ class OverstayCalculator
         }
 
         $holidays ??= $this->holidayDates(
-            Carbon::createFromFormat('Y-m-d', $scheduledExitDate, self::TZ)->startOfDay()->addDay()->toDateString(),
-            $effectiveEnd->copy()->setTimezone(self::TZ)->startOfDay()->toDateString()
+            Carbon::createFromFormat('Y-m-d', $scheduledExitDate, config('app.timezone'))->startOfDay()->addDay()->toDateString(),
+            $effectiveEnd->copy()->setTimezone(config('app.timezone'))->startOfDay()->toDateString()
         );
 
         $computed = $this->compute(
@@ -301,7 +300,7 @@ class OverstayCalculator
         ])->all();
 
         $result['payment_state'] = $charge->payment ? 'paid' : 'unpaid';
-        $result['paid_at'] = $charge->payment?->paid_at?->setTimezone(self::TZ)->toIso8601String();
+        $result['paid_at'] = $charge->payment?->paid_at?->copy()->setTimezone(config('app.timezone'))->toIso8601String();
 
         return $result;
     }
@@ -329,8 +328,8 @@ class OverstayCalculator
         }
 
         $holidays = $this->holidayDates(
-            Carbon::createFromFormat('Y-m-d', $scheduledExitDate, self::TZ)->startOfDay()->addDay()->toDateString(),
-            $actualCheckoutAt->copy()->setTimezone(self::TZ)->startOfDay()->toDateString()
+            Carbon::createFromFormat('Y-m-d', $scheduledExitDate, config('app.timezone'))->startOfDay()->addDay()->toDateString(),
+            $actualCheckoutAt->copy()->setTimezone(config('app.timezone'))->startOfDay()->toDateString()
         );
 
         $computed = $this->compute(
@@ -357,7 +356,7 @@ class OverstayCalculator
      */
     public function bookingSummary(gk_booking $booking, ?CarbonInterface $now = null): array
     {
-        $now = ($now ?? Carbon::now())->copy()->setTimezone(self::TZ);
+        $now = ($now ?? Carbon::now())->copy()->setTimezone(config('app.timezone'));
 
         $booking->loadMissing([
             'pendakis.biodata',
@@ -368,7 +367,7 @@ class OverstayCalculator
             'pendakis.booking',
         ]);
 
-        $holidayStart = Carbon::createFromFormat('Y-m-d', $booking->tanggal_keluar, self::TZ)->startOfDay()->addDay()->toDateString();
+        $holidayStart = Carbon::createFromFormat('Y-m-d', $booking->tanggal_keluar, config('app.timezone'))->startOfDay()->addDay()->toDateString();
         $holidayEnd = $now->copy()->startOfDay()->toDateString();
         $holidays = $holidayStart <= $holidayEnd ? $this->holidayDates($holidayStart, $holidayEnd) : [];
 
@@ -383,7 +382,7 @@ class OverstayCalculator
             'booking_id' => $booking->id,
             'unique_code' => $booking->unique_code,
             'scheduled_exit_date' => $booking->tanggal_keluar,
-            'timezone' => self::TZ,
+            'timezone' => config('app.timezone'),
             'server_now' => $now->toIso8601String(),
             'pendakis' => $pendakis->all(),
             'team' => [

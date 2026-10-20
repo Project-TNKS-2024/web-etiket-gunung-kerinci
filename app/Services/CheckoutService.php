@@ -31,7 +31,7 @@ class CheckoutService
      */
     public function checkout(gk_booking $booking, array $items, User $admin, ?CarbonInterface $now = null): array
     {
-        $now = ($now ?? Carbon::now())->setTimezone(OverstayCalculator::TZ);
+        $now = ($now ?? Carbon::now())->setTimezone(config('app.timezone'));
 
         return DB::transaction(function () use ($booking, $items, $admin, $now) {
             $booking = gk_booking::lockForUpdate()->findOrFail($booking->id);
@@ -71,7 +71,7 @@ class CheckoutService
             ));
         }
 
-        $actual = ($item['actual_checkout_at'] ?? $now)->copy()->setTimezone(OverstayCalculator::TZ);
+        $actual = ($item['actual_checkout_at'] ?? $now)->copy()->setTimezone(config('app.timezone'));
         $reason = $item['reason'] ?? null;
 
         // Waktu turun tidak boleh di masa depan (toleransi kecil).

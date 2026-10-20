@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use Carbon\Carbon;
 use App\Models\GkPost;
 use App\Services\CheckpointTimelineService;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class CheckpointTimelineServiceTest extends TestCase
 {

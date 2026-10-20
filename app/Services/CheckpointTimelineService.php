@@ -31,9 +31,9 @@ class CheckpointTimelineService
                 'nama' => $post->nama,
                 'urutan' => $post->urutan,
                 'completed' => $log !== null,
-                'checked_at' => $log?->checked_at?->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+                'checked_at' => $log?->checked_at?->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
                 'method' => $log?->method,
-                'estimated_arrival_at' => $arrival?->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
+                'estimated_arrival_at' => $arrival?->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
                 'travel_minutes_from_previous' => $minutes,
                 'estimate_is_dummy' => $arrivalIsDummy,
             ];
