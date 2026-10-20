@@ -1,0 +1,42 @@
+PERBAIKAN MIGRASI 80 - TNKS
+
+Penyebab: migrasi lama selalu mencoba menghapus foreign key bernama
+gk_bookings_id_tiket_foreign. Database hosting bisa tidak memiliki constraint
+itu, atau mempunyai nama berbeda.
+
+CARA MEMAKAI
+1. Pastikan backup database production sudah tersedia.
+2. Upload ZIP perbaikan ini ke root backend Laravel yang berisi artisan.
+3. Extract di situ dan overwrite SATU file:
+   database/migrations/80_fix_booking_package_foreign_key.php
+4. Dari terminal cPanel, di folder backend yang sama, jalankan:
+
+   php artisan migrate --force
+   php artisan migrate:status
+
+Migrasi 77-79 yang sudah DONE tidak dijalankan ulang. Migrasi 80 yang gagal
+akan dicoba kembali, lalu migrasi berikutnya dilanjutkan.
+
+JANGAN rollback atau menjalankan migrate:fresh/migrate:refresh/db:wipe.
+Tidak perlu menghapus tabel, booking, atau isi tabel migrations secara manual.
+
+Perbaikan membaca nama foreign key yang benar-benar ada. Jika tidak ada,
+constraint langsung dibuat. Jika sudah mengarah ke paket tiket dengan aturan
+yang benar, dibiarkan. Foreign key kolom lain tidak diubah. ID tiket yang tidak
+cocok tetap membuat migrasi berhenti sebelum constraint lama disentuh.
+Jika setelah ini muncul pesan ID tidak cocok, kirim error itu untuk diperiksa;
+jangan menghapus booking agar migrasi lolos.
+
+Setelah seluruh migrasi sukses, jika memang ingin menjalankan semua seeder:
+
+   php artisan db:seed --force
+
+Seeder utama mereset role/permission sesuai workflow lama dan bisa memasukkan
+pesan DEMO aktif. Tidak dijalankan otomatis oleh paket perbaikan ini.
+
+VALIDASI
+- Error MySQL 1091 direproduksi sebelum perbaikan.
+- 6 pengujian MySQL lulus, termasuk eksekusi artisan migrate, constraint yang
+  hilang, nama khusus, relasi sudah benar, ID tidak cocok, retry, dan down.
+- 17 pengujian seeder terkait dijalankan ulang di database SQLite terpisah.
+- Database production tidak diakses atau dimodifikasi oleh Codex.
