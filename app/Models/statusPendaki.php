@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use function PHPUnit\Framework\isEmpty;
-
 class statusPendaki extends Model
 {
     use HasFactory;
@@ -20,7 +18,7 @@ class statusPendaki extends Model
 
     public function statusName($id = null)
     {
-        if (isEmpty($id)) {
+        if ($id === null) {
             $id = $this->status;
         }
         switch ($id) {

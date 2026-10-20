@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-use function PHPUnit\Framework\isEmpty;
-
 class gk_booking extends Model
 {
     use HasFactory;
@@ -125,7 +123,7 @@ class gk_booking extends Model
 
     public function getStatusBooking($id = null)
     {
-        if (isEmpty($id)) {
+        if ($id === null) {
             $id = $this->status_booking;
         }
         // Konversi tanggal untuk perbandingan

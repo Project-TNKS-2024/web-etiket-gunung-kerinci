@@ -1,0 +1,27 @@
+PERBAIKAN SEEDER PRODUCTION - FUNGSI PHPUNIT TIDAK TERSEDIA
+
+1. Upload ZIP kecil ini ke root backend Laravel (folder berisi artisan).
+2. Extract dan overwrite dua file model:
+   app/Models/gk_booking.php
+   app/Models/statusPendaki.php
+3. Jalankan di terminal cPanel dari folder backend:
+
+   php artisan optimize:clear
+   php artisan db:seed --force
+
+Migrasi 80-87 Anda sudah DONE. Tidak perlu rollback atau migrasi ulang.
+Seeder yang selesai sebelum error tidak dibatalkan secara global. Sebagian
+data sudah ada dan pengulangan menggunakan mekanisme seeder masing-masing.
+Seeder utama tetap mereset role/permission sebagaimana workflow yang dipilih.
+Paket ini tidak memuat .env, database, atau vendor.
+
+Penyebab: model memanggil PHPUnit\Framework\isEmpty(), fungsi milik paket
+pengujian. Fungsi tersebut tidak tersedia di production tanpa dependensi dev.
+Fungsi PHPUnit itu juga bukan pengujian nilai kosong, melainkan pembuat objek
+constraint. Penggantinya adalah $id === null, sehingga parameter status 0
+tetap dikenali dan parameter yang tidak diisi memakai status model.
+
+Error direproduksi dengan fungsi PHPUnit tidak dimuat. Perbaikan diuji dengan
+6 pemeriksaan status tanpa PHPUnit, 18 pengujian terkait, serta dua kali
+migrasi lengkap dan dua kali seeder pada database memori terpisah tanpa PHPUnit.
+Tidak ada akses atau perubahan ke database production oleh Codex.
