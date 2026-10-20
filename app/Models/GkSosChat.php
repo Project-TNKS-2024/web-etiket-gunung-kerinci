@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GkSosChat extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected $table = 'gk_sos_chats';
 
     protected $fillable = [

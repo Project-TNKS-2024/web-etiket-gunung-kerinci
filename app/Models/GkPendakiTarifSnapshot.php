@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GkPendakiTarifSnapshot extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected $table = 'gk_pendaki_tarif_snapshots';
 
     protected $fillable = [

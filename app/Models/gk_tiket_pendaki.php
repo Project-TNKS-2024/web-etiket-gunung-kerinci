@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class gk_tiket_pendaki extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
     protected $fillable = [
         'id_paket_tiket',

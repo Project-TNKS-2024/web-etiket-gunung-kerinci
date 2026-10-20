@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class setting extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
     protected $table = 'settings';
     protected $fillable = [

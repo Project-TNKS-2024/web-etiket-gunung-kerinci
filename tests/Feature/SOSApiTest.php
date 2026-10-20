@@ -6,6 +6,14 @@ use Tests\TestCase;
 
 class SOSApiTest extends TestCase
 {
+    use \Illuminate\Foundation\Testing\RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        \App\Models\User::create(['email' => 'sos-test@example.test', 'password' => 'password', 'role' => 'admin']);
+    }
+
     /**
      * Test SOS trigger requires auth.
      */

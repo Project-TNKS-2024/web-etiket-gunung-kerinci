@@ -130,10 +130,10 @@ class CheckpointItineraryServiceTest extends TestCase
         $visits = collect((new CheckpointItineraryService)->visits($posts, $logs))->keyBy('visit_key');
 
         // P1 -> P2 (10m), P2 -> P3 (20m) tersedia; P3 -> P4 terputus (null).
-        $this->assertSame('2026-10-16T00:30:00.000000Z', $visits['naik:3']['estimated_arrival_at']);
+        $this->assertSame('2026-10-16T07:30:00+07:00', $visits['naik:3']['estimated_arrival_at']);
         $this->assertNull($visits['naik:4']['estimated_arrival_at']);
         // Turun memakai anchor summit (06:00) + durasi turun puncak 35m.
-        $this->assertSame('2026-10-16T06:35:00.000000Z', $visits['turun:3']['estimated_arrival_at']);
+        $this->assertSame('2026-10-16T13:35:00+07:00', $visits['turun:3']['estimated_arrival_at']);
     }
 
     public function test_zero_descent_duration_is_valid_and_not_treated_as_null(): void
@@ -145,6 +145,6 @@ class CheckpointItineraryServiceTest extends TestCase
         $visits = collect((new CheckpointItineraryService)->visits($posts, $logs))->keyBy('visit_key');
 
         $this->assertSame(0, $visits['naik:4']['estimated_time_to_next_minutes']);
-        $this->assertSame('2026-10-16T06:00:00.000000Z', $visits['turun:3']['estimated_arrival_at']);
+        $this->assertSame('2026-10-16T13:00:00+07:00', $visits['turun:3']['estimated_arrival_at']);
     }
 }

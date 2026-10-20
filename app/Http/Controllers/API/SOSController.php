@@ -78,7 +78,7 @@ class SOSController extends Controller
         return ApiResponse::success([
             'sos_id' => $sos->id,
             'status' => 'active',
-            'created_at' => $sos->created_at->toISOString(),
+            'created_at' => $sos->created_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
             'rescue_contact' => $this->getRescueContact(),
         ], 'SOS berhasil dikirim. Bantuan sedang dalam perjalanan.', 201);
     }
@@ -112,7 +112,7 @@ class SOSController extends Controller
             'status' => $sos->status,
             'latitude' => $sos->latitude,
             'longitude' => $sos->longitude,
-            'created_at' => $sos->created_at->toISOString(),
+            'created_at' => $sos->created_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
         ]);
     }
 

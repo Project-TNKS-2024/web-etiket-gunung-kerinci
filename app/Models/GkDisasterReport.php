@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GkDisasterReport extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected $table = 'gk_disaster_reports';
 
     protected $fillable = [

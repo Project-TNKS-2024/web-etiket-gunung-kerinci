@@ -242,9 +242,9 @@ class CheckpointItineraryService
 
             $visit['completed'] = $log !== null;
             $visit['checkpoint_log_id'] = $log?->id;
-            $visit['checked_at'] = $log?->checked_at?->toISOString();
+            $visit['checked_at'] = $log?->checked_at?->copy()->setTimezone('Asia/Jakarta')->toIso8601String();
             $visit['method'] = $log?->method;
-            $visit['estimated_arrival_at'] = $arrival?->toISOString();
+            $visit['estimated_arrival_at'] = $arrival?->copy()->setTimezone('Asia/Jakarta')->toIso8601String();
             $visit['travel_minutes_from_previous'] = $inMinutes;
             $visit['estimate_is_dummy'] = $dummyChain;
 

@@ -12,6 +12,8 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**

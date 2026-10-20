@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class statusPendaki extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
     protected $table = 'gk_status_pendaki';
     protected $fillable = [

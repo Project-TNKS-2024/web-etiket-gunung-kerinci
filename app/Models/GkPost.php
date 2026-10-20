@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GkPost extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected $table = 'gk_posts';
 
     protected $fillable = [

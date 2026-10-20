@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class pembayaran extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
     protected $fillable = [
         'id_booking',

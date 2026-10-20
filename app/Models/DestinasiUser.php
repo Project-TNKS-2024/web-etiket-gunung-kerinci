@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class DestinasiUser extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
 
     protected $table = 'destinasi_user';

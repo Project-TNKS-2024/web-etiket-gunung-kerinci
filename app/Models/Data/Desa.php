@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\File;
 
 class Desa extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected static $filePath = 'assets/json/kelurahan.json';
 
     public static function getAll(): Collection

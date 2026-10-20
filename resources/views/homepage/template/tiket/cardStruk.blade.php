@@ -74,7 +74,7 @@
          <div class="col-sm-6 text-end">
             <strong>Tanggal Invoice:</strong><br>
             @if ($data->status_pembayaran)
-            <span>{{$data->pembayaran[count($data->pembayaran)-1]->updated_at ? \Carbon\Carbon::parse($data->pembayaran[count($data->pembayaran)-1]->updated_at)->format('d/M/Y H:i:s') : '-'}}</span>
+            <span>{{$data->pembayaran[count($data->pembayaran)-1]->updated_at ? \Carbon\Carbon::parse($data->pembayaran[count($data->pembayaran)-1]->updated_at)->setTimezone('Asia/Jakarta')->format('d/M/Y H:i:s').' WIB' : '-'}}</span>
             @else
             <span>-</span>
             @endif

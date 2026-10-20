@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\File;
 
 class Kabupaten extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected static $filePath = 'assets/json/kabupaten.json';
 
     public static function getAll(): Collection

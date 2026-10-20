@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GkOverstayChargeItem extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected $table = 'gk_overstay_charge_items';
 
     protected $fillable = [

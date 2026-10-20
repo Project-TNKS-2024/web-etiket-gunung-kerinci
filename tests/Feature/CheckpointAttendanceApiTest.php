@@ -343,7 +343,7 @@ class CheckpointAttendanceApiTest extends TestCase
         $hikers = collect($response->json('data.hikers'))->keyBy('pendaki_id');
         $leaderPosts = collect($hikers[$this->leaderHiker->id]['checkpoints'])->keyBy('post_id');
         $memberPosts = collect($hikers[$this->memberHiker->id]['checkpoints'])->keyBy('post_id');
-        $this->assertSame('2026-10-15T17:30:00.000000Z', $leaderPosts[$next->id]['estimated_arrival_at']);
+        $this->assertSame('2026-10-16T00:30:00+07:00', $leaderPosts[$next->id]['estimated_arrival_at']);
         $this->assertSame(45, $leaderPosts[$next->id]['travel_minutes_from_previous']);
         $this->assertNull($memberPosts[$next->id]['estimated_arrival_at']);
         $this->assertFalse($memberPosts[$this->post->id]['completed']);

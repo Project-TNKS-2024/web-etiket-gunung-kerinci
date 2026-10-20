@@ -66,10 +66,12 @@ Edit `.env`, minimal sesuaikan database:
 ```env
 APP_NAME="E-Tiket Gunung Kerinci"
 APP_ENV=local
+APP_TIMEZONE=Asia/Jakarta
 APP_DEBUG=true
 APP_URL=http://127.0.0.1:8000
 
 DB_CONNECTION=mysql
+DB_TIMEZONE=+07:00
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=etiket_gunung_kerinci
@@ -86,6 +88,13 @@ Jalankan migrasi dan seeder:
 php artisan migrate
 php artisan db:seed
 ```
+
+Waktu aplikasi, sesi MySQL, dan tanggal API menggunakan WIB (`Asia/Jakarta`,
+offset `+07:00`). Input API bertanda `Z` tetap diterima dan dikonversi sebelum
+disimpan. Migrasi `88_convert_legacy_dates_to_wib.php` menyesuaikan timestamp
+lama yang ditulis oleh versi aplikasi UTC; migrasi berjalan sekali sebelum
+seeding. Buat cadangan database sebelum memperbarui instalasi lama. Tanggal
+tanpa jam, seperti tanggal lahir dan jadwal tiket, tidak digeser.
 
 Jika ada perubahan cache konfigurasi atau `.env`, bersihkan cache:
 

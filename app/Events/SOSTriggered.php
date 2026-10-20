@@ -40,7 +40,7 @@ class SOSTriggered implements ShouldBroadcast
             'longitude' => $this->longitude,
             'hiker_name' => $this->hikerName,
             'message' => $this->message,
-            'timestamp' => now()->toISOString(),
+            'timestamp' => now()->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
         ];
     }
 }

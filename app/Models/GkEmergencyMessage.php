@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GkEmergencyMessage extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected $table = 'gk_emergency_messages';
 
     protected $fillable = [

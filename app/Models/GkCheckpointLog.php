@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GkCheckpointLog extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected $table = 'gk_checkpoint_logs';
 
     protected $fillable = [

@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 
 class gk_booking extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
 
     public const STATUS_CANCELLED = 9;

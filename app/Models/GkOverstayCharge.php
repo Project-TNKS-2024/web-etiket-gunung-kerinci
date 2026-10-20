@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 
 class GkOverstayCharge extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected $table = 'gk_overstay_charges';
 
     public $incrementing = false;

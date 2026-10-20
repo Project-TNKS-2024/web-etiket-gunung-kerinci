@@ -24,8 +24,8 @@ class CheckpointTimelineServiceTest extends TestCase
         $result = (new CheckpointTimelineService)->checkpoints($this->posts(), $logs);
 
         $this->assertNull($result[0]['estimated_arrival_at']);
-        $this->assertSame('2026-10-15T17:30:00.000000Z', $result[1]['estimated_arrival_at']);
-        $this->assertSame('2026-10-15T18:00:00.000000Z', $result[2]['estimated_arrival_at']);
+        $this->assertSame('2026-10-16T00:30:00+07:00', $result[1]['estimated_arrival_at']);
+        $this->assertSame('2026-10-16T01:00:00+07:00', $result[2]['estimated_arrival_at']);
         $this->assertSame(45, $result[1]['travel_minutes_from_previous']);
         $this->assertFalse($result[1]['completed']);
     }
@@ -41,7 +41,7 @@ class CheckpointTimelineServiceTest extends TestCase
         $result = (new CheckpointTimelineService)->checkpoints($posts, $logs);
 
         $this->assertNull($result[1]['estimated_arrival_at']);
-        $this->assertSame('2026-10-15T03:30:00.000000Z', $result[2]['estimated_arrival_at']);
+        $this->assertSame('2026-10-15T10:30:00+07:00', $result[2]['estimated_arrival_at']);
         $this->assertTrue($result[1]['completed']);
     }
 

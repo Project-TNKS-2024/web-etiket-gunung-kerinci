@@ -29,8 +29,8 @@ class OverstayCheckoutTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        config(['app.timezone' => 'UTC']);
-        date_default_timezone_set('UTC');
+        config(['app.timezone' => 'Asia/Jakarta']);
+        date_default_timezone_set('Asia/Jakarta');
         $now = now();
 
         $this->admin = User::create(['email' => 'admin@test.id', 'password' => 'password', 'role' => 'admin']);

@@ -38,7 +38,7 @@ class TrackingUpdated implements ShouldBroadcast
             'longitude' => $this->longitude,
             'altitude' => $this->altitude,
             'hiker_name' => $this->hikerName,
-            'timestamp' => now()->toISOString(),
+            'timestamp' => now()->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
         ];
     }
 }

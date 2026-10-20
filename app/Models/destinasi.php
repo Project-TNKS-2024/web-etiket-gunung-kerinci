@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class destinasi extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
 
     protected $fillable = [

@@ -41,7 +41,7 @@
                     <tr><td>Destinasi</td><td>{{ $sos->destinasi?->nama }}</td></tr>
                     <tr><td>Pesan</td><td>{{ $sos->message ?? '-' }}</td></tr>
                     <tr><td>Koordinat</td><td>{{ $sos->latitude }}, {{ $sos->longitude }}</td></tr>
-                    <tr><td>Waktu</td><td>{{ $sos->created_at->format('d/m/Y H:i:s') }}</td></tr>
+                    <tr><td>Waktu</td><td>{{ $sos->created_at->format('d/m/Y H:i:s') }} WIB</td></tr>
                 </table>
 
                 <div data-admin-live="sos-actions">

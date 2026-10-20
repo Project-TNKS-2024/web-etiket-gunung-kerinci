@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 
 class bio_pendaki extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
 
     protected $table = 'biodatas';

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\File;
 
 class Negara extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected static $filePath = 'assets/json/negara.json';
 
     public static function getAll(): Collection

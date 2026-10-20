@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class gk_gates extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
     protected $fillable = [
         'nama',

@@ -11,6 +11,8 @@ use function PHPUnit\Framework\isEmpty;
 
 class gk_pendaki extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     use HasFactory;
     protected $table = 'gk_pendakis';
 

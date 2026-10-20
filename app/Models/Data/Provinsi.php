@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\File;
 
 class Provinsi extends Model
 {
+    use \App\Models\Concerns\UsesWibDates;
+
     protected static $filePath = 'assets/json/provinsi.json';
 
     public static function getAll(): Collection

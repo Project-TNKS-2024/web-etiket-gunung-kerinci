@@ -70,7 +70,7 @@ class SOSChatController extends Controller
             'sender_type' => $senderType,
             'type' => $message->type,
             'content' => $message->content,
-            'created_at' => $message->created_at->toISOString(),
+            'created_at' => $message->created_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
         ], 'Pesan terkirim', 201);
     }
 
@@ -108,7 +108,7 @@ class SOSChatController extends Controller
             'type' => $m->type,
             'content' => $m->type === 'image' ? Storage::url($m->content) : $m->content,
             'is_read' => $m->is_read,
-            'created_at' => $m->created_at->toISOString(),
+            'created_at' => $m->created_at->copy()->setTimezone('Asia/Jakarta')->toIso8601String(),
         ]);
 
         return ApiResponse::success([
