@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
             TrailPostSeeder::class,
             BookingSeeder::class,
             CompletedBookingSeeder::class,
+            BookingStatusSeeder::class,
+            EmergencyMessageSeeder::class,
         ]);
     }
 }
