@@ -87,13 +87,7 @@ class BookingAndEmergencySeederTest extends TestCase
         foreach ($snapshot as $id => $attributes) {
             $this->assertSame($attributes, gk_booking::findOrFail($id)->getAttributes());
         }
-    }
-
-    public function test_reseeding_on_a_later_day_preserves_ticket_dates_and_does_not_clone_active_hikers(): void
-    {
-        Carbon::setTestNow(Carbon::parse('2026-10-20 12:00:00'));
-        $this->seed(DatabaseSeeder::class);
-        $active = gk_booking::where('status_booking', 6)->firstOrFail();
+        // Repeat the same scenario after the original ticket becomes overdue.
         $before = $active->getAttributes();
         $members = $active->pendakis()->pluck('id_bio')->all();
         Carbon::setTestNow(Carbon::parse('2026-10-25 12:00:00'));
@@ -108,28 +102,6 @@ class BookingAndEmergencySeederTest extends TestCase
             $this->assertSame(1, gk_pendaki::where('id_bio', $bioId)
                 ->whereHas('booking', fn ($query) => $query->where('status_booking', 6))->count());
         }
-    }
-
-    public function test_seeders_skip_missing_demo_source_when_an_operational_booking_exists(): void
-    {
-        $this->seed(DatabaseSeeder::class);
-        $active = gk_booking::where('status_booking', 6)->firstOrFail();
-        $active->update(['keterangan' => 'Booking operasional pengguna']);
-        $before = $active->fresh()->getAttributes();
-        $counts = [gk_booking::count(), gk_pendaki::count(), statusPendaki::count()];
-
-        $this->seed([
-            \Database\Seeders\BookingSeeder::class,
-            \Database\Seeders\CompletedBookingSeeder::class,
-            BookingStatusSeeder::class,
-        ]);
-
-        $this->assertSame($before, $active->fresh()->getAttributes());
-        $this->assertSame($counts, [gk_booking::count(), gk_pendaki::count(), statusPendaki::count()]);
-        // A database without any eligible source is also a valid no-op.
-        $active->update(['keterangan' => 'Data demo seeding: pendakian aktif untuk uji fitur pelacakan jejak.', 'status_booking' => 8]);
-        $this->seed(BookingStatusSeeder::class);
-        $this->assertSame($counts, [gk_booking::count(), gk_pendaki::count(), statusPendaki::count()]);
     }
 
     public function test_existing_alerts_and_processed_tickets_are_preserved_without_broadcasting(): void
@@ -148,6 +120,22 @@ class BookingAndEmergencySeederTest extends TestCase
         $this->assertSame($ticketSnapshot, $ticket->fresh()->getAttributes());
         $this->assertSame(2, GkEmergencyMessage::count());
         Event::assertNotDispatched(\App\Events\EmergencyBroadcast::class);
+
+        $active = gk_booking::where('status_booking', 6)->firstOrFail();
+        $active->update(['keterangan' => 'Booking operasional pengguna']);
+        $before = $active->fresh()->getAttributes();
+        $counts = [gk_booking::count(), gk_pendaki::count(), statusPendaki::count()];
+        $this->seed([
+            \Database\Seeders\BookingSeeder::class,
+            \Database\Seeders\CompletedBookingSeeder::class,
+            BookingStatusSeeder::class,
+        ]);
+        $this->assertSame($before, $active->fresh()->getAttributes());
+        $this->assertSame($counts, [gk_booking::count(), gk_pendaki::count(), statusPendaki::count()]);
+        // A database without any eligible source is also a valid no-op.
+        $active->update(['keterangan' => 'Data demo seeding: pendakian aktif untuk uji fitur pelacakan jejak.', 'status_booking' => 8]);
+        $this->seed(BookingStatusSeeder::class);
+        $this->assertSame($counts, [gk_booking::count(), gk_pendaki::count(), statusPendaki::count()]);
     }
 
     public function test_non_demo_alert_prevents_adding_any_demo_alerts(): void

@@ -45,6 +45,6 @@ Tiket aktif utama baru dimulai pada hari seeding menurut zona waktu aplikasi (WI
 
 Jika sumber demo aktif tidak tersedia, seeder status melewati proses dengan pesan informasi, sama seperti seeder tiket selesai. Booking operasional tidak dijadikan sumber pengganti. Booking demo lama yang sudah terbuat, termasuk contoh aktif ganda versi lama, tidak dihapus, dibatalkan, atau diubah tanggalnya secara otomatis. Penanganan data lama perlu memeriksa riwayatnya tersendiri; perubahan ini memperbaiki pembuatan data baru, bukan mereset data pengguna.
 
-Verifikasi perbaikan ini pada database MySQL sementara: 21 pengujian terkait seeder/relasi/API pos lulus (479 assertions; ada peringatan deprecation PHP 8.5). Pengujian mencakup seeding ulang lima hari kemudian, sumber demo hilang/sudah selesai, ketinggian/gambar khusus admin, dan tanggal tiket selesai. Database lokal pengguna tidak diseed ulang pada perubahan ini.
+Verifikasi perbaikan ini pada database MySQL sementara: 19 pengujian terkait seeder/relasi/API pos lulus (479 assertions; ada peringatan deprecation PHP 8.5). Pemeriksaan baru digabung ke metode pengujian yang sudah ada, tanpa menambah jumlah metode. Pengujian mencakup seeding ulang lima hari kemudian, sumber demo hilang/sudah selesai, ketinggian/gambar khusus admin, dan tanggal tiket selesai. Database lokal pengguna tidak diseed ulang pada perubahan ini.
 
 Perubahan ini disengaja berbeda dari snapshot production yang sebelumnya disamakan. Tidak ada deployment atau push GitHub pada pekerjaan ini.
