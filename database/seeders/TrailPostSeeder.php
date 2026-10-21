@@ -108,9 +108,12 @@ class TrailPostSeeder extends Seeder
                     && abs((float) $created->latitude - $legacy[0]) < 0.00000001
                     && abs((float) $created->longitude - $legacy[1]) < 0.00000001;
                 // Update old sample positions, but preserve coordinates edited by admins.
-                $changes = ['nama' => $post['nama'], 'urutan' => $post['urutan'], 'altitude' => $post['altitude']];
+                $changes = ['nama' => $post['nama'], 'urutan' => $post['urutan']];
+                if ($created->altitude === null) {
+                    $changes['altitude'] = $post['altitude'];
+                }
                 if ($isLegacyCoordinate) {
-                    $changes += array_intersect_key($post, array_flip(['latitude', 'longitude', 'altitude']));
+                    $changes += array_intersect_key($post, array_flip(['latitude', 'longitude']));
                     $changes['detail'] = trim(($created->detail ?? '') . "\n" . $estimateNote);
                 }
                 $created->update($changes);
@@ -123,7 +126,12 @@ class TrailPostSeeder extends Seeder
             if ((bool) $created->is_summit !== $isSummit) {
                 $created->update(['is_summit' => $isSummit]);
             }
-            $created->update(['map_image_path' => 'images/trail-maps/kersik-tuo/' . $mapImages[$post['nama']]]);
+            $defaultMap = 'images/trail-maps/kersik-tuo/' . $mapImages[$post['nama']];
+            $legacyMap = substr($defaultMap, 0, -5) . '.png';
+            // Isi yang kosong atau tingkatkan PNG bawaan; gambar khusus admin tetap dipakai.
+            if (blank($created->map_image_path) || $created->map_image_path === $legacyMap) {
+                $created->update(['map_image_path' => $defaultMap]);
+            }
             $this->seedDemoInfo($created);
         }
 

@@ -49,9 +49,9 @@ class BookingSeeder extends Seeder
             return;
         }
 
-        // Pertahankan tanggal mulai booking lama agar riwayat pendakian tetap sesuai.
+        // Tanggal tiket lama tidak digeser ketika seeding ulang; riwayat tetap sesuai.
         $masuk = $booking ? Carbon::parse($booking->tanggal_masuk) : Carbon::today();
-        $keluar = $masuk->copy()->addDays(2);
+        $keluar = $booking ? Carbon::parse($booking->tanggal_keluar) : $masuk->copy()->addDays(2);
 
         // gk_bookings.id_tiket -> relasi gktiket() = gk_paket_tiket ("Umum").
         $destinationId = destinasi::where('nama', 'Gunung Kerinci')->firstOrFail()->id;

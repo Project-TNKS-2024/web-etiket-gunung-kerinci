@@ -15,16 +15,23 @@ class BookingStatusSeeder extends Seeder
     public function run(): void
     {
         $source = gk_booking::where('keterangan', 'Data demo seeding: pendakian aktif untuk uji fitur pelacakan jejak.')
+            ->where('status_booking', 6)
             ->whereHas('user', fn ($query) => $query->where('email', 'satria@gmail.com'))
-            ->whereHas('pendakis')->firstOrFail();
+            ->whereHas('pendakis')->first();
+
+        if (! $source) {
+            $this->command?->info('BookingStatusSeeder: sumber demo aktif tidak tersedia, dilewati.');
+
+            return;
+        }
 
         DB::transaction(function () use ($source): void {
             $source = gk_booking::whereKey($source->id)->lockForUpdate()->firstOrFail();
             $covered = gk_booking::with('pendakis.getStatus')->get()
                 ->map(fn ($booking) => (int) $booking->getStatusBooking()->code)->all();
 
-            // 40/50/51/61 adalah status tampilan turunan; simpan status dasar yang sah.
-            foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 40, 50, 51, 61] as $code) {
+            // Status 6/61 berasal dari satu tiket aktif utama; jangan kloning pendakian aktif.
+            foreach ([0, 1, 2, 3, 4, 5, 7, 8, 9, 40, 50, 51] as $code) {
                 if (in_array($code, $covered, true)) {
                     continue;
                 }
@@ -49,12 +56,11 @@ class BookingStatusSeeder extends Seeder
         $base = match ($code) {
             40, 51 => 4,
             50 => 5,
-            61 => 6,
             default => $code,
         };
         $start = match ($code) {
-            40, 7, 8, 61 => Carbon::today()->subDays(4),
-            51, 6 => Carbon::today(),
+            40, 7, 8 => Carbon::today()->subDays(4),
+            51 => Carbon::today(),
             default => Carbon::today()->addDays(7),
         };
         $end = $start->copy()->addDays(2);

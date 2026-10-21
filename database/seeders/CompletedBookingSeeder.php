@@ -38,7 +38,13 @@ class CompletedBookingSeeder extends Seeder
             } while (gk_booking::where('unique_code', $code)->exists());
 
             $finished = $source->replicate(['cancelled_at', 'cancelled_by', 'cancellation_reason']);
+            $start = Carbon::today()->subDays(4);
+            $end = $start->copy()->addDays(2);
             $finished->fill([
+                'tanggal_masuk' => $start->toDateString(),
+                'tanggal_keluar' => $end->toDateString(),
+                'total_hari' => 3,
+                'dataStruk' => null,
                 'status_booking' => 8,
                 'status_pembayaran' => 1,
                 'unique_code' => $code,
@@ -46,9 +52,10 @@ class CompletedBookingSeeder extends Seeder
             ]);
             $finished->save();
 
-            $checkoutAt = Carbon::now();
+            $checkinAt = $start->copy()->setHour(8);
+            $checkoutAt = $end->copy()->setHour(16);
+            $total = 0;
             foreach ($source->pendakis as $sourceMember) {
-                $checkinAt = $sourceMember->checkin_at ?? Carbon::parse($source->tanggal_masuk)->startOfDay();
                 $member = $sourceMember->replicate();
                 $member->fill([
                     'booking_id' => $finished->id,
@@ -60,6 +67,8 @@ class CompletedBookingSeeder extends Seeder
                     'checkout_reason' => 'Data demo tiket selesai.',
                 ]);
                 $member->save();
+                $member->update(['tagihan' => $helper->getTagihanPendaki($member)]);
+                $total += $member->tagihan;
 
                 foreach ([2 => $checkinAt, 3 => $checkoutAt] as $status => $time) {
                     $history = new statusPendaki([
@@ -72,6 +81,7 @@ class CompletedBookingSeeder extends Seeder
                     $history->save();
                 }
             }
+            $finished->update(['total_pembayaran' => $total]);
         });
 
         $this->command?->info('CompletedBookingSeeder: tiket selesai tersedia; tiket aktif tetap dipertahankan.');

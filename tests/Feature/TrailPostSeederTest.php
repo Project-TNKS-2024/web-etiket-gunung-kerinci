@@ -74,6 +74,7 @@ class TrailPostSeederTest extends TestCase
             'nama' => 'Pos 3 (Shelter 2)', 'urutan' => 4, 'latitude' => -1.7288, 'longitude' => 101.2620,
             'altitude' => 2220, 'id_gate' => 10, 'qr_code_value' => 'SURVEYED-QR',
             'status' => false, 'detail' => 'Hasil survei admin',
+            'map_image_path' => 'images/trail-maps/custom/panorama-survey.png',
         ]);
         $solok = GkPost::create([
             'nama' => 'Pos 1 Solok', 'urutan' => 1, 'latitude' => -1.71, 'longitude' => 101.255,
@@ -92,10 +93,15 @@ class TrailPostSeederTest extends TestCase
         $this->assertSame(5, $admin->urutan);
         $this->assertSame('-1.72880000', $admin->latitude);
         $this->assertSame('101.26200000', $admin->longitude);
-        $this->assertSame(2367, $admin->altitude);
+        $this->assertSame(2220, $admin->altitude);
+        $this->assertSame('images/trail-maps/custom/panorama-survey.png', $admin->map_image_path);
+        $this->assertSame(2400, $legacy->altitude);
         $this->assertFalse($admin->status);
         $this->assertSame('SURVEYED-QR', $admin->qr_code_value);
         $this->assertSame('Hasil survei admin', $admin->detail);
+        $this->seed(TrailPostSeeder::class);
+        $this->assertSame(2220, $admin->fresh()->altitude);
+        $this->assertSame('images/trail-maps/custom/panorama-survey.png', $admin->fresh()->map_image_path);
         foreach (['id', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'qr_code_value', 'status', 'detail'] as $field) {
             $this->assertSame($beforeSolok[$field], $solok->fresh()->toArray()[$field]);
         }
@@ -150,5 +156,6 @@ class TrailPostSeederTest extends TestCase
         $this->assertSame('Catatan petugas', $real->info_note);
         $this->assertNull($real->temperature_c);
         $this->assertNull($real->info_updated_at);
+        $this->assertSame(2505, $real->altitude);
     }
 }

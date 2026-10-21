@@ -93,7 +93,7 @@ class DemoSeedRelationsTest extends TestCase
         $this->assertSame(1, gk_booking::count());
     }
 
-    public function test_reseeding_upgrades_old_two_member_booking_to_three_days_and_members(): void
+    public function test_reseeding_adds_missing_member_without_changing_existing_ticket_dates(): void
     {
         $this->seed([destinasi_gate::class, paket_tiket::class, UserSampelSeeder::class, BookingSeeder::class]);
         $booking = gk_booking::firstOrFail();
@@ -116,8 +116,8 @@ class DemoSeedRelationsTest extends TestCase
         $this->assertSame(1, gk_booking::count());
         $this->assertSame($booking->unique_code, $fresh->unique_code);
         $this->assertSame($booking->tanggal_masuk, $fresh->tanggal_masuk);
-        $this->assertSame(3, (int) $fresh->total_hari);
-        $this->assertSame(Carbon::parse($fresh->tanggal_masuk)->addDays(2)->toDateString(), $fresh->tanggal_keluar);
+        $this->assertSame(2, (int) $fresh->total_hari);
+        $this->assertSame(Carbon::parse($fresh->tanggal_masuk)->addDay()->toDateString(), $fresh->tanggal_keluar);
         $this->assertSame(3, $fresh->pendakis()->count());
         $this->assertSame(2, $fresh->pendakis()->whereIn('id', $existingIds)->count());
         $this->assertSame($statusCount + 1, statusPendaki::count());
