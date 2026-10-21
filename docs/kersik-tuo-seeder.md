@@ -1,5 +1,13 @@
 # Seeder jalur Kersik Tuo
 
+## Gambar peta WebP
+
+Sepuluh peta pos Kersik Tuo tersedia sebagai WebP kualitas 88 dengan resolusi asli 1536 × 2752. Total ukuran turun dari 20.584.819 menjadi 987.476 byte (95,2% lebih kecil); Pondok Panorama turun dari 2.062.122 menjadi 84.278 byte. PNG asli tetap tersedia untuk URL lama. Solok Selatan belum memiliki gambar peta dalam backend, sehingga tidak dibuat gambar pengganti.
+
+Seeder memakai path WebP. Untuk database lama yang masih menyimpan path PNG di `images/trail-maps/`, accessor `map_image_url` otomatis memakai file WebP pendamping jika tersedia. Path peta lain tetap digunakan seperti sebelumnya. Penerapan ke production cukup menyertakan perubahan model dan sepuluh file WebP; tidak perlu menjalankan ulang seeder, migrasi, atau mengubah ID/koordinat/kehadiran. Perubahan seeder juga disertakan untuk pemasangan baru. Verifikasi URL dari API v1/v2 dan respons gambar `Content-Type: image/webp` setelah deployment. Perubahan ini baru diterapkan dan diperiksa secara lokal.
+
+Verifikasi 21 Oktober 2026: 13 pengujian peta/seeder selesai tanpa kegagalan (412 assertions, dengan peringatan deprecation PHP 8.5); build Vite berhasil. Sepuluh URL peta database lokal memakai WebP, dan gambar Pondok Panorama mengembalikan HTTP 200 dengan `Content-Type: image/webp`, panjang 84.278 byte. Pengujian mobile tetap 19 dan semuanya lulus. Suite backend penuh belum hijau: 45 pengujian gagal dengan constraint `gk_bookings_id_tiket_foreign` pada penyusunan data uji tiket, di luar cakupan optimasi gambar. Seluruh pengujian backend dijalankan pada database MySQL sementara terpisah, kemudian database uji dihapus.
+
 Jalur aktif mengikuti sepuluh peta posisi: 10 titik Kersik Tuo termasuk titik awal, ditambah 4 titik Solok Selatan. `urutan` mengatur posisi pada jalur; `id` adalah identitas database yang dipertahankan dan tidak harus dimulai dari 1 atau berurutan.
 
 | Urutan | Titik | Elevasi (mdpl) | Latitude perkiraan | Longitude perkiraan |

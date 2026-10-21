@@ -40,7 +40,7 @@ class TrailPostInfoApiTest extends TestCase
         $response = $this->getJson('/api/tracking/posts/10')->assertOk()
             ->assertJsonPath('success', true)->assertJsonCount(10, 'data')
             ->assertJsonPath('data.0.nama', 'Kersik Tuo')
-            ->assertJsonPath('data.0.map_image_url', asset('images/trail-maps/kersik-tuo/kersik-tuo.png'))
+            ->assertJsonPath('data.0.map_image_url', asset('images/trail-maps/kersik-tuo/kersik-tuo.webp'))
             ->assertJsonPath('data.0.mountain_status', 'Normal')
             ->assertJsonPath('data.0.temperature_c', 20)
             ->assertJsonPath('data.0.distance_to_next_m', 2000)
@@ -67,10 +67,14 @@ class TrailPostInfoApiTest extends TestCase
             'kersik-tuo', 'pintu-rimba', 'pos-1-bangku-panjang', 'pos-2-batu-lumut',
             'pos-3-pondok-panorama', 'shelter-1', 'shelter-2', 'shelter-3', 'tugu-yudha', 'puncak-kerinci',
         ];
+        // Existing PNG paths must also return WebP without reseeding the database.
+        foreach (GkPost::where('id_gate', 10)->orderBy('urutan')->get() as $index => $post) {
+            $post->update(['map_image_path' => "images/trail-maps/kersik-tuo/{$files[$index]}.png"]);
+        }
         foreach (['/api/tracking/posts/10', '/api/tracking/v2/posts/10'] as $endpoint) {
             $response = $this->getJson($endpoint)->assertOk()->assertJsonCount(10, 'data');
             foreach ($files as $index => $file) {
-                $response->assertJsonPath("data.$index.map_image_url", asset("images/trail-maps/kersik-tuo/$file.png"));
+                $response->assertJsonPath("data.$index.map_image_url", asset("images/trail-maps/kersik-tuo/$file.webp"));
             }
         }
         $response = $this->getJson('/api/tracking/posts/20')->assertOk();

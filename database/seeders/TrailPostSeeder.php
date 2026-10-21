@@ -61,16 +61,16 @@ class TrailPostSeeder extends Seeder
         ];
 
         $mapImages = [
-            'Kersik Tuo' => 'kersik-tuo.png',
-            'Pintu Rimba' => 'pintu-rimba.png',
-            'Bangku Panjang' => 'pos-1-bangku-panjang.png',
-            'Batu Lumut' => 'pos-2-batu-lumut.png',
-            'Pondok Panorama' => 'pos-3-pondok-panorama.png',
-            'Shelter 1' => 'shelter-1.png',
-            'Shelter 2' => 'shelter-2.png',
-            'Shelter 3' => 'shelter-3.png',
-            'Tugu Yudha' => 'tugu-yudha.png',
-            'Puncak Kerinci' => 'puncak-kerinci.png',
+            'Kersik Tuo' => 'kersik-tuo.webp',
+            'Pintu Rimba' => 'pintu-rimba.webp',
+            'Bangku Panjang' => 'pos-1-bangku-panjang.webp',
+            'Batu Lumut' => 'pos-2-batu-lumut.webp',
+            'Pondok Panorama' => 'pos-3-pondok-panorama.webp',
+            'Shelter 1' => 'shelter-1.webp',
+            'Shelter 2' => 'shelter-2.webp',
+            'Shelter 3' => 'shelter-3.webp',
+            'Tugu Yudha' => 'tugu-yudha.webp',
+            'Puncak Kerinci' => 'puncak-kerinci.webp',
         ];
 
         $aliases = [

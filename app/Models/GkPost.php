@@ -23,7 +23,16 @@ class GkPost extends Model
 
     public function getMapImageUrlAttribute(): ?string
     {
-        return $this->map_image_path ? asset($this->map_image_path) : null;
+        $path = $this->map_image_path;
+        // Existing databases can keep PNG paths; serve the optimized sibling when available.
+        if ($path && str_starts_with($path, 'images/trail-maps/') && str_ends_with($path, '.png')) {
+            $webp = substr($path, 0, -4) . '.webp';
+            if (is_file(public_path($webp))) {
+                $path = $webp;
+            }
+        }
+
+        return $path ? asset($path) : null;
     }
 
     protected $casts = [

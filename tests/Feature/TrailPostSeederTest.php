@@ -44,6 +44,7 @@ class TrailPostSeederTest extends TestCase
             $this->assertStringContainsString('perkiraan', $post->detail);
             $this->assertTrue($post->status);
             $this->assertFileExists(public_path($post->map_image_path));
+            $this->assertStringEndsWith('.webp', $post->map_image_path);
             $this->assertSame(asset($post->map_image_path), $post->map_image_url);
             $this->assertGreaterThan(-1.78, (float) $post->latitude);
             $this->assertLessThan(-1.69, (float) $post->latitude);
