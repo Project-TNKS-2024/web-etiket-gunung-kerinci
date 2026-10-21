@@ -56,11 +56,23 @@ class BookingAndEmergencySeederTest extends TestCase
         $this->assertSame(['high', 'medium'], GkEmergencyMessage::orderBy('severity')->pluck('severity')->sort()->values()->all());
         $snapshot = $bookings->mapWithKeys(fn ($booking) => [$booking->id => $booking->getAttributes()])->all();
         $counts = [gk_pendaki::count(), statusPendaki::count(), pembayaran::count()];
+        $postSnapshot = \App\Models\GkPost::orderBy('id')->get(['id', 'id_gate', 'nama', 'urutan', 'qr_code_value', 'status'])->toArray();
+        $gateSnapshot = \App\Models\gk_gates::orderBy('id')->get(['id', 'nama', 'id_destinasi'])->toArray();
+        $active = $bookings->firstWhere('status_booking', 6);
+        $post = \App\Models\GkPost::where('id_gate', $active->gate_masuk)->orderBy('urutan')->firstOrFail();
+        $log = \App\Models\GkCheckpointLog::firstOrCreate([
+            'id_booking' => $active->id, 'id_pendaki' => $active->pendakis->first()->id,
+            'id_post' => $post->id, 'phase' => 'naik',
+        ], ['method' => 'qr', 'checked_at' => now()]);
+        $attendanceSnapshot = $log->fresh()->getAttributes();
 
         $this->seed(DatabaseSeeder::class);
         $this->assertSame(14, gk_booking::count());
         $this->assertSame(2, GkEmergencyMessage::count());
         $this->assertSame($counts, [gk_pendaki::count(), statusPendaki::count(), pembayaran::count()]);
+        $this->assertSame($postSnapshot, \App\Models\GkPost::orderBy('id')->get(['id', 'id_gate', 'nama', 'urutan', 'qr_code_value', 'status'])->toArray());
+        $this->assertSame($gateSnapshot, \App\Models\gk_gates::orderBy('id')->get(['id', 'nama', 'id_destinasi'])->toArray());
+        $this->assertSame($attendanceSnapshot, $log->fresh()->getAttributes());
         foreach ($snapshot as $id => $attributes) {
             $this->assertSame($attributes, gk_booking::findOrFail($id)->getAttributes());
         }
