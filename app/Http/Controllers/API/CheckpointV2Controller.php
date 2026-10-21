@@ -245,24 +245,17 @@ class CheckpointV2Controller extends Controller
             return ApiResponse::error('Check-in tidak ditemukan', null, 404);
         }
 
-        $actor = $this->getActivePendaki($request->user());
-        if (! $actor) {
-            return ApiResponse::error('Tidak ada pendakian aktif', null, 403);
-        }
-
         $log = GkCheckpointLog::whereKey($checkpointLogId)
-            ->where('id_booking', $actor->booking_id)
-            ->whereHas('pendaki', fn ($q) => $q->where('booking_id', $actor->booking_id))
+            ->whereHas('booking', fn ($q) => $q->where('status_booking', 6))
             ->first();
         if (! $log) {
             return ApiResponse::error('Check-in tidak ditemukan', null, 404);
         }
 
-        if ($log->id_pendaki !== $actor->id && $actor->booking->id_user !== $request->user()->id) {
-            return ApiResponse::error('Hanya ketua tim yang dapat membatalkan kehadiran anggota', null, 403);
+        [$actor, $target, $error] = $this->resolveTarget($request->user(), $log->id_pendaki);
+        if ($error !== null) {
+            return $error;
         }
-
-        $target = $actor->booking->pendakis()->whereKey($log->id_pendaki)->firstOrFail();
 
         try {
             $result = $this->visits->cancel($log, $target);
@@ -281,7 +274,14 @@ class CheckpointV2Controller extends Controller
      */
     private function resolveTarget($user, ?string $targetId): array
     {
-        $actor = $this->getActivePendaki($user);
+        $requested = $targetId !== null
+            ? gk_pendaki::whereKey($targetId)->whereHas('booking', fn ($q) => $q->where('status_booking', 6))->first()
+            : null;
+        if ($targetId !== null && $requested === null) {
+            return [null, null, ApiResponse::error('Pendaki tidak berada pada pendakian aktif', null, 403)];
+        }
+        // An explicit target determines the booking; never silently choose another active hike.
+        $actor = $this->getActivePendaki($user, $requested?->booking_id);
         if (! $actor) {
             return [$actor, null, ApiResponse::error('Tidak ada pendakian aktif', null, 403)];
         }
@@ -300,13 +300,14 @@ class CheckpointV2Controller extends Controller
         return [$actor, $target, null];
     }
 
-    private function getActivePendaki($user): ?gk_pendaki
+    private function getActivePendaki($user, ?string $bookingId = null): ?gk_pendaki
     {
         if (! $user->id_bio) {
             return null;
         }
 
         return gk_pendaki::where('id_bio', $user->id_bio)
+            ->when($bookingId !== null, fn ($query) => $query->where('booking_id', $bookingId))
             ->whereHas('booking', fn ($query) => $query->where('status_booking', 6))
             ->with('booking')
             ->first();

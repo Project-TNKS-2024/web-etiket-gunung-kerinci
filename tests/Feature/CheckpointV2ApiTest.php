@@ -123,6 +123,35 @@ class CheckpointV2ApiTest extends TestCase
             ->assertJsonPath('errors.code', 'CHECKPOINT_ALREADY_RECORDED');
 
         $this->assertSame(1, GkCheckpointLog::where('id_pendaki', $this->leaderHiker->id)->count());
+
+        // Explicit identity must bind attendance to the selected booking, even with another active hike.
+        $otherBooking = $this->booking->replicate();
+        $otherBooking->id = (string) Str::uuid();
+        $otherBooking->save();
+        $otherHiker = gk_pendaki::create([
+            'booking_id' => $otherBooking->id, 'id_bio' => $this->leader->id_bio, 'usia' => 36,
+        ]);
+        $this->scan('naik', $this->post2, $this->leaderHiker->id)->assertCreated()
+            ->assertJsonPath('data.pendaki_id', $this->leaderHiker->id);
+        $this->scan('naik', $this->post1, $otherHiker->id)->assertCreated()
+            ->assertJsonPath('data.pendaki_id', $otherHiker->id)
+            ->assertJsonPath('data.next_visit_key', 'naik:' . $this->post2->id);
+        $this->getJson('/api/tracking/v2/progress/' . $otherBooking->id)->assertOk()
+            ->assertJsonPath('data.hikers.0.visits.0.completed', true);
+        $this->postJson('/api/tracking/v2/checkpoint/manual', [
+            'pendaki_id' => $otherHiker->id, 'post_id' => $this->post2->id,
+            'phase' => 'naik', 'client_event_id' => (string) Str::uuid(),
+            'recorded_at' => now()->toIso8601String(), 'latitude' => -1.71, 'longitude' => 101.27,
+        ])->assertCreated()->assertJsonPath('data.pendaki_id', $otherHiker->id);
+        $this->postJson('/api/tracking/checkpoint/gps', [
+            'pendaki_id' => $otherHiker->id, 'latitude' => -1.70, 'longitude' => 101.26,
+        ])->assertOk()->assertJsonPath('data.nearest_post.id', $this->post1->id);
+        $this->postJson('/api/tracking/checkpoint/gps', [
+            'pendaki_id' => $this->memberHiker->id, 'latitude' => -1.70, 'longitude' => 101.26,
+        ])->assertForbidden();
+        $otherLog = GkCheckpointLog::where('id_pendaki', $otherHiker->id)->where('id_post', $this->post1->id)->firstOrFail();
+        $this->deleteJson('/api/tracking/v2/checkpoint/' . $otherLog->id)->assertOk();
+        $this->assertSame(2, GkCheckpointLog::where('id_pendaki', $this->leaderHiker->id)->count());
     }
 
     public function test_summit_checkin_atomically_transitions_to_descent(): void

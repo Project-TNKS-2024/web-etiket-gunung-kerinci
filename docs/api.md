@@ -1070,6 +1070,12 @@ Cuaca berbahasa Indonesia, cache sukses 5 menit; jumlah pendaki dan status tidak
 Jika PHP lokal belum memiliki trust store CA, `WEATHER_CA_BUNDLE` dapat menunjuk ke bundle PEM tepercaya milik lingkungan (path privat; jangan commit sertifikat lokal). Verifikasi HTTPS tetap aktif. Cache cuaca hanya menyimpan respons berhasil selama 300 detik.
 
 
+## Identitas tiket untuk checkpoint (21 Oktober 2026)
+
+Mobile memakai `GET /api/tracking/v2/posts/{gate_id}` agar konfigurasi puncak dan segmen turun tersedia. Untuk QR dan manual v2, kirim `pendaki_id` UUID dari booking yang sedang ditampilkan, termasuk ketika mencatat diri sendiri dan saat sinkronisasi offline. Server mencari pendaki pemanggil pada booking target itu; hak mewakili anggota tetap hanya untuk ketua booking. Parameter tetap opsional demi kompatibilitas klien lama, tetapi klien baru tidak boleh mengandalkan pilihan booking aktif pertama. Pembatalan menentukan booking dari log yang dibatalkan dan tetap memverifikasi akses.
+
+`POST /api/tracking/checkpoint/gps` juga menerima `pendaki_id` UUID opsional untuk memilih pendakian pemanggil sebelum mencari pos terdekat. Target GPS wajib merupakan identitas pemanggil sendiri. Mobile memvalidasi `pendaki_id`, pos, fase, dan `client_event_id` pada respons sukses sebelum menyimpan centang lokal; respons yang tidak cocok tidak dianggap absen berhasil.
+
 ## Catatan anggota checkpoint (18 Oktober 2026)
 
 `POST /api/tracking/v2/member-note` (Sanctum) menerima `pendaki_id` UUID, `post_id`, `phase` (`naik`/`turun`), dan `note` nullable string maksimal 500 karakter. Field `note` wajib ada, nilai kosong mengosongkan catatan. Scope unik: booking aktif + anggota + pos + fase. Catatan tidak membuat log kehadiran. Hanya pemilik catatan atau ketua booking yang dapat menulis; untuk anggota lain, ketua harus sudah check-in pada pos/fase sama. Anggota asing ditolak 403, pos berbeda gate 404, anggota sudah check-in ditolak 409. Penyimpanan diserialisasi dengan lock pendaki yang juga dipakai check-in.

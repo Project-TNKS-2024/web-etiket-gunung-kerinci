@@ -145,10 +145,11 @@ class CheckpointController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'accuracy' => 'nullable|numeric|min:0',
+            'pendaki_id' => 'nullable|uuid',
         ]);
 
         $user = $request->user();
-        $pendaki = $this->getActivePendaki($user);
+        $pendaki = $this->getActivePendaki($user, $validated['pendaki_id'] ?? null);
         if (!$pendaki) {
             return ApiResponse::error('Tidak ada pendakian aktif', null, 403);
         }
@@ -336,13 +337,14 @@ class CheckpointController extends Controller
         return ApiResponse::success($posts);
     }
 
-    private function getActivePendaki($user): ?gk_pendaki
+    private function getActivePendaki($user, ?string $pendakiId = null): ?gk_pendaki
     {
         if (!$user->id_bio) {
             return null;
         }
 
         return gk_pendaki::where('id_bio', $user->id_bio)
+            ->when($pendakiId !== null, fn ($query) => $query->whereKey($pendakiId))
             ->whereHas('booking', fn ($query) => $query->where('status_booking', 6))
             ->with('booking')
             ->first();
