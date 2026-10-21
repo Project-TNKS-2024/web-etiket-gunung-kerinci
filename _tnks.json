@@ -1,0 +1,1247 @@
+{
+  "info": {
+    "_postman_id": "377def9d-4b8f-4627-9254-bb37becda1ed",
+    "name": "TNKS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-09-08T03:53:04.000Z",
+    "updatedAt": "2026-09-15T08:52:37.000Z",
+    "lastUpdatedBy": "27289766",
+    "uid": "27289766-377def9d-4b8f-4627-9254-bb37becda1ed"
+  },
+  "item": [
+    {
+      "name": "AUTHENTICATION",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\npm.test(\"Status 200 OK\", () => {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Envelope sukses + token\", () => {\n    pm.expect(res.success).to.eql(true);\n    pm.expect(res.data.token).to.be.a(\"string\").and.not.empty;\n});\n\npm.test(\"Token disimpan ke collection variable token\", () => {\n    pm.collectionVariables.set(\"token\", res.data.token);\n    pm.expect(pm.collectionVariables.get(\"token\")).to.eql(res.data.token);\n});\n\npm.test(\"Email yang di-login punya email_verified_at (bisa akses endpoint auth:sanctum)\", () => {\n    pm.expect(res.data.user.email_verified_at).to.not.be.null;\n});"
+                ]
+              }
+            }
+          ],
+          "id": "5fc30d6c-0930-440b-b88a-af83c4e4deab",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user1@example.com\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "POST {{base_url}}/api/login — login email + password, mengembalikan Sanctum token.\n\nKONTRAK (routes/api/routeAuth.php + App\\Http\\Controllers\\API\\AuthCoontroller::login)\n- Body wajib: email (required|email), password (required)\n- 200 -> {success:true, message:\"Login berhasil\", data:{user:{...}, token:\"<plainTextToken>\"}}\n- 401 -> \"Email atau password salah\" (dikembalikan ApiResponse langsung oleh controller)\n- 422 -> \"Validasi gagal\" (body kosong / email bukan format email)\n\nDATA NYATA DI MySQL (tabel users — 11 baris, semua email_verified_at terisi)\n| id | email                | role  |\n| 1  | superadmin@tnks.com  | admin |\n| 2  | user1@example.com    | user  |\n| … user2 s/d user9 @example.com (role user) …   |\n| 11 | user10@example.com   | user  |\n\nPassword semua akun seeder = \"password\" (Hash::make('password') di UsersAdminSeeder + UserSampelSeeder).\n\nHASIL UJI LANGSUNG (request dikirim ke server lokal, bukan asumsi)\n- user1@example.com / password -> 200 + token (50 karakter)\n- superadmin@tnks.com / password -> 200 + token\n- password salah -> 401 \"Email atau password salah\"\n- Token hasil login dipakai ke endpoint auth:sanctum (GET /api/tracking/my-position) -> 200, artinya Test script yang menyimpan data.token ke collection variable {{token}} memang jalan.\n\nCATATAN HEADER: Accept: application/json TIDAK wajib di sini — bootstrap/app.php memasang middleware ForceJsonResponse pada seluruh route /api/* (server men-set Accept: application/json sendiri), jadi 401/422 selalu JSON. Header tetap dipasang supaya eksplisit dan aman kalau request disalin ke luar Postman.\n\nSIDE EFFECT: setiap login sukses menambah 1 baris di personal_access_tokens; tidak dihapus kecuali memanggil /api/logout."
+          },
+          "response": [],
+          "createdAt": "2026-09-08T03:56:25.000Z",
+          "updatedAt": "2026-09-12T02:45:25.000Z",
+          "uid": "27289766-5fc30d6c-0930-440b-b88a-af83c4e4deab"
+        },
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();\n\npm.test(\"Status 201 Created\", () => {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"User baru + token dibuat\", () => {\n    pm.expect(res.success).to.eql(true);\n    pm.expect(res.data.user.email).to.eql(pm.request.json().email);\n    pm.expect(res.data.token).to.be.a(\"string\").and.not.empty;\n});\n\npm.test(\"gauth_type manual & email belum terverifikasi\", () => {\n    pm.expect(res.data.user.gauth_type).to.eql(\"manual\");\n    pm.expect(res.data.user.email_verified_at).to.be.null;\n});\n\npm.test(\"Token disimpan ke collection variable token\", () => {\n    pm.collectionVariables.set(\"token\", res.data.token);\n});"
+                ]
+              }
+            }
+          ],
+          "id": "6027afde-7525-447f-8c21-b327b59a6efb",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user11@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "register"
+              ]
+            },
+            "description": "POST {{base_url}}/api/register — registrasi akun manual (email + password).\n\nKONTRAK (App\\Http\\Controllers\\API\\AuthCoontroller::register)\n- email    -> required|string|email|max:255|unique:users,email\n- password -> required|string|min:8|confirmed  (field password_confirmation wajib dikirim)\n- 201 -> \"Registrasi berhasil. Silakan cek email untuk verifikasi.\", data:{user, token}\n- 422 -> \"Validasi gagal\" (daftar kasus ada di hasil uji)\n\nNILAI CONTOH DIAMBIL DARI MySQL\nTabel users berisi user1@example.com … user10@example.com + superadmin@tnks.com (11 baris). Nomor berikutnya yang masih bebas = user11@example.com, jadi body contoh pakai itu. Kalau request sudah pernah dijalankan, ganti nomornya.\n\nHASIL UJI LANGSUNG (kasus yang tidak membuat baris baru)\n- email user1@example.com (sudah ada) -> 422, errors.email: \"The email has already been taken.\" -> rule unique menang lebih dulu, jadi branch 409 \"Akun dengan email ini sudah terdaftar.\" di controller praktis tidak tercapai\n- password 7 karakter -> 422, errors.password: \"…must be at least 8 characters.\"\n- password_confirmation tidak sama -> 422, errors.password: \"…confirmation does not match.\"\n- body kosong -> 422, errors: email required + password required\n\nBELUM DIUJI (jalur sukses 201): menjalankannya membuat baris user baru SEKALIGUS mengirim email verifikasi nyata via SMTP (MAIL_MAILER=smtp, relay Brevo). Kalau pengiriman email gagal, controller membalas 500 dan baris user TIDAK dihapus (baris `$user->delete();` dikomentari di controller) — jadi bisa tertinggal akun \"gantung\" yang tetap bisa login. Cek tabel users kalau dapat 500.\n\nCATATAN HEADER: sama seperti Login, Accept: application/json tidak wajib karena middleware ForceJsonResponse aktif untuk semua route /api/*."
+          },
+          "response": [],
+          "createdAt": "2026-09-08T03:56:34.000Z",
+          "updatedAt": "2026-09-12T02:45:27.000Z",
+          "uid": "27289766-6027afde-7525-447f-8c21-b327b59a6efb"
+        }
+      ],
+      "id": "057ec796-6d88-474e-943c-3dfbcf3a30f7",
+      "createdAt": "2026-09-08T03:56:07.000Z",
+      "updatedAt": "2026-09-08T03:56:34.000Z",
+      "uid": "27289766-057ec796-6d88-474e-943c-3dfbcf3a30f7"
+    },
+    {
+      "name": "BOOKING & TIKET",
+      "item": [
+        {
+          "name": "My Tiket (daftar booking)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status 200 OK\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Mengembalikan daftar booking\", () => {",
+                  "    pm.expect(res.success).to.eql(true);",
+                  "    pm.expect(res.data).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// Simpan UUID booking aktif (status_booking = 6) ke collection variable.",
+                  "// Dipakai \"Progress Pendakian\" supaya tidak perlu edit URL manual",
+                  "// setiap kali habis migrate:fresh --seed.",
+                  "const aktif = (res.data || []).find((b) => b.status_booking === 6) || (res.data || [])[0];",
+                  "if (aktif && aktif.id) {",
+                  "    pm.collectionVariables.set(\"booking_id\", aktif.id);",
+                  "}",
+                  "",
+                  "// Set bio_pendaki2 = id biodata pendaki ke-2 di booking aktif",
+                  "// (dipakai request \"3. Tambah Pendaki\" supaya tidak perlu isi manual",
+                  "// setiap habis migrate:fresh --seed).",
+                  "if (aktif && aktif.pendakis && aktif.pendakis.length > 1) {",
+                  "    pm.collectionVariables.set(\"bio_pendaki2\", aktif.pendakis[1].id_bio);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "id": "b70be841-9da4-4bca-b48b-a0bbcfbeb46f",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/mytiket",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mytiket"
+              ]
+            },
+            "description": "Daftar booking milik user yang sedang login (terbaru dulu) — lengkap dengan gate, pendaki, pembayaran.\n\nBUKA UNTUK APA: mengambil UUID booking, lalu ditempel ke URL 'Progress Pendakian' ({{base_url}}/tracking/progress/<uuid>).\n\nCARA PAKAI:\n1. Jalankan request ini (token sudah otomatis dari variabel {{token}}).\n2. Cari item dengan status_booking = 6 (pendakian aktif).\n3. Salin nilai id (UUID panjang) ke URL Progress Pendakian.\n\nRESPONSE 200: data = array booking.\n- data: [] artinya user ini belum punya booking — bukan error.\n- status_booking: 1 SNK, 2 Formulir, 3 Menunggu Pembayaran, 4 Sudah Bayar, 5 Konfirmasi, 6 Check-in/aktif, 7 Check-out, 8 Selesai.\n\nERROR: 401 kalau belum login / token kosong atau sudah mati (setelah migrate:fresh, jalankan Login dulu).\n\nSUMBER: BookingController::myTickets, routes/api/routeUser.php:38."
+          },
+          "response": [],
+          "createdAt": "2026-09-12T04:21:50.000Z",
+          "updatedAt": "2026-09-12T04:21:50.000Z",
+          "uid": "27289766-b70be841-9da4-4bca-b48b-a0bbcfbeb46f"
+        },
+        {
+          "name": "1. Buat Booking (draft)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
+                  "",
+                  "// Simpan ID booking draft ke variable supaya langkah 2-5 tidak perlu edit manual.",
+                  "if (res.data && res.data.id) {",
+                  "    pm.collectionVariables.set(\"draft_booking_id\", res.data.id);",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Isi tanggal otomatis: 3 hari dari sekarang (draft) s/d 4 hari.",
+                  "// +3 hari supaya TIDAK bentrok dengan booking aktif milik user",
+                  "// (booking aktif setelah seed: hari ini s/d besok — overlap = 422",
+                  "// \"Anda sudah melakukan booking di tanggal tersebut\").",
+                  "// Tanpa script ini, tanggal tetap akan 422 begitu tanggalnya lewat.",
+                  "function fmt(d) {",
+                  "    return d.toISOString().split(\"T\")[0];",
+                  "}",
+                  "const start = new Date(); start.setDate(start.getDate() + 3);",
+                  "const end = new Date(); end.setDate(end.getDate() + 4);",
+                  "pm.collectionVariables.set(\"date_start\", fmt(start));",
+                  "pm.collectionVariables.set(\"date_end\", fmt(end));"
+                ]
+              }
+            }
+          ],
+          "id": "0d184c26-c114-45f3-9b05-b240bad650ee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date_start\": \"{{date_start}}\",\n  \"date_end\": \"{{date_end}}\",\n  \"wni\": 2,\n  \"wna\": 0,\n  \"jenis_tiket\": 1,\n  \"gerbang_masuk\": 1,\n  \"gerbang_keluar\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/booking/destinasi/paket/tiket",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "booking",
+                "destinasi",
+                "paket",
+                "tiket"
+              ]
+            },
+            "description": "LANGKAH 1 dari 5 alur booking (Cara B — tanpa aplikasi). Membuat booking draft untuk user yang login.\n\nBODY:\n- date_start, date_end (wajib, format Y-m-d): tidak boleh masa lalu, maksimal 1 bulan dari sekarang, date_start <= date_end\n- wni, wna (wajib, integer >= 0): totalnya harus >= minimal paket\n- jenis_tiket (wajib) = id di gk_paket_tikets -> 1 = 'Umum' (min 2 pendaki), 2 = 'Rombongan pelajar/mahasiswa' (min 10)\n- gerbang_masuk, gerbang_keluar (wajib) = id di gk_gates -> 1 = Desa Kersik Tuo (kuota 30/hari), 2 = Solok Selatan (46/hari)\n\nPRASYARAT: biodata user yang login berstatus 'verified' (kalau tidak -> 403 'Biodata anda belum terverifikasi'); umur ketua >= 17 tahun; kapasitas gate pada tanggal itu belum penuh.\n\nHASIL: booking baru dengan status_booking = 0 + otomatis 1 baris pendaki (ketua, id_bio = biodata user login, tagihan 0).\nSALIN nilai data.id (UUID booking) -> dipakai di request '2. Setujui SNK' dan seterusnya.\nUUID pendaki (data.pendakis[].id) juga sudah tersedia di respons ini -> dipakai di '4. Simpan Formulir'.\n\nERROR: 403 biodata belum verified | 422 validasi / tanggal tidak sesuai / kapasitas penuh / jumlah pendaki tidak mencukupi.\n\nPENTING (agar admin bisa 'Cek In'): date_start harus HARI INI atau sudah lewat, TAPI tanggal masa lalu ditolak endpoint ini. Jadi isi date_start = tanggal hari ini (2026-09-12). Kalau date_start > hari ini, dashboard admin menolak Cek In dengan pesan 'Tidak bisa mengubah status booking' (bookingController::updateStatus). Body di request ini sudah diset 2026-09-12 -> 2026-09-13.\n\nPASCA FRESH SEED: jalankan berurutan 1 -> 5. ID booking draft disimpan otomatis ke variable {{draft_booking_id}} saat request ini sukses."
+          },
+          "response": [],
+          "createdAt": "2026-09-12T04:29:58.000Z",
+          "updatedAt": "2026-09-12T04:29:58.000Z",
+          "uid": "27289766-0d184c26-c114-45f3-9b05-b240bad650ee"
+        },
+        {
+          "name": "2. Setujui SNK",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
+                  "",
+                  "// Simpan pendaki pertama (ketua) untuk langkah 4.",
+                  "const p = (res.data && res.data.pendakis) ? res.data.pendakis : [];",
+                  "if (p[0] && p[0].id) {",
+                  "    pm.collectionVariables.set(\"p1_id\", p[0].id);",
+                  "    pm.collectionVariables.set(\"p1_bio\", p[0].id_bio);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "id": "13eb3f87-f0cf-4ea9-93cc-c90f28ed2cfd",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{draft_booking_id}}\",\n  \"snk\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/booking/snk",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "booking",
+                "snk"
+              ]
+            },
+            "description": "LANGKAH 2 dari 5. Menyetujui syarat & ketentuan -> status booking naik dari 0 ke 2.\n\nBODY:\n- id (wajib, UUID booking)\n- snk (wajib, harus true)\n\nERROR: 404 kalau booking bukan milik user ini atau statusnya bukan 0/1/2 | 422 validasi."
+          },
+          "response": [],
+          "createdAt": "2026-09-12T04:29:58.000Z",
+          "updatedAt": "2026-09-12T05:06:57.000Z",
+          "uid": "27289766-13eb3f87-f0cf-4ea9-93cc-c90f28ed2cfd"
+        },
+        {
+          "name": "3. Tambah Pendaki (anggota ke-2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));",
+                  "",
+                  "// Simpan pendaki terakhir yang baru ditambahkan (anggota ke-2) untuk langkah 4.",
+                  "const p = (res.data && res.data.pendakis) ? res.data.pendakis : [];",
+                  "const last = p[p.length - 1];",
+                  "if (last && last.id) {",
+                  "    pm.collectionVariables.set(\"p2_id\", last.id);",
+                  "    pm.collectionVariables.set(\"p2_bio\", last.id_bio);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "id": "45186288-3780-4bf6-a243-8eb28937d364",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking\": \"{{draft_booking_id}}\",\n  \"code\": \"{{bio_pendaki2}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/booking/formulir/pendaki/add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "booking",
+                "formulir",
+                "pendaki",
+                "add"
+              ]
+            },
+            "description": "LANGKAH 3 dari 5. Menambah anggota ke-2 (wajib, karena paket 'Umum' minimal 2 pendaki).\n\nBODY:\n- booking (wajib, UUID booking)\n- code (wajib) = ID biodata orang yang ditambahkan (tabel biodatas, harus verified). Contoh dari seeder:\n    0386d962 = User One    (milik akun user1@example.com)\n    6d0903ee = User Two\n    270f2355 = User Three\n- id (opsional) = UUID pendaki, kalau mau mengubah pendaki yang sudah ada di booking\n\nERROR: 404 kode biodata tidak ditemukan / belum verified, atau booking bukan milik user | 422 pendaki sudah ada di booking ini / sudah terdaftar di pendakian lain pada tanggal yang sama.\n\nPASCA FRESH SEED: set dulu collection variable bio_pendaki2 = id biodata pendaki ke-2 (berbeda tiap seed). Ambil via tinker: DB::table('users')->join('biodatas','biodatas.id','=','users.id_bio')->where('users.email','user2@example.com')->value('biodatas.id')"
+          },
+          "response": [],
+          "createdAt": "2026-09-12T04:29:58.000Z",
+          "updatedAt": "2026-09-12T05:06:57.000Z",
+          "uid": "27289766-45186288-3780-4bf6-a243-8eb28937d364"
+        },
+        {
+          "name": "4. Simpan Formulir (lanjut)",
+          "id": "e14735ae-5132-434a-8ce3-819ee332e001",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_booking\": \"{{draft_booking_id}}\",\n  \"action\": \"next\",\n  \"barangWajib\": true,\n  \"formulir\": [\n    {\n      \"id_pendaki\": \"{{p1_id}}\",\n      \"kode_bio\": \"{{p1_bio}}\",\n      \"no_hp_darurat\": \"081234567890\"\n    },\n    {\n      \"id_pendaki\": \"{{p2_id}}\",\n      \"kode_bio\": \"{{p2_bio}}\",\n      \"no_hp_darurat\": \"081298765432\"\n    }\n  ],\n  \"barang_bawaan\": [\n    {\n      \"nama_barang\": \"Tenda\",\n      \"jumlah\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/booking/formulir",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "booking",
+                "formulir"
+              ]
+            },
+            "description": "LANGKAH 4 dari 5. Mengisi formulir + barang bawaan. action = 'next' menghitung tagihan dan menaikkan status ke 3 (menunggu pembayaran).\n\nBODY:\n- id_booking (wajib, UUID)\n- action (wajib): 'next' (lanjut -> status 3) atau 'save' (simpan sementara -> status tetap 2)\n- barangWajib (wajib kalau action = next, boolean): konfirmasi barang wajib sudah disiapkan\n- formulir (wajib, array): satu entri per pendaki -> { id_pendaki (UUID), kode_bio (ID biodata), no_hp_darurat (opsional) }\n    Jumlah entri harus SAMA dengan total pendaki booking (wni + wna) dan >= min_pendaki_booking gate (2).\n- barang_bawaan (opsional, array): { nama_barang, jumlah }\n\nHASIL: tagihan per pendaki dihitung, total_pembayaran terisi, status_booking = 3, dataStruk dibuat.\nSetelah ini 'My Tiket' menampilkan booking dengan status_booking 3.\n\nERROR: 404 status booking bukan 2 | 422 jumlah pendaki tidak sesuai / kurang dari minimal / lampiran surat izin ortu wajib untuk pendaki di bawah 17 tahun."
+          },
+          "response": [],
+          "createdAt": "2026-09-12T04:29:58.000Z",
+          "updatedAt": "2026-09-12T05:06:58.000Z",
+          "uid": "27289766-e14735ae-5132-434a-8ce3-819ee332e001"
+        },
+        {
+          "name": "5. Unggah Bukti Bayar",
+          "id": "2d2377c4-6483-43b9-91f9-6b6984126b09",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "id",
+                  "value": "{{draft_booking_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "metode",
+                  "value": "transfer",
+                  "type": "text"
+                },
+                {
+                  "key": "bukti_pembayaran",
+                  "type": "file",
+                  "src": [
+                    "/C:/Users/ASUS/Downloads/creator-agreement-satriabaharii-.pdf"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/booking/payment",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "booking",
+                "payment"
+              ]
+            },
+            "description": "LANGKAH 5 dari 5. Mengunggah bukti pembayaran -> dibuat baris di tabel pembayarans dengan status 'pending'. Status booking TETAP 3 sampai admin memverifikasi.\n\nBODY (form-data, BUKAN JSON):\n- id (text) = UUID booking\n- metode (text) = transfer | scan\n- bukti_pembayaran (FILE) -> pilih file di Postman (jpg / jpeg / png / pdf, maksimal 2 MB)\n\nSETELAH INI (di luar API): buka dashboard admin http://127.0.0.1:8000 -> Booking -> detail booking -> verifikasi pembayaran (status 4) -> konfirmasi (5) -> 'Cek In' pendaki (status 6 = pendakian aktif). Tidak ada endpoint API untuk langkah-langkah admin ini.\n\nERROR: 404 status booking bukan 3 | 422 bukti_pembayaran hilang / format salah / lebih dari 2 MB."
+          },
+          "response": [],
+          "createdAt": "2026-09-12T04:29:58.000Z",
+          "updatedAt": "2026-09-12T05:07:01.000Z",
+          "uid": "27289766-2d2377c4-6483-43b9-91f9-6b6984126b09"
+        }
+      ],
+      "id": "029d1a6a-bb5f-46e5-9ab8-48e16787f3bc",
+      "description": "Alat bantu penyiapan data uji: endpoint booking/tiket yang dibutuhkan SEBELUM menguji 3 fitur (Pelacakan Jejak, Panic Button, Peringatan Dini). Endpoint di folder ini bukan bagian dari ketiga fitur tersebut — ada di routes/api/routeUser.php, bukan routes/api/routeTracking.php.",
+      "createdAt": "2026-09-12T04:21:50.000Z",
+      "updatedAt": "2026-09-12T04:23:40.000Z",
+      "uid": "27289766-029d1a6a-bb5f-46e5-9ab8-48e16787f3bc"
+    },
+    {
+      "name": "PELACAKAN JEJAK",
+      "item": [
+        {
+          "name": "Check-in QR",
+          "id": "3b1e809c-bdc3-4314-ab09-625251044646",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"qr_code_value\": \"TNKS_CHECKPOINT:2\",\n  \"latitude\": -1.704,\n  \"longitude\": 101.266\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/tracking/checkpoint/qr",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "checkpoint",
+                "qr"
+              ]
+            },
+            "description": "Check-in dengan scan QR di pos. Server mencocokkan qr_code_value ke tabel gk_posts (status=true).\n\nBODY:\n- qr_code_value (wajib): nilai QR dari plang pos, format TNKS_CHECKPOINT:<id pos>\n- latitude/longitude (opsional): koordinat saat scan\n\nALUR SERVER: cek pendakian aktif -> cocokkan QR -> cek duplikat -> insert GkCheckpointLog (method='qr')\n\nRESPONSE 201: { checkpoint_log_id, post: {id, nama, urutan}, progress: {completed, total, percentage} }\n\nERROR:\n- 403 'Tidak ada pendakian aktif' (booking status_booking != 6)\n- 404 'QR code tidak valid' (nilai tidak ada di gk_posts)\n- 409 'Sudah check-in di pos ini' (errors.checked_at berisi waktu check-in lama)\n- 422 validasi gagal\n\nNILAI QR (Opsi D — deterministik, tidak berubah walau seed ulang):\nid 1 Shelter 1          = TNKS_CHECKPOINT:1   <- dipakai di body request ini\nid 2 Pos 1              = TNKS_CHECKPOINT:2\nid 3 Pos 2              = TNKS_CHECKPOINT:3\nid 4 Pos 3 (Shelter 2)  = TNKS_CHECKPOINT:4\nid 5 Puncak Kerinci     = TNKS_CHECKPOINT:5\nid 6 Pos 1 Solok        = TNKS_CHECKPOINT:6\nid 7 Pos 2 Solok        = TNKS_CHECKPOINT:7\nid 8 Pos 3 Solok        = TNKS_CHECKPOINT:8\nid 9 Puncak Kerinci(2)  = TNKS_CHECKPOINT:9\n\nGambar QR siap cetak: D:\\documents\\coding\\university\\tnks\\qr-checkpoint\\\n\nCATATAN: format ini juga yang dipahami app mobile (CheckpointQrParser.kt: prefix 'TNKS_CHECKPOINT:'), jadi scan langsung dari aplikasi cocok dengan server.\n\nPRASYARAT TES: harus ada booking status_booking=6 (pendakian aktif) milik user yang login, kalau tidak -> 403."
+          },
+          "response": [],
+          "createdAt": "2026-09-08T03:54:57.000Z",
+          "updatedAt": "2026-09-12T13:47:31.000Z",
+          "uid": "27289766-3b1e809c-bdc3-4314-ab09-625251044646"
+        },
+        {
+          "name": "Kirim Posisi GPS",
+          "id": "eb66d917-9da8-77ee-21c8-7bc7766581c9",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": -1.6973,\n  \"longitude\": 101.2642,\n  \"altitude\": 2200.5,\n  \"accuracy\": 12.5,\n  \"battery_level\": 87,\n  \"recorded_at\": \"2026-09-08T03:00:00.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/tracking/gps",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "gps"
+              ]
+            },
+            "description": "Kirim 1 posisi GPS real-time. Dipanggil app saat tracking aktif.\n\nBODY:\n- latitude/longitude (wajib, numeric: -90..90 / -180..180)\n- altitude (opsional)\n- accuracy (opsional, >= 0)\n- battery_level (opsional, integer 0-100) — telemetri utk admin monitoring\n- recorded_at (opsional, format date) — waktu posisi direkam di HP (boleh masa lalu utk offline)\n\nATURAN: rate limit 1x per 30 detik per pendaki. Sukses memicu broadcast TrackingUpdated ke admin realtime.\n\nRESPONSE 201: { id, server_time }\n\nERROR: 403 tidak ada pendakian aktif | 429 'Terlalu cepat, tunggu 30 detik' | 422 validasi"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T05:58:07.000Z",
+          "updatedAt": "2026-09-08T06:10:17.000Z",
+          "uid": "27289766-eb66d917-9da8-77ee-21c8-7bc7766581c9"
+        },
+        {
+          "name": "Kirim Posisi GPS (Batch)",
+          "id": "398da809-53f5-eaa9-22b2-926ffb843a4e",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"positions\": [\n    {\n      \"latitude\": -1.6973,\n      \"longitude\": 101.2642,\n      \"accuracy\": 10.0,\n      \"battery_level\": 85,\n      \"recorded_at\": \"2026-09-08T03:00:00.000Z\"\n    },\n    {\n      \"latitude\": -1.6961,\n      \"longitude\": 101.2638,\n      \"accuracy\": 9.5,\n      \"battery_level\": 84,\n      \"recorded_at\": \"2026-09-08T03:05:00.000Z\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/tracking/gps/batch",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "gps",
+                "batch"
+              ]
+            },
+            "description": "Kirim banyak posisi sekaligus — jalur sinkronisasi data offline yang tertumpuk di HP.\n\nBODY:\n\n- positions (wajib, array min 1 maks 100)\n    \n- tiap posisi: latitude/longitude (wajib), recorded_at (WAJIB, date), altitude/accuracy/battery_level (opsional)\n    \n\nBEDA DENGAN /gps TUNGGAL: tanpa rate limit, tanpa broadcast realtime.\n\nRESPONSE 201: { inserted: , server_time }\n\nERROR: 403 tidak ada pendakian aktif | 422 validasi (mis. recorded_at hilang)"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T05:58:08.000Z",
+          "updatedAt": "2026-09-08T06:11:31.000Z",
+          "uid": "27289766-398da809-53f5-eaa9-22b2-926ffb843a4e"
+        },
+        {
+          "name": "Posisi Terakhir Saya",
+          "id": "214f1edd-6023-ddf8-728e-46ac64b1512d",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tracking/my-position",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "my-position"
+              ]
+            },
+            "description": "Ambil posisi GPS terakhir pendaki aktif (urut recorded_at).\n\nRESPONSE 200 (ada data): { latitude, longitude, altitude, accuracy, battery_level, recorded_at }\nRESPONSE 200 (belum pernah kirim): success=true, data=null, message 'Belum ada posisi terekam' — BUKAN error.\n\nERROR: 403 tidak ada pendakian aktif"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T05:58:09.000Z",
+          "updatedAt": "2026-09-08T06:10:18.000Z",
+          "uid": "27289766-214f1edd-6023-ddf8-728e-46ac64b1512d"
+        },
+        {
+          "name": "Check-in GPS Otomatis (Deteksi)",
+          "id": "53409efb-d564-5de4-5078-9560a4a77efe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": -1.6973,\n  \"longitude\": 101.2642,\n  \"accuracy\": 10.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/tracking/checkpoint/gps",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "checkpoint",
+                "gps"
+              ]
+            },
+            "description": "Deteksi pos/checkpoint terdekat dari koordinat GPS — TIDAK menulis log check-in. App memakainya untuk tahu pendaki dekat pos mana & apakah dalam radius sebelum check-in.\n\nBODY:\n- latitude/longitude (wajib)\n- accuracy (opsional, >= 0)\n\nRESPONSE 200:\n- nearest_post: { id, nama, distance_meters, within_radius, radius_meter } (null jika tidak ada pos)\n- all_posts: daftar semua pos dgn distance_meters & within_radius\n\nERROR: 403 tidak ada pendakian aktif | 404 'Tidak ada pos di jalur ini'"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T05:58:10.000Z",
+          "updatedAt": "2026-09-08T06:11:37.000Z",
+          "uid": "27289766-53409efb-d564-5de4-5078-9560a4a77efe"
+        },
+        {
+          "name": "Check-in Manual",
+          "id": "9504cb45-f716-a329-bff1-9d8115a12737",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"post_id\": 3,\n  \"latitude\": -1.6973,\n  \"longitude\": 101.2642\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/tracking/checkpoint/manual",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "checkpoint",
+                "manual"
+              ]
+            },
+            "description": "Check-in manual oleh pendaki ke pos tertentu (mis. QR rusak / tidak terbaca).\n\nBODY:\n- post_id (wajib, harus ada di gk_posts)\n- latitude/longitude (WAJIB — beda dengan check-in QR)\n\nATURAN: jarak > 500 m dari pos → is_manual_override=true (tercatat utk audit: check-in di luar radius).\n\nRESPONSE 201: { checkpoint_log_id, post: {id, nama, urutan}, is_manual_override, distance_from_post, progress }\n\nERROR: 403 tidak ada pendakian aktif | 404 post_id tidak ditemukan | 409 sudah check-in di pos ini | 422 validasi"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T05:58:10.000Z",
+          "updatedAt": "2026-09-08T06:10:20.000Z",
+          "uid": "27289766-9504cb45-f716-a329-bff1-9d8115a12737"
+        },
+        {
+          "name": "Progress Pendakian",
+          "id": "1c722972-3266-fc28-96f1-0abe269810f4",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tracking/progress/{{booking_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "progress",
+                "{{booking_id}}"
+              ]
+            },
+            "description": "Progress pendakian: status check-in seluruh pendaki dalam 1 booking (rombongan).\n\nPATH: ganti {booking_id} di URL dengan ID booking milikmu. Booking harus milik user pemanggil.\n\nRESPONSE 200:\n- gate: nama jalur masuk\n- total_posts: jumlah pos aktif jalur\n- hikers[]: per pendaki → { pendaki_id, nama, completed, total, percentage, checkpoints: [{post_id, nama, urutan, completed, checked_at, method}] }\n\nERROR: 403/404 booking tidak ditemukan atau bukan milikmu\n\nCATATAN: path memakai collection variable {{booking_id}}, diisi otomatis oleh 'My Tiket (daftar booking)' — jalankan request itu sekali setelah fresh seed (atau isi manual UUID booking aktif)."
+          },
+          "response": [],
+          "createdAt": "2026-09-08T05:58:11.000Z",
+          "updatedAt": "2026-09-12T05:07:05.000Z",
+          "uid": "27289766-1c722972-3266-fc28-96f1-0abe269810f4"
+        },
+        {
+          "name": "Daftar Pos Jalur",
+          "id": "0ebd8854-d91e-2b7a-1469-3815c60c72d6",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tracking/posts/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "posts",
+                "1"
+              ]
+            },
+            "description": "Daftar semua pos/checkpoint aktif di jalur gerbang (gate) tertentu.\n\nPATH: ganti {gate_id} di URL dengan ID gerbang asli (mis. 1).\n\nRESPONSE 200: array pos → { id, nama, urutan, latitude, longitude, altitude, radius_meter }\n\nradius_meter dipakai app utk deteksi radius GPS check-in.\n\nERROR: 404 gate tidak ditemukan (data kosong → success dgn data [])"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T05:58:12.000Z",
+          "updatedAt": "2026-09-08T06:10:22.000Z",
+          "uid": "27289766-0ebd8854-d91e-2b7a-1469-3815c60c72d6"
+        }
+      ],
+      "id": "0cabf30c-e395-40f3-ba68-da4263df76c8",
+      "createdAt": "2026-09-08T03:55:15.000Z",
+      "updatedAt": "2026-09-08T06:00:23.000Z",
+      "uid": "27289766-0cabf30c-e395-40f3-ba68-da4263df76c8"
+    },
+    {
+      "name": "PANIC BUTTON",
+      "item": [
+        {
+          "name": "Trigger SOS (Panic Button)",
+          "id": "9160a2d4-db23-a44e-867a-1a5eedc55200",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "value": "application/json",
+                "key": "Accept"
+              },
+              {
+                "value": "Bearer {{token}}",
+                "key": "Authorization"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": -1.6973,\n  \"longitude\": 101.2642,\n  \"severity\": \"high\",\n  \"message\": \"Saya terjebak di dekat pos 5, butuh bantuan\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/sos/trigger",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sos",
+                "trigger"
+              ]
+            },
+            "description": "Trigger SOS / panic button.\n\nBODY:\n- latitude/longitude (WAJIB)\n- severity (wajib): low | medium | high — TIDAK ADA 'critical' di endpoint ini (beda dengan emergency)\n- message (opsional, max 1000)\n\nALUR: cek pendakian aktif → cooldown 5 menit → simpan GkSos (status=active, altitude diambil otomatis dari tracking terakhir) → broadcast SOSTriggered → ambil kontak penyelamat dari settings.\n\nRESPONSE 201: { sos_id, status, created_at, rescue_contact: { phone, whatsapp_link } }\n\nERROR:\n- 403 tidak ada pendakian aktif\n- 404 destinasi tidak ditemukan\n- 429 'Tunggu X detik...' (cooldown 5 menit; errors.wait_seconds berisi sisa detik)"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:15:57.000Z",
+          "updatedAt": "2026-09-08T06:15:57.000Z",
+          "uid": "27289766-9160a2d4-db23-a44e-867a-1a5eedc55200"
+        },
+        {
+          "name": "Cek SOS Aktif",
+          "id": "c4d51b06-e56d-a4ab-2fc0-4be0153148b0",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "value": "application/json",
+                "key": "Accept"
+              },
+              {
+                "value": "Bearer {{token}}",
+                "key": "Authorization"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sos/active",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sos",
+                "active"
+              ]
+            },
+            "description": "Cek SOS aktif milikku. Status yang dianggap aktif: active | acknowledged | dispatched.\n\nRESPONSE 200 (ada): { id, severity, message, status, latitude, longitude, created_at }\nRESPONSE 200 (tidak ada): success=true, data=null, message 'Tidak ada SOS aktif' — BUKAN error.\n\nERROR: 403 tidak ada pendakian aktif"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:15:57.000Z",
+          "updatedAt": "2026-09-08T06:15:57.000Z",
+          "uid": "27289766-c4d51b06-e56d-a4ab-2fc0-4be0153148b0"
+        },
+        {
+          "name": "Kirim Chat SOS",
+          "id": "112081d0-bc02-9019-7093-f8c39b39e817",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"text\",\n  \"content\": \"Saya aman, menunggu tim di pos 5\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/sos/chat/1/send",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sos",
+                "chat",
+                "1",
+                "send"
+              ]
+            },
+            "description": "Kirim pesan teks dalam sesi chat SOS. GANTI angka 1 di URL dengan sos_id dari response Trigger SOS.\n\nBODY (type=text):\n- type (wajib): text | image\n- content (wajib utk text, max 2000)\n\nUNTUK KIRIM GAMBAR (type=image): ubah body jadi form-data dengan field type=image + upload file image (jpeg/png/jpg, max 5MB).\n\nHAK AKSES: hanya pendaki pemilik SOS atau admin destinasi.\n\nRESPONSE 201: { id, sender_type: \"hiker\"/\"admin\", type, content, created_at }\n\nERROR: 404 SOS tidak ditemukan | 403 tidak memiliki akses | 422 validasi"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:15:58.000Z",
+          "updatedAt": "2026-09-08T06:15:58.000Z",
+          "uid": "27289766-112081d0-bc02-9019-7093-f8c39b39e817"
+        },
+        {
+          "name": "Riwayat Chat SOS",
+          "id": "46e9e2bd-76c6-4ada-decc-7715fe9766be",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sos/chat/1/messages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sos",
+                "chat",
+                "1",
+                "messages"
+              ]
+            },
+            "description": "Ambil riwayat chat SOS (urutan lama→baru, 50 pesan per halaman). GANTI angka 1 di URL dengan sos_id.\n\nEfek samping: pesan dari pengirim lain otomatis ditandai is_read=true.\n\nRESPONSE 200:\n- messages[]: { id, sender_type, sender_name, type, content, is_read, created_at } — content berupa URL lengkap utk pesan gambar\n- pagination: { current_page, last_page, total }\n\nERROR: 404 SOS tidak ditemukan | 403 tidak memiliki akses"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:15:59.000Z",
+          "updatedAt": "2026-09-08T06:15:59.000Z",
+          "uid": "27289766-46e9e2bd-76c6-4ada-decc-7715fe9766be"
+        },
+        {
+          "name": "Kontak Darurat (Call Options)",
+          "id": "62fad718-1b80-f45c-6a93-5e5be4157054",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "value": "application/json",
+                "key": "Accept"
+              },
+              {
+                "value": "Bearer {{token}}",
+                "key": "Authorization"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sos/call-options",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sos",
+                "call-options"
+              ]
+            },
+            "description": "Ambil kontak darurat/penyelamat dari settings (rescue_phone + emergency_phone) beserta deep link WhatsApp & telepon.\n\nBUKAN butuh pendaki aktif — cukup login. Pesan WhatsApp otomatis terisi nama pendaki + booking kalau ada pendakian aktif.\n\nRESPONSE 200: array → { name, phone, whatsapp_link, tel_link }\n\nERROR: 401 kalau belum login"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:15:59.000Z",
+          "updatedAt": "2026-09-08T06:15:59.000Z",
+          "uid": "27289766-62fad718-1b80-f45c-6a93-5e5be4157054"
+        },
+        {
+          "name": "Kirim Laporan Bencana",
+          "id": "a9d10e61-89cf-0510-2021-8d0483fd2888",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "value": "application/json",
+                "key": "Accept"
+              },
+              {
+                "value": "Bearer {{token}}",
+                "key": "Authorization"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "value": "Tanah Longsor",
+                  "type": "text",
+                  "key": "potensi_bencana"
+                },
+                {
+                  "value": "Terlihat retakan tanah & batu bergerak di lereng timur jalur.",
+                  "type": "text",
+                  "key": "deskripsi"
+                },
+                {
+                  "value": "±300m sebelum pos 4, jalur utama",
+                  "type": "text",
+                  "key": "lokasi"
+                },
+                {
+                  "value": "-1.6973",
+                  "type": "text",
+                  "key": "latitude"
+                },
+                {
+                  "value": "101.2642",
+                  "type": "text",
+                  "key": "longitude"
+                },
+                {
+                  "value": "",
+                  "type": "file",
+                  "key": "lampiran"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/sos/disaster-report",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sos",
+                "disaster-report"
+              ]
+            },
+            "description": "Lapor potensi bencana di jalur (form-data / multipart).\n\nFIELD:\n- potensi_bencana (wajib, max 255)\n- deskripsi (wajib, max 2000)\n- lokasi (wajib, max 255)\n- latitude/longitude (opsional)\n- lampiran (opsional): file gambar jpeg/png/jpg max 5MB — pilih file di tab Body\n\nALUR: cek pendakian aktif → upload lampiran ke storage/disaster-reports → simpan status=pending → broadcast DisasterReported.\n\nRESPONSE 201: { id, status: \"pending\", created_at }\n\nERROR: 403 tidak ada pendakian aktif | 404 destinasi tidak ditemukan | 422 validasi"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:16:00.000Z",
+          "updatedAt": "2026-09-08T06:16:00.000Z",
+          "uid": "27289766-a9d10e61-89cf-0510-2021-8d0483fd2888"
+        },
+        {
+          "name": "Riwayat Laporan Bencana",
+          "id": "16cfbb57-ae35-f8e7-0142-052535b4f428",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "value": "application/json",
+                "key": "Accept"
+              },
+              {
+                "value": "Bearer {{token}}",
+                "key": "Authorization"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sos/disaster-reports",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sos",
+                "disaster-reports"
+              ]
+            },
+            "description": "Riwayat laporan bencana milikku sendiri (terbaru dulu, semua status).\n\nRESPONSE 200: array → { id, potensi_bencana, lokasi, status, created_at }\n\nERROR: 401 kalau belum login"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:16:01.000Z",
+          "updatedAt": "2026-09-08T06:16:01.000Z",
+          "uid": "27289766-16cfbb57-ae35-f8e7-0142-052535b4f428"
+        }
+      ],
+      "id": "1b640eed-e0d4-4782-be76-0bc8730f3f8a",
+      "createdAt": "2026-09-08T06:13:46.000Z",
+      "updatedAt": "2026-09-08T06:16:01.000Z",
+      "uid": "27289766-1b640eed-e0d4-4782-be76-0bc8730f3f8a"
+    },
+    {
+      "name": "PERINGATAN DINI BAHAYA",
+      "item": [
+        {
+          "name": "Kirim Peringatan (Trigger)",
+          "id": "1f4a5fb5-2cd1-52e9-accd-e010f99bcda9",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Longsor di jalur pendakian\",\n  \"description\": \"Terjadi longsor kecil sekitar 200m di atas pos 3, jalur tertutup.\",\n  \"severity\": \"high\",\n  \"latitude\": -1.6973,\n  \"longitude\": 101.2642\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/emergency/trigger",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "emergency",
+                "trigger"
+              ]
+            },
+            "description": "Kirim peringatan dini bahaya (trigger emergency alert) dari pendaki.\n\nBODY:\n- title (wajib, max 255)\n- description (wajib, max 2000)\n- severity (wajib): low | medium | high | critical\n- latitude/longitude (opsional) — kalau kosong, server pakai posisi GPS terakhir pendaki (gk_tracking)\n\nALUR: cek pendakian aktif → cek destinasi → simpan GkEmergencyMessage (status=active) → broadcast EmergencyTriggered ke admin realtime.\n\nRESPONSE 201: { id, status: \"active\", created_at }\n\nERROR: 403 tidak ada pendakian aktif | 404 destinasi tidak ditemukan | 422 validasi"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:15:55.000Z",
+          "updatedAt": "2026-09-08T06:15:55.000Z",
+          "uid": "27289766-1f4a5fb5-2cd1-52e9-accd-e010f99bcda9"
+        },
+        {
+          "name": "Daftar Peringatan Aktif",
+          "id": "756c59bf-4285-1ded-b6b5-1f87e1bd779c",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/emergency/active",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "emergency",
+                "active"
+              ]
+            },
+            "description": "Ambil semua peringatan dini berstatus active di destinasi pendaki (dipakai app untuk polling peringatan).\n\nRESPONSE 200: array → { id, type, title, description, severity, latitude, longitude, created_at }\n- Tidak ada peringatan → success=true, data=[]\n- Pendaki tanpa destinasi → success=true, data=[]\n\nERROR: 403 tidak ada pendakian aktif"
+          },
+          "response": [],
+          "createdAt": "2026-09-08T06:15:56.000Z",
+          "updatedAt": "2026-09-08T06:15:56.000Z",
+          "uid": "27289766-756c59bf-4285-1ded-b6b5-1f87e1bd779c"
+        }
+      ],
+      "id": "c9868339-cb74-499b-a529-0f6f833adb84",
+      "createdAt": "2026-09-08T06:13:53.000Z",
+      "updatedAt": "2026-09-08T06:15:56.000Z",
+      "uid": "27289766-c9868339-cb74-499b-a529-0f6f833adb84"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "booking_id",
+      "value": "be5286b1-bbef-4694-ba1d-3f493d5e012a",
+      "type": "string"
+    },
+    {
+      "key": "draft_booking_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "p1_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "p1_bio",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "p2_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "p2_bio",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bio_pendaki2",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
