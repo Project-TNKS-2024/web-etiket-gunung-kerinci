@@ -52,10 +52,10 @@
                   </select>
                </div>
                <div class="col-4">
-                  <label class="form-label" for="statusGunung">Status Gunung </label>
-                  <select class="form-control borderx bg-white" id="statusGunung" name="statusGunung" required>
+                  <label class="form-label" for="status_gunung">Status Gunung </label>
+                  <select class="form-control borderx bg-white" id="status_gunung" name="status_gunung" required>
                      @foreach([4, 3, 2, 1, 0] as $level)
-                     <option value="{{ $level }}" {{ (string) old('statusGunung', $destinasi->statusGunung) === (string) $level ? 'selected' : '' }}>{{$destinasi->getStatusGunung($level)}}</option>
+                     <option value="{{ $level }}" {{ (string) old('status_gunung', $destinasi->status_gunung) === (string) $level ? 'selected' : '' }}>{{$destinasi->getStatusGunung($level)}}</option>
                      @endforeach
                   </select>
                </div>

@@ -62,7 +62,7 @@ class settingController extends AdminController
             'text2' => 'nullable|string',
         ]);
         $var = setting::find($request->id);
-        if (!$var->canDelete) {
+        if (!$var->can_delete) {
             $var->update([
                 'text1' => $request->text1,
                 'text2' => $request->text2,
@@ -83,7 +83,7 @@ class settingController extends AdminController
             'id' => 'required|exists:settings,id',
         ]);
         $setting = setting::find($request->id);
-        if (!$setting->canDelete) {
+        if (!$setting->can_delete) {
             return redirect()->route('admin.setting')->with('error', 'Data tidak bisa dihapus');
         }
         $setting->delete();

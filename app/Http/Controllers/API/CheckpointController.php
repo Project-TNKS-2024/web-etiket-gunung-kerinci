@@ -325,13 +325,13 @@ class CheckpointController extends Controller
     {
         $posts = GkPost::where('id_gate', $gateId)
             ->where('status', true)
-            ->with(['gate:id,id_destinasi', 'gate.destinasi:id,statusGunung'])
+            ->with(['gate:id,id_destinasi', 'gate.destinasi:id,status_gunung'])
             ->orderBy('urutan')
             ->get([
                 'id', 'id_gate', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'detail',
                 'mountain_status', 'water_source_status', 'camping_status', 'temperature_c',
                 'distance_to_next_m', 'estimated_time_minutes', 'distance_to_summit_m',
-                'info_is_dummy', 'info_note', 'info_updated_at', 'map_image_path',
+                'info_note', 'info_updated_at', 'map_image_path',
             ]);
 
         // Kondisi gunung satu destinasi: sumbernya status destinasi, bukan data per pos.

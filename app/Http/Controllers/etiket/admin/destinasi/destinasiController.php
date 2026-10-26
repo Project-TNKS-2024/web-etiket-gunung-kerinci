@@ -50,7 +50,7 @@ class destinasiController extends AdminController
             'nama' => 'required',
             'kategori' => 'required',
             'status' => 'required|integer|in:0,1,2',
-            'statusGunung' => 'required|integer|in:0,1,2,3,4',
+            'status_gunung' => 'required|integer|in:0,1,2,3,4',
             'lokasi' => 'required',
             'detail' => 'required',
             'sop' => 'required',
@@ -61,7 +61,7 @@ class destinasiController extends AdminController
             !ModelsDestinasi::where('id', $request->id)->update([
                 'nama' => $request->nama,
                 'status' => $request->status,
-                'statusGunung' => $request->statusGunung,
+                'status_gunung' => $request->status_gunung,
                 'kategori' => $request->kategori,
                 'lokasi' => $request->lokasi,
                 'detail' => $request->detail,

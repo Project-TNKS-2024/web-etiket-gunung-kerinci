@@ -106,7 +106,7 @@
                   </table>
                </div>
             </div>
-            @if ($booking->dataStruk)
+            @if ($booking->data_struk)
             <a href="{{route('admin.destinasi.booking.struk.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Struk Pembelian</a>
             @endif
          </div>

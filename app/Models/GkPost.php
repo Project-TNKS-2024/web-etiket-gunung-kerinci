@@ -16,7 +16,7 @@ class GkPost extends Model
         'mountain_status', 'water_source_status', 'camping_status', 'temperature_c',
         'distance_to_next_m', 'estimated_time_minutes', 'estimated_descent_time_minutes',
         'distance_to_summit_m',
-        'info_is_dummy', 'info_note', 'info_updated_at', 'map_image_path',
+        'info_note', 'info_updated_at', 'map_image_path',
     ];
 
     protected $appends = ['map_image_url', 'map_image_url_turun'];
@@ -55,7 +55,6 @@ class GkPost extends Model
         'estimated_time_minutes' => 'integer',
         'estimated_descent_time_minutes' => 'integer',
         'distance_to_summit_m' => 'integer',
-        'info_is_dummy' => 'boolean',
         'info_updated_at' => 'datetime',
     ];
 

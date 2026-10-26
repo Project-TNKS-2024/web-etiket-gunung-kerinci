@@ -37,7 +37,7 @@
                <td class="py-2">{{$item->text2}}</td>
                <td class="py-2">
                   <a href="{{ route('admin.setting.update', ['id' => $item->id]) }}" class="btn btn-primary p-2 lh-1"><i class="fa-regular fa-pen-to-square"></i></a>
-                  @if ($item->canDelete)
+                  @if ($item->can_delete)
                   <form method="post" action="{{ route('admin.setting.deleteAction') }}" style="display: inline-block;">
                      @csrf
                      <input type="hidden" name="id" value="{{$item->id}}">

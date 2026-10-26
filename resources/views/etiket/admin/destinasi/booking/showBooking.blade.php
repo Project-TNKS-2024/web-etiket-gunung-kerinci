@@ -159,7 +159,7 @@
 <div class="card">
    <div class="card-body py-3">
       <div class="text-end">
-         @if ($booking->dataStruk)
+         @if ($booking->data_struk)
          <a href="{{route('admin.destinasi.booking.struk.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Struk</a>
          @endif
          <a href="{{route('admin.destinasi.booking.payment.show', ['id' => $booking->id])}}" class="btn btn-primary">Cek Pembelian</a>

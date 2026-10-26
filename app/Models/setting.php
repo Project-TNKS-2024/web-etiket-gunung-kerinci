@@ -16,7 +16,7 @@ class setting extends Model
         'nama',
         'text1',
         'text2',
-        'canDelete',
+        'can_delete',
     ];
 
     public $incrementing = false;

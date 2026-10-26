@@ -74,7 +74,7 @@ class DestinasiController extends Controller
      */
     public function index()
     {
-        $destinasi = destinasi::select('id', 'nama', 'status', 'statusGunung', 'kategori', 'lokasi', 'detail', 'sop')
+        $destinasi = destinasi::select('id', 'nama', 'status', 'status_gunung', 'kategori', 'lokasi', 'detail', 'sop')
             ->where('status', 2)
             ->where('kategori', 'gunung')
             ->with([
@@ -100,7 +100,7 @@ class DestinasiController extends Controller
      */
     public function show($id)
     {
-        $destinasi = destinasi::select('id', 'nama', 'status', 'statusGunung', 'kategori', 'lokasi', 'detail', 'sop')
+        $destinasi = destinasi::select('id', 'nama', 'status', 'status_gunung', 'kategori', 'lokasi', 'detail', 'sop')
             ->where('status', 2)
             ->where('kategori', 'gunung')
             ->with([
@@ -128,7 +128,7 @@ class DestinasiController extends Controller
      */
     public function paket($id)
     {
-        $destinasi = destinasi::select('id', 'nama', 'status', 'statusGunung', 'kategori', 'lokasi', 'detail', 'sop')
+        $destinasi = destinasi::select('id', 'nama', 'status', 'status_gunung', 'kategori', 'lokasi', 'detail', 'sop')
             ->where('status', 2)
             ->where('kategori', 'gunung')
             ->with('gambar_destinasi:id,id_destinasi,src,nama,detail')
@@ -157,7 +157,7 @@ class DestinasiController extends Controller
     {
         $paket = gk_paket_tiket::select('id', 'id_destinasi', 'nama', 'min_pendaki', 'penugasan', 'keterangan')
             ->with([
-                'destinasi:id,nama,status,statusGunung,kategori,lokasi,detail,sop',
+                'destinasi:id,nama,status,status_gunung,kategori,lokasi,detail,sop',
                 'destinasi.gambar_destinasi:id,id_destinasi,src,nama,detail',
                 'destinasi.gates' => function ($query) {
                     $query->select('id', 'nama', 'status', 'id_destinasi', 'max_pendaki_hari', 'min_pendaki_booking', 'lokasi', 'lokasi_maps', 'detail')

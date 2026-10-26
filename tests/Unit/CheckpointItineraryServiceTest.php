@@ -15,22 +15,22 @@ class CheckpointItineraryServiceTest extends TestCase
             new GkPost([
                 'nama' => 'Base', 'urutan' => 1,
                 'distance_to_next_m' => 100, 'estimated_time_minutes' => 10,
-                'estimated_descent_time_minutes' => null, 'info_is_dummy' => false,
+                'estimated_descent_time_minutes' => null,
             ]),
             new GkPost([
                 'nama' => 'Pos 1', 'urutan' => 2,
                 'distance_to_next_m' => 200, 'estimated_time_minutes' => 20,
-                'estimated_descent_time_minutes' => 15, 'info_is_dummy' => false,
+                'estimated_descent_time_minutes' => 15,
             ]),
             new GkPost([
                 'nama' => 'Pos 2', 'urutan' => 3,
                 'distance_to_next_m' => 300, 'estimated_time_minutes' => 30,
-                'estimated_descent_time_minutes' => 25, 'info_is_dummy' => false,
+                'estimated_descent_time_minutes' => 25,
             ]),
             new GkPost([
                 'nama' => 'Puncak', 'urutan' => 4, 'is_summit' => true,
                 'distance_to_next_m' => 0, 'estimated_time_minutes' => 0,
-                'estimated_descent_time_minutes' => 35, 'info_is_dummy' => false,
+                'estimated_descent_time_minutes' => 35,
             ]),
         ])->each(function (GkPost $post, $index) {
             $post->id = $index + 1;

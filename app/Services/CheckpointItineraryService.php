@@ -91,16 +91,14 @@ class CheckpointItineraryService
             if ($i < $n - 1) {
                 $outDistance = $post->distance_to_next_m;
                 $outMinutes = $post->estimated_time_minutes;
-                $outDummy = (bool) $post->info_is_dummy;
             } else {
                 $prev = $posts->get($n - 2);
                 $outDistance = $prev?->distance_to_next_m;
                 $outMinutes = $post->estimated_descent_time_minutes;
-                $outDummy = (bool) $post->info_is_dummy;
             }
 
             $order++;
-            $raw[] = $this->visitFrame(TrackingPhase::Naik, $post, $order, $outDistance, $outMinutes, $outDummy);
+            $raw[] = $this->visitFrame(TrackingPhase::Naik, $post, $order, $outDistance, $outMinutes);
         }
 
         // Turun: P(N-2) .. P0.
@@ -108,10 +106,9 @@ class CheckpointItineraryService
             $post = $posts->get($k);
             $outDistance = $k > 0 ? $posts->get($k - 1)->distance_to_next_m : null;
             $outMinutes = $k > 0 ? $post->estimated_descent_time_minutes : null;
-            $outDummy = (bool) $post->info_is_dummy;
 
             $order++;
-            $raw[] = $this->visitFrame(TrackingPhase::Turun, $post, $order, $outDistance, $outMinutes, $outDummy);
+            $raw[] = $this->visitFrame(TrackingPhase::Turun, $post, $order, $outDistance, $outMinutes);
         }
 
         return $this->attachVisitStatuses($this->attachLogsAndEstimates($raw, $logByKey));
@@ -199,8 +196,7 @@ class CheckpointItineraryService
         GkPost $post,
         int $order,
         ?int $outDistance,
-        ?int $outMinutes,
-        bool $outDummy
+        ?int $outMinutes
     ): array {
         return [
             'visit_key' => $phase->value . ':' . $post->id,
@@ -221,27 +217,22 @@ class CheckpointItineraryService
             'next_visit_key' => null,
             'distance_to_next_m' => $outDistance,
             'estimated_time_to_next_minutes' => $outMinutes,
-            'estimate_is_dummy' => false,
             // internal, dibuang setelah estimasi dihitung:
             '_out_minutes' => $outMinutes,
-            '_out_dummy' => $outDummy,
         ];
     }
 
     private function attachLogsAndEstimates(array $raw, Collection $logByKey): array
     {
         $arrival = null;
-        $dummyChain = false;
         $previous = null;
 
         foreach ($raw as $i => $visit) {
             $inMinutes = $previous['_out_minutes'] ?? null;
-            $inDummy = (bool) ($previous['_out_dummy'] ?? false);
 
             $arrival = ($arrival !== null && $inMinutes !== null && $inMinutes >= 0)
                 ? $arrival->copy()->addMinutes((int) $inMinutes)
                 : null;
-            $dummyChain = $dummyChain || $inDummy;
 
             $log = $logByKey->get($visit['visit_key']);
 
@@ -251,16 +242,12 @@ class CheckpointItineraryService
             $visit['method'] = $log?->method;
             $visit['estimated_arrival_at'] = $arrival?->copy()->setTimezone(config('app.timezone'))->toIso8601String();
             $visit['travel_minutes_from_previous'] = $inMinutes;
-            $visit['estimate_is_dummy'] = $dummyChain;
 
             $arrival = $log?->checked_at?->copy() ?? $arrival;
-            if ($log?->checked_at !== null) {
-                $dummyChain = false;
-            }
 
             // Simpan referensi internal untuk iterasi berikutnya, lalu buang dari hasil.
             $previous = $visit;
-            unset($visit['_out_minutes'], $visit['_out_dummy']);
+            unset($visit['_out_minutes']);
             $raw[$i] = $visit;
         }
 

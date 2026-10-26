@@ -73,7 +73,7 @@ class BookingController extends Controller
         $booking->load([
             'gktiket:id,id_destinasi,nama,min_pendaki,penugasan,keterangan',
             'gktiket.tiket_pendaki:id,id_paket_tiket,kategori_pendaki,harga_masuk_wk,harga_masuk_wd,harga_kemah,harga_traking,harga_ansuransi,masa_ansuransi',
-            'destinasi:destinasis.id,destinasis.nama,destinasis.status,destinasis.statusGunung,destinasis.kategori,destinasis.lokasi,destinasis.detail,destinasis.sop',
+            'destinasi:destinasis.id,destinasis.nama,destinasis.status,destinasis.status_gunung,destinasis.kategori,destinasis.lokasi,destinasis.detail,destinasis.sop',
             'gateMasuk:id,nama,status,id_destinasi,max_pendaki_hari,min_pendaki_booking,lokasi,lokasi_maps,detail',
             'gateKeluar:id,nama,status,id_destinasi,max_pendaki_hari,min_pendaki_booking,lokasi,lokasi_maps,detail',
             'pendakis:id,booking_id,tagihan,id_bio,usia,lampiran_surat_izin_ortu,checkin_at,actual_checkout_at',
@@ -387,7 +387,7 @@ class BookingController extends Controller
                     if (($wni + $wna) < (int) $booking->gateMasuk->min_pendaki_booking) {
                         throw new \InvalidArgumentException('Minimal pendaki ' . $booking->gateMasuk->min_pendaki_booking . ' orang');
                     }
-                    $booking->dataStruk = $this->helper->getDataStruk($booking->id);
+                    $booking->data_struk = $this->helper->getDataStruk($booking->id);
                     $booking->total_pendaki_wni = $wni;
                     $booking->total_pendaki_wna = $wna;
                     $booking->total_pembayaran = $totalTagihan;
@@ -476,7 +476,7 @@ class BookingController extends Controller
         if (!$booking) {
             return ApiResponse::error('Booking tidak ditemukan atau status tidak valid', null, 404);
         }
-        return ApiResponse::success($booking->dataStruk ? json_decode($booking->dataStruk) : $this->helper->getDataStruk($booking->id), 'Berhasil mengambil struk', 200);
+        return ApiResponse::success($booking->data_struk ? json_decode($booking->data_struk) : $this->helper->getDataStruk($booking->id), 'Berhasil mengambil struk', 200);
     }
 
     public function tiket(Request $request, $id)

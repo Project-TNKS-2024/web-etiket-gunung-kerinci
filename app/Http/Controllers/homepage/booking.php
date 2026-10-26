@@ -613,7 +613,7 @@ class booking extends Controller
 
             // buat data Struk
             $dataStruk = $this->helper->getDataStruk($booking->id);
-            $booking->dataStruk = $dataStruk;
+            $booking->data_struk = $dataStruk;
 
             // return $dataStruk;
 
@@ -766,7 +766,7 @@ class booking extends Controller
         }
 
         // if ($booking->status_pembayaran) {
-        $booking = json_decode($booking->dataStruk);
+        $booking = json_decode($booking->data_struk);
         // } else {
         //     $booking = $this->helper->getDataStruk($booking->id);
         // }

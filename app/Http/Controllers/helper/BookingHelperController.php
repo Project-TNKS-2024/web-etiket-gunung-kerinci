@@ -182,7 +182,7 @@ class BookingHelperController extends Controller
         $wniwna = $this->countWniWna($booking);
         $booking->wkwd = (object) $wkwd->getData(true);
         $booking->wniwna = (object) $wniwna->getData(true);
-        unset($booking->dataStruk);
+        unset($booking->data_struk);
         return $booking;
     }
 }

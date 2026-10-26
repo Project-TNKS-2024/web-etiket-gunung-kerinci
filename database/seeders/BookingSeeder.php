@@ -589,7 +589,7 @@ class BookingSeeder extends Seeder
                 'total_pembayaran' => 0,
                 'unique_code' => $definition['code'],
                 'keterangan' => $description,
-                'dataStruk' => null,
+                'data_struk' => null,
             ], $extra));
             $booking->created_at = $createdAt;
             $booking->updated_at = $createdAt;

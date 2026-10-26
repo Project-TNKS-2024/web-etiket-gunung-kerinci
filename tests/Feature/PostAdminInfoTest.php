@@ -49,15 +49,13 @@ class PostAdminInfoTest extends TestCase
                 ->assertJsonPath('data.0.camping_status', 'Boleh')
                 ->assertJsonPath('data.0.distance_to_summit_m', 3500);
         }
-        $post->update(['info_is_dummy' => true]);
         $this->put('/admin/posts/' . $post->id, array_replace($this->payload($this->kersik), [
             'altitude' => 0, 'distance_to_summit_m' => 0, 'water_source_status' => 'Tidak tersedia', 'camping_status' => 'Tidak boleh',
         ]))->assertRedirect()->assertSessionHasNoErrors();
         $post->refresh();
         $this->assertEquals(0, $post->altitude);
         $this->assertSame(0, $post->distance_to_summit_m);
-        $this->assertTrue($post->info_is_dummy);
-        $this->get('/admin/posts')->assertOk()->assertSee('0 mdpl')->assertSee('0 m')->assertSee('Data contoh');
+        $this->get('/admin/posts')->assertOk()->assertSee('0 mdpl')->assertSee('0 m');
         $this->put('/admin/posts/' . $post->id, array_replace($this->payload($this->kersik), [
             'altitude' => '', 'distance_to_summit_m' => '', 'water_source_status' => 'Belum diketahui', 'camping_status' => 'Belum diketahui',
         ]))->assertRedirect()->assertSessionHasNoErrors();

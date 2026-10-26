@@ -44,7 +44,7 @@ class CompletedBookingSeeder extends Seeder
                 'tanggal_masuk' => $start->toDateString(),
                 'tanggal_keluar' => $end->toDateString(),
                 'total_hari' => 3,
-                'dataStruk' => null,
+                'data_struk' => null,
                 'status_booking' => 8,
                 'status_pembayaran' => 1,
                 'unique_code' => $code,

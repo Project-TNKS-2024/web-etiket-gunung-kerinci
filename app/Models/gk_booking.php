@@ -29,7 +29,7 @@ class gk_booking extends Model
         'status_booking',
         'total_pembayaran',
         'status_pembayaran',
-        'dataStruk',
+        'data_struk',
         'unique_code',
         'keterangan',
         'id_booking_master',

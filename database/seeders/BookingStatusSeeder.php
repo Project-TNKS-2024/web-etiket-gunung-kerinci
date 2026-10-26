@@ -79,7 +79,7 @@ class BookingStatusSeeder extends Seeder
             'status_pembayaran' => in_array($base, [4, 5, 6, 7, 8], true),
             'unique_code' => $ticketCode,
             'keterangan' => $description,
-            'dataStruk' => null,
+            'data_struk' => null,
             'id_booking_master' => null,
             'validator' => null,
             'cancelled_at' => $code === 9 ? now() : null,

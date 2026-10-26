@@ -15,7 +15,7 @@ class destinasi extends Model
     protected $fillable = [
         'nama',
         'status',
-        'statusGunung',
+        'status_gunung',
         'kategori',
         'lokasi',
         'detail',
@@ -59,7 +59,7 @@ class destinasi extends Model
     public function getStatusGunung($kode = null)
     {
         if (!isset($kode)) {
-            $kode = $this->statusGunung;
+            $kode = $this->status_gunung;
         }
         switch ($kode) {
             case 0:
@@ -83,7 +83,7 @@ class destinasi extends Model
      */
     public function statusGunungLabel(): ?string
     {
-        $kode = is_numeric($this->statusGunung) ? (int) $this->statusGunung : null;
+        $kode = is_numeric($this->status_gunung) ? (int) $this->status_gunung : null;
 
         return in_array($kode, [0, 1, 2, 3, 4], true)
             ? $this->getStatusGunung($kode)

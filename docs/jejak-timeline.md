@@ -8,7 +8,6 @@ pemeriksaan anggota/pemilik booking yang sudah ada. Setiap elemen
 |---|---|
 | `estimated_arrival_at` | Estimasi tiba ISO-8601 WIB (+07:00), nullable. |
 | `travel_minutes_from_previous` | Durasi dari pos sebelumnya ke pos ini, nullable. |
-| `estimate_is_dummy` | Estimasi/durasi menggunakan data contoh, termasuk segmen sebelumnya yang memengaruhi estimasi. |
 
 `estimated_time_minutes` di master pos adalah durasi dari **pos tersebut menuju
 pos berikutnya**. Service menghitung estimasi per pendaki dari check-in aktual

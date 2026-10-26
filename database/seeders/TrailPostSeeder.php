@@ -72,7 +72,7 @@ class TrailPostSeeder extends Seeder
                     'distance_to_summit_m' => $remaining,
                     'estimated_descent_time_minutes' => null, 'temperature_c' => null,
                     'detail' => "Jalur pendakian melalui {$name}.",
-                    'info_is_dummy' => false, 'info_note' => null,
+                    'info_note' => null,
                     'map_image_path' => str_starts_with((string) $post->map_image_path, 'storage/post-images/')
                         ? $post->map_image_path
                         : 'images/trail-maps/kersik-tuo/'.Str::slug($name).'-naik.webp',
@@ -106,14 +106,6 @@ class TrailPostSeeder extends Seeder
                 'altitude' => $altitude, 'radius_meter' => $name === 'Puncak Kerinci' ? 200 : 150,
                 'status' => true,
             ]);
-            if ($post->info_is_dummy) {
-                $post->fill([
-                    'temperature_c' => null, 'distance_to_next_m' => null,
-                    'estimated_time_minutes' => null, 'estimated_descent_time_minutes' => null,
-                    'distance_to_summit_m' => null, 'water_source_status' => 'Belum diketahui',
-                    'camping_status' => 'Belum diketahui', 'info_is_dummy' => false, 'info_note' => null,
-                ]);
-            }
             $post->is_summit = $name === 'Puncak Kerinci';
             if (!$post->qr_code_value || $post->qr_code_value === 'PLACEHOLDER') {
                 $post->qr_code_value = 'TNKS_CHECKPOINT:'.$post->id;

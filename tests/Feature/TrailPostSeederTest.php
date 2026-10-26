@@ -144,13 +144,12 @@ class TrailPostSeederTest extends TestCase
     {
         $real = GkPost::create([
             'nama' => 'Shelter 1', 'urutan' => 6, 'latitude' => -1.7204, 'longitude' => 101.2636,
-            'id_gate' => 10, 'qr_code_value' => 'REAL-INFO', 'info_is_dummy' => false,
+            'id_gate' => 10, 'qr_code_value' => 'REAL-INFO',
             'water_source_status' => 'Tidak tersedia', 'camping_status' => 'Tidak boleh',
             'info_note' => 'Catatan petugas',
         ]);
         $this->seed(TrailPostSeeder::class);
         $real->refresh();
-        $this->assertFalse($real->info_is_dummy);
         $this->assertSame('Tidak tersedia', $real->water_source_status);
         $this->assertSame('Tidak boleh', $real->camping_status);
         $this->assertSame('Catatan petugas', $real->info_note);

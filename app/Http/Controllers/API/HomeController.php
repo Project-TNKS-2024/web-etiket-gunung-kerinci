@@ -27,18 +27,18 @@ class HomeController extends Controller
         $tiketAktif = gk_paket_tiket::select('id', 'id_destinasi', 'nama', 'min_pendaki', 'penugasan', 'keterangan')
             ->with([
                 'tiket_pendaki:id,id_paket_tiket,kategori_pendaki,harga_masuk_wk,harga_masuk_wd,harga_kemah,harga_traking,harga_ansuransi,masa_ansuransi',
-                'destinasi:id,nama,status,statusGunung,kategori,lokasi,detail,sop',
+                'destinasi:id,nama,status,status_gunung,kategori,lokasi,detail,sop',
             ])
             ->get();
 
         // list destinasi wisata, disesuaikan dengan beranda web
-        $destinasi = destinasi::select('id', 'nama', 'status', 'statusGunung', 'kategori', 'lokasi', 'detail', 'sop')
+        $destinasi = destinasi::select('id', 'nama', 'status', 'status_gunung', 'kategori', 'lokasi', 'detail', 'sop')
             ->with('gambar_destinasi:id,id_destinasi,src,nama,detail')
             ->get();
 
         $kerinci = $destinasi->firstWhere('nama', 'Gunung Kerinci');
         $pendaki = $homeHelper->getPendaki($kerinci?->id);
-        $mountainCode = is_numeric($kerinci?->statusGunung) ? (int) $kerinci->statusGunung : null;
+        $mountainCode = is_numeric($kerinci?->status_gunung) ? (int) $kerinci->status_gunung : null;
         $data = [
             'cuaca' => $cuaca,
             'status_gunung' => $kerinci && $kerinci->statusGunungLabel() !== null ? [

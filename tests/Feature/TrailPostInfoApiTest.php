@@ -16,7 +16,7 @@ class TrailPostInfoApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $destination = DB::table('destinasis')->insertGetId(['nama' => 'Kerinci', 'statusGunung' => 1, 'kategori' => 'gunung', 'lokasi' => 'Jambi']);
+        $destination = DB::table('destinasis')->insertGetId(['nama' => 'Kerinci', 'status_gunung' => 1, 'kategori' => 'gunung', 'lokasi' => 'Jambi']);
         DB::table('gk_gates')->insert([
             ['id' => 10, 'nama' => 'Desa Kersik Tuo', 'id_destinasi' => $destination],
             ['id' => 20, 'nama' => 'Solok Selatan', 'id_destinasi' => $destination],
@@ -33,7 +33,7 @@ class TrailPostInfoApiTest extends TestCase
         $this->getJson('/api/tracking/posts/10')->assertUnauthorized();
     }
 
-    public function test_api_returns_static_demo_information_for_all_ten_route_points(): void
+    public function test_api_returns_configured_information_for_all_ten_route_points(): void
     {
         $this->seed(TrailPostSeeder::class);
         $this->login();
@@ -50,13 +50,11 @@ class TrailPostInfoApiTest extends TestCase
             ->assertJsonPath('data.9.estimated_time_minutes', 0)
             ->assertJsonPath('data.9.distance_to_summit_m', 0);
         foreach ($response->json('data') as $post) {
-            $this->assertTrue($post['info_is_dummy']);
-            $this->assertStringContainsString('DATA DEMO', $post['info_note']);
             $this->assertNotNull($post['info_updated_at']);
             $this->assertIsInt($post['distance_to_next_m']);
             $this->assertIsInt($post['estimated_time_minutes']);
         }
-        $this->assertSame(4, GkPost::where('id_gate', 20)->where('info_is_dummy', true)->count());
+        $this->assertSame(4, GkPost::where('id_gate', 20)->count());
     }
 
     public function test_both_api_versions_return_the_matching_position_map_in_route_order(): void
@@ -88,7 +86,6 @@ class TrailPostInfoApiTest extends TestCase
         GkPost::create(['nama' => 'Pos belum diisi', 'urutan' => 1, 'latitude' => -1.7, 'longitude' => 101.26, 'id_gate' => 10]);
         $this->login();
         $this->getJson('/api/tracking/posts/10')->assertOk()
-            ->assertJsonPath('data.0.info_is_dummy', false)
             ->assertJsonPath('data.0.water_source_status', 'Belum diketahui')
             ->assertJsonPath('data.0.camping_status', 'Belum diketahui')
             ->assertJsonPath('data.0.mountain_status', 'Normal (Level 1)')
@@ -99,14 +96,14 @@ class TrailPostInfoApiTest extends TestCase
             ->assertJsonPath('data.0.distance_to_summit_m', null);
 
         // Status destinasi yang berubah langsung diikuti seluruh pos (v1 dan v2).
-        DB::table('destinasis')->where('id', DB::table('destinasis')->value('id'))->update(['statusGunung' => 2]);
+        DB::table('destinasis')->where('id', DB::table('destinasis')->value('id'))->update(['status_gunung' => 2]);
         foreach (['/api/tracking/posts/10', '/api/tracking/v2/posts/10'] as $endpoint) {
             $this->getJson($endpoint)->assertOk()
                 ->assertJsonPath('data.0.mountain_status', 'Waspada (Level 2)');
         }
 
         // Status yang tidak tersedia tidak boleh diganti "Normal".
-        DB::table('destinasis')->where('id', DB::table('destinasis')->value('id'))->update(['statusGunung' => 9]);
+        DB::table('destinasis')->where('id', DB::table('destinasis')->value('id'))->update(['status_gunung' => 9]);
         foreach (['/api/tracking/posts/10', '/api/tracking/v2/posts/10'] as $endpoint) {
             $this->getJson($endpoint)->assertOk()
                 ->assertJsonPath('data.0.mountain_status', null);
