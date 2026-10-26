@@ -19,7 +19,17 @@ class GkPost extends Model
         'info_is_dummy', 'info_note', 'info_updated_at', 'map_image_path',
     ];
 
-    protected $appends = ['map_image_url'];
+    protected $appends = ['map_image_url', 'map_image_url_turun'];
+
+    public function getMapImageUrlTurunAttribute(): ?string
+    {
+        $path = $this->map_image_path;
+        if ($path && str_ends_with($path, '-naik.webp')) {
+            $descent = substr($path, 0, -strlen('-naik.webp')).'-turun.webp';
+            return is_file(public_path($descent)) ? asset($descent) : null;
+        }
+        return $this->map_image_url;
+    }
 
     public function getMapImageUrlAttribute(): ?string
     {

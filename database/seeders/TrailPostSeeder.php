@@ -6,200 +6,122 @@ use App\Models\GkPost;
 use App\Models\gk_gates;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TrailPostSeeder extends Seeder
 {
-    // DATA DEMO: [sumber air, berkemah, suhu C, jarak berikutnya m, waktu menit,
-    //              jarak puncak m, durasi turun menit].
-    // Angka ditentukan langsung, bukan hasil pengukuran atau perhitungan jalur.
-    // Durasi turun (elemen ke-7) adalah durasi pos ini -> pos berurutan tepat sebelumnya.
-    private const DEMO_INFO = [
-        'Kersik Tuo' => ['Tersedia', 'Boleh', 20, 2000, 45, 9400, null],
-        'Pintu Rimba' => ['Belum diketahui', 'Tidak boleh', 19, 900, 30, 7400, 50],
-        'Bangku Panjang' => ['Tidak tersedia', 'Tidak boleh', 18, 700, 25, 6500, 30],
-        'Batu Lumut' => ['Tersedia', 'Tidak boleh', 17, 1000, 40, 5800, 30],
-        'Pondok Panorama' => ['Tersedia', 'Belum diketahui', 15, 1300, 60, 4800, 45],
-        'Shelter 1' => ['Tersedia', 'Boleh', 13, 1200, 75, 3500, 60],
-        'Shelter 2' => ['Tersedia', 'Boleh', 10, 600, 45, 2300, 75],
-        'Shelter 3' => ['Tersedia', 'Boleh', 8, 1300, 90, 1700, 45],
-        'Tugu Yudha' => ['Tidak tersedia', 'Tidak boleh', 5, 400, 25, 400, 85],
-        'Puncak Kerinci' => ['Tidak tersedia', 'Tidak boleh', 4, 0, 0, 0, 25],
-        'Pos 1 Solok' => ['Belum diketahui', 'Tidak boleh', 18, 1800, 60, 5100, null],
-        'Pos 2 Solok' => ['Tersedia', 'Boleh', 12, 1600, 70, 3300, 60],
-        'Pos 3 Solok' => ['Belum diketahui', 'Boleh', 9, 1700, 90, 1700, 70],
+    // Nama, mdpl, jarak ke titik berikutnya (m), estimasi naik (menit).
+    private const KERSIK_ROUTE = [
+        ['Kersik Tuo', null, 2985, 30],
+        ['Pintu Rimba', 1809, 787, 20],
+        ['Bangku Panjang', 1890, 736, 30],
+        ['Batu Lumut', 2010, 1900, 60],
+        ['Pondok Panorama', 2367, 538, 90],
+        ['Shelter 1', 2505, 959, 180],
+        ['Shelter 2', 3056, 534, 70],
+        ['Shelter 3', 3290, 584, 40],
+        ['Batu Gantung', 3528, 344, 30],
+        ['Tugu Yudha', 3673, 344, 30],
+        ['Puncak Kerinci', 3805, 0, 0],
     ];
 
-    private const SUMMIT_NAMES = ['Puncak Kerinci', 'Puncak Gunung Kerinci'];
+    // Titik lama dipakai saat membuat database baru; koordinat tersimpan dipertahankan.
+    private const COORDINATES = [
+        'Kersik Tuo' => [-1.7650, 101.2650],
+        'Pintu Rimba' => [-1.7483, 101.2594],
+        'Bangku Panjang' => [-1.7407, 101.2601],
+        'Batu Lumut' => [-1.7348, 101.2603],
+        'Pondok Panorama' => [-1.7290, 101.2622],
+        'Shelter 1' => [-1.7204, 101.2636],
+        'Shelter 2' => [-1.7096, 101.2675],
+        'Shelter 3' => [-1.7056, 101.2673],
+        'Batu Gantung' => [-1.69666667, 101.26555556],
+        'Tugu Yudha' => [-1.6992, 101.2642],
+        'Puncak Kerinci' => [-1.6974, 101.2661],
+    ];
 
     public function run(): void
     {
-        DB::transaction(fn () => $this->seedPosts());
+        DB::transaction(function (): void {
+            $gate = gk_gates::whereIn('nama', ['Desa Kersik Tuo', 'Kersik Tuo', 'Desa Kresik Tuo', 'Kresik Tuo'])->firstOrFail();
+            $aliases = [
+                'Bangku Panjang' => ['Pos 1', 'Bangku Panjang (Pos 1)'],
+                'Batu Lumut' => ['Pos 2', 'Batu Lumut (Pos 2)'],
+                'Pondok Panorama' => ['Pos 3 (Shelter 2)', 'Pondok Panorama (Pos 3)'],
+                'Puncak Kerinci' => ['Puncak Gunung Kerinci'],
+            ];
+            $remaining = array_sum(array_column(self::KERSIK_ROUTE, 2));
+            foreach (self::KERSIK_ROUTE as $order => [$name, $altitude, $distance, $minutes]) {
+                $matches = GkPost::where('id_gate', $gate->id)
+                    ->whereIn('nama', array_merge([$name], $aliases[$name] ?? []))->get();
+                if ($matches->count() > 1) {
+                    throw new \RuntimeException("Pos bernama {$name} bertumpuk; periksa data tanpa menghapus riwayat.");
+                }
+                $post = $matches->first() ?? new GkPost();
+                [$latitude, $longitude] = self::COORDINATES[$name];
+                $post->fill([
+                    'nama' => $name, 'id_gate' => $gate->id, 'urutan' => $order,
+                    'latitude' => $post->exists ? $post->latitude : $latitude,
+                    'longitude' => $post->exists ? $post->longitude : $longitude,
+                    'altitude' => $altitude ?? $post->altitude,
+                    'radius_meter' => $post->radius_meter ?: ($name === 'Puncak Kerinci' ? 200 : 150),
+                    'status' => true, 'is_summit' => $name === 'Puncak Kerinci',
+                    'water_source_status' => in_array($name, ['Batu Lumut', 'Shelter 3'], true) ? 'Tersedia' : 'Tidak tersedia',
+                    'camping_status' => in_array($name, ['Shelter 1', 'Shelter 2', 'Shelter 3'], true) ? 'Boleh' : 'Tidak boleh',
+                    'distance_to_next_m' => $distance, 'estimated_time_minutes' => $minutes,
+                    'distance_to_summit_m' => $remaining,
+                    'estimated_descent_time_minutes' => null, 'temperature_c' => null,
+                    'detail' => "Jalur pendakian melalui {$name}.",
+                    'info_is_dummy' => false, 'info_note' => null,
+                    'map_image_path' => str_starts_with((string) $post->map_image_path, 'storage/post-images/')
+                        ? $post->map_image_path
+                        : 'images/trail-maps/kersik-tuo/'.Str::slug($name).'-naik.webp',
+                ]);
+                if ($post->isDirty()) {
+                    $post->info_updated_at = now();
+                    $post->save();
+                }
+                if (!$post->qr_code_value || $post->qr_code_value === 'PLACEHOLDER') {
+                    $post->update(['qr_code_value' => 'TNKS_CHECKPOINT:'.$post->id]);
+                }
+                $remaining -= $distance;
+            }
+            GkPost::where('id_gate', $gate->id)->where('nama', 'Bayangan Shelter 2')->update(['status' => false]);
+            $this->seedSolok();
+        });
+        $this->command?->info('Pos jalur tersimpan: 11 Kersik Tuo dan 4 Solok Selatan.');
     }
 
-    private function seedPosts(): void
+    private function seedSolok(): void
     {
-        // Resolve by name: gate IDs can differ between databases.
-        $kersikGate = gk_gates::whereIn('nama', ['Desa Kersik Tuo', 'Kersik Tuo', 'Desa Kresik Tuo', 'Kresik Tuo'])->firstOrFail();
-        $solokGate = gk_gates::where('nama', 'Solok Selatan')->firstOrFail();
-
-        // ESTIMATES for development, read approximately from the 2020.1 trail map.
-        // https://www.gunungbagging.com/wp-content/maps/peta-jalur-pendakian-gunung-kerinci.pdf
-        // Names, order and elevations follow the author's latest list.
-        // The ten active points follow the supplied position maps.
-        // Kersik Tuo is an estimated approach/basecamp point. No field survey yet.
-        $kersikTuoPosts = [
-            ['nama' => 'Kersik Tuo', 'urutan' => 1, 'latitude' => -1.7650, 'longitude' => 101.2650, 'altitude' => 1605, 'radius_meter' => 150],
-            ['nama' => 'Pintu Rimba', 'urutan' => 2, 'latitude' => -1.7483, 'longitude' => 101.2594, 'altitude' => 1809, 'radius_meter' => 150],
-            ['nama' => 'Bangku Panjang', 'urutan' => 3, 'latitude' => -1.7407, 'longitude' => 101.2601, 'altitude' => 1890, 'radius_meter' => 150],
-            ['nama' => 'Batu Lumut', 'urutan' => 4, 'latitude' => -1.7348, 'longitude' => 101.2603, 'altitude' => 2010, 'radius_meter' => 150],
-            ['nama' => 'Pondok Panorama', 'urutan' => 5, 'latitude' => -1.7290, 'longitude' => 101.2622, 'altitude' => 2367, 'radius_meter' => 150],
-            ['nama' => 'Shelter 1', 'urutan' => 6, 'latitude' => -1.7204, 'longitude' => 101.2636, 'altitude' => 2505, 'radius_meter' => 150],
-            ['nama' => 'Shelter 2', 'urutan' => 7, 'latitude' => -1.7096, 'longitude' => 101.2675, 'altitude' => 3056, 'radius_meter' => 150],
-            ['nama' => 'Shelter 3', 'urutan' => 8, 'latitude' => -1.7056, 'longitude' => 101.2673, 'altitude' => 3290, 'radius_meter' => 150],
-            ['nama' => 'Tugu Yudha', 'urutan' => 9, 'latitude' => -1.6992, 'longitude' => 101.2642, 'altitude' => 3673, 'radius_meter' => 150],
-            ['nama' => 'Puncak Kerinci', 'urutan' => 10, 'latitude' => -1.6974, 'longitude' => 101.2661, 'altitude' => 3805, 'radius_meter' => 200],
-        ];
-
-        $mapImages = [
-            'Kersik Tuo' => 'kersik-tuo.webp',
-            'Pintu Rimba' => 'pintu-rimba.webp',
-            'Bangku Panjang' => 'pos-1-bangku-panjang.webp',
-            'Batu Lumut' => 'pos-2-batu-lumut.webp',
-            'Pondok Panorama' => 'pos-3-pondok-panorama.webp',
-            'Shelter 1' => 'shelter-1.webp',
-            'Shelter 2' => 'shelter-2.webp',
-            'Shelter 3' => 'shelter-3.webp',
-            'Tugu Yudha' => 'tugu-yudha.webp',
-            'Puncak Kerinci' => 'puncak-kerinci.webp',
-        ];
-
-        $aliases = [
-            'Bangku Panjang' => ['Pos 1', 'Bangku Panjang (Pos 1)'],
-            'Batu Lumut' => ['Pos 2', 'Batu Lumut (Pos 2)'],
-            'Pondok Panorama' => ['Pos 3 (Shelter 2)', 'Pondok Panorama (Pos 3)'],
-            'Puncak Kerinci' => ['Puncak Gunung Kerinci'],
-        ];
-        $legacyCoordinates = [
-            'Kersik Tuo' => [-1.7515, 101.2595],
-            'Shelter 1' => [-1.7080, 101.2680],
-            'Bangku Panjang' => [-1.7040, 101.2660],
-            'Batu Lumut' => [-1.7000, 101.2645],
-            'Pondok Panorama' => [-1.6970, 101.2635],
-            'Puncak Kerinci' => [-1.6974, 101.2642],
-        ];
-        $estimateNote = 'Koordinat perkiraan untuk pengembangan; acuan peta Gunung Bagging 2020.1 dan interpolasi. Ketinggian mengikuti daftar penulis. Belum diverifikasi dengan GPS lapangan.';
-
-        foreach ($kersikTuoPosts as $post) {
-            $matches = GkPost::where('id_gate', $kersikGate->id)
-                ->whereIn('nama', array_merge([$post['nama']], $aliases[$post['nama']] ?? []))->get();
-            if ($matches->count() > 1) {
-                throw new \RuntimeException("Nama pos lama dan baru bertumpuk untuk {$post['nama']}; periksa duplikat tanpa menghapus riwayat check-in.");
+        $gate = gk_gates::where('nama', 'Solok Selatan')->firstOrFail();
+        foreach ([
+            ['Pos 1 Solok', 1, -1.7100, 101.2550, 2200],
+            ['Pos 2 Solok', 2, -1.7050, 101.2580, 2700],
+            ['Pos 3 Solok', 3, -1.7000, 101.2610, 3100],
+            ['Puncak Kerinci', 4, -1.6974, 101.2642, 3805],
+        ] as [$name, $order, $latitude, $longitude, $altitude]) {
+            $post = GkPost::firstOrCreate(['nama' => $name, 'id_gate' => $gate->id], [
+                'urutan' => $order, 'latitude' => $latitude, 'longitude' => $longitude,
+                'altitude' => $altitude, 'radius_meter' => $name === 'Puncak Kerinci' ? 200 : 150,
+                'status' => true,
+            ]);
+            if ($post->info_is_dummy) {
+                $post->fill([
+                    'temperature_c' => null, 'distance_to_next_m' => null,
+                    'estimated_time_minutes' => null, 'estimated_descent_time_minutes' => null,
+                    'distance_to_summit_m' => null, 'water_source_status' => 'Belum diketahui',
+                    'camping_status' => 'Belum diketahui', 'info_is_dummy' => false, 'info_note' => null,
+                ]);
             }
-
-            $created = $matches->first();
-            if (!$created) {
-                $created = GkPost::create(array_merge($post, [
-                    'id_gate' => $kersikGate->id, 'qr_code_value' => null,
-                    'status' => true, 'detail' => $estimateNote,
-                ]));
-            } else {
-                $legacy = $legacyCoordinates[$post['nama']] ?? null;
-                $isLegacyCoordinate = $legacy
-                    && abs((float) $created->latitude - $legacy[0]) < 0.00000001
-                    && abs((float) $created->longitude - $legacy[1]) < 0.00000001;
-                // Update old sample positions, but preserve coordinates edited by admins.
-                $changes = ['nama' => $post['nama'], 'urutan' => $post['urutan']];
-                if ($created->altitude === null) {
-                    $changes['altitude'] = $post['altitude'];
-                }
-                if ($isLegacyCoordinate) {
-                    $changes += array_intersect_key($post, array_flip(['latitude', 'longitude']));
-                    $changes['detail'] = trim(($created->detail ?? '') . "\n" . $estimateNote);
-                }
-                $created->update($changes);
+            $post->is_summit = $name === 'Puncak Kerinci';
+            if (!$post->qr_code_value || $post->qr_code_value === 'PLACEHOLDER') {
+                $post->qr_code_value = 'TNKS_CHECKPOINT:'.$post->id;
             }
-            if (!$created->qr_code_value || $created->qr_code_value === 'PLACEHOLDER') {
-                $created->update(['qr_code_value' => 'TNKS_CHECKPOINT:' . $created->id]);
+            if ($post->isDirty()) {
+                $post->info_updated_at = now();
+                $post->save();
             }
-            // Tandai puncak jalur dari nama (bukan urutan/altitude), idempoten.
-            $isSummit = in_array($post['nama'], self::SUMMIT_NAMES, true);
-            if ((bool) $created->is_summit !== $isSummit) {
-                $created->update(['is_summit' => $isSummit]);
-            }
-            $defaultMap = 'images/trail-maps/kersik-tuo/' . $mapImages[$post['nama']];
-            $legacyMap = substr($defaultMap, 0, -5) . '.png';
-            // Isi yang kosong atau tingkatkan PNG bawaan; gambar khusus admin tetap dipakai.
-            if (blank($created->map_image_path) || $created->map_image_path === $legacyMap) {
-                $created->update(['map_image_path' => $defaultMap]);
-            }
-            $this->seedDemoInfo($created);
-        }
-
-        // Retain old IDs and attendance history; omit this point from the active route.
-        GkPost::where('id_gate', $kersikGate->id)->whereIn('nama', ['Bayangan Shelter 2', 'Batu Gantung'])->update(['status' => false]);
-
-        // Gate 2: Solok Selatan route
-        $solokPosts = [
-            ['nama' => 'Pos 1 Solok', 'urutan' => 1, 'latitude' => -1.7100, 'longitude' => 101.2550, 'altitude' => 2200, 'radius_meter' => 150],
-            ['nama' => 'Pos 2 Solok', 'urutan' => 2, 'latitude' => -1.7050, 'longitude' => 101.2580, 'altitude' => 2700, 'radius_meter' => 150],
-            ['nama' => 'Pos 3 Solok', 'urutan' => 3, 'latitude' => -1.7000, 'longitude' => 101.2610, 'altitude' => 3100, 'radius_meter' => 150],
-            ['nama' => 'Puncak Kerinci', 'urutan' => 4, 'latitude' => -1.6974, 'longitude' => 101.2642, 'altitude' => 3805, 'radius_meter' => 200],
-        ];
-
-        foreach ($solokPosts as $post) {
-            $created = GkPost::firstOrCreate(
-                ['nama' => $post['nama'], 'id_gate' => $solokGate->id],
-                array_merge($post, [
-                    'id_gate' => $solokGate->id,
-                    // Opsi D: nilai QR deterministik = TNKS_CHECKPOINT:<id pos> (cocok dengan parser mobile)
-                    'qr_code_value' => 'PLACEHOLDER',
-                    'status' => true,
-                ])
-            );
-            if ($created->qr_code_value === 'PLACEHOLDER') {
-                $created->update(['qr_code_value' => 'TNKS_CHECKPOINT:' . $created->id]);
-            }
-            $isSummit = in_array($post['nama'], self::SUMMIT_NAMES, true);
-            if ((bool) $created->is_summit !== $isSummit) {
-                $created->update(['is_summit' => $isSummit]);
-            }
-            $this->seedDemoInfo($created);
-        }
-
-        $this->command?->info('Trail posts seeded: 10 (Kersik Tuo) + 4 (Solok Selatan). Koordinat Kersik Tuo masih perkiraan.');
-    }
-
-    private function seedDemoInfo(GkPost $post): void
-    {
-        // Jangan menimpa informasi non-dummy yang telah diisi untuk pos ini.
-        $hasInfo = $post->mountain_status !== null
-            || ($post->water_source_status ?? 'Belum diketahui') !== 'Belum diketahui'
-            || ($post->camping_status ?? 'Belum diketahui') !== 'Belum diketahui'
-            || $post->temperature_c !== null || $post->distance_to_next_m !== null
-            || $post->estimated_time_minutes !== null || $post->distance_to_summit_m !== null
-            || $post->estimated_descent_time_minutes !== null
-            || $post->info_note !== null || $post->info_updated_at !== null;
-        if (!$post->info_is_dummy && $hasInfo) {
-            return;
-        }
-
-        [$water, $camping, $temperature, $distance, $minutes, $summit, $descent] = self::DEMO_INFO[$post->nama];
-        $info = [
-            'mountain_status' => 'Normal',
-            'water_source_status' => $water,
-            'camping_status' => $camping,
-            'temperature_c' => $temperature,
-            'distance_to_next_m' => $distance,
-            'estimated_time_minutes' => $minutes,
-            'estimated_descent_time_minutes' => $descent,
-            'distance_to_summit_m' => $summit,
-            'info_is_dummy' => true,
-            'info_note' => 'DATA DEMO: contoh untuk pengembangan, bukan kondisi lapangan, prakiraan cuaca, atau izin berkemah yang sebenarnya.',
-        ];
-        $post->fill($info);
-        if ($post->isDirty(array_keys($info))) {
-            $post->info_updated_at = now();
-            $post->save();
         }
     }
 }

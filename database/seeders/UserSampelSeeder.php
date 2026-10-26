@@ -82,6 +82,18 @@ class UserSampelSeeder extends Seeder
             ],
         ];
 
+        $users[] = [
+            'email' => 'raka@gmail.com',
+            'legacy_email' => 'raka@gmail.com',
+            'bio' => array_replace($users[0]['bio'], [
+                'nik' => '1234567834567352',
+                'first_name' => 'Raka',
+                'last_name' => 'Pratama',
+                'no_hp' => '081234567895',
+                'no_hp_darurat' => '081298765435',
+            ]),
+        ];
+
         foreach ($users as $user) {
             $existing = User::where('email', $user['email'])->first();
             $legacy = User::where('email', $user['legacy_email'])->first();

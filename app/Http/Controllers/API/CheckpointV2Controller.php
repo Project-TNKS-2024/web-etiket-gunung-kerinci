@@ -36,13 +36,20 @@ class CheckpointV2Controller extends Controller
     {
         $posts = GkPost::where('id_gate', $gateId)
             ->where('status', true)
+            ->with(['gate:id,id_destinasi', 'gate.destinasi:id,statusGunung'])
             ->orderBy('urutan')
             ->get([
-                'id', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'detail',
+                'id', 'id_gate', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'detail',
                 'is_summit', 'mountain_status', 'water_source_status', 'camping_status', 'temperature_c',
                 'distance_to_next_m', 'estimated_time_minutes', 'estimated_descent_time_minutes',
                 'distance_to_summit_m', 'info_is_dummy', 'info_note', 'info_updated_at', 'map_image_path',
             ]);
+
+        // Kondisi gunung satu destinasi: sumbernya status destinasi, bukan data per pos.
+        $posts->each(function (GkPost $post): void {
+            $post->mountain_status = $post->gate?->destinasi?->statusGunungLabel();
+            $post->makeHidden('id_gate');
+        });
 
         return ApiResponse::success($posts);
     }
@@ -60,6 +67,10 @@ class CheckpointV2Controller extends Controller
             'recorded_at' => 'required|date',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
+            'altitude' => 'nullable|numeric|between:-99999.99,99999.99',
+            'accuracy' => 'nullable|numeric|between:0,9999.99',
+            'battery_level' => 'nullable|integer|between:0,100',
+            'position_recorded_at' => 'nullable|date|before_or_equal:'.now()->addMinutes(5)->toIso8601String(),
         ]);
 
         [$actor, $target, $error] = $this->resolveTarget($request->user(), $validated['pendaki_id'] ?? null);
@@ -78,7 +89,7 @@ class CheckpointV2Controller extends Controller
             $result = $this->visits->record(
                 $actor, $target, $post, $validated['phase'], 'qr',
                 $validated['latitude'] ?? null, $validated['longitude'] ?? null,
-                false, $validated['client_event_id'], $recordedAt
+                false, $validated['client_event_id'], $recordedAt, $validated
             );
             $data = $this->visits->checkinResponse($result['log'], $result['target'], $post, $result['idempotent']);
 
@@ -101,6 +112,10 @@ class CheckpointV2Controller extends Controller
             'recorded_at' => 'required|date',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
+            'altitude' => 'nullable|numeric|between:-99999.99,99999.99',
+            'accuracy' => 'nullable|numeric|between:0,9999.99',
+            'battery_level' => 'nullable|integer|between:0,100',
+            'position_recorded_at' => 'nullable|date|before_or_equal:'.now()->addMinutes(5)->toIso8601String(),
         ]);
 
         [$actor, $target, $error] = $this->resolveTarget($request->user(), $validated['pendaki_id'] ?? null);
@@ -117,17 +132,16 @@ class CheckpointV2Controller extends Controller
             (float) $validated['latitude'], (float) $validated['longitude'],
             (float) $post->latitude, (float) $post->longitude
         );
-        $isOverride = $distance > 500;
 
         try {
             $recordedAt = Carbon::parse($validated['recorded_at']);
             $result = $this->visits->record(
                 $actor, $target, $post, $validated['phase'], 'manual',
                 (float) $validated['latitude'], (float) $validated['longitude'],
-                $isOverride, $validated['client_event_id'], $recordedAt
+                false, $validated['client_event_id'], $recordedAt, $validated
             );
             $data = $this->visits->checkinResponse($result['log'], $result['target'], $post, $result['idempotent']);
-            $data['is_manual_override'] = $isOverride;
+            $data['is_manual_override'] = false;
             $data['distance_from_post'] = round($distance, 2);
 
             return ApiResponse::success($data, "Check-in manual berhasil di {$post->nama}", $result['idempotent'] ? 200 : 201);

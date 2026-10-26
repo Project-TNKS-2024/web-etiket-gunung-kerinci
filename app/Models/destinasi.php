@@ -65,7 +65,7 @@ class destinasi extends Model
             case 0:
                 return 'Tidak Aktif';
             case 1:
-                return 'Normal (Leverl 1)';
+                return 'Normal (Level 1)';
             case 2:
                 return 'Waspada (Level 2)';
             case 3:
@@ -75,6 +75,19 @@ class destinasi extends Model
             default:
                 return 'Tidak Terdefenisi';
         }
+    }
+
+    /**
+     * Label kondisi gunung yang dipakai Home dan seluruh pos destinasi.
+     * Null berarti status belum tersedia, bukan "Normal".
+     */
+    public function statusGunungLabel(): ?string
+    {
+        $kode = is_numeric($this->statusGunung) ? (int) $this->statusGunung : null;
+
+        return in_array($kode, [0, 1, 2, 3, 4], true)
+            ? $this->getStatusGunung($kode)
+            : null;
     }
 
     public function paket()

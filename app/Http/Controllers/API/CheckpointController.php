@@ -219,19 +219,18 @@ class CheckpointController extends Controller
             return ApiResponse::error('Pos tidak ditemukan', null, 404);
         }
 
-        // Check if manual override (> 500m from post)
+        // Validasi radius per pos ditegakkan oleh service sebelum pencatatan.
         $distance = GeoService::distance(
             (float) $validated['latitude'], (float) $validated['longitude'],
             (float) $post->latitude, (float) $post->longitude
         );
-        $isOverride = $distance > 500;
 
         try {
             $log = $this->visits->recordLegacyAscent($pendaki, $post, [
                 'method' => 'manual',
                 'latitude' => $validated['latitude'],
                 'longitude' => $validated['longitude'],
-                'is_manual_override' => $isOverride,
+                'is_manual_override' => false,
                 'checked_at' => now(),
             ]);
         } catch (CheckpointException $e) {
@@ -243,7 +242,7 @@ class CheckpointController extends Controller
         return ApiResponse::success([
             'checkpoint_log_id' => $log->id,
             'post' => ['id' => $post->id, 'nama' => $post->nama, 'urutan' => $post->urutan],
-            'is_manual_override' => $isOverride,
+            'is_manual_override' => false,
             'distance_from_post' => round($distance, 2),
             'progress' => $progress,
         ], "Check-in manual berhasil di {$post->nama}", 201);
@@ -326,13 +325,20 @@ class CheckpointController extends Controller
     {
         $posts = GkPost::where('id_gate', $gateId)
             ->where('status', true)
+            ->with(['gate:id,id_destinasi', 'gate.destinasi:id,statusGunung'])
             ->orderBy('urutan')
             ->get([
-                'id', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'detail',
+                'id', 'id_gate', 'nama', 'urutan', 'latitude', 'longitude', 'altitude', 'radius_meter', 'detail',
                 'mountain_status', 'water_source_status', 'camping_status', 'temperature_c',
                 'distance_to_next_m', 'estimated_time_minutes', 'distance_to_summit_m',
                 'info_is_dummy', 'info_note', 'info_updated_at', 'map_image_path',
             ]);
+
+        // Kondisi gunung satu destinasi: sumbernya status destinasi, bukan data per pos.
+        $posts->each(function (GkPost $post): void {
+            $post->mountain_status = $post->gate?->destinasi?->statusGunungLabel();
+            $post->makeHidden('id_gate');
+        });
 
         return ApiResponse::success($posts);
     }

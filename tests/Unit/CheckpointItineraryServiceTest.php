@@ -147,4 +147,84 @@ class CheckpointItineraryServiceTest extends TestCase
         $this->assertSame(0, $visits['naik:4']['estimated_time_to_next_minutes']);
         $this->assertSame('2026-10-16T13:00:00+07:00', $visits['turun:3']['estimated_arrival_at']);
     }
+
+    public function test_visit_after_furthest_checkin_is_skipped_and_next_stays_ahead(): void
+    {
+        $posts = $this->posts();
+        // Pos 1 (order 1) lalu Pos 3 (order 3): Pos 2 dilewati.
+        $logs = collect([
+            $this->log(1, 1, 'naik', '2026-10-16T00:00:00Z'),
+            $this->log(2, 3, 'naik', '2026-10-16T02:00:00Z'),
+        ]);
+
+        $visits = collect((new CheckpointItineraryService)->visits($posts, $logs))->keyBy('visit_key');
+        $summary = (new CheckpointItineraryService)->summary($posts, $logs, 'naik');
+
+        $this->assertSame('completed', $visits['naik:1']['status']);
+        $this->assertSame('skipped', $visits['naik:2']['status']);
+        $this->assertSame('completed', $visits['naik:3']['status']);
+        $this->assertSame('upcoming', $visits['naik:4']['status']);
+        $this->assertFalse($visits['naik:1']['is_next']);
+        $this->assertTrue($visits['naik:4']['is_next']);
+        $this->assertSame('naik:4', $summary['next_visit_key']);
+        // Pos dilewati bukan check-in: hanya 2 dari 7 kunjungan yang selesai.
+        $this->assertSame(2, $summary['overall_progress']['completed']);
+        $this->assertSame(7, $summary['overall_progress']['total']);
+    }
+
+    public function test_late_checkin_on_skipped_visit_turns_green_without_moving_next(): void
+    {
+        $posts = $this->posts();
+        $logs = collect([
+            $this->log(1, 1, 'naik', '2026-10-16T00:00:00Z'),
+            $this->log(2, 3, 'naik', '2026-10-16T02:00:00Z'),
+            $this->log(3, 2, 'naik', '2026-10-16T03:00:00Z'),
+        ]);
+
+        $visits = collect((new CheckpointItineraryService)->visits($posts, $logs))->keyBy('visit_key');
+        $summary = (new CheckpointItineraryService)->summary($posts, $logs, 'naik');
+
+        $this->assertSame('completed', $visits['naik:2']['status']);
+        $this->assertSame('naik:4', $summary['next_visit_key']);
+        $this->assertTrue($visits['naik:4']['is_next']);
+    }
+
+    public function test_cancelling_furthest_checkin_recomputes_status_and_next(): void
+    {
+        $posts = $this->posts();
+        $allLogs = collect([
+            $this->log(1, 1, 'naik', '2026-10-16T00:00:00Z'),
+            $this->log(2, 3, 'naik', '2026-10-16T02:00:00Z'),
+        ]);
+        $afterCancel = $allLogs->reject(fn ($log) => $log->id_post === 3);
+
+        $visits = collect((new CheckpointItineraryService)->visits($posts, $afterCancel))->keyBy('visit_key');
+        $summary = (new CheckpointItineraryService)->summary($posts, $afterCancel, 'naik');
+
+        $this->assertSame('completed', $visits['naik:1']['status']);
+        $this->assertSame('upcoming', $visits['naik:2']['status']);
+        $this->assertSame('upcoming', $visits['naik:3']['status']);
+        $this->assertSame('naik:2', $summary['next_visit_key']);
+        $this->assertTrue($visits['naik:2']['is_next']);
+    }
+
+    public function test_descent_visits_skipped_when_returning_past_them(): void
+    {
+        $posts = $this->posts();
+        // Summit (order 4) lalu turun Pos 3 (order 5) lalu langsung Pos 1 (order 7).
+        $logs = collect([
+            $this->log(1, 4, 'naik', '2026-10-16T06:00:00Z'),
+            $this->log(2, 3, 'turun', '2026-10-16T07:00:00Z'),
+            $this->log(3, 1, 'turun', '2026-10-16T09:00:00Z'),
+        ]);
+
+        $visits = collect((new CheckpointItineraryService)->visits($posts, $logs))->keyBy('visit_key');
+        $summary = (new CheckpointItineraryService)->summary($posts, $logs, 'turun');
+
+        $this->assertSame('completed', $visits['turun:3']['status']);
+        $this->assertSame('skipped', $visits['turun:2']['status']);
+        $this->assertSame('completed', $visits['turun:1']['status']);
+        $this->assertSame('skipped', $visits['naik:1']['status']);
+        $this->assertNull($summary['next_visit_key']);
+    }
 }

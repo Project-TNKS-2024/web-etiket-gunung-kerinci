@@ -21,3 +21,11 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Local CodeGraph indexes and configuration
+.codegraph/
+.codegraph-*/
+codegraph.json
+
+# Local agent instructions (all capitalization variants)
+[Aa][Gg][Ee][Nn][Tt][Ss].[Mm][Dd]

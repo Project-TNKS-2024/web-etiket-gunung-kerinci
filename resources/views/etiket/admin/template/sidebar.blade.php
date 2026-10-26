@@ -23,6 +23,12 @@
 
             <li class="nav-small-cap"><span class="hide-menu">Keselamatan Pendaki</span></li>
             <li class="sidebar-item">
+               <a class="sidebar-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}" href="{{ route('admin.posts.index') }}">
+                  <span><i class="fa-solid fa-map-location-dot"></i></span>
+                  <span class="hide-menu">Pos Jalur</span>
+               </a>
+            </li>
+            <li class="sidebar-item">
                <a class="sidebar-link {{ request()->routeIs('admin.emergency.*') ? 'active' : '' }}" href="{{ route('admin.emergency.index') }}">
                   <span><i class="fa-solid fa-triangle-exclamation"></i></span><span class="hide-menu">Peringatan Dini Bahaya</span>
                </a>

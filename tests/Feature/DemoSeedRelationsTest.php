@@ -36,7 +36,7 @@ class DemoSeedRelationsTest extends TestCase
         $package = gk_paket_tiket::where('id_destinasi', $destination->id)->where('nama', 'Umum')->firstOrFail();
         $this->assertGreaterThan(73, $package->id);
         $this->assertSame(2, gk_tiket_pendaki::where('id_paket_tiket', $package->id)->count());
-        $booking = gk_booking::firstOrFail();
+        $booking = gk_booking::where('unique_code', 'DEMOCEKIN1')->firstOrFail();
         $this->assertSame($gate->id, (int) $booking->gate_masuk);
         $this->assertSame($package->id, (int) $booking->id_tiket);
         $this->assertSame(3, $booking->pendakis()->count());
@@ -58,14 +58,14 @@ class DemoSeedRelationsTest extends TestCase
         $snapshot = [destinasi::count(), gk_gates::count(), gambar_destinasi::count(), gk_paket_tiket::count(), gk_tiket_pendaki::count(), gk_booking::count()];
         $this->seed($seeders);
         $this->assertSame($snapshot, [destinasi::count(), gk_gates::count(), gambar_destinasi::count(), gk_paket_tiket::count(), gk_tiket_pendaki::count(), gk_booking::count()]);
-        $this->assertSame($booking->id, gk_booking::firstOrFail()->id);
+        $this->assertSame($booking->id, gk_booking::where('unique_code', 'DEMOCEKIN1')->firstOrFail()->id);
         $this->assertSame($booking->unique_code, $booking->fresh()->unique_code);
     }
 
     public function test_reseeding_repairs_missing_demo_ticket_code_without_recreating_booking(): void
     {
         $this->seed([destinasi_gate::class, paket_tiket::class, UserSampelSeeder::class, BookingSeeder::class]);
-        $booking = gk_booking::firstOrFail();
+        $booking = gk_booking::where('unique_code', 'DEMOCEKIN1')->firstOrFail();
         $booking->update(['unique_code' => null]);
         $snapshot = $booking->fresh()->getAttributes();
         $hikerIds = $booking->pendakis()->pluck('id')->all();
@@ -74,7 +74,7 @@ class DemoSeedRelationsTest extends TestCase
 
         $booking->refresh();
         $this->assertMatchesRegularExpression('/^[A-Za-z0-9]{10}$/', $booking->unique_code ?? '');
-        $this->assertSame(1, gk_booking::count());
+        $this->assertSame(7, gk_booking::count());
         $this->assertSame($hikerIds, $booking->pendakis()->pluck('id')->all());
         unset($snapshot['unique_code'], $snapshot['updated_at']);
         $this->assertSame($snapshot, array_diff_key($booking->getAttributes(), array_flip(['unique_code', 'updated_at'])));
@@ -83,20 +83,20 @@ class DemoSeedRelationsTest extends TestCase
     public function test_reseeding_does_not_change_non_demo_active_booking(): void
     {
         $this->seed([destinasi_gate::class, paket_tiket::class, UserSampelSeeder::class, BookingSeeder::class]);
-        $booking = gk_booking::firstOrFail();
+        $booking = gk_booking::where('unique_code', 'DEMOCEKIN1')->firstOrFail();
         $booking->update(['unique_code' => null, 'keterangan' => 'Booking pengguna']);
         $snapshot = $booking->fresh()->getAttributes();
 
         $this->seed(BookingSeeder::class);
 
         $this->assertSame($snapshot, $booking->fresh()->getAttributes());
-        $this->assertSame(1, gk_booking::count());
+        $this->assertSame(7, gk_booking::count());
     }
 
-    public function test_reseeding_adds_missing_member_without_changing_existing_ticket_dates(): void
+    public function test_reseeding_preserves_processed_demo_ticket_without_restoring_removed_member(): void
     {
         $this->seed([destinasi_gate::class, paket_tiket::class, UserSampelSeeder::class, BookingSeeder::class]);
-        $booking = gk_booking::firstOrFail();
+        $booking = gk_booking::where('unique_code', 'DEMOCEKIN1')->firstOrFail();
         $opi = $booking->pendakis()->where('id_bio', User::where('email', 'opi@gmail.com')->firstOrFail()->id_bio)->firstOrFail();
         $opi->getStatus()->delete();
         $opi->delete();
@@ -113,18 +113,14 @@ class DemoSeedRelationsTest extends TestCase
         $this->seed(BookingSeeder::class);
 
         $fresh = $booking->fresh();
-        $this->assertSame(1, gk_booking::count());
+        $this->assertSame(7, gk_booking::count());
         $this->assertSame($booking->unique_code, $fresh->unique_code);
         $this->assertSame($booking->tanggal_masuk, $fresh->tanggal_masuk);
         $this->assertSame(2, (int) $fresh->total_hari);
         $this->assertSame(Carbon::parse($fresh->tanggal_masuk)->addDay()->toDateString(), $fresh->tanggal_keluar);
-        $this->assertSame(3, $fresh->pendakis()->count());
-        $this->assertSame(2, $fresh->pendakis()->whereIn('id', $existingIds)->count());
-        $this->assertSame($statusCount + 1, statusPendaki::count());
-        $this->assertEquals($fresh->pendakis()->sum('tagihan'), $fresh->total_pembayaran);
-
-        $this->seed(BookingSeeder::class);
-        $this->assertSame(3, $fresh->pendakis()->count());
-        $this->assertSame($statusCount + 1, statusPendaki::count());
+        $this->assertSame(2, $fresh->pendakis()->count());
+        $this->assertSame($existingIds, $fresh->pendakis()->pluck('id')->all());
+        $this->assertSame($statusCount, statusPendaki::count());
+        $this->assertSame(105000, (int) $fresh->total_pembayaran);
     }
 }

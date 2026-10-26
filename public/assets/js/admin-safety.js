@@ -37,6 +37,9 @@
                     // Never discard a draft, focused control, or text being selected.
                     if (!next || region.contains(document.activeElement)
                         || window.getSelection()?.toString()) return;
+                    const hasDraft = Array.from(region.querySelectorAll('input:not([type="hidden"]), textarea'))
+                        .some(input => input.type === 'file' ? input.files?.length > 0 : input.value.trim() !== '');
+                    if (hasDraft && next.querySelector('form')) return;
                     if (region.innerHTML === next.innerHTML) return;
                     const nearBottom = region.scrollHeight - region.scrollTop - region.clientHeight < 40;
                     const scrollTop = region.scrollTop;

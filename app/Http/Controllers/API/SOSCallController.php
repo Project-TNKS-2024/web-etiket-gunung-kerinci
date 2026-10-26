@@ -9,6 +9,8 @@ use App\Models\gk_pendaki;
 use App\Models\setting;
 use App\Events\DisasterReported;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class SOSCallController extends Controller
 {
@@ -72,9 +74,18 @@ class SOSCallController extends Controller
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
             'lampiran' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'client_event_id' => 'nullable|uuid',
+            'location_recorded_at' => 'nullable|date',
         ]);
 
         $user = $request->user();
+        $eventId = $validated['client_event_id'] ?? null;
+        if ($eventId) {
+            $existing = GkDisasterReport::where('id_user', $user->id)->where('client_event_id', $eventId)->first();
+            if ($existing) {
+                return $this->reportResponse($existing, 200);
+            }
+        }
         $pendaki = $this->getActivePendaki($user);
 
         if (!$pendaki) {
@@ -86,38 +97,55 @@ class SOSCallController extends Controller
             return ApiResponse::error('Destinasi tidak ditemukan', null, 404);
         }
 
-        // Handle image upload
-        $lampiranPath = null;
-        if ($request->hasFile('lampiran')) {
-            $lampiranPath = $request->file('lampiran')->store('disaster-reports', 'public');
+        [$report, $created] = DB::transaction(function () use ($request, $user, $pendaki, $destinasiId, $validated, $eventId) {
+            // Satu akun dapat mengirim ulang event yang sama setelah koneksi putus.
+            DB::table('users')->where('id', $user->id)->lockForUpdate()->first();
+            if ($eventId) {
+                $existing = GkDisasterReport::where('id_user', $user->id)->where('client_event_id', $eventId)->first();
+                if ($existing) {
+                    return [$existing, false];
+                }
+            }
+            $lampiranPath = $request->hasFile('lampiran')
+                ? $request->file('lampiran')->store('disaster-reports', 'public') : null;
+            $report = GkDisasterReport::create([
+                'id_user' => $user->id,
+                'id_destinasi' => $destinasiId,
+                'id_booking' => $pendaki->booking_id,
+                'potensi_bencana' => $validated['potensi_bencana'],
+                'deskripsi' => $validated['deskripsi'],
+                'lokasi' => $validated['lokasi'],
+                'latitude' => $validated['latitude'] ?? null,
+                'longitude' => $validated['longitude'] ?? null,
+                'lampiran' => $lampiranPath,
+                'status' => 'pending',
+                'client_event_id' => $eventId,
+                'location_recorded_at' => isset($validated['location_recorded_at'])
+                    ? Carbon::parse($validated['location_recorded_at'])->setTimezone(config('app.timezone')) : null,
+            ]);
+            return [$report, true];
+        });
+
+        if ($created) {
+            broadcast(new DisasterReported(
+                destinasiId: $destinasiId,
+                reportId: $report->id,
+                potensiBencana: $report->potensi_bencana,
+                lokasi: $report->lokasi,
+                hikerName: $pendaki->fullName ?? 'Unknown',
+            ));
         }
 
-        $report = GkDisasterReport::create([
-            'id_user' => $user->id,
-            'id_destinasi' => $destinasiId,
-            'id_booking' => $pendaki->booking_id,
-            'potensi_bencana' => $validated['potensi_bencana'],
-            'deskripsi' => $validated['deskripsi'],
-            'lokasi' => $validated['lokasi'],
-            'latitude' => $validated['latitude'] ?? null,
-            'longitude' => $validated['longitude'] ?? null,
-            'lampiran' => $lampiranPath,
-            'status' => 'pending',
-        ]);
+        return $this->reportResponse($report, $created ? 201 : 200);
+    }
 
-        broadcast(new DisasterReported(
-            destinasiId: $destinasiId,
-            reportId: $report->id,
-            potensiBencana: $report->potensi_bencana,
-            lokasi: $report->lokasi,
-            hikerName: $pendaki->fullName ?? 'Unknown',
-        ));
-
+    private function reportResponse(GkDisasterReport $report, int $code)
+    {
         return ApiResponse::success([
             'id' => $report->id,
-            'status' => 'pending',
+            'status' => $report->status,
             'created_at' => $report->created_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
-        ], 'Laporan bencana berhasil dikirim', 201);
+        ], 'Laporan bencana berhasil dikirim', $code);
     }
 
     /**

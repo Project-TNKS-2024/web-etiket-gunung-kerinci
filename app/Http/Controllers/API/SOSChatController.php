@@ -9,6 +9,7 @@ use App\Models\GkSosChat;
 use App\Events\SOSMessageSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class SOSChatController extends Controller
 {
@@ -24,54 +25,59 @@ class SOSChatController extends Controller
             'image' => 'required_if:type,image|nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
-        $user = $request->user();
-        $sos = GkSos::find($sosId);
+        return DB::transaction(function () use ($request, $sosId, $validated) {
+            $user = $request->user();
+            $sos = GkSos::lockForUpdate()->find($sosId);
 
-        if (!$sos) {
-            return ApiResponse::error('SOS tidak ditemukan', null, 404);
-        }
+            if (!$sos) {
+                return ApiResponse::error('SOS tidak ditemukan', null, 404);
+            }
 
-        // Verify access: must be the hiker who triggered OR admin of the destinasi
-        if (!$this->canAccessSos($user, $sos)) {
-            return ApiResponse::error('Tidak memiliki akses ke SOS ini', null, 403);
-        }
+            // Verify access: must be the hiker who triggered OR admin of the destinasi
+            if (!$this->canAccessSos($user, $sos)) {
+                return ApiResponse::error('Tidak memiliki akses ke SOS ini', null, 403);
+            }
+            if (! in_array($sos->status, ['active', 'acknowledged', 'dispatched'], true)) {
+                return ApiResponse::error('Percakapan SOS sudah ditutup; pesan tidak terkirim.', ['code' => 'SOS_SESSION_CLOSED'], 409);
+            }
 
-        // Determine sender type
-        $senderType = $this->getSenderType($user, $sos);
+            // Determine sender type
+            $senderType = $this->getSenderType($user, $sos);
 
-        // Handle image upload
-        $content = $validated['content'] ?? '';
-        if ($validated['type'] === 'image' && $request->hasFile('image')) {
-            $path = $request->file('image')->store('sos/' . $sosId, 'public');
-            $content = $path;
-        }
+            // Handle image upload
+            $content = $validated['content'] ?? '';
+            if ($validated['type'] === 'image' && $request->hasFile('image')) {
+                $path = $request->file('image')->store('sos/' . $sosId, 'public');
+                $content = $path;
+            }
 
-        $message = GkSosChat::create([
-            'id_sos' => $sos->id,
-            'sender_id' => $user->id,
-            'sender_type' => $senderType,
-            'type' => $validated['type'],
-            'content' => $content,
-        ]);
+            $message = GkSosChat::create([
+                'id_sos' => $sos->id,
+                'sender_id' => $user->id,
+                'sender_type' => $senderType,
+                'type' => $validated['type'],
+                'content' => $content,
+            ]);
 
-        $senderName = $user->biodata?->first_name ?? ($senderType === 'admin' ? 'Admin' : 'Pendaki');
+            $senderName = $user->biodata?->first_name ?? ($senderType === 'admin' ? 'Admin' : 'Pendaki');
 
-        broadcast(new SOSMessageSent(
-            sosId: $sos->id,
-            messageId: $message->id,
-            senderType: $senderType,
-            senderName: $senderName,
-            type: $validated['type'],
-            content: $content,
-        ));
+            DB::afterCommit(fn () => broadcast(new SOSMessageSent(
+                sosId: $sos->id,
+                messageId: $message->id,
+                senderType: $senderType,
+                senderName: $senderName,
+                type: $validated['type'],
+                content: $content,
+            )));
 
-        return ApiResponse::success([
-            'id' => $message->id,
-            'sender_type' => $senderType,
-            'type' => $message->type,
-            'content' => $message->content,
-            'created_at' => $message->created_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
-        ], 'Pesan terkirim', 201);
+            return ApiResponse::success([
+                'id' => $message->id,
+                'sender_type' => $senderType,
+                'type' => $message->type,
+                'content' => $message->content,
+                'created_at' => $message->created_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
+            ], 'Pesan terkirim', 201);
+        });
     }
 
     /**
@@ -128,8 +134,8 @@ class SOSChatController extends Controller
             return $user->destinasis()->where('destinasis.id', $sos->id_destinasi)->exists();
         }
         // Hiker who owns the SOS
-        return $sos->pendaki && $sos->pendaki->booking
-            && $sos->pendaki->booking->id_user === $user->id;
+        return $user->id_bio !== null
+            && $sos->pendaki()->where('id_bio', $user->id_bio)->exists();
     }
 
     private function getSenderType($user, GkSos $sos): string

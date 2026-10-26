@@ -607,6 +607,7 @@
       let formName = document.getElementById("form-name");
       let checkboxContainer = document.getElementById("checkbox-container");
       let previousState = {};
+      const statusCheckboxes = document.querySelectorAll(".batal-checkbox, .cekin-checkbox, .cekout-checkbox");
 
       function saveState() {
          previousState = {
@@ -623,7 +624,7 @@
       }
 
       function disableAllCheckboxes() {
-         document.querySelectorAll(".form-check-input").forEach(chk => chk.disabled = true);
+         statusCheckboxes.forEach(chk => chk.disabled = true);
       }
 
       function enableCheckboxes(targetClass, actionName) {
@@ -647,7 +648,7 @@
 
       function updateHiddenInputs() {
          checkboxContainer.innerHTML = "";
-         document.querySelectorAll(".form-check-input").forEach(chk => {
+         statusCheckboxes.forEach(chk => {
             if (!chk.disabled) {
                let input = document.createElement("input");
                input.type = "hidden";

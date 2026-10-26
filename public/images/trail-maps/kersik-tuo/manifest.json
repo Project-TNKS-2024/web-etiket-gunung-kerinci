@@ -1,0 +1,191 @@
+[
+    {
+        "sequence": 0,
+        "post": "kersik-tuo",
+        "phase": "naik",
+        "file": "kersik-tuo-naik.webp",
+        "width": 1600,
+        "height": 1527,
+        "bytes": 266262
+    },
+    {
+        "sequence": 1,
+        "post": "pintu-rimba",
+        "phase": "naik",
+        "file": "pintu-rimba-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 124894
+    },
+    {
+        "sequence": 2,
+        "post": "bangku-panjang",
+        "phase": "naik",
+        "file": "bangku-panjang-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 111756
+    },
+    {
+        "sequence": 3,
+        "post": "batu-lumut",
+        "phase": "naik",
+        "file": "batu-lumut-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 103324
+    },
+    {
+        "sequence": 4,
+        "post": "pondok-panorama",
+        "phase": "naik",
+        "file": "pondok-panorama-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 112868
+    },
+    {
+        "sequence": 5,
+        "post": "shelter-1",
+        "phase": "naik",
+        "file": "shelter-1-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 112474
+    },
+    {
+        "sequence": 6,
+        "post": "shelter-2",
+        "phase": "naik",
+        "file": "shelter-2-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 117056
+    },
+    {
+        "sequence": 7,
+        "post": "shelter-3",
+        "phase": "naik",
+        "file": "shelter-3-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 118674
+    },
+    {
+        "sequence": 8,
+        "post": "batu-gantung",
+        "phase": "naik",
+        "file": "batu-gantung-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 117404
+    },
+    {
+        "sequence": 9,
+        "post": "tugu-yudha",
+        "phase": "naik",
+        "file": "tugu-yudha-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 115826
+    },
+    {
+        "sequence": 10,
+        "post": "puncak-kerinci",
+        "phase": "naik",
+        "file": "puncak-kerinci-naik.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 118850
+    },
+    {
+        "sequence": 11,
+        "post": "tugu-yudha",
+        "phase": "turun",
+        "file": "tugu-yudha-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 125232
+    },
+    {
+        "sequence": 12,
+        "post": "batu-gantung",
+        "phase": "turun",
+        "file": "batu-gantung-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 125494
+    },
+    {
+        "sequence": 13,
+        "post": "shelter-3",
+        "phase": "turun",
+        "file": "shelter-3-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 127398
+    },
+    {
+        "sequence": 14,
+        "post": "shelter-2",
+        "phase": "turun",
+        "file": "shelter-2-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 125456
+    },
+    {
+        "sequence": 15,
+        "post": "shelter-1",
+        "phase": "turun",
+        "file": "shelter-1-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 127638
+    },
+    {
+        "sequence": 16,
+        "post": "pondok-panorama",
+        "phase": "turun",
+        "file": "pondok-panorama-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 127420
+    },
+    {
+        "sequence": 17,
+        "post": "batu-lumut",
+        "phase": "turun",
+        "file": "batu-lumut-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 129262
+    },
+    {
+        "sequence": 18,
+        "post": "bangku-panjang",
+        "phase": "turun",
+        "file": "bangku-panjang-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 129230
+    },
+    {
+        "sequence": 19,
+        "post": "pintu-rimba",
+        "phase": "turun",
+        "file": "pintu-rimba-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 131972
+    },
+    {
+        "sequence": 20,
+        "post": "kersik-tuo",
+        "phase": "turun",
+        "file": "kersik-tuo-turun.webp",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 132346
+    }
+]

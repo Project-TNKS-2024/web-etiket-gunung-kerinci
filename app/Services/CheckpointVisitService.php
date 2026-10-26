@@ -3,11 +3,16 @@
 namespace App\Services;
 
 use App\Enums\TrackingPhase;
+use App\Events\TrackingUpdated;
 use App\Exceptions\CheckpointException;
 use App\Models\GkCheckpointLog;
 use App\Models\GkPost;
+use App\Models\GkTracking;
 use App\Models\gk_pendaki;
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use Illuminate\Validation\ValidationException;
+use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -26,11 +31,59 @@ class CheckpointVisitService
     {
     }
 
+    /** Dipanggil dalam transaksi konfirmasi tiket, setelah baris pendaki dikunci. */
+    public function recordTicketBoundary(gk_pendaki $target, TrackingPhase $phase, CarbonInterface $at): GkCheckpointLog
+    {
+        $booking = $target->booking;
+        $gateId = $phase === TrackingPhase::Naik ? $booking->gate_masuk : $booking->gate_keluar;
+        $posts = GkPost::where('id_gate', $gateId)->where('status', true)->orderBy('urutan')->get();
+        $post = $posts->first();
+        if (! $post || $post->is_summit || $posts->where('urutan', $post->urutan)->count() !== 1) {
+            throw ValidationException::withMessages(['booking_id' => 'Pos gerbang awal/akhir belum dikonfigurasi dengan benar.']);
+        }
+        if (! $post->gate || ! $booking->gktiket || (int) $post->gate->id_destinasi !== (int) $booking->gktiket->id_destinasi) {
+            throw ValidationException::withMessages(['booking_id' => 'Gerbang tidak sesuai destinasi tiket.']);
+        }
+
+        // Kepulangan fisik tidak mensyaratkan rekaman puncak atau mengisi pos yang terlewat.
+        return GkCheckpointLog::firstOrCreate([
+            'id_pendaki' => $target->id,
+            'id_booking' => $booking->id,
+            'id_post' => $post->id,
+            'phase' => $phase->value,
+        ], [
+            'client_event_id' => $this->ticketEventId($target, $phase),
+            'method' => 'manual',
+            'is_manual_override' => false,
+            'checked_at' => $at,
+        ]);
+    }
+
+    public function cancelTicketEntry(gk_pendaki $target): void
+    {
+        $eventId = $this->ticketEventId($target, TrackingPhase::Naik);
+        $logs = $target->checkpointLogs()->where('id_booking', $target->booking_id)->get();
+        if ($logs->contains(fn ($log) => $log->client_event_id !== $eventId)) {
+            throw ValidationException::withMessages(['pendakis' => 'Check-in tiket tidak dapat dibatalkan karena sudah ada kehadiran pos lain.']);
+        }
+        $target->checkpointLogs()->where('client_event_id', $eventId)->delete();
+        $target->update(['checkin_at' => null, 'tracking_phase' => TrackingPhase::Naik->value]);
+    }
+
+    private function ticketEventId(gk_pendaki $target, TrackingPhase $phase): string
+    {
+        return Uuid::uuid5(Uuid::NAMESPACE_URL, "tnks:ticket:{$target->booking_id}:{$target->id}:{$phase->value}")->toString();
+    }
+
     /** Legacy clients record ascent only and may use routes without v2 configuration. */
     public function recordLegacyAscent(gk_pendaki $target, GkPost $post, array $attributes): GkCheckpointLog
     {
         return DB::transaction(function () use ($target, $post, $attributes) {
             $locked = gk_pendaki::whereKey($target->id)->lockForUpdate()->firstOrFail();
+            if (in_array($attributes['method'] ?? null, ['manual', 'gps'], true)) {
+                $this->assertWithinPostRadius($post, $attributes['latitude'] ?? null, $attributes['longitude'] ?? null);
+                $attributes['is_manual_override'] = false;
+            }
             $existing = GkCheckpointLog::where('id_pendaki', $locked->id)
                 ->where('id_booking', $locked->booking_id)
                 ->where('id_post', $post->id)
@@ -67,7 +120,8 @@ class CheckpointVisitService
         ?float $longitude,
         bool $isManualOverride,
         ?string $clientEventId,
-        ?Carbon $recordedAt
+        ?Carbon $recordedAt,
+        array $positionDetails = []
     ): array {
         $phase = TrackingPhase::tryFrom($phaseString);
         if ($phase === null) {
@@ -84,7 +138,7 @@ class CheckpointVisitService
 
         return DB::transaction(function () use (
             $actor, $target, $post, $phase, $method, $latitude, $longitude,
-            $isManualOverride, $clientEventId, $recordedAt
+            $isManualOverride, $clientEventId, $recordedAt, $positionDetails
         ) {
             // 1. Lock baris pendaki target (urutan lock konsisten: pendaki dulu).
             $locked = gk_pendaki::whereKey($target->id)->lockForUpdate()->firstOrFail();
@@ -96,6 +150,10 @@ class CheckpointVisitService
             }
             if (! $post->status) {
                 throw new CheckpointException('CHECKPOINT_PHASE_CONFLICT', 'Pos tidak aktif.', [], 404);
+            }
+            if (in_array($method, ['manual', 'gps'], true)) {
+                $this->assertWithinPostRadius($post, $latitude, $longitude);
+                $isManualOverride = false;
             }
 
             // 3. Bukti kehadiran ketua saat mewakili anggota: wajib sesuai fase kunjungan.
@@ -207,6 +265,32 @@ class CheckpointVisitService
                 'checked_at' => $recordedAt,
             ]);
 
+            // Koordinat diri disimpan bersama checkpoint; replay event tidak membuat titik kedua.
+            if ($locked->id === $actor->id && $latitude !== null && $longitude !== null) {
+                GkTracking::create([
+                    'id_pendaki' => $locked->id,
+                    'id_booking' => $booking->id,
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                    'altitude' => $positionDetails['altitude'] ?? null,
+                    'accuracy' => $positionDetails['accuracy'] ?? null,
+                    'battery_level' => $positionDetails['battery_level'] ?? null,
+                    'recorded_at' => isset($positionDetails['position_recorded_at'])
+                        ? Carbon::parse($positionDetails['position_recorded_at']) : $recordedAt,
+                ]);
+                $destinasiId = $booking->destinasi?->id;
+                if ($destinasiId) {
+                    DB::afterCommit(fn () => broadcast(new TrackingUpdated(
+                        destinasiId: $destinasiId,
+                        pendakiId: $locked->id,
+                        latitude: $latitude,
+                        longitude: $longitude,
+                        altitude: $positionDetails['altitude'] ?? null,
+                        hikerName: $locked->fullName ?? 'Unknown',
+                    )));
+                }
+            }
+
             // 9. Summit naik -> alihkan fase target ke turun dalam transaksi yang sama.
             if ($phase === TrackingPhase::Naik && $post->is_summit) {
                 $locked->update(['tracking_phase' => TrackingPhase::Turun->value]);
@@ -234,6 +318,18 @@ class CheckpointVisitService
                 ->first();
             if ($log === null) {
                 throw new CheckpointException('CHECKPOINT_NOT_FOUND', 'Check-in tidak ditemukan.', [], 404);
+            }
+
+            if ($log->client_event_id === $this->ticketEventId($locked, TrackingPhase::from($phase))) {
+                throw new CheckpointException('TICKET_CONFIRMATION_REQUIRED', 'Kehadiran dari konfirmasi tiket hanya dapat dibatalkan petugas.', [], 403);
+            }
+
+            $booking = $locked->booking;
+            $gateId = $phase === TrackingPhase::Naik->value ? $booking->gate_masuk : $booking->gate_keluar;
+            $confirmedAt = $phase === TrackingPhase::Naik->value ? $locked->checkin_at : $locked->actual_checkout_at;
+            if ($confirmedAt && (int) $post->id_gate === (int) $gateId
+                && (int) $post->urutan === (int) GkPost::where('id_gate', $gateId)->where('status', true)->min('urutan')) {
+                throw new CheckpointException('TICKET_CONFIRMATION_REQUIRED', 'Kehadiran pos gerbang sudah dikonfirmasi petugas.', [], 403);
             }
 
             if ($phase === TrackingPhase::Naik->value && $post->is_summit) {
@@ -276,6 +372,7 @@ class CheckpointVisitService
             'client_event_id' => $log->client_event_id,
             'pendaki_id' => $target->id,
             'phase' => $phase,
+            'status' => 'completed',
             'checked_at' => $log->checked_at?->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
             'post' => ['id' => $post->id, 'nama' => $post->nama, 'urutan' => $post->urutan],
             'visit_key' => $phase . ':' . $post->id,
@@ -310,6 +407,30 @@ class CheckpointVisitService
             'descent_progress' => $summary['descent_progress'],
             'overall_progress' => $summary['overall_progress'],
         ];
+    }
+
+    private function assertWithinPostRadius(GkPost $post, ?float $latitude, ?float $longitude): void
+    {
+        if (! $post->status) {
+            throw new CheckpointException('CHECKPOINT_PHASE_CONFLICT', 'Pos tidak aktif.', [], 404);
+        }
+        if ($post->latitude === null || $post->longitude === null
+            || abs((float) $post->latitude) > 90 || abs((float) $post->longitude) > 180
+            || ! is_numeric($post->radius_meter)
+            || (float) $post->radius_meter <= 0) {
+            throw new CheckpointException('CHECKPOINT_LOCATION_INVALID', 'Lokasi atau radius pos belum dikonfigurasi dengan benar.', [], 422);
+        }
+        if ($latitude === null || $longitude === null || ! is_finite($latitude) || ! is_finite($longitude)
+            || abs($latitude) > 90 || abs($longitude) > 180) {
+            throw new CheckpointException('CHECKPOINT_LOCATION_INVALID', 'Koordinat check-in tidak valid.', [], 422);
+        }
+        $distance = GeoService::distance($latitude, $longitude, (float) $post->latitude, (float) $post->longitude);
+        if (! is_finite($distance) || $distance > (float) $post->radius_meter) {
+            throw new CheckpointException('CHECKPOINT_OUTSIDE_RADIUS', 'Check-in ditolak: lokasi berada di luar radius pos.', [
+                'distance_from_post' => round($distance, 2),
+                'radius_meter' => (float) $post->radius_meter,
+            ], 422);
+        }
     }
 
     private function identityMatches(GkCheckpointLog $log, string $pendakiId, string $bookingId, int $postId, string $phase): bool

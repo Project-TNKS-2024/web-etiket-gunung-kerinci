@@ -6,7 +6,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\helper\BookingHelperController;
 use App\Mail\BookingPayment;
 use App\Mail\BookingPaymentFailed;
-use App\Models\destinasi;
 use App\Models\gk_booking;
 use App\Models\gk_tiket_pendaki;
 use App\Models\GkPendakiTarifSnapshot;
@@ -15,12 +14,16 @@ use App\Models\statusPendaki;
 use App\Models\User;
 use App\Services\AdditionalChargePaymentService;
 use App\Services\CheckoutService;
+use App\Services\CheckpointVisitService;
+use App\Enums\TrackingPhase;
 use App\Services\OverstayCalculator;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -35,7 +38,8 @@ class bookingController extends AdminController
         BookingHelperController $helper,
         CheckoutService $checkout,
         AdditionalChargePaymentService $paymentService,
-        OverstayCalculator $overstay
+        OverstayCalculator $overstay,
+        private CheckpointVisitService $visits
     ) {
         $this->helper = $helper;
         $this->checkout = $checkout;
@@ -45,7 +49,7 @@ class bookingController extends AdminController
 
     public function index($id, Request $request)
     {
-        $destinasi = destinasi::find($id);
+        $destinasi = $this->userAdmin()->destinasis()->findOrFail($id);
 
         // Query utama
         $queryUtama = gk_booking::with(['pendakis.biodata', 'gateMasuk', 'pembayaran'])
@@ -128,16 +132,14 @@ class bookingController extends AdminController
             'reason' => 'required|string|max:500',
         ]);
         app(\App\Services\BookingCancellationService::class)->cancel(
-            gk_booking::findOrFail($request->booking_id), $request->user(), $request->reason
+            $this->authorizedBooking($request->booking_id), $request->user(), $request->reason
         );
         return back()->with('success', 'Pesanan dibatalkan. Riwayat dan bukti pembayaran tetap tersimpan.');
     }
 
     public function showPembayaran($id)
     {
-        $booking = gk_booking::with('pendakis.biodata', 'user', 'pembayaran')
-            ->where('id', $id)
-            ->first();
+        $booking = $this->authorizedBooking($id)->load('pendakis.biodata', 'user', 'pembayaran');
         // return $booking;
 
         return view('etiket.admin.destinasi.booking.showPembayaran', [
@@ -155,6 +157,7 @@ class bookingController extends AdminController
 
         return \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
             $booking = gk_booking::with('pembayaran')->lockForUpdate()->findOrFail($request->id_booking);
+            $this->assertDestinationAccess($booking);
             $userBooking = User::with('biodata')->find($booking->id_user);
             if (!$booking) {
                 abort(404);
@@ -263,7 +266,7 @@ class bookingController extends AdminController
 
     public function showBooking($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'pendakis.getStatus', 'cancelledBy', 'destinasi'])->where('id', $id)->first();
+        $booking = $this->authorizedBooking($id)->load(['gateMasuk', 'gateKeluar', 'pendakis.biodata.user', 'pendakis.getStatus', 'cancelledBy', 'destinasi']);
 
 
         $listStatusPendakian = $booking->riwayatPendakian();
@@ -288,11 +291,9 @@ class bookingController extends AdminController
             'totalHari' => 'required|integer|min:1',
             'bookinfStartDate' => 'required|date',
         ]);
-        $booking = gk_booking::where('id', $request->id_booking)
-            ->whereBetween('status_booking', [4, 8])
-            ->first();
+        $booking = $this->authorizedBooking($request->id_booking);
 
-        if (!$booking) {
+        if ($booking->status_booking < 4 || $booking->status_booking > 8) {
             return redirect()->back()->withErrors('Booking tidak ditemukan');
         }
 
@@ -311,7 +312,7 @@ class bookingController extends AdminController
     }
     public function showTiket($id)
     {
-        $booking = gk_booking::with(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'destinasi'])->where('id', $id)->first();
+        $booking = $this->authorizedBooking($id)->load(['gateMasuk', 'gateKeluar', 'pendakis.biodata', 'destinasi']);
 
         return view('etiket.admin.destinasi.booking.showTiket', [
             'booking' => $booking
@@ -331,7 +332,10 @@ class bookingController extends AdminController
         // return $request;
 
         // cek status booking >= 4
-        $booking = gk_booking::find($request->booking_id);
+        $booking = $this->authorizedBooking($request->booking_id);
+        if ($request->input('pendakis') !== null && array_diff(array_keys($request->input('pendakis')), $booking->pendakis()->pluck('id')->all())) {
+            throw ValidationException::withMessages(['pendakis' => 'Pendaki tidak terdaftar dalam booking ini.']);
+        }
         if ($booking->status_booking < 4 || $booking->status_booking > 8) {
             return redirect()->back()->withErrors('Bookingan belum menyelesaikan pembayaran');
         }
@@ -433,46 +437,64 @@ class bookingController extends AdminController
     }
     private function pendakiCekIn($booking, $pendakis)
     {
-        $booking->load('pendakis.getStatus', 'pendakis.biodata');
-        $messages = [];
-        foreach ($pendakis as $idPendaki => $statusPendaki) {
-            $pendaki = $booking->pendakis->where('id', $idPendaki)->first();
-            $lastStatus = $pendaki->getStatus->last();
+        return DB::transaction(function () use ($booking, $pendakis) {
+            $booking = gk_booking::lockForUpdate()->findOrFail($booking->id);
+            $this->assertDestinationAccess($booking);
+            if ($booking->status_booking < 4 || $booking->status_booking > 6) {
+                throw ValidationException::withMessages(['booking_id' => 'Booking tidak dapat menerima check-in.']);
+            }
+            $booking->setRelation('pendakis', $booking->pendakis()->lockForUpdate()->with(['getStatus', 'biodata'])->get());
+            if (! is_array($pendakis) || array_diff(array_keys($pendakis), $booking->pendakis->modelKeys())) {
+                throw ValidationException::withMessages(['pendakis' => 'Pilih pendaki yang terdaftar dalam booking ini.']);
+            }
+            $messages = [];
+            foreach ($pendakis as $idPendaki => $statusPendaki) {
+                $pendaki = $booking->pendakis->where('id', $idPendaki)->first();
+                $lastStatus = $pendaki->getStatus->last();
 
-            if (empty($lastStatus)) {
-                if ($statusPendaki == 1) {
-                    statusPendaki::create([
-                        'id_pendaki' => $pendaki->id,
-                        'status' => 2,
-                        'detail' => 'Melakukan pendakian',
-                        'validator' =>  $this->userAdmin()->id,
-                    ]);
-                    // Bekukan waktu masuk dan dasar tarif tambahan saat check-in.
-                    $pendaki->update(['checkin_at' => Carbon::now(config('app.timezone'))]);
-                    $this->freezeTarifSnapshot($pendaki);
-                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
-                }
-            } elseif ($lastStatus->status == 1) {
-                $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' sudah dibatalkan';
-            } elseif ($lastStatus->status == 2) {
-                if ($statusPendaki == 0) {
-                    $lastStatus->delete();
-                    $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil dihapus';
-                }
-            } elseif ($lastStatus->status == 3) {
-                if ($statusPendaki == 0) {
-                    $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' tidak dapat diterima, karna sudah ' . $lastStatus->statusName();
+                if (empty($lastStatus)) {
+                    if ($statusPendaki == 1) {
+                        statusPendaki::create([
+                            'id_pendaki' => $pendaki->id,
+                            'status' => 2,
+                            'detail' => 'Melakukan pendakian',
+                            'validator' =>  $this->userAdmin()->id,
+                        ]);
+                        // Bekukan waktu masuk dan dasar tarif tambahan saat check-in.
+                        $pendaki->update(['checkin_at' => Carbon::now(config('app.timezone'))]);
+                        $this->visits->recordTicketBoundary($pendaki, TrackingPhase::Naik, $pendaki->checkin_at);
+                        $this->freezeTarifSnapshot($pendaki);
+                        $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil diupdate';
+                    }
+                } elseif ($lastStatus->status == 1) {
+                    $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' sudah dibatalkan';
+                } elseif ($lastStatus->status == 2) {
+                    if ($statusPendaki == 0) {
+                        $this->visits->cancelTicketEntry($pendaki);
+                        $lastStatus->delete();
+                        $messages['success'][] = 'Status pendakian ' . $pendaki->fullName . ' berhasil dihapus';
+                    } else {
+                        $messages['error'][] = 'Check-in ' . $pendaki->fullName . ' sudah tercatat';
+                    }
+                } elseif ($lastStatus->status == 3) {
+                    if ($statusPendaki == 0) {
+                        $messages['error'][] = 'Status pendakian ' . $pendaki->fullName . ' tidak dapat diterima, karna sudah ' . $lastStatus->statusName();
+                    }
                 }
             }
-        }
 
-        if ($booking->status_booking <= 5) {
-            $booking->update([
-                'status_booking' => 6
-            ]);
-        }
+            $booking->load('pendakis.getStatus');
+            $hasActiveHikers = $booking->pendakis->contains(fn ($pendaki) => (int) $pendaki->getStatus->last()?->status === 2);
+            if ($hasActiveHikers && $booking->status_booking <= 5) {
+                $booking->update([
+                    'status_booking' => 6
+                ]);
+            } elseif (! $hasActiveHikers && (int) $booking->status_booking === 6 && ! $booking->pendakis->contains(fn ($pendaki) => (int) $pendaki->getStatus->last()?->status === 3)) {
+                $booking->update(['status_booking' => 5]);
+            }
 
-        return $messages;
+            return $messages;
+        });
     }
 
     /**
@@ -502,7 +524,7 @@ class bookingController extends AdminController
 
     public function showStruk($id)
     {
-        $booking = gk_booking::where('id', $id)->first();
+        $booking = $this->authorizedBooking($id);
 
         // if ($booking->status_pembayaran) {
         //     $booking = json_decode($booking->dataStruk);
@@ -535,7 +557,7 @@ class bookingController extends AdminController
             'reasons.*' => 'nullable|string|max:255',
         ]);
 
-        $booking = gk_booking::find($request->booking_id);
+        $booking = $this->authorizedBooking($request->booking_id);
         if (!$booking || $booking->status_booking < 4 || $booking->status_booking > 8) {
             return redirect()->back()->withErrors('Booking tidak valid');
         }
@@ -558,6 +580,19 @@ class bookingController extends AdminController
         return redirect()->back()->with('success', 'Kepulangan pendaki berhasil dicatat');
     }
 
+    private function authorizedBooking(string $id): gk_booking
+    {
+        $booking = gk_booking::findOrFail($id);
+        $this->assertDestinationAccess($booking);
+
+        return $booking;
+    }
+
+    private function assertDestinationAccess(gk_booking $booking): void
+    {
+        abort_unless($booking->gktiket && $this->userAdmin()->destinasis()->whereKey($booking->gktiket->id_destinasi)->exists(), 403, 'Destinasi tiket berada di luar penugasan petugas.');
+    }
+
     /**
      * Catat pembayaran biaya tambahan di pos (nominal dari tagihan server).
      */
@@ -571,7 +606,7 @@ class bookingController extends AdminController
             'note' => 'nullable|string|max:255',
         ]);
 
-        $booking = gk_booking::find($request->booking_id);
+        $booking = $this->authorizedBooking($request->booking_id);
         if (!$booking) {
             return redirect()->back()->withErrors('Booking tidak ditemukan');
         }

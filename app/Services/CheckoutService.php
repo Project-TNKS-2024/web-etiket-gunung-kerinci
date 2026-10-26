@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\gk_booking;
+use App\Enums\TrackingPhase;
 use App\Models\gk_pendaki;
 use App\Models\GkOverstayAudit;
 use App\Models\GkOverstayCharge;
@@ -21,7 +22,7 @@ use InvalidArgumentException;
  */
 class CheckoutService
 {
-    public function __construct(private OverstayCalculator $calculator)
+    public function __construct(private OverstayCalculator $calculator, private CheckpointVisitService $visits)
     {
     }
 
@@ -35,6 +36,7 @@ class CheckoutService
 
         return DB::transaction(function () use ($booking, $items, $admin, $now) {
             $booking = gk_booking::lockForUpdate()->findOrFail($booking->id);
+            abort_unless($booking->gktiket && $admin->destinasis()->whereKey($booking->gktiket->id_destinasi)->exists(), 403, 'Destinasi tiket berada di luar penugasan petugas.');
 
             $results = [];
             foreach ($items as $item) {
@@ -80,7 +82,7 @@ class CheckoutService
         }
 
         // Waktu turun tidak boleh sebelum check-in yang valid.
-        if ($pendaki->checkin_at && $actual->lessThan($pendaki->checkin_at->copy()->subMinute())) {
+        if ($pendaki->checkin_at && $actual->lessThan($pendaki->checkin_at)) {
             throw new InvalidArgumentException('Waktu turun tidak boleh sebelum waktu check-in');
         }
 
@@ -95,6 +97,7 @@ class CheckoutService
         $pendaki->checkout_recorded_by = $admin->id;
         $pendaki->checkout_reason = $reason ?: null;
         $pendaki->save();
+        $this->visits->recordTicketBoundary($pendaki, TrackingPhase::Turun, $actual);
 
         statusPendaki::create([
             'id_pendaki' => $pendaki->id,

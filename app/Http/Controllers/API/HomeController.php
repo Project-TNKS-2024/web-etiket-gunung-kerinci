@@ -41,9 +41,9 @@ class HomeController extends Controller
         $mountainCode = is_numeric($kerinci?->statusGunung) ? (int) $kerinci->statusGunung : null;
         $data = [
             'cuaca' => $cuaca,
-            'status_gunung' => $kerinci && in_array($mountainCode, [0, 1, 2, 3, 4], true) ? [
+            'status_gunung' => $kerinci && $kerinci->statusGunungLabel() !== null ? [
                 'kode' => $mountainCode,
-                'label' => str_replace('Leverl', 'Level', $kerinci->getStatusGunung()),
+                'label' => $kerinci->statusGunungLabel(),
             ] : null,
             'ringkasan_pendaki' => [
                 'sedang_mendaki' => $pendaki['total_sedang_cekin'],

@@ -1037,6 +1037,10 @@ menyertakan `map_image_url` (URL absolut, atau `null` bila belum tersedia).
 Gambar mengikuti pos yang dipilih, bukan pos tujuan berikutnya. Mobile menampilkan
 peta utuh dan membuka tampilan zoom ketika diketuk.
 
+`mountain_status` pada kedua endpoint diisi dari status destinasi melalui relasi
+gate, bukan dari nilai tersimpan per pos. Semua pos dalam satu destinasi memakai
+label yang sama dengan Beranda; `null` berarti status belum tersedia.
+
 Sepuluh peta PNG jalur Kersik Tuo tersedia di
 `public/images/trail-maps/kersik-tuo/`. Jalankan migrasi
 `85_gk_posts_add_map_image_path.php`, lalu `TrailPostSeeder` untuk memasangkannya.
@@ -1076,8 +1080,75 @@ Mobile memakai `GET /api/tracking/v2/posts/{gate_id}` agar konfigurasi puncak da
 
 `POST /api/tracking/checkpoint/gps` juga menerima `pendaki_id` UUID opsional untuk memilih pendakian pemanggil sebelum mencari pos terdekat. Target GPS wajib merupakan identitas pemanggil sendiri. Mobile memvalidasi `pendaki_id`, pos, fase, dan `client_event_id` pada respons sukses sebelum menyimpan centang lokal; respons yang tidak cocok tidak dianggap absen berhasil.
 
+## GPS pendamping checkpoint — 25 Oktober 2026
+
+Pembaruan 25 Oktober 2026: QR/manual checkpoint v2 menyimpan GPS diri yang
+berkoordinat lengkap dalam transaksi checkpoint yang sama. Field opsional baru
+adalah altitude (-99999.99..99999.99), accuracy (0..9999.99 meter), dan
+battery_level (integer 0..100). Replay client_event_id tidak membuat titik kedua.
+Kehadiran anggota yang diwakili tidak menghasilkan titik GPS anggota. Mobile baru
+tidak perlu mengirim GPS pendamping terpisah. Lihat
+`docs/checkpoint-naik-turun-v2-kontrak.md` untuk kontrak, urutan pembaruan, dan
+batas data historis. Respons checkpoint serta endpoint GPS mandiri tetap tersedia.
+
+## Kesegaran GPS dan Live Monitoring — 25 Oktober 2026
+
+QR/manual v2 menerima `position_recorded_at` opsional (ISO-8601): waktu GPS diukur,
+terpisah dari `recorded_at` kehadiran. Mobile mengukur ulang lokasi pada scan QR,
+deteksi radius, dan konfirmasi; hanya menerima umur maksimal 60 detik. Waktu
+pengukuran dipertahankan di antrean Room 17 → 18. Klien/antrean lama tanpa field
+baru tetap memakai waktu checkpoint sebagai fallback, tanpa menebak waktu GPS asli.
+
+Endpoint GPS tunggal/batch dan position_recorded_at menolak waktu lebih dari lima
+menit ke depan. Posisi terakhir pada my-position serta Admin dipilih dari
+recorded_at <= waktu server, urut recorded_at terbaru lalu ID terbesar saat waktu
+sama. Titik offline lama tetap tersimpan tanpa menggantikan posisi yang lebih baru.
+Data historis bertanggal masa depan tidak dihapus, tetapi tidak dipilih sebelum
+waktu server mencapainya.
+
+`GET /admin/monitoring` tetap halaman web terautentikasi dan dibatasi penugasan
+destinasi. Accept application/json mengembalikan snapshot server_time, hikers,
+sos, posts, emergency_count dengan Cache-Control no-store, private. Halaman
+memperbarui snapshot setiap 5 detik (tidak menumpuk request; berhenti saat tab
+tersembunyi/sesi tidak sah), menjaga posisi/zoom peta, dan memperbarui umur lokasi
+setiap 10 detik. Lokasi lebih tua dari 30 menit ditandai kuning, SOS tetap merah.
+Kegagalan pembaruan mempertahankan data terakhir dengan keterangan gagal, bukan
+menunjukkan keberhasilan baru. Tidak memerlukan WebSocket atau migrasi Backend.
+
 ## Catatan anggota checkpoint (18 Oktober 2026)
 
 `POST /api/tracking/v2/member-note` (Sanctum) menerima `pendaki_id` UUID, `post_id`, `phase` (`naik`/`turun`), dan `note` nullable string maksimal 500 karakter. Field `note` wajib ada, nilai kosong mengosongkan catatan. Scope unik: booking aktif + anggota + pos + fase. Catatan tidak membuat log kehadiran. Hanya pemilik catatan atau ketua booking yang dapat menulis; untuk anggota lain, ketua harus sudah check-in pada pos/fase sama. Anggota asing ditolak 403, pos berbeda gate 404, anggota sudah check-in ditolak 409. Penyimpanan diserialisasi dengan lock pendaki yang juga dipakai check-in.
 
 `GET /api/tracking/v2/progress/{booking_id}` menambahkan `member_notes`: daftar `{pendaki_id, post_id, phase, note, updated_at}`. Akses mengikuti keanggotaan/pemilik booking pada endpoint progress yang sudah ada. Catatan disimpan terpisah dari `gk_checkpoint_logs` agar dapat ditulis sebelum kehadiran, dan tetap tersimpan ketika UI menyembunyikannya setelah hijau. Jalankan migration 87 sebelum memakai kode ini. Tidak ada antrean offline baru untuk catatan.
+
+## Status pos dilewati (23 Oktober 2026)
+
+`GET /api/tracking/v2/progress/{booking_id}` menambahkan field `status` dan `is_next` pada setiap item `visits[]`. Nilai `status`: `completed` (sudah check-in), `skipped` (belum check-in, tetapi ada check-in pada kunjungan sesudahnya), atau `upcoming` (belum check-in dan masih di depan). Field lama `completed` tetap ada. Status dihitung dari urutan itinerary naik–turun per pendaki dan booking; tidak ada kolom database baru dan tidak ada log yang dibuat untuk pos yang dilewati.
+
+`next_visit_key` kini menunjuk kunjungan tepat setelah posisi terjauh yang tercatat, bukan pos kosong pertama. Check-in susulan pada pos merah mengubahnya menjadi hijau tanpa memundurkan tujuan. Pembatalan check-in terjauh menghitung ulang status dan tujuan. Pos `skipped` tidak menambah angka `completed` pada `ascent_progress`, `descent_progress`, maupun `overall_progress`.
+
+QR dan manual v2 tetap menerima pos mana pun yang belum selesai pada fase aktif. Pemeriksaan QR terhadap pos pilihan, gate booking, lokasi/radius, hari aktif, identitas, dan kewenangan pengguna tidak berubah. Check-in puncak tetap menjadi syarat fase turun dan pembatalan puncak tetap ditolak selama ada check-in turun.
+
+## Validasi radius dan akses chat SOS — 2026-10-24
+
+- Manual check-in v1/v2 menggunakan radius_meter pos. Lokasi di luar radius menghasilkan HTTP 422 dengan errors.code=CHECKPOINT_OUTSIDE_RADIUS, distance_from_post, dan radius_meter; tidak membuat log. Konfigurasi lokasi/radius tidak valid atau koordinat hilang menghasilkan CHECKPOINT_LOCATION_INVALID (422). Pemeriksaan ada di CheckpointVisitService, termasuk jalur legacy. Check-in manual yang diterima mempunyai is_manual_override=false. Konfirmasi tiket oleh petugas tetap alur terpisah.
+- Akses baca/kirim chat dan kanal sos-chat.{sosId} untuk pendaki memakai id_bio pendaki pemicu SOS. Kepemilikan booking saja tidak memberi akses ke SOS anggota lain. Admin tetap harus ditugaskan pada destinasi SOS.
+- Pengiriman chat hanya menerima status active, acknowledged, dispatched. Sesi lain (termasuk resolved/false_alarm) ditolak HTTP 409, errors.code=SOS_SESSION_CLOSED. Riwayat tetap dapat dibaca pengguna berwenang.
+- Pengiriman mengunci baris SOS dalam transaksi sebelum memeriksa status dan menyimpan teks/gambar. Broadcast dilakukan setelah commit. Penolakan sesi tertutup terjadi sebelum penyimpanan lampiran.
+- Tidak ada perubahan format sukses atau migrasi. Data override historis tidak diubah. Pemeriksaan sintaks lulus; tes fungsi belum dijalankan.
+
+## Gambar pos per fase — 2026-10-24
+
+Respons pos v1/v2 menyertakan map_image_url (naik) dan map_image_url_turun (turun). Jalur Kersik Tuo memakai aset bernama <nama-pos>-naik.webp / <nama-pos>-turun.webp. Puncak hanya mempunyai gambar naik; URL turun null. Field URL turun dihitung dari aset yang tersedia, tanpa kolom atau migrasi database baru.
+
+Urutan sumber 0–10 naik dari Kersik Tuo ke puncak; 11–20 turun dari Tugu Yudha ke Kersik Tuo. Pemetaan lengkap: public/images/trail-maps/kersik-tuo/manifest.json. Seeder mengisi map_image_path ke gambar naik; aset lama tetap tersedia untuk kompatibilitas URL sebelumnya.
+
+Mobile memilih URL sesuai fase kunjungan. Cache pos yang menyimpan URL naik dapat menurunkan nama pasangan turun untuk aset baru Kersik Tuo. Rasio tampilan mengikuti dimensi aktual gambar. Tidak ada perubahan skema Room.
+
+## Laporan potensi bencana offline (25 Oktober 2026)
+
+`POST /api/sos/disaster-report` tetap menerima multipart dan Sanctum. Tambahan opsional: `client_event_id` UUID, unik per pengguna, serta `location_recorded_at` tanggal ISO 8601 dengan offset (Mobile mengirim UTC Z; penyimpanan mengikuti WIB). Latitude/longitude tetap merupakan koordinat saat laporan dibuat, bukan lokasi saat antrean dikirim. Jalankan migrasi 89 sebelum menggunakan backend ini.
+
+Request pertama membuat laporan dan mengembalikan HTTP 201. Pengiriman ulang `client_event_id` yang sama oleh pengguna yang sama mengembalikan laporan sebelumnya dengan HTTP 200 tanpa membuat laporan/notifikasi baru; replay diperiksa sebelum persyaratan pendakian aktif. Request baru tetap memerlukan pendakian aktif. Format respons lama tetap `{success,message,data:{id,status,created_at},errors}`. Klien lama boleh tidak mengirim field tambahan; pencegahan duplikat hanya berlaku untuk request dengan ID event.
+
+Mobile menyimpan form yang sudah disubmit, foto pada penyimpanan privat, koordinat, waktu GPS, dan akurasi di Room 19. Worker dengan syarat jaringan tersambung mengirim data tersimpan. Gangguan jaringan, HTTP 401/408/429/5xx dicoba ulang; penolakan lain dipertahankan dengan status dan alasan. Akun lain tidak mengirim antrean pemilik sebelumnya. Tidak ada pengiriman langsung atau pengambilan GPS baru di worker. Admin menerima laporan melalui tabel/alur lama; tidak ada perubahan tampilan Admin.

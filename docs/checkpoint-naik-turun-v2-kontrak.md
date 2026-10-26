@@ -30,10 +30,54 @@ tentang pos fisik, tidak bergantung fase.
 - `client_event_id` (UUID) dibuat sekali di mobile saat menyimpan event, dipakai
   ulang pada semua retry; unik untuk nilai terisi.
 
+### GPS pendamping checkpoint — 25 Oktober 2026
+
+QR/manual v2 menyimpan koordinat diri ke `gk_tracking` dalam transaksi yang sama
+dengan checkpoint. Jika salah satu penyimpanan gagal, keduanya dibatalkan. Replay
+`client_event_id` yang sama mengembalikan hasil canonical tanpa titik GPS baru.
+Hanya check-in diri dengan latitude dan longitude lengkap yang menghasilkan titik;
+kehadiran anggota yang diwakili ketua tidak membuat lokasi anggota dari GPS ketua.
+
+Field opsional tambahan: `altitude` (-99999.99..99999.99), `accuracy`
+(0..9999.99 meter), dan `battery_level` (integer 0..100). `position_recorded_at`
+opsional menyimpan waktu pengukuran GPS; jika kosong (klien/antrean lama),
+`recorded_at` checkpoint menjadi fallback waktu titik pendamping. Waktu upload
+antrean tidak menggantikan kedua waktu kejadian tersebut. Format respons tetap.
+Broadcast lokasi dijadwalkan setelah commit.
+
+Mobile mengirim metadata tersebut langsung melalui request checkpoint, termasuk
+worker offline. Tidak ada lagi request GPS terpisah setelah check-in atau batch
+GPS pendamping sesudah status SENT. Kegagalan jaringan/HTTP 408, 429, dan 5xx
+masuk antrean checkpoint dengan event ID yang sama. Transaksi ini tidak memerlukan
+migrasi Backend. Pembaruan usia GPS memakai Room 17 → 18 untuk menyimpan waktu
+pengukuran terpisah; tidak memerlukan migrasi database Backend.
+Backend ini harus tersedia sebelum memakai APK baru. Log lama yang sudah SENT
+tidak di-backfill; endpoint GPS mandiri/batch tetap tersedia untuk caller lain.
+
 ### Timeline
 
 Pos naik `P1..PN` (PN puncak). Itinerary = `naik:P1..naik:PN` lalu
 `turun:P(N-1)..turun:P1`. Jumlah kunjungan `2N-1`.
+
+### Status kunjungan (fitur pos dilewati)
+
+Setiap item `visits[]` pada respons progress memiliki field tambahan:
+
+| Status | Arti | Warna mobile |
+|---|---|---|
+| `completed` | Kunjungan punya catatan check-in. `completed = true` tetap dipertahankan. | Hijau |
+| `skipped` | Belum check-in, tetapi ada catatan pada kunjungan yang lebih jauh. | Merah (peringatan, bukan larangan) |
+| `upcoming` | Belum check-in dan belum ada catatan yang lebih jauh. | Abu-abu |
+
+Status diturunkan saat baca dari urutan itinerary naik–turun; tidak ada kolom
+database baru dan tidak ada log untuk pos yang dilewati. Setiap item juga
+mengirim `is_next` (kunjungan tepat setelah posisi terjauh yang tercatat).
+
+`next_visit_key` = kunjungan dengan `is_next = true`, yaitu kunjungan tepat
+setelah posisi terjauh yang sudah tercatat — bukan pos kosong pertama. Check-in
+susulan pada pos yang dilewati mengubah statusnya menjadi hijau tanpa
+memundurkan tujuan. Pembatalan kunjungan terjauh menghitung ulang status dan
+tujuan. Pos `skipped` tidak menambah angka `completed` pada progres.
 
 ### Pemetaan segmen (arah ternormalisasi)
 

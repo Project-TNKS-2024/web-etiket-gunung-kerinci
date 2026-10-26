@@ -14,10 +14,12 @@ class GkDisasterReport extends Model
         'id_user', 'id_destinasi', 'id_booking', 'potensi_bencana',
         'deskripsi', 'lokasi', 'latitude', 'longitude', 'lampiran',
         'status', 'verified_by', 'verified_at', 'notes',
+        'client_event_id', 'location_recorded_at',
     ];
 
     protected $casts = [
         'verified_at' => 'datetime',
+        'location_recorded_at' => 'datetime',
     ];
 
     public function user()

@@ -418,4 +418,149 @@ class CheckpointV2ApiTest extends TestCase
         $this->assertSame(1, $hikers[$this->leaderHiker->id]['completed']);
         $this->assertSame(3, $hikers[$this->leaderHiker->id]['total']);
     }
+
+    public function test_sequential_checkins_leave_no_skipped_visit(): void
+    {
+        $this->actingAs($this->leader, 'sanctum');
+        $this->scan('naik', $this->post1)->assertCreated();
+        $this->scan('naik', $this->post2)->assertCreated();
+        $this->scan('naik', $this->summit)->assertCreated();
+
+        $visits = $this->leaderVisits();
+        $this->assertSame([], collect($visits)->where('status', 'skipped')->all());
+        $this->assertSame('turun:' . $this->post2->id, $this->leaderHikerProgress()['next_visit_key']);
+    }
+
+    public function test_skipped_post_is_red_and_next_target_is_the_visit_after_the_furthest(): void
+    {
+        $this->actingAs($this->leader, 'sanctum');
+        [$post3, $post4] = $this->extendRouteToFourPostsBeforeSummit();
+
+        $this->scan('naik', $this->post1)->assertCreated();
+        $this->scan('naik', $post3)->assertCreated();
+
+        $visits = collect($this->leaderVisits())->keyBy('visit_key');
+        $this->assertSame('completed', $visits['naik:' . $this->post1->id]['status']);
+        $this->assertSame('skipped', $visits['naik:' . $this->post2->id]['status']);
+        $this->assertSame('completed', $visits['naik:' . $post3->id]['status']);
+        $this->assertSame('upcoming', $visits['naik:' . $post4->id]['status']);
+        $this->assertTrue($visits['naik:' . $post4->id]['is_next']);
+        $this->assertSame('naik:' . $post4->id, $this->leaderHikerProgress()['next_visit_key']);
+
+        // Pos dilewati tidak dihitung sebagai check-in berhasil.
+        $progress = $this->leaderHikerProgress();
+        $this->assertSame(['completed' => 2, 'total' => 5, 'percentage' => 40], $progress['ascent_progress']);
+        $this->assertSame(2, $progress['overall_progress']['completed']);
+    }
+
+    public function test_late_checkin_on_skipped_post_turns_green_without_rewinding_target(): void
+    {
+        $this->actingAs($this->leader, 'sanctum');
+        [$post3, $post4] = $this->extendRouteToFourPostsBeforeSummit();
+
+        $this->scan('naik', $this->post1)->assertCreated();
+        $this->scan('naik', $post3)->assertCreated();
+        $this->scan('naik', $this->post2)->assertCreated();
+
+        $visits = collect($this->leaderVisits())->keyBy('visit_key');
+        $this->assertSame('completed', $visits['naik:' . $this->post2->id]['status']);
+        $this->assertSame('naik:' . $post4->id, $this->leaderHikerProgress()['next_visit_key']);
+        $this->assertNull(collect($this->leaderVisits())->firstWhere('status', 'skipped'));
+    }
+
+    public function test_descent_statuses_follow_itinerary_and_recompute_after_cancellation(): void
+    {
+        $this->actingAs($this->leader, 'sanctum');
+        [$post3, $post4] = $this->extendRouteToFourPostsBeforeSummit();
+
+        $this->scan('naik', $this->summit)->assertCreated();
+        $this->scan('turun', $post4)->assertCreated();
+        $furthestDescent = $this->scan('turun', $this->post2)->assertCreated()
+            ->json('data.checkpoint_log_id');
+
+        $visits = collect($this->leaderVisits())->keyBy('visit_key');
+        $this->assertSame('skipped', $visits['turun:' . $post3->id]['status']);
+        $this->assertSame('completed', $visits['turun:' . $this->post2->id]['status']);
+        $this->assertSame('turun:' . $this->post1->id, $this->leaderHikerProgress()['next_visit_key']);
+
+        $this->deleteJson('/api/tracking/v2/checkpoint/' . $furthestDescent)->assertOk();
+
+        $visits = collect($this->leaderVisits())->keyBy('visit_key');
+        $this->assertSame('upcoming', $visits['turun:' . $post3->id]['status']);
+        $this->assertSame('turun:' . $post3->id, $this->leaderHikerProgress()['next_visit_key']);
+    }
+
+    public function test_sync_arrival_order_does_not_change_final_statuses(): void
+    {
+        $this->actingAs($this->leader, 'sanctum');
+        [$post3, $post4] = $this->extendRouteToFourPostsBeforeSummit();
+
+        // Kedatangan terbalik: Pos 3, lalu Pos 1, lalu Pos 2.
+        $event3 = (string) Str::uuid();
+        $this->scan('naik', $post3, null, $event3)->assertCreated();
+        $this->scan('naik', $this->post1)->assertCreated();
+        $this->scan('naik', $this->post2)->assertCreated();
+        // Replay event yang sama bersifat idempoten.
+        $this->scan('naik', $post3, null, $event3)->assertOk()
+            ->assertJsonPath('data.idempotent', true);
+
+        $visits = collect($this->leaderVisits())->keyBy('visit_key');
+        foreach ([$this->post1, $this->post2, $post3] as $post) {
+            $this->assertSame('completed', $visits['naik:' . $post->id]['status']);
+        }
+        $this->assertNull(collect($this->leaderVisits())->firstWhere('status', 'skipped'));
+        $this->assertSame('naik:' . $post4->id, $this->leaderHikerProgress()['next_visit_key']);
+    }
+
+    public function test_skipped_status_never_adds_a_checkin_log(): void
+    {
+        $this->actingAs($this->leader, 'sanctum');
+        [$post3] = $this->extendRouteToFourPostsBeforeSummit();
+
+        $this->scan('naik', $this->post1)->assertCreated();
+        $this->scan('naik', $post3)->assertCreated();
+
+        $this->assertSame(2, GkCheckpointLog::where('id_pendaki', $this->leaderHiker->id)->count());
+        $this->assertDatabaseMissing('gk_checkpoint_logs', [
+            'id_pendaki' => $this->leaderHiker->id,
+            'id_post' => $this->post2->id,
+        ]);
+    }
+
+    /** @return array{0: GkPost, 1: GkPost} */
+    private function extendRouteToFourPostsBeforeSummit(): array
+    {
+        $this->summit->update(['urutan' => 5]);
+
+        return [
+            GkPost::create([
+                'nama' => 'Pos 3', 'urutan' => 3, 'latitude' => -1.73, 'longitude' => 101.29,
+                'id_gate' => $this->booking->gate_masuk, 'qr_code_value' => 'V2-POST-3', 'status' => true,
+                'estimated_time_minutes' => 30, 'distance_to_next_m' => 1000,
+                'estimated_descent_time_minutes' => 40,
+            ]),
+            GkPost::create([
+                'nama' => 'Pos 4', 'urutan' => 4, 'latitude' => -1.74, 'longitude' => 101.30,
+                'id_gate' => $this->booking->gate_masuk, 'qr_code_value' => 'V2-POST-4', 'status' => true,
+                'estimated_time_minutes' => 30, 'distance_to_next_m' => 1000,
+                'estimated_descent_time_minutes' => 40,
+            ]),
+        ];
+    }
+
+    private function leaderVisits(): array
+    {
+        $response = $this->getJson('/api/tracking/v2/progress/' . $this->booking->id)->assertOk();
+        $hikers = collect($response->json('data.hikers'))->keyBy('pendaki_id');
+
+        return $hikers[$this->leaderHiker->id]['visits'];
+    }
+
+    private function leaderHikerProgress(): array
+    {
+        $response = $this->getJson('/api/tracking/v2/progress/' . $this->booking->id)->assertOk();
+        $hikers = collect($response->json('data.hikers'))->keyBy('pendaki_id');
+
+        return $hikers[$this->leaderHiker->id];
+    }
 }

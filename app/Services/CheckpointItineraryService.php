@@ -114,11 +114,15 @@ class CheckpointItineraryService
             $raw[] = $this->visitFrame(TrackingPhase::Turun, $post, $order, $outDistance, $outMinutes, $outDummy);
         }
 
-        return $this->attachLogsAndEstimates($raw, $logByKey);
+        return $this->attachVisitStatuses($this->attachLogsAndEstimates($raw, $logByKey));
     }
 
     /**
      * Ringkasan progres per fase untuk satu pendaki.
+     *
+     * Tujuan berikutnya selalu kunjungan tepat setelah posisi terjauh yang sudah
+     * tercatat (bukan pos kosong pertama), sehingga check-in susulan pada pos
+     * yang dilewati tidak memundurkan tujuan.
      */
     public function summary(Collection $posts, Collection $logs, string $trackingPhase): array
     {
@@ -140,8 +144,7 @@ class CheckpointItineraryService
                 && $v['post_id'] === $firstPostId
                 && $v['completed']);
 
-        $phase = TrackingPhase::tryFromString($trackingPhase) ?? TrackingPhase::Naik;
-        $nextVisitKey = $this->nextVisitKey($visits, $phase);
+        $nextVisitKey = $this->nextVisitKey($visits);
 
         return [
             'ascent_progress' => [
@@ -208,6 +211,8 @@ class CheckpointItineraryService
             'urutan' => $post->urutan,
             'is_summit' => (bool) $post->is_summit,
             'completed' => false,
+            'status' => 'upcoming',
+            'is_next' => false,
             'checkpoint_log_id' => null,
             'checked_at' => null,
             'method' => null,
@@ -262,6 +267,47 @@ class CheckpointItineraryService
         return $raw;
     }
 
+    /**
+     * Status kunjungan diturunkan dari catatan check-in, bukan dari pos fisik:
+     *  - completed: kunjungan ini punya catatan.
+     *  - skipped: belum tercatat, tetapi ada catatan pada kunjungan sesudahnya.
+     *  - upcoming: belum tercatat dan belum ada catatan yang lebih jauh.
+     *
+     * `completed` tetap dipertahankan untuk konsumen lama; `status` adalah field
+     * tambahan yang dipakai UI untuk warna hijau/merah/abu-abu.
+     */
+    private function attachVisitStatuses(array $visits): array
+    {
+        $furthestOrder = $this->furthestCompletedOrder($visits);
+        $nextOrder = $furthestOrder === null ? 1 : $furthestOrder + 1;
+
+        foreach ($visits as $index => $visit) {
+            $order = (int) $visit['visit_order'];
+            $visits[$index]['status'] = $visit['completed']
+                ? 'completed'
+                : ($furthestOrder !== null && $order < $furthestOrder ? 'skipped' : 'upcoming');
+            $visits[$index]['is_next'] = $order === $nextOrder;
+        }
+
+        return $visits;
+    }
+
+    private function furthestCompletedOrder(array $visits): ?int
+    {
+        $furthest = null;
+        foreach ($visits as $visit) {
+            if (! $visit['completed']) {
+                continue;
+            }
+            $order = (int) $visit['visit_order'];
+            if ($furthest === null || $order > $furthest) {
+                $furthest = $order;
+            }
+        }
+
+        return $furthest;
+    }
+
     private function completedCount(array $visits, TrackingPhase $phase): int
     {
         return collect($visits)
@@ -271,13 +317,13 @@ class CheckpointItineraryService
     }
 
     /**
-     * Tujuan berikutnya fase aktif: kunjungan pertama belum tercatat pada fase itu.
-     * Null bila seluruh kunjungan fase tersebut sudah tercatat.
+     * Tujuan berikutnya = kunjungan tepat setelah posisi terjauh yang tercatat.
+     * Null bila seluruh itinerary sudah tercatat.
      */
-    private function nextVisitKey(array $visits, TrackingPhase $phase): ?string
+    private function nextVisitKey(array $visits): ?string
     {
         foreach ($visits as $visit) {
-            if ($visit['phase'] === $phase->value && ! $visit['completed']) {
+            if ($visit['is_next']) {
                 return $visit['visit_key'];
             }
         }

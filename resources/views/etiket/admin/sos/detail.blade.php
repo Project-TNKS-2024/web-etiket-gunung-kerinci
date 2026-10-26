@@ -121,6 +121,17 @@
                         <button type="submit" class="btn btn-primary"><i class="ti ti-send"></i></button>
                     </div>
                 </form>
+                <form action="{{ route('admin.sos.messages.send', $sos->id) }}" method="POST" enctype="multipart/form-data" class="mt-3">
+                    @csrf
+                    <input type="hidden" name="type" value="image">
+                    <label for="sosChatImage" class="form-label">Kirim gambar</label>
+                    <div class="input-group">
+                        <input type="file" name="image" id="sosChatImage" class="form-control @error('image') is-invalid @enderror" accept="image/jpeg,image/png" required aria-describedby="sosChatImageHelp">
+                        <button type="submit" class="btn btn-primary">Kirim gambar</button>
+                    </div>
+                    <div id="sosChatImageHelp" class="form-text">JPG atau PNG, maksimal 5 MB. Jika pengiriman gagal, pilih ulang gambar.</div>
+                    @error('image')<div class="text-danger small" role="alert">{{ $message }}</div>@enderror
+                </form>
                 @endif
                 </div>
             </div>

@@ -38,8 +38,8 @@ Broadcast::channel('sos-chat.{sosId}', function ($user, $sosId) {
             ->exists();
     }
 
-    return $sos->pendaki && $sos->pendaki->booking
-        && $sos->pendaki->booking->id_user === $user->id;
+    return $user->id_bio !== null
+        && $sos->pendaki()->where('id_bio', $user->id_bio)->exists();
 }, ['guards' => ['web', 'sanctum']]);
 
 // Tracking channel: admin only

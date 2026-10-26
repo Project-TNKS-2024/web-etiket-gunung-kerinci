@@ -24,7 +24,7 @@ class TrackingController extends Controller
             'altitude' => 'nullable|numeric',
             'accuracy' => 'nullable|numeric|min:0',
             'battery_level' => 'nullable|integer|between:0,100',
-            'recorded_at' => 'nullable|date',
+            'recorded_at' => 'nullable|date|before_or_equal:'.now()->addMinutes(5)->toIso8601String(),
         ]);
 
         $user = $request->user();
@@ -86,7 +86,7 @@ class TrackingController extends Controller
             'positions.*.altitude' => 'nullable|numeric',
             'positions.*.accuracy' => 'nullable|numeric|min:0',
             'positions.*.battery_level' => 'nullable|integer|between:0,100',
-            'positions.*.recorded_at' => 'required|date',
+            'positions.*.recorded_at' => 'required|date|before_or_equal:'.now()->addMinutes(5)->toIso8601String(),
         ]);
 
         $user = $request->user();
@@ -131,7 +131,9 @@ class TrackingController extends Controller
         }
 
         $lastPosition = GkTracking::where('id_pendaki', $pendaki->id)
+            ->where('recorded_at', '<=', now())
             ->latest('recorded_at')
+            ->latest('id')
             ->first();
 
         if (!$lastPosition) {

@@ -53,7 +53,7 @@
             </fieldset>
          </div>
          <div class="col-4">
-            <label class="form-label" for="status">Status</label>
+            <label class="form-label" for="statusGunung">Status Gunung</label>
             <fieldset disabled>
                <select class="form-control borderx" id="statusGunung" name="statusGunung">
                   <option selected>{{$destinasi->getStatusGunung()}}</option>

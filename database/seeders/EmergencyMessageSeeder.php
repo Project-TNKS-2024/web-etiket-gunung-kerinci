@@ -15,6 +15,14 @@ class EmergencyMessageSeeder extends Seeder
         DB::transaction(function (): void {
             $destination = destinasi::where('nama', 'Gunung Kerinci')->lockForUpdate()->firstOrFail();
 
+            foreach ([
+                '[DEMO] Peringatan jalur licin' => ['Peringatan jalur licin', 'Jalur licin. Berjalan dengan hati-hati dan ikuti arahan petugas.'],
+                '[DEMO] Peringatan cuaca buruk' => ['Peringatan cuaca buruk', 'Cuaca buruk. Hentikan perjalanan di tempat aman dan ikuti arahan petugas.'],
+            ] as $oldTitle => [$title, $description]) {
+                GkEmergencyMessage::where('id_destinasi', $destination->id)->where('title', $oldTitle)
+                    ->update(['title' => $title, 'description' => $description]);
+            }
+
             // Pertahankan seluruh pesan yang sudah ada, termasuk pesan operasional.
             if (GkEmergencyMessage::exists()) {
                 $this->command?->info('EmergencyMessageSeeder: pesan sudah ada, tidak diubah atau ditambah.');
@@ -24,8 +32,8 @@ class EmergencyMessageSeeder extends Seeder
 
             $admin = User::where('email', 'superadmin@tnks.com')->where('role', 'admin')->firstOrFail();
             foreach ([
-                'medium' => '[DEMO] Peringatan jalur licin',
-                'high' => '[DEMO] Peringatan cuaca buruk',
+                'medium' => 'Peringatan jalur licin',
+                'high' => 'Peringatan cuaca buruk',
             ] as $severity => $title) {
                 // Simpan contoh tanpa memanggil controller/event broadcast.
                 GkEmergencyMessage::withoutEvents(fn () => GkEmergencyMessage::create([
@@ -33,7 +41,9 @@ class EmergencyMessageSeeder extends Seeder
                     'id_destinasi' => $destination->id,
                     'type' => 'admin_broadcast',
                     'title' => $title,
-                    'description' => 'DATA DEMO untuk pengujian peringatan dini bahaya. Bukan laporan kondisi lapangan atau peringatan resmi.',
+                    'description' => $severity === 'medium'
+                        ? 'Jalur licin. Berjalan dengan hati-hati dan ikuti arahan petugas.'
+                        : 'Cuaca buruk. Hentikan perjalanan di tempat aman dan ikuti arahan petugas.',
                     'severity' => $severity,
                     'status' => 'active',
                 ]));
