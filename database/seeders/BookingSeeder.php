@@ -27,7 +27,8 @@ use Illuminate\Support\Facades\DB;
  *
  * Semua tanggal dihitung dari satu acuan T (tanggal seeder dijalankan, WIB).
  * Identitas skenario memakai unique_code tetap supaya seeding ulang tidak
- * menggandakan booking. Dua skenario selesai menyelaraskan riwayat demo saat seed ulang.
+ * menggandakan booking. Jadwal Satria memakai selisih bulan kalender tanpa overflow;
+ * dua skenario selesai menyelaraskan riwayat demo saat seed ulang.
  */
 class BookingSeeder extends Seeder
 {
@@ -47,7 +48,7 @@ class BookingSeeder extends Seeder
     private const SCENARIOS = [
         'draft' => ['code' => 'KRNPESAN01', 'legacy_code' => 'DEMODRAFT1', 'label' => 'draft pendaftaran'],
         'cancelled' => ['code' => 'KRNBATAL01', 'legacy_code' => 'DEMOBATAL1', 'label' => 'draft dibatalkan'],
-        'finished' => ['code' => 'KRNLUNAS01', 'legacy_code' => 'DEMOSELES1', 'label' => 'pendakian selesai'],
+        'finished' => ['code' => 'KRNSELESAI01', 'legacy_code' => 'DEMOSELES1', 'previous_code' => 'KRNLUNAS01', 'label' => 'pendakian selesai'],
         'late' => ['code' => 'KRNTELAT01', 'legacy_code' => 'DEMOTELAT1', 'label' => 'pendakian selesai terlambat'],
         'active' => ['code' => 'KRNAKTIF01', 'legacy_code' => 'DEMOAKTIF1', 'label' => 'tiket aktif'],
         'checked_in' => ['code' => 'KRNCEKIN01', 'legacy_code' => 'DEMOCEKIN1', 'label' => 'sedang mendaki'],
@@ -160,11 +161,16 @@ class BookingSeeder extends Seeder
 
     private function seedDraft(): void
     {
-        if ($this->existing('draft')) {
+        $start = $this->today->copy()->addMonthNoOverflow();
+        if ($booking = $this->existing('draft')) {
+            if ((int) $booking->status_booking !== 2 || $booking->pembayaran()->exists()) {
+                $this->command?->warn('BookingSeeder: draft sudah diproses; pembaruan jadwal dilewati.');
+                return;
+            }
+            $this->rescheduleBooking($booking, $start);
             return;
         }
 
-        $start = $this->today->copy()->addDays(7);
         $this->createBooking(
             'draft',
             [$this->mainBios['satria']],
@@ -180,13 +186,18 @@ class BookingSeeder extends Seeder
 
     private function seedCancelled(): void
     {
-        if ($this->existing('cancelled')) {
+        $start = $this->today->copy()->subMonthsNoOverflow(4);
+        if ($booking = $this->existing('cancelled')) {
+            if ((int) $booking->status_booking !== 9 || $booking->pembayaran()->exists()) {
+                $this->command?->warn('BookingSeeder: tiket batal sudah berubah; pembaruan jadwal dilewati.');
+                return;
+            }
+            $this->rescheduleBooking($booking, $start);
             return;
         }
 
-        $start = $this->today->copy()->addDays(7);
-        $createdAt = $this->today->copy()->subDays(3)->setTime(10, 0);
-        $cancelledAt = $this->today->copy()->subDay()->setTime(14, 30);
+        $createdAt = $start->copy()->subDay()->setTime(6, 0);
+        $cancelledAt = $createdAt->copy()->addHour();
         $booking = $this->createBooking(
             'cancelled',
             [$this->mainBios['satria']],
@@ -219,11 +230,11 @@ class BookingSeeder extends Seeder
     private function seedCompletedScenario(string $scenario, bool $late): void
     {
         DB::transaction(function () use ($scenario, $late): void {
-            $start = $this->today->copy()->subDays(8);
-            $end = $this->today->copy()->subDays(6);
+            $start = $this->today->copy()->subMonthsNoOverflow($late ? 3 : 2);
+            $end = $start->copy()->addDays(2);
             $booking = $this->existing($scenario) ?? $this->createBooking(
                 $scenario, array_values($this->mainBios), $start, $end, 8, true,
-                $this->today->copy()->subDays(12)->setTime(9, 0)
+                $start->copy()->subDays(self::PURCHASE_LEAD_DAYS[$scenario])->setTime(6, 0)
             );
             $booking = gk_booking::whereKey($booking->id)->lockForUpdate()->with('pendakis')->firstOrFail();
             $expectedBios = collect($this->mainBios)->pluck('id')->sort()->values()->all();
@@ -237,9 +248,7 @@ class BookingSeeder extends Seeder
                 throw new \RuntimeException('Booking memiliki pembayaran non-demo; pembaruan skenario dibatalkan.');
             }
 
-            // Tanggal booking lama tetap dipakai; seed ulang tidak menggeser riwayat.
-            $start = Carbon::parse($booking->tanggal_masuk, config('app.timezone'))->startOfDay();
-            $end = Carbon::parse($booking->tanggal_keluar, config('app.timezone'))->startOfDay();
+            $this->rescheduleBooking($booking, $start);
             $checkinAt = $start->copy()->setTime(8, 0);
             $checkoutAt = $late ? $end->copy()->addDay()->setTime(10, 0) : $end->copy()->setTime(16, 0);
             $this->addPayment($booking, $start->copy()->subDays(3)->setTime(10, 15), $booking->total_pembayaran);
@@ -339,12 +348,11 @@ class BookingSeeder extends Seeder
                 || $booking->pendakis()->where(function ($query) {
                     $query->whereNotNull('checkin_at')->orWhereNotNull('actual_checkout_at');
                 })->exists()) {
-                throw new \RuntimeException('Tiket siap berangkat sudah mempunyai aktivitas; seeder tidak menghapus perjalanan yang sudah berjalan.');
+                $this->command?->warn('BookingSeeder: tiket aktif sudah digunakan; pembaruan dilewati.');
+
+                return;
             }
-            $booking->update([
-                'tanggal_masuk' => $start->toDateString(),
-                'tanggal_keluar' => $end->toDateString(),
-            ]);
+            $this->rescheduleBooking($booking, $start);
             return;
         }
 
@@ -467,6 +475,9 @@ class BookingSeeder extends Seeder
 
                 $orderedAt = Carbon::parse($booking->tanggal_masuk, config('app.timezone'))
                     ->startOfDay()->subDays($daysBeforeEntry)->setTime(6, 0);
+                if ($scenario === 'draft') {
+                    $orderedAt = $this->today->copy()->setTime(6, 0);
+                }
                 $paidAt = $orderedAt->copy()->addMinutes(30);
                 $booking->timestamps = false;
                 $booking->created_at = $orderedAt;
@@ -503,7 +514,7 @@ class BookingSeeder extends Seeder
                 }
             }
         });
-        $this->command?->info('BookingSeeder: pemesanan/pembayaran diseragamkan H-0/H-1/H-2 (06.00/06.30 WIB).');
+        $this->command?->info('BookingSeeder: draft dipesan hari ini; tiket lain H-0/H-1/H-2 sebelum masuk (06.00/06.30 WIB).');
     }
 
     private function assignScenarioOwner(string $scenario, User $target, ?string $oldBio = null): void
@@ -533,7 +544,9 @@ class BookingSeeder extends Seeder
         $description = self::PREFIX.$definition['label'];
 
         $booking = gk_booking::where(function ($query) use ($definition, $description): void {
-            $query->whereIn('unique_code', [$definition['code'], $definition['legacy_code']])
+            $query->whereIn('unique_code', array_filter([
+                $definition['code'], $definition['legacy_code'], $definition['previous_code'] ?? null,
+            ]))
                 ->orWhere(function ($query) use ($description): void {
                     $query->where('id_user', $this->owner->id)->where('keterangan', $description);
                 });
@@ -550,6 +563,27 @@ class BookingSeeder extends Seeder
         }
 
         return $booking;
+    }
+
+    private function rescheduleBooking(gk_booking $booking, Carbon $start): void
+    {
+        if ($booking->pembayaran()->whereNotIn('payment_method', ['demo', 'tunai'])->exists()) {
+            throw new \RuntimeException('Jadwal seeder tidak boleh mengubah pembayaran non-demo.');
+        }
+        $booking->update([
+            'tanggal_masuk' => $start->toDateString(),
+            'tanggal_keluar' => $start->copy()->addDays(2)->toDateString(),
+            'total_hari' => 3,
+            'data_struk' => null,
+        ]);
+        $total = 0;
+        foreach ($booking->pendakis as $member) {
+            $member->setRelation('booking', $booking);
+            $member->update(['tagihan' => $this->helper->getTagihanPendaki($member)]);
+            $total += $member->tagihan;
+        }
+        $booking->update(['total_pembayaran' => $total]);
+        $booking->pembayaran()->update(['amount' => $total]);
     }
 
     /**

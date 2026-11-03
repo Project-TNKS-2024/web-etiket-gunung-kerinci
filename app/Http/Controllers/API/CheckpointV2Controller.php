@@ -63,7 +63,7 @@ class CheckpointV2Controller extends Controller
             'qr_code_value' => 'required|string',
             'pendaki_id' => 'sometimes|nullable|uuid',
             'phase' => 'required|in:naik,turun',
-            'client_event_id' => 'required|uuid',
+            'id_client_event' => 'required|uuid',
             'recorded_at' => 'required|date',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
@@ -89,7 +89,7 @@ class CheckpointV2Controller extends Controller
             $result = $this->visits->record(
                 $actor, $target, $post, $validated['phase'], 'qr',
                 $validated['latitude'] ?? null, $validated['longitude'] ?? null,
-                false, $validated['client_event_id'], $recordedAt, $validated
+                false, $validated['id_client_event'], $recordedAt, $validated
             );
             $data = $this->visits->checkinResponse($result['log'], $result['target'], $post, $result['idempotent']);
 
@@ -108,7 +108,7 @@ class CheckpointV2Controller extends Controller
             'post_id' => 'required|exists:gk_posts,id',
             'pendaki_id' => 'sometimes|nullable|uuid',
             'phase' => 'required|in:naik,turun',
-            'client_event_id' => 'required|uuid',
+            'id_client_event' => 'required|uuid',
             'recorded_at' => 'required|date',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
@@ -138,7 +138,7 @@ class CheckpointV2Controller extends Controller
             $result = $this->visits->record(
                 $actor, $target, $post, $validated['phase'], 'manual',
                 (float) $validated['latitude'], (float) $validated['longitude'],
-                false, $validated['client_event_id'], $recordedAt, $validated
+                false, $validated['id_client_event'], $recordedAt, $validated
             );
             $data = $this->visits->checkinResponse($result['log'], $result['target'], $post, $result['idempotent']);
             $data['is_manual_override'] = false;
@@ -154,16 +154,16 @@ class CheckpointV2Controller extends Controller
     public function saveMemberNote(Request $request)
     {
         $data = $request->validate([
-            'pendaki_id' => 'required|uuid',
-            'post_id' => 'required|integer|exists:gk_posts,id',
+            'id_pendaki' => 'required|uuid',
+            'id_post' => 'required|integer|exists:gk_posts,id',
             'phase' => 'required|in:naik,turun',
             'note' => 'present|nullable|string|max:500',
         ]);
-        [$actor, $target, $error] = $this->resolveTarget($request->user(), $data['pendaki_id']);
+        [$actor, $target, $error] = $this->resolveTarget($request->user(), $data['id_pendaki']);
         if ($error !== null) {
             return $error;
         }
-        $post = GkPost::whereKey($data['post_id'])->where('status', true)->firstOrFail();
+        $post = GkPost::whereKey($data['id_post'])->where('status', true)->firstOrFail();
         if ((int) $post->id_gate !== (int) $actor->booking->gate_masuk) {
             return ApiResponse::error('Pos tidak berada di jalur booking ini.', null, 404);
         }
@@ -183,11 +183,13 @@ class CheckpointV2Controller extends Controller
                 return ApiResponse::error('Ketua harus check-in pada pos dan fase yang sama.', null, 403);
             }
             $note = GkCheckpointMemberNote::updateOrCreate([
-                'booking_id' => $locked->booking_id, 'pendaki_id' => $locked->id,
-                'post_id' => $post->id, 'phase' => $data['phase'],
+                'id_booking' => $locked->booking_id, 'id_pendaki' => $locked->id,
+                'id_post' => $post->id, 'phase' => $data['phase'],
             ], ['note' => trim($data['note'] ?? ''), 'updated_by' => $request->user()->id]);
 
-            return ApiResponse::success($note->only(['pendaki_id', 'post_id', 'phase', 'note', 'updated_at']), 'Catatan tersimpan.');
+            return ApiResponse::success($note->only([
+                'id_booking', 'id_pendaki', 'id_post', 'phase', 'note', 'updated_at',
+            ]), 'Catatan tersimpan.');
         });
     }
 
@@ -244,8 +246,8 @@ class CheckpointV2Controller extends Controller
             'total_posts' => $posts->count(),
             'total_visits' => 2 * $posts->count() - 1,
             'hikers' => $hikers,
-            'member_notes' => GkCheckpointMemberNote::where('booking_id', $bookingId)
-                ->get(['pendaki_id', 'post_id', 'phase', 'note', 'updated_at']),
+            'member_notes' => GkCheckpointMemberNote::where('id_booking', $bookingId)
+                ->get(['id_booking', 'id_pendaki', 'id_post', 'phase', 'note', 'updated_at']),
             'current_pendaki_id' => $leaderHiker?->id,
         ]);
     }

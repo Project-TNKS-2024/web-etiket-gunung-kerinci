@@ -1152,3 +1152,21 @@ Mobile memilih URL sesuai fase kunjungan. Cache pos yang menyimpan URL naik dapa
 Request pertama membuat laporan dan mengembalikan HTTP 201. Pengiriman ulang `client_event_id` yang sama oleh pengguna yang sama mengembalikan laporan sebelumnya dengan HTTP 200 tanpa membuat laporan/notifikasi baru; replay diperiksa sebelum persyaratan pendakian aktif. Request baru tetap memerlukan pendakian aktif. Format respons lama tetap `{success,message,data:{id,status,created_at},errors}`. Klien lama boleh tidak mengirim field tambahan; pencegahan duplikat hanya berlaku untuk request dengan ID event.
 
 Mobile menyimpan form yang sudah disubmit, foto pada penyimpanan privat, koordinat, waktu GPS, dan akurasi di Room 19. Worker dengan syarat jaringan tersambung mengirim data tersimpan. Gangguan jaringan, HTTP 401/408/429/5xx dicoba ulang; penolakan lain dipertahankan dengan status dan alasan. Akun lain tidak mengirim antrean pemilik sebelumnya. Tidak ada pengiriman langsung atau pengambilan GPS baru di worker. Admin menerima laporan melalui tabel/alur lama; tidak ada perubahan tampilan Admin.
+
+## Penamaan lima kolom Backend lokal — 27 Oktober 2026
+
+Migration `92_standardize_selected_id_prefixes.php` mengubah nama kolom database berikut tanpa mengganti nilai, tipe, urutan, indeks atau FK:
+
+| Tabel | Sebelum | Sesudah |
+| --- | --- | --- |
+| gk_checkpoint_logs | client_event_id | id_client_event |
+| gk_checkpoint_member_notes | booking_id | id_booking |
+| gk_checkpoint_member_notes | pendaki_id | id_pendaki |
+| gk_checkpoint_member_notes | post_id | id_post |
+| gk_disaster_reports | client_event_id | id_client_event |
+
+Sesuai keputusan lanjutan pengguna, field API mengikuti kelima nama kolom baru. Request/response checkpoint v2 dan request multipart laporan memakai `id_client_event`; respons laporan juga menyertakannya. Request catatan anggota memakai `id_pendaki`/`id_post`; respons simpan catatan dan `member_notes` memakai `id_booking`/`id_pendaki`/`id_post`. Mobile diperbarui bersama Backend melalui @SerializedName dan @Part. Room versi 22 mengganti kolom checkpoint_logs.client_event_id menjadi id_client_event melalui migration 21 → 22 yang menyalin data. Properti Kotlin tetap clientEventId/bookingId/pendakiId/postId. `gk_pendakis.booking_id` serta field lain di luar lima rename ini tetap mengikuti skema/kontrak sebelumnya. Backend dan aplikasi Mobile yang sudah diperbarui harus digunakan bersama.
+
+Migration 83, 87 dan 89 tetap menjadi riwayat pembuatan struktur; migration 92 melakukan rename setelahnya. Nama constraint/index dipertahankan; kolom yang ditopangnya mengikuti rename. `id_client_event` adalah identitas kejadian untuk retry, bukan FK ke tabel lain.
+
+Migration 92 telah diterapkan pada database Backend lokal. Pemeriksaan sintaks PHP lulus; pembacaan sebelum–sesudah menunjukkan 127 record checkpoint tetap sama, tabel catatan/laporan masing-masing kosong, definisi kolom sesuai mapping, dan indeks/FK tetap terjaga. Tes otomatis maupun endpoint end-to-end belum dijalankan.

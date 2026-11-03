@@ -74,14 +74,14 @@ class SOSCallController extends Controller
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
             'lampiran' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
-            'client_event_id' => 'nullable|uuid',
+            'id_client_event' => 'nullable|uuid',
             'location_recorded_at' => 'nullable|date',
         ]);
 
         $user = $request->user();
-        $eventId = $validated['client_event_id'] ?? null;
+        $eventId = $validated['id_client_event'] ?? null;
         if ($eventId) {
-            $existing = GkDisasterReport::where('id_user', $user->id)->where('client_event_id', $eventId)->first();
+            $existing = GkDisasterReport::where('id_user', $user->id)->where('id_client_event', $eventId)->first();
             if ($existing) {
                 return $this->reportResponse($existing, 200);
             }
@@ -101,7 +101,7 @@ class SOSCallController extends Controller
             // Satu akun dapat mengirim ulang event yang sama setelah koneksi putus.
             DB::table('users')->where('id', $user->id)->lockForUpdate()->first();
             if ($eventId) {
-                $existing = GkDisasterReport::where('id_user', $user->id)->where('client_event_id', $eventId)->first();
+                $existing = GkDisasterReport::where('id_user', $user->id)->where('id_client_event', $eventId)->first();
                 if ($existing) {
                     return [$existing, false];
                 }
@@ -119,7 +119,7 @@ class SOSCallController extends Controller
                 'longitude' => $validated['longitude'] ?? null,
                 'lampiran' => $lampiranPath,
                 'status' => 'pending',
-                'client_event_id' => $eventId,
+                'id_client_event' => $eventId,
                 'location_recorded_at' => isset($validated['location_recorded_at'])
                     ? Carbon::parse($validated['location_recorded_at'])->setTimezone(config('app.timezone')) : null,
             ]);
@@ -143,6 +143,7 @@ class SOSCallController extends Controller
     {
         return ApiResponse::success([
             'id' => $report->id,
+            'id_client_event' => $report->id_client_event,
             'status' => $report->status,
             'created_at' => $report->created_at->copy()->setTimezone(config('app.timezone'))->toIso8601String(),
         ], 'Laporan bencana berhasil dikirim', $code);

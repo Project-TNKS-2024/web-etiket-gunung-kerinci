@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
  *
  * Controller menangani autentikasi/otorisasi awal; service ini menegakkan
  * invariant domain di dalam transaksi: lock baris pendaki, idempotensi
- * client_event_id, validasi fase terhadap summit, dan peralihan fase.
+ * id_client_event, validasi fase terhadap summit, dan peralihan fase.
  */
 class CheckpointVisitService
 {
@@ -52,7 +52,7 @@ class CheckpointVisitService
             'id_post' => $post->id,
             'phase' => $phase->value,
         ], [
-            'client_event_id' => $this->ticketEventId($target, $phase),
+            'id_client_event' => $this->ticketEventId($target, $phase),
             'method' => 'manual',
             'is_manual_override' => false,
             'checked_at' => $at,
@@ -63,10 +63,10 @@ class CheckpointVisitService
     {
         $eventId = $this->ticketEventId($target, TrackingPhase::Naik);
         $logs = $target->checkpointLogs()->where('id_booking', $target->booking_id)->get();
-        if ($logs->contains(fn ($log) => $log->client_event_id !== $eventId)) {
+        if ($logs->contains(fn ($log) => $log->id_client_event !== $eventId)) {
             throw ValidationException::withMessages(['pendakis' => 'Check-in tiket tidak dapat dibatalkan karena sudah ada kehadiran pos lain.']);
         }
-        $target->checkpointLogs()->where('client_event_id', $eventId)->delete();
+        $target->checkpointLogs()->where('id_client_event', $eventId)->delete();
         $target->update(['checkin_at' => null, 'tracking_phase' => TrackingPhase::Naik->value]);
     }
 
@@ -178,7 +178,7 @@ class CheckpointVisitService
 
             // 5. Idempotensi + duplikasi.
             $existingByEvent = $clientEventId !== null && $clientEventId !== ''
-                ? GkCheckpointLog::where('client_event_id', $clientEventId)->first()
+                ? GkCheckpointLog::where('id_client_event', $clientEventId)->first()
                 : null;
 
             if ($existingByEvent !== null) {
@@ -187,8 +187,8 @@ class CheckpointVisitService
                 }
                 throw new CheckpointException(
                     'CLIENT_EVENT_CONFLICT',
-                    'client_event_id sudah dipakai untuk kejadian berbeda.',
-                    ['client_event_id' => $clientEventId]
+                    'id_client_event sudah dipakai untuk kejadian berbeda.',
+                    ['id_client_event' => $clientEventId]
                 );
             }
 
@@ -199,7 +199,7 @@ class CheckpointVisitService
                 ->first();
 
             if ($existingByTuple !== null) {
-                if ($clientEventId !== null && $existingByTuple->client_event_id === $clientEventId) {
+                if ($clientEventId !== null && $existingByTuple->id_client_event === $clientEventId) {
                     return ['log' => $existingByTuple, 'target' => $locked, 'idempotent' => true];
                 }
                 throw new CheckpointException(
@@ -257,7 +257,7 @@ class CheckpointVisitService
                 'id_post' => $post->id,
                 'id_booking' => $booking->id,
                 'phase' => $phase->value,
-                'client_event_id' => $clientEventId !== null && $clientEventId !== '' ? $clientEventId : null,
+                'id_client_event' => $clientEventId !== null && $clientEventId !== '' ? $clientEventId : null,
                 'method' => $method,
                 'latitude' => $latitude,
                 'longitude' => $longitude,
@@ -320,7 +320,7 @@ class CheckpointVisitService
                 throw new CheckpointException('CHECKPOINT_NOT_FOUND', 'Check-in tidak ditemukan.', [], 404);
             }
 
-            if ($log->client_event_id === $this->ticketEventId($locked, TrackingPhase::from($phase))) {
+            if ($log->id_client_event === $this->ticketEventId($locked, TrackingPhase::from($phase))) {
                 throw new CheckpointException('TICKET_CONFIRMATION_REQUIRED', 'Kehadiran dari konfirmasi tiket hanya dapat dibatalkan petugas.', [], 403);
             }
 
@@ -369,7 +369,7 @@ class CheckpointVisitService
 
         return [
             'checkpoint_log_id' => $log->id,
-            'client_event_id' => $log->client_event_id,
+            'id_client_event' => $log->id_client_event,
             'pendaki_id' => $target->id,
             'phase' => $phase,
             'status' => 'completed',

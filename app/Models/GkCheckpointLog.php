@@ -11,7 +11,7 @@ class GkCheckpointLog extends Model
     protected $table = 'gk_checkpoint_logs';
 
     protected $fillable = [
-        'id_pendaki', 'id_post', 'id_booking', 'phase', 'client_event_id',
+        'id_pendaki', 'id_post', 'id_booking', 'phase', 'id_client_event',
         'method', 'latitude', 'longitude', 'is_manual_override', 'checked_at',
     ];
 

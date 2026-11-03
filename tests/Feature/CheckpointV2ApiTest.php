@@ -101,7 +101,7 @@ class CheckpointV2ApiTest extends TestCase
         $payload = [
             'qr_code_value' => $post->qr_code_value,
             'phase' => $phase,
-            'client_event_id' => $clientEventId ?? (string) Str::uuid(),
+            'id_client_event' => $clientEventId ?? (string) Str::uuid(),
             'recorded_at' => $recordedAt,
         ];
         if ($pendakiId !== null) {
@@ -140,7 +140,7 @@ class CheckpointV2ApiTest extends TestCase
             ->assertJsonPath('data.hikers.0.visits.0.completed', true);
         $this->postJson('/api/tracking/v2/checkpoint/manual', [
             'pendaki_id' => $otherHiker->id, 'post_id' => $this->post2->id,
-            'phase' => 'naik', 'client_event_id' => (string) Str::uuid(),
+            'phase' => 'naik', 'id_client_event' => (string) Str::uuid(),
             'recorded_at' => now()->toIso8601String(), 'latitude' => -1.71, 'longitude' => 101.27,
         ])->assertCreated()->assertJsonPath('data.pendaki_id', $otherHiker->id);
         $this->postJson('/api/tracking/checkpoint/gps', [
